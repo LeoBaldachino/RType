@@ -6,14 +6,17 @@
 */
 
 #pragma once
-#include <asio.hpp>
+#include "../../Sockets/includes/SocketServer.hpp"
+#include <memory>
+#include <exception>
 
 namespace RType {
     class CoreServer {
         public:
             CoreServer(int, char **);
             ~CoreServer();
-        protected:
         private:
+            void run();
+            std::unique_ptr<Utils::SocketServer> _socket;
     };
 }

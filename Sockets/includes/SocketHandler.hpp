@@ -15,10 +15,12 @@ namespace RType {
             public:
                 SocketHandler(int port);
                 ~SocketHandler();
-                void send(MessageParsed_t &toSend);
+                void send(const MessageParsed_t &toSend);
                 MessageParsed_t receive(int timeout);
             protected:
-            private:
+                boost::asio::io_service _ioService;
+                boost::asio::ip::udp::socket _socket;
+                boost::asio::ip::udp::endpoint _Endpoint;
         };
     }
 }
