@@ -14,7 +14,7 @@ namespace RType {
             public:
                 SocketServer(int port);
                 ~SocketServer();
-                void send(int to, const void *data, size_t dataSize);
+                void send(int to, MessageParsed_t &toSend);
 
             protected:
             private:

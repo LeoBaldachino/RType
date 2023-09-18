@@ -7,6 +7,7 @@
 
 #pragma once
 #include <boost/asio.hpp>
+#include "MessageParsed.hpp"
 
 namespace RType {
     namespace Utils {
@@ -14,8 +15,8 @@ namespace RType {
             public:
                 SocketHandler(int port);
                 ~SocketHandler();
-                void send(const void *data, size_t dataSize);
-                const void *receive(int timeout);
+                void send(MessageParsed_t &toSend);
+                MessageParsed_t receive(int timeout);
             protected:
             private:
         };
