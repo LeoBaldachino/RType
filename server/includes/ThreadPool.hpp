@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2023
-** B-CCP-400-MLH-4-1-theplazza-younes.boufrioua
+** B-CPP-500-MLH-5-1-rtype-robin.denni
 ** File description:
 ** ThreadPool
 */
