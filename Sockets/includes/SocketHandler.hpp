@@ -8,6 +8,7 @@
 #pragma once
 #include <boost/asio.hpp>
 #include "MessageParsed.hpp"
+#include <boost/array.hpp>
 
 namespace RType {
     namespace Utils {
@@ -15,16 +16,12 @@ namespace RType {
             public:
                 SocketHandler(const std::string &ipAdress, int port);
                 ~SocketHandler();
-                template<typename T>
-                void send(const struct MessageParsed_s<T> &toSend, const std::string &ipAdress, int port);
-                template<typename T, typename R>
-                MessageParsed_s<R> receive(T &toPass);
+                void send(const struct MessageParsed_s &toSend, const std::string &ipAdress, int port);
+                MessageParsed_s receive();
             protected:
                 boost::asio::io_service _ioService;
                 boost::asio::ip::udp::socket _socket;
                 boost::asio::ip::udp::endpoint _Endpoint;
-                template<typename T, typename R>
-                void handleReceive(const boost::system::error_code& error, size_t bytes_transferred, T &toPass);
         };
     }
 }

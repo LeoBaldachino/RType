@@ -10,12 +10,9 @@
 
 namespace RType {
     namespace Utils {
-        template<typename T>
         struct MessageParsed_s {
             unsigned char msgType;
-            unsigned int sender;
-            T data;
-            size_t dataSize;
+            unsigned char bytes[7];
         };
     }
 }
