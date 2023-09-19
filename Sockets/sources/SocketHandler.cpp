@@ -52,12 +52,15 @@ RType::Utils::MessageParsed_s RType::Utils::SocketHandler::receive()
     unsigned long long data;
     boost::asio::mutable_buffer buffer(&data, sizeof(data));
     _socket.receive_from(buffer, _Endpoint);
-    return decompressFromMessage(data);
+    Utils::MessageParsed_s msg = decompressFromMessage(data);
+    msg.senderIp = _Endpoint.address().to_v4().to_string();
+    msg.senderPort = _Endpoint.port();
+    return msg;
 }
 
-void RType::Utils::SocketHandler::send(const struct MessageParsed_s &toSend, const std::string &ipAdress, int port)
+void RType::Utils::SocketHandler::send(const struct MessageParsed_s &toSend)
 {
     unsigned long long compressed = compressFromMessage(toSend);
     boost::asio::const_buffer buffer(&compressed, sizeof(compressed));
-    _socket.send_to(buffer, boost::asio::ip::udp::endpoint(boost::asio::ip::address::from_string(ipAdress), port));
+    _socket.send_to(buffer, boost::asio::ip::udp::endpoint(boost::asio::ip::address::from_string(toSend.senderIp), toSend.senderPort));
 }

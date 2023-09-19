@@ -9,6 +9,7 @@
 #include <boost/asio.hpp>
 #include "MessageParsed.hpp"
 #include <boost/array.hpp>
+#include <tuple>
 
 namespace RType {
     namespace Utils {
@@ -16,7 +17,7 @@ namespace RType {
             public:
                 SocketHandler(const std::string &ipAdress, int port);
                 ~SocketHandler();
-                void send(const struct MessageParsed_s &toSend, const std::string &ipAdress, int port);
+                void send(const struct MessageParsed_s &toSend);
                 MessageParsed_s receive();
             protected:
                 boost::asio::io_service _ioService;

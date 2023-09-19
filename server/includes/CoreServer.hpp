@@ -8,8 +8,10 @@
 #pragma once
 #include "../../Sockets/includes/SocketHandler.hpp"
 #include "../../Sockets/includes/MessageParsed.hpp"
+#include "ThreadPool.hpp"
 #include <memory>
 #include <exception>
+#include <unordered_map>
 
 namespace RType {
     class CoreServer {
@@ -18,6 +20,12 @@ namespace RType {
             ~CoreServer();
         private:
             void run();
-            std::unique_ptr<Utils::SocketServer> _socket;
+            void sendInfosThread();
+            void threadMethod(RType::Utils::MessageParsed_s);
+            std::unique_ptr<Server::ThreadPool> _threadPool;
+            std::unique_ptr<Utils::SocketHandler> _socket;
+            std::unique_ptr<std::thread> _senderThread;
+            std::mutex _mutex;
+            std::unordered_map<char, std::pair<std::string, int>> _clients;
     };
 }

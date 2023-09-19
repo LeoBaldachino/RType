@@ -13,6 +13,8 @@ namespace RType {
         struct MessageParsed_s {
             unsigned char msgType;
             unsigned char bytes[7];
+            std::string senderIp;
+            unsigned short senderPort;
         };
     }
 }
