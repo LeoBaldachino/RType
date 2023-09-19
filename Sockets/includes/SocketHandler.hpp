@@ -13,14 +13,18 @@ namespace RType {
     namespace Utils {
         class SocketHandler {
             public:
-                SocketHandler(int port);
+                SocketHandler(const std::string &ipAdress, int port);
                 ~SocketHandler();
-                void send(const MessageParsed_t &toSend);
-                MessageParsed_t receive(int timeout);
+                template<typename T>
+                void send(const struct MessageParsed_s<T> &toSend, const std::string &ipAdress, int port);
+                template<typename T, typename R>
+                MessageParsed_s<R> receive(T &toPass);
             protected:
                 boost::asio::io_service _ioService;
                 boost::asio::ip::udp::socket _socket;
                 boost::asio::ip::udp::endpoint _Endpoint;
+                template<typename T, typename R>
+                void handleReceive(const boost::system::error_code& error, size_t bytes_transferred, T &toPass);
         };
     }
 }
