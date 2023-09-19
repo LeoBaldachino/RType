@@ -5,7 +5,7 @@
 ** CoreServer
 */
 
-#include "includes/CoreServer.hpp"
+#include "../includes/CoreServer.hpp"
 
 RType::CoreServer::CoreServer(int ar, char **av)
 {

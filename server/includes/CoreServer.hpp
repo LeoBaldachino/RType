@@ -6,7 +6,8 @@
 */
 
 #pragma once
-#include "../../Sockets/includes/SocketServer.hpp"
+#include "../../Sockets/includes/SocketHandler.hpp"
+#include "../../Sockets/includes/MessageParsed.hpp"
 #include <memory>
 #include <exception>
 
