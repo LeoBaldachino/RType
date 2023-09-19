@@ -11,9 +11,17 @@
 #include "ThreadPool.hpp"
 #include <memory>
 #include <exception>
-#include <unordered_map>
-
+#include <chrono>
 namespace RType {
+    enum ComCodes {
+        move = 11,
+        valueChange = 12,
+        touchingObject = 13,
+        keyPressed = 14,
+
+        newPlayerConnected = 21,
+        playerDeconnected = 22,
+    };
     class CoreServer {
         public:
             CoreServer(int, char **);
@@ -21,11 +29,12 @@ namespace RType {
         private:
             void run();
             void sendInfosThread();
-            void threadMethod(RType::Utils::MessageParsed_s);
+            void threadMethod(const RType::Utils::MessageParsed_s &);
             std::unique_ptr<Server::ThreadPool> _threadPool;
             std::unique_ptr<Utils::SocketHandler> _socket;
             std::unique_ptr<std::thread> _senderThread;
             std::mutex _mutex;
-            std::unordered_map<char, std::pair<std::string, int>> _clients;
+            std::vector<std::pair<std::string, int>> _clients;
+            bool _threadIsOpen;
     };
 }

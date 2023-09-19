@@ -2,23 +2,23 @@
 ** EPITECH PROJECT, 2023
 ** B-CCP-400-MLH-4-1-theplazza-younes.boufrioua
 ** File description:
-** ThreadPool
+** RType::Server::ThreadPool
 */
 
 #include "../includes/ThreadPool.hpp"
 
-ThreadPool::ThreadPool(size_t nb)
+RType::Server::ThreadPool::ThreadPool(size_t nb)
 {
     this->_nb_of_threads = nb;
 }
 
-void ThreadPool::InitThreadPool() {
+void RType::Server::ThreadPool::InitThreadPool() {
     this->_threads.resize(this->_nb_of_threads);
     for (size_t i = 0; i < this->_nb_of_threads; i++)
-        this->_threads[i] = std::thread(&ThreadPool::ThreadMain, this);
+        this->_threads[i] = std::thread(&RType::Server::ThreadPool::ThreadMain, this);
 }
 
-void ThreadPool::CloseThreadPool() {
+void RType::Server::ThreadPool::CloseThreadPool() {
     {
         std::unique_lock<std::mutex> lock(queue_mutex);
         this->close_all = true;
@@ -29,7 +29,7 @@ void ThreadPool::CloseThreadPool() {
     this->_threads.clear();
 }
 
-void ThreadPool::ThreadMain()
+void RType::Server::ThreadPool::ThreadMain()
 {
     bool ex = false;
     while (1) {
@@ -52,7 +52,7 @@ void ThreadPool::ThreadMain()
     }
 }
 
-void ThreadPool::AddTask(const std::function<void()>& job) {
+void RType::Server::ThreadPool::AddTask(const std::function<void()>& job) {
     {
         std::unique_lock<std::mutex> lock(this->queue_mutex);
         this->_tasks.push(job);
@@ -60,13 +60,13 @@ void ThreadPool::AddTask(const std::function<void()>& job) {
     mutex_c.notify_one();
 }
 
-size_t ThreadPool::GetTaskRemaining()
+size_t RType::Server::ThreadPool::GetTaskRemaining()
 {
     return (this->_tasks.size());
 }
 
 
-size_t ThreadPool::GetRunning()
+size_t RType::Server::ThreadPool::GetRunning()
 {
     return (this->_running);
 }

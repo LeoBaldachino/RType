@@ -15,6 +15,12 @@ namespace RType {
     namespace Utils {
         class SocketHandler {
             public:
+            /**
+             * @brief Construct a new Socket Handler object
+             * 
+             * @param ipAdress
+             * @param port 
+             */
                 SocketHandler(const std::string &ipAdress, int port);
                 ~SocketHandler();
                 void send(const struct MessageParsed_s &toSend);

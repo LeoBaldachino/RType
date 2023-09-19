@@ -5,7 +5,14 @@
 ** main
 */
 
+#include "../includes/CoreServer.hpp"
+
 int main(int ar, char **av)
 {
+    try {
+        RType::CoreServer server(ar, av);
+    } catch (const std::exception &err) {
+        std::cerr << err.what() << std::endl;
+    }
     return 0;
 }
