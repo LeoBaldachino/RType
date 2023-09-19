@@ -10,11 +10,12 @@
 
 namespace RType {
     namespace Utils {
-        typedef struct MessageParsed_s {
+        template<typename T>
+        struct MessageParsed_s {
             unsigned char msgType;
             unsigned int sender;
-            const void *data;
+            T data;
             size_t dataSize;
-        } MessageParsed_t;
+        };
     }
 }
