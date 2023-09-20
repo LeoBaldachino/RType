@@ -5,34 +5,62 @@
 ** Controlable.hpp
 */
 
+#pragma once
 #include <fstream>
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/Event.hpp>
 #include <iostream>
+#include <vector>
+#include <chrono>
+#include <SFML/Graphics.hpp>
 
 class Controlable {
 public:
     Controlable() = default;
     ~Controlable() = default;
+    enum Events {
+            Up,
+            Down,
+            Left,
+            Right,
+            Shoot,
+            PiercingShoot,
+            CloseWindow,
+            Unknown
+    };
 
-    void handleInput(sf::Event event) {
+    void handleInput(sf::Event event, std::unique_ptr<sf::RenderWindow> window) {
         if (event.type == sf::Event::KeyPressed) {
             switch (event.key.code) {
                 case sf::Keyboard::Up:
-                    // Handle Up Key Pressed
+                    _events.push_back(Events::Up);
                     break;
                 case sf::Keyboard::Down:
-                    // Handle Down Key Pressed
+                    _events.push_back(Events::Down);
                     break;
                 case sf::Keyboard::Left:
-                    // Handle Left Key Pressed
+                    _events.push_back(Events::Left);
                     break;
                 case sf::Keyboard::Right:
-                    // Handle Right Key Pressed
+                    _events.push_back(Events::Right);
                     break;
+                case sf::Keyboard::Escape:
+                    _events.push_back(Events::CloseWindow);
+                case sf::Keyboard::Space:
+                    std::chrono::time_point<std::chrono::_V2::steady_clock, std::chrono::_V2::steady_clock::duration>
+                    shootTime = std::chrono::steady_clock::now();
+                    sf::Event tmpEvent;
+                    while (tmpEvent.type != sf::Event::KeyReleased)
+                        window->pollEvent(tmpEvent);
+                    auto time = std::chrono::steady_clock::now();
+                    if (std::chrono::duration_cast<std::chrono::seconds>(time - shootTime).count() >= 1)
+                        _events.push_back(Events::PiercingShoot);
+                    else
+                        _events.push_back(Events::Shoot);
                 default:
                     break;
             }
         }
     }
+    std::vector<Events> _events;
 };
