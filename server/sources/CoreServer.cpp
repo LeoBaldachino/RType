@@ -12,18 +12,14 @@ RType::CoreServer::CoreServer(int ar, char **av)
 {
     if (ar < 2)
         throw std::invalid_argument("Not enougth arguments");
-    this->_threadIsOpen = true;
     this->_socket = std::make_unique<Utils::SocketHandler>(av[1], std::atoi(av[2]));
     this->_threadPool = std::make_unique<Server::ThreadPool>(std::thread::hardware_concurrency() - 1);
     this->_threadPool->InitThreadPool();
-    this->_senderThread = std::make_unique<std::thread>(&RType::CoreServer::sendInfosThread, this);
     this->run();
 }
 
 RType::CoreServer::~CoreServer()
 {
-    this->_threadIsOpen = false;
-    this->_senderThread->join();
     this->_threadPool->CloseThreadPool();
 }
 
@@ -42,18 +38,52 @@ void RType::CoreServer::run()
     }
 }
 
-void RType::CoreServer::sendInfosThread()
-{
-    while (_threadIsOpen) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-        //notify the state of everyone
-    }
-}
-
 void RType::CoreServer::threadMethod(const Utils::MessageParsed_s &msg)
 {
-    if (msg.msgType == move) {
-        std::cout << "object " << std::endl;
+    std::cout << "message received " << msg.msgType << std::endl;
+    if (msg.msgType == newPlayerConnected) {
+        if (this->_rooms.empty())
+            return;
+        for (auto &it : this->_rooms)
+            if (it->getId() == msg.bytes[0]) {
+                if (!it->addToRoom({msg.senderIp, msg.senderPort})) {
+                    Utils::MessageParsed_s newMsg;
+                    newMsg.msgType = illegalAction;
+                    //need to set the id of the object
+                    //newMsg.byte[0];newMsg.bytes[1]
+                    newMsg.bytes[0] = 1;
+                    newMsg.bytes[1] = 2;
+                    newMsg.bytes[2] = newPlayerConnected;
+                    newMsg.senderIp = msg.senderIp;
+                    newMsg.senderPort = msg.senderPort;
+                    this->_socket->send(newMsg);
+                };
+                return;
+            }
+    }
+    if (msg.msgType == newTeamIsCreated) {
+        for (auto & it : this->_rooms)
+            if (it->getId() == msg.bytes[0]) {
+                Utils::MessageParsed_s newMsg;
+                newMsg.msgType = illegalAction;
+                //need to set the id of the object
+                //newMsg.byte[0];newMsg.bytes[1]
+                newMsg.bytes[0] = 1;
+                newMsg.bytes[1] = 2;
+                newMsg.bytes[2] = newTeamIsCreated;
+                newMsg.senderIp = msg.senderIp;
+                newMsg.senderPort = msg.senderPort;
+                this->_socket->send(newMsg);
+                return;
+            }
+        this->_rooms.push_back(std::make_unique<Server::Room>(msg.bytes[0], ROOM_MAX_SIZE, this->_socket));
+        this->_rooms.back()->addToRoom({msg.senderIp, msg.senderPort});
         return;
     }
+    for (auto &it : this->_rooms)
+        if (it->isInRoom({msg.senderIp, msg.senderPort})) {
+            it->sendMessageToRoom(msg);
+            return;
+        }
+    std::cerr << "This user is in no rooms" << std::endl;
 }

@@ -12,6 +12,8 @@
 #include <memory>
 #include <exception>
 #include <chrono>
+#include "Room.hpp"
+
 namespace RType {
     enum ComCodes {
         move = 11,
@@ -21,6 +23,8 @@ namespace RType {
 
         newPlayerConnected = 21,
         playerDeconnected = 22,
+        newTeamIsCreated = 23,
+        illegalAction = 31,
     };
     class CoreServer {
         public:
@@ -28,13 +32,11 @@ namespace RType {
             ~CoreServer();
         private:
             void run();
-            void sendInfosThread();
             void threadMethod(const RType::Utils::MessageParsed_s &);
             std::unique_ptr<Server::ThreadPool> _threadPool;
             std::unique_ptr<Utils::SocketHandler> _socket;
-            std::unique_ptr<std::thread> _senderThread;
             std::mutex _mutex;
             std::vector<std::pair<std::string, int>> _clients;
-            bool _threadIsOpen;
+            std::vector<std::unique_ptr<Server::Room>> _rooms;
     };
 }
