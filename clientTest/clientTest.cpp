@@ -9,7 +9,7 @@ static std::string get_input()
     return actual_line;
 }
 
-static void transformInput(RType::Utils::MessageParsed_s &modInput, std::string params, RType::Utils::SocketHandler &socket)
+static void transformInput(RType::Utils::MessageParsed_s &modInput, std::string params, RType::Utils::SocketHandler &socket, int port)
 {
     if (params == "connect") {
         modInput.msgType = 21;
@@ -23,6 +23,15 @@ static void transformInput(RType::Utils::MessageParsed_s &modInput, std::string 
         socket.send(modInput);
         return;
     }
+    if (params == "msg") {
+        std::cout << "msg is sended" << std::endl;
+        int tmpPort = modInput.senderPort;
+        modInput.senderPort = 4000;
+        modInput.msgType = 11;
+        socket.send(modInput);
+        modInput.senderPort = tmpPort;
+        return;
+    }
     // if (params ==)
 }
 
@@ -31,7 +40,8 @@ int main(int av, char **ar)
     if (av != 2)
         return 1;
     std::srand(std::time(nullptr));
-    RType::Utils::SocketHandler handler("127.0.0.1", 4242 + std::rand() % 1000);
+    int port = 4242 + std::rand() % 1000;
+    RType::Utils::SocketHandler handler("127.0.0.1", port);
     RType::Utils::MessageParsed_s toSend;
     toSend.msgType = static_cast<unsigned char>(std::atoi(ar[1]));
     toSend.senderIp = "127.0.0.1";
@@ -40,7 +50,7 @@ int main(int av, char **ar)
         toSend.bytes[i] = 0;
     std::string actualLine = get_input();
     while (actualLine != "") {
-        transformInput(toSend, actualLine, handler);
+        transformInput(toSend, actualLine, handler, port);
         actualLine = get_input();
     }
 

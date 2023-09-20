@@ -42,8 +42,10 @@ void RType::CoreServer::threadMethod(const Utils::MessageParsed_s &msg)
 {
     std::cout << "message received " << msg.msgType << std::endl;
     if (msg.msgType == newPlayerConnected) {
-        if (this->_rooms.empty())
+        if (this->_rooms.empty()) {
+            std::cerr << "Rooms are empty !" << std::endl;
             return;
+        }
         for (auto &it : this->_rooms)
             if (it->getId() == msg.bytes[0]) {
                 if (!it->addToRoom({msg.senderIp, msg.senderPort})) {
@@ -56,6 +58,7 @@ void RType::CoreServer::threadMethod(const Utils::MessageParsed_s &msg)
                     newMsg.bytes[2] = newPlayerConnected;
                     newMsg.senderIp = msg.senderIp;
                     newMsg.senderPort = msg.senderPort;
+                    std::cerr << "Cannot add the player to the team" << std::endl;
                     this->_socket->send(newMsg);
                 };
                 return;
@@ -73,9 +76,11 @@ void RType::CoreServer::threadMethod(const Utils::MessageParsed_s &msg)
                 newMsg.bytes[2] = newTeamIsCreated;
                 newMsg.senderIp = msg.senderIp;
                 newMsg.senderPort = msg.senderPort;
+                std::cerr << "team aldready exist" << std::endl;
                 this->_socket->send(newMsg);
                 return;
             }
+        std::cerr << "Team " << static_cast<int>(msg.bytes[0]) << " is created !" << std::endl;
         this->_rooms.push_back(std::make_unique<Server::Room>(msg.bytes[0], ROOM_MAX_SIZE, this->_socket));
         this->_rooms.back()->addToRoom({msg.senderIp, msg.senderPort});
         return;
