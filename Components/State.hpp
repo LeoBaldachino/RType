@@ -10,7 +10,7 @@
 
 class State {
     public:
-        State(int health)
+        State(int health = 100)
         {
             this->_state = true;
             this->_health = health;

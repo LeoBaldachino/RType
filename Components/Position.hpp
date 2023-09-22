@@ -11,7 +11,7 @@
 
 class Position {
     public:
-        Position(int x, int y, int height, int width) { this->_pos_x = x; this->_pos_y = y; this->_width = width; this->_height = height; }
+        Position(int x = 0, int y = 0, int height = 1080, int width = 1920) { this->_pos_x = x; this->_pos_y = y; this->_width = width; this->_height = height; }
         ~Position() {};
         int getX() const { return this->_pos_x; }
         int getY() const { return this->_pos_y; }

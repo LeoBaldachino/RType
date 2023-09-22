@@ -11,6 +11,8 @@
 class Moveable {
     public:
         Moveable(Vector2d origin, Vector2d direction, int velocity) { this->_origin = origin; this->_direction = direction; this->_velocity = velocity; }
+        Moveable() {};
+        ~Moveable() {};
     private:
         Vector2d _origin;
         Vector2d _direction;
