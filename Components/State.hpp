@@ -10,10 +10,10 @@
 
 class State {
     public:
-        State()
+        State(int health)
         {
             this->_state = true;
-            this->_health = 100;
+            this->_health = health;
         };
         ~State(){};
         bool getState() const
