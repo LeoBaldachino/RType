@@ -25,10 +25,12 @@ namespace RType {
                 ~SocketHandler();
                 void send(const struct MessageParsed_s &toSend);
                 MessageParsed_s receive();
+                const std::unique_ptr<SocketHandler> &getInstance() const;
             protected:
                 boost::asio::io_service _ioService;
                 boost::asio::ip::udp::socket _socket;
                 boost::asio::ip::udp::endpoint _Endpoint;
+                std::unique_ptr<SocketHandler> _instance;
         };
     }
 }

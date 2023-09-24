@@ -12,6 +12,7 @@ RType::Utils::SocketHandler::SocketHandler(const std::string &ipAdress, int port
 {
     _socket.open(boost::asio::ip::udp::v4());
     _socket.bind(boost::asio::ip::udp::endpoint(boost::asio::ip::address::from_string(ipAdress), port));
+    this->_instance = std::make_unique<SocketHandler>(this);
 }
 
 RType::Utils::SocketHandler::~SocketHandler()
@@ -63,4 +64,9 @@ void RType::Utils::SocketHandler::send(const struct MessageParsed_s &toSend)
     unsigned long long compressed = compressFromMessage(toSend);
     boost::asio::const_buffer buffer(&compressed, sizeof(compressed));
     _socket.send_to(buffer, boost::asio::ip::udp::endpoint(boost::asio::ip::address::from_string(toSend.senderIp), toSend.senderPort));
+}
+
+const std::unique_ptr<RType::Utils::SocketHandler> &RType::Utils::SocketHandler::getInstance() const
+{
+    return this->_instance;
 }
