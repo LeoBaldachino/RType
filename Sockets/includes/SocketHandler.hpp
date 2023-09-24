@@ -10,6 +10,7 @@
 #include "MessageParsed.hpp"
 #include <boost/array.hpp>
 #include <tuple>
+#include <mutex>
 
 namespace RType {
     namespace Utils {
@@ -31,6 +32,7 @@ namespace RType {
                 boost::asio::ip::udp::socket _socket;
                 boost::asio::ip::udp::endpoint _Endpoint;
                 std::unique_ptr<SocketHandler> _instance;
+                std::mutex _mutex;
         };
     }
 }

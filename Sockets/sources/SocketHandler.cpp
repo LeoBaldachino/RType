@@ -63,6 +63,7 @@ void RType::Utils::SocketHandler::send(const struct MessageParsed_s &toSend)
 {
     unsigned long long compressed = compressFromMessage(toSend);
     boost::asio::const_buffer buffer(&compressed, sizeof(compressed));
+    std::unique_lock<std::mutex> lock(this->_mutex);
     _socket.send_to(buffer, boost::asio::ip::udp::endpoint(boost::asio::ip::address::from_string(toSend.senderIp), toSend.senderPort));
 }
 
