@@ -6,6 +6,7 @@
 */
 
 #pragma once
+#include "IEntity.hpp"
 #include "../Components/Shoot.hpp"
 #include "../Components/Position.hpp"
 #include "../Components/State.hpp"
@@ -13,10 +14,11 @@
 // #include "../Components/Hitbox.hpp"
 #include "../Components/Moveable.hpp"
 
-class Player {
+class Player : public IEntity {
     public:
         Player(Position position);
         ~Player() {};
+        void accept(IVisitor &v);
 
         Shoot shoot() const;
 

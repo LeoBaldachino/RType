@@ -32,6 +32,11 @@ void Player::handleInput(std::unique_ptr<sf::RenderWindow> &window)
         this->_controlable.handleInput(sfevent, window);
 }
 
+void Player::accept(IVisitor &v)
+{
+    v.visitPlayer(*this);
+}
+
 void Player::move(Vector2d direction)
 {
 
