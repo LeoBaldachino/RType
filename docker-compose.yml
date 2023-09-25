@@ -1,0 +1,15 @@
+version: '3'
+services:
+  server:
+    image: gcc:latest
+    volumes:
+      - .:/app
+    working_dir: /app/build
+    command: bash -c "apt-get update && apt-get install -y cmake && cmake .. && make && ./serverTest"
+    ports:
+      - "8732:8732"
+    networks:
+      - mynet
+networks:
+  mynet:
+    driver: bridge
