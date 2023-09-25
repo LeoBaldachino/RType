@@ -11,7 +11,7 @@
 RType::CoreServer::CoreServer(int ar, char **av)
 {
     if (ar < 3)
-        throw std::invalid_argument("Not enougth arguments");
+        throw std::invalid_argument("Not enough arguments");
     int port = std::atoi(av[2]);
     if (port < 100)
         throw std::invalid_argument("Port is not valid");
@@ -44,29 +44,8 @@ void RType::CoreServer::run()
 void RType::CoreServer::threadMethod(const Utils::MessageParsed_s &msg)
 {
     std::cout << "message received " << msg.msgType << std::endl;
-    if (msg.msgType == newPlayerConnected) {
-        if (this->_rooms.empty()) {
-            std::cerr << "Rooms are empty !" << std::endl;
-            return;
-        }
-        for (auto &it : this->_rooms)
-            if (it->getId() == msg.bytes[0]) {
-                if (!it->addToRoom({msg.senderIp, msg.senderPort})) {
-                    Utils::MessageParsed_s newMsg;
-                    newMsg.msgType = illegalAction;
-                    //need to set the id of the object
-                    //newMsg.byte[0];newMsg.bytes[1]
-                    newMsg.bytes[0] = 1;
-                    newMsg.bytes[1] = 2;
-                    newMsg.bytes[2] = newPlayerConnected;
-                    newMsg.senderIp = msg.senderIp;
-                    newMsg.senderPort = msg.senderPort;
-                    std::cerr << "Cannot add the player to the team" << std::endl;
-                    this->_socket->send(newMsg);
-                };
-                return;
-            }
-    }
+    if (msg.msgType == newPlayerConnected)
+        return this->connectToRoom(msg);
     if (msg.msgType == newRoomIsCreated)
         return this->newRoomCreated(msg);
     if (msg.msgType == getListOfRooms)
@@ -84,7 +63,7 @@ void RType::CoreServer::threadMethod(const Utils::MessageParsed_s &msg)
 void RType::CoreServer::newRoomCreated(const Utils::MessageParsed_s &msg)
 {
     for (auto & it : this->_rooms)
-        if (it->getId() == msg.bytes[0]) {
+        if (it->getId() == msg.bytes[0] || it->isInRoom({msg.senderIp, msg.senderPort})) {
             Utils::MessageParsed_s newMsg;
             newMsg.msgType = illegalAction;
             //need to set the id of the object
@@ -108,7 +87,7 @@ void RType::CoreServer::getOutFromRoom(const Utils::MessageParsed_s &msg)
 {
     for (auto it = this->_rooms.begin(); it < this->_rooms.end(); it++) {
         if ((*it)->getId() == msg.bytes[0])
-            if (!(*it)->removeFromRoom({msg.senderIp, msg.senderPort}) && (*it)->willBeDestroyed()) {
+            if ((*it)->removeFromRoom({msg.senderIp, msg.senderPort}) && (*it)->willBeDestroyed()) {
                 (*it)->waitForDestroy();
                 std::unique_lock<std::mutex>(this->_mutex);
                 std::cout << "Remove room with id " << (*it)->getId() << std::endl;
@@ -140,4 +119,34 @@ void RType::CoreServer::getRoomList(const Utils::MessageParsed_s &msg)
         newMsg.bytes[2] = it->getMaxPlayers();
         this->_socket->send(newMsg);
     }
+}
+
+void RType::CoreServer::connectToRoom(const Utils::MessageParsed_s &msg)
+{
+    Utils::MessageParsed_s newMsg;
+    newMsg.msgType = illegalAction;
+    //need to set the id of the object
+    //newMsg.byte[0];newMsg.bytes[1]
+    newMsg.bytes[0] = 1;
+    newMsg.bytes[1] = 2;
+    newMsg.bytes[2] = newPlayerConnected;
+    newMsg.senderIp = msg.senderIp;
+    newMsg.senderPort = msg.senderPort;
+    if (this->_rooms.empty()) {
+        std::cerr << "Rooms are empty !" << std::endl;
+        return;
+    }
+    for (auto &it : this->_rooms)
+        if (it->isInRoom({msg.senderIp, msg.senderPort})) {
+            std::cout << "this player is already on a team" << std::endl;
+            return this->_socket->send(newMsg);
+        }
+    for (auto &it : this->_rooms)
+        if (it->getId() == msg.bytes[0]) {
+            if (!it->addToRoom({msg.senderIp, msg.senderPort})) {
+                std::cerr << "Cannot add the player to the team" << std::endl;
+                this->_socket->send(newMsg);
+            };
+            return;
+        }
 }

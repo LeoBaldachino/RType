@@ -25,7 +25,7 @@ namespace RType {
             void getRoomList(const RType::Utils::MessageParsed_s &);
             void newRoomCreated(const RType::Utils::MessageParsed_s &);
             void getOutFromRoom(const RType::Utils::MessageParsed_s &);
-
+            void connectToRoom(const RType::Utils::MessageParsed_s &);
             std::unique_ptr<Server::ThreadPool> _threadPool;
             std::unique_ptr<Utils::SocketHandler> _socket;
             std::mutex _mutex;

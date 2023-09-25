@@ -15,11 +15,14 @@ std::vector<std::string> parseString(const std::string &str, char parseTo)
 {
     int actual = 0;
     std::vector<std::string> parsed;
+    parsed.push_back(std::string(""));
     for (auto i = 0; i < str.size(); ++i) {
         if (str[i] != parseTo)
             parsed[actual].push_back(str[i]);
-        else
+        else {
             actual++;
+            parsed.push_back(std::string(""));
+        }
     }
     return parsed;
 }
