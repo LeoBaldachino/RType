@@ -7,11 +7,11 @@
 
 #include "Player.hpp"
 
-Player::Player(Position position, int velocity, Vector2d moveDirection)
+Player::Player(Position position)
 {
     this->_position = position;
     this->_state = State(100);
-    this->_movement = Moveable(Vector2d(this->_position.getX(), this->_position.getY()), moveDirection, velocity);
+    this->_velocity = 1;
 }
 
 Shoot Player::shoot() const
@@ -23,6 +23,14 @@ Shoot Player::shoot() const
     return Shoot(shootDirection, playerPos, this->_shootDmg, this->_shootVelocity, this->_shootGravity, true);
 }
 /* Player position methods */
+
+void Player::handleInput(std::unique_ptr<sf::RenderWindow> &window)
+{
+    sf::Event sfevent;
+
+    while (window->pollEvent(sfevent))
+        this->_controlable.handleInput(sfevent, window);
+}
 
 void Player::move(Vector2d direction)
 {
@@ -41,15 +49,15 @@ Position Player::getPosition() const
 
 /* Player Hitbox & State methods */
 
-void Player::setHitbox(Hitbox hitbox)
-{
-    // this->_hitbox = hitbox;
-}
+// void Player::setHitbox(Hitbox hitbox)
+// {
+//     // this->_hitbox = hitbox;
+// }
 
-Hitbox Player::getHitbox() const
-{
-    // return this->_hitbox;
-}
+// Hitbox Player::getHitbox() const
+// {
+//     // return this->_hitbox;
+// }
 
 void Player::setState(State state)
 {

@@ -10,25 +10,25 @@
 #include "../Components/Position.hpp"
 #include "../Components/State.hpp"
 #include "../Components/Controlable.hpp"
-#include "../Components/Hitbox.hpp"
+// #include "../Components/Hitbox.hpp"
 #include "../Components/Moveable.hpp"
 
 class Player {
     public:
-        Player(Position position, int velocity, Vector2d moveDirection);
+        Player(Position position);
         ~Player() {};
 
         Shoot shoot() const;
 
-        void handleInput(sf::Event event, std::unique_ptr<sf::RenderWindow> window);
+        void handleInput(std::unique_ptr<sf::RenderWindow> &window);
 
         void move(Vector2d direction);
 
         void setPosition(Position position);
         Position getPosition() const;
 
-        void setHitbox(Hitbox hitbox);
-        Hitbox getHitbox() const;
+        // void setHitbox(Hitbox hitbox);
+        // Hitbox getHitbox() const;
 
         void setState(State state);
         State getState() const;
@@ -40,6 +40,8 @@ class Player {
         State _state;
         Position _position;
         Moveable _movement;
+        Controlable _controlable;
+        int _velocity;
         // Hitbox _hitbox;
         int _shootDmg = 10;
         int _shootVelocity = 10;
