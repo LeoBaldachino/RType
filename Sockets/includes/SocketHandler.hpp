@@ -14,19 +14,47 @@
 
 namespace RType {
     namespace Utils {
+        /**
+         * @brief class socketHandler, class used for handle the sockets, use the asio library and it's an singleton
+         * 
+         */
         class SocketHandler {
             public:
-            /**
-             * @brief Construct a new Socket Handler object
-             * 
-             * @param ipAdress
-             * @param port 
-             */
+                /**
+                 * @brief Construct a new Socket Handler object
+                 * 
+                 * @param ipAdress
+                 * @param port 
+                 */
                 SocketHandler(const std::string &ipAdress, int port);
+                /**
+                 * @brief copy constructor of the socketHandler
+                 * 
+                 * @param socket socket to copy
+                 */
                 SocketHandler(const SocketHandler &socket);
+                /**
+                 * @brief Destroy the Socket Handler object
+                 * 
+                 */
                 ~SocketHandler();
+                /**
+                 * @brief send a message the user resigned in the message
+                 * 
+                 * @param toSend message to send
+                 */
                 void send(const struct MessageParsed_s &toSend);
+                /**
+                 * @brief receive a message, blocking function
+                 * 
+                 * @return MessageParsed_s message received
+                 */
                 MessageParsed_s receive();
+                /**
+                 * @brief Get the Instance object singleton
+                 * 
+                 * @return std::shared_ptr<SocketHandler> the instance
+                 */
                 std::shared_ptr<SocketHandler> getInstance() const;
             protected:
                 boost::asio::io_service _ioService;
