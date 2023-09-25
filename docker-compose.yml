@@ -3,14 +3,14 @@ services:
   server:
     image: gcc:latest
     environment:
-      - SERVER_PORT=8732
-      - SERVER_ARGS=
+      - SERVER_PORT=4000
+      - SERVER_ARGS= "127.0.0.1" 4000
     volumes:
       - .:/app
     working_dir: /app/build
     command: bash -c "apt-get update && apt-get install -y cmake libboost-dev && cmake .. && make && ./serverTest $SERVER_ARGS"
     ports:
-      - "${SERVER_PORT}:${SERVER_PORT}"
+      - 4000:4000
     networks:
       - mynet
 networks:

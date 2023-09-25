@@ -10,9 +10,12 @@
 
 RType::CoreServer::CoreServer(int ar, char **av)
 {
-    if (ar < 2)
+    if (ar < 3)
         throw std::invalid_argument("Not enougth arguments");
-    this->_socket = std::make_unique<Utils::SocketHandler>(av[1], std::atoi(av[2]));
+    int port = std::atoi(av[2]);
+    if (port < 100)
+        throw std::invalid_argument("Port is not valid");
+    this->_socket = std::make_unique<Utils::SocketHandler>(av[1], port);
     this->_threadPool = std::make_unique<Server::ThreadPool>(std::thread::hardware_concurrency() - 1);
     this->_threadPool->InitThreadPool();
     this->run();
