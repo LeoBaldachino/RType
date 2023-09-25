@@ -11,21 +11,35 @@ static std::string get_input()
     return actual_line;
 }
 
-static void transformInput(RType::Utils::MessageParsed_s &modInput, std::string params, RType::Utils::SocketHandler &socket, int port)
+std::vector<std::string> parseString(const std::string &str, char parseTo)
 {
-    if (params == "connect") {
+    int actual = 0;
+    std::vector<std::string> parsed;
+    for (auto i = 0; i < str.size(); ++i) {
+        if (str[i] != parseTo)
+            parsed[actual].push_back(str[i]);
+        else
+            actual++;
+    }
+    return parsed;
+}
+
+static void transformInput(RType::Utils::MessageParsed_s &modInput, const std::string &param, RType::Utils::SocketHandler &socket, int port)
+{
+    std::vector<std::string> params = parseString(param, ' ');
+    if (params[0] == "connect") {
         modInput.msgType = 21;
-        modInput.bytes[0] = 1;
+        modInput.bytes[0] = std::stoi(params[1]);
         socket.send(modInput);
         return;
     }
-    if (params == "cteam") {
+    if (params[0] == "cteam") {
         modInput.msgType = 23;
-        modInput.bytes[0] = 1;
+        modInput.bytes[0] = std::stoi(params[1]);;
         socket.send(modInput);
         return;
     }
-    if (params == "msg") {
+    if (params[0] == "msg") {
         std::cout << "msg is sended" << std::endl;
         int tmpPort = modInput.senderPort;
         modInput.senderPort = 4000;
@@ -34,14 +48,14 @@ static void transformInput(RType::Utils::MessageParsed_s &modInput, std::string 
         modInput.senderPort = tmpPort;
         return;
     }
-    if (params == "list") {
+    if (params[0] == "list") {
         modInput.msgType = 25;
         socket.send(modInput);
         return;
     }
-    if (params == "deco") {
+    if (params[0] == "deco") {
         modInput.msgType = 22;
-        modInput.bytes[0] = 1;
+        modInput.bytes[0] = std::stoi(params[1]);
         socket.send(modInput);
         return;
     }
