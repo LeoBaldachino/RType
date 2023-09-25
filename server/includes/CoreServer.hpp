@@ -15,17 +15,6 @@
 #include "Room.hpp"
 
 namespace RType {
-    enum ComCodes {
-        move = 11,
-        valueChange = 12,
-        touchingObject = 13,
-        keyPressed = 14,
-
-        newPlayerConnected = 21,
-        playerDeconnected = 22,
-        newTeamIsCreated = 23,
-        illegalAction = 31,
-    };
     class CoreServer {
         public:
             CoreServer(int, char **);
@@ -33,6 +22,10 @@ namespace RType {
         private:
             void run();
             void threadMethod(const RType::Utils::MessageParsed_s &);
+            void getRoomList(const RType::Utils::MessageParsed_s &);
+            void newRoomCreated(const RType::Utils::MessageParsed_s &);
+            void getOutFromRoom(const RType::Utils::MessageParsed_s &);
+
             std::unique_ptr<Server::ThreadPool> _threadPool;
             std::unique_ptr<Utils::SocketHandler> _socket;
             std::mutex _mutex;

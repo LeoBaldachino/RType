@@ -7,8 +7,9 @@
 
 #include "../includes/Room.hpp"
 
-RType::Server::Room::Room(unsigned char id, unsigned char maxSize, std::unique_ptr<Utils::SocketHandler>  &setSocket) : _socket(setSocket)
+RType::Server::Room::Room(unsigned char id, unsigned char maxSize, std::shared_ptr<Utils::SocketHandler>  setSocket) : _socket(setSocket)
 {
+    this->_willBeDestroyed = false;
     this->_id = id;
     this->_maxSize = maxSize;
     this->_isOpen = true;
@@ -24,7 +25,7 @@ RType::Server::Room::~Room()
 
 bool RType::Server::Room::addToRoom(const std::pair<std::string, int> &newPlayer)
 {
-    if (this->_allPlayers.size() >= this->_maxSize)
+    if (this->_willBeDestroyed || this->_allPlayers.size() >= this->_maxSize)
         return false;
     auto it = this->_allPlayers.begin();
     for (; it < this->_allPlayers.end(); it++)
@@ -43,6 +44,8 @@ int RType::Server::Room::getId() const
 
 bool RType::Server::Room::isInRoom(const std::pair<std::string, int> &toSearch) const
 {
+    if (this->_willBeDestroyed)
+        return false;
     auto it = this->_allPlayers.begin();
     for (; it < this->_allPlayers.end(); it++)
         if (*it == toSearch)
@@ -52,6 +55,8 @@ bool RType::Server::Room::isInRoom(const std::pair<std::string, int> &toSearch) 
 
 bool RType::Server::Room::sendMessageToRoom(const Utils::MessageParsed_s &msg)
 {
+    if (this->_willBeDestroyed)
+        return false;
     std::cout << "message incoming" << std::endl;
     std::pair<std::string, int> toFind({msg.senderIp, msg.senderPort});
     auto it = this->_allPlayers.begin();
@@ -77,7 +82,20 @@ void RType::Server::Room::stopRoom()
 
 void RType::Server::Room::runRoom()
 {
+    int nbMsg = DESTROYED_NB_MSG_SEND;
     while (this->_isOpen) {
+        if (_willBeDestroyed) {
+            std::unique_lock<std::mutex> lock(this->_mutex);
+            Utils::MessageParsed_s msg;
+            msg.msgType = destroyedRoom;
+            for (const auto &it : this->_allPlayers) {
+                msg.senderIp = it.first;
+                msg.senderPort = it.second;
+                for (int i = 0; i < nbMsg; ++i)
+                    this->_socket->send(msg);
+            }
+            return;
+        }
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
         std::cout<< "Room " << static_cast<int>(this->_id) << "is running" << std::endl;
         std::cout << "Members of the team --" << std::endl;
@@ -86,4 +104,44 @@ void RType::Server::Room::runRoom()
         }
         //need the ecs to do actions
     }
+}
+
+bool RType::Server::Room::removeFromRoom(const std::pair<std::string, signed int> &toRemove)
+{
+    bool isFirst = false;
+    if (this->_willBeDestroyed)
+        return false;
+    for (auto it = this->_allPlayers.begin(); it < this->_allPlayers.end(); it++) {
+        if (*it == toRemove) {
+            std::cout << "Player " << toRemove.first << " " << toRemove.second << " has been removed from team" << this->_id << std::endl;
+            if (it == this->_allPlayers.begin()) {
+                isFirst = true;
+                _willBeDestroyed = true;
+            }
+            this->_allPlayers.erase(it);
+            return isFirst;
+        } 
+    }
+    return false;
+}
+
+bool RType::Server::Room::willBeDestroyed() const
+{
+    return this->_willBeDestroyed;
+}
+
+void RType::Server::Room::waitForDestroy()
+{
+    std::unique_lock<std::mutex> lock(this->_mutex);
+    return;
+}
+
+int RType::Server::Room::getMaxPlayers() const
+{
+    return this->_maxSize;
+}
+
+int RType::Server::Room::getNumberOfPlayer() const
+{
+    return this->_allPlayers.size();
 }

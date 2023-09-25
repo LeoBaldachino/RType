@@ -1,4 +1,6 @@
 #include "../Sockets/includes/SocketHandler.hpp"
+#include <thread>
+#include "../server/includes/ComCodes.hpp"
 
 static std::string get_input()
 {
@@ -32,8 +34,27 @@ static void transformInput(RType::Utils::MessageParsed_s &modInput, std::string 
         modInput.senderPort = tmpPort;
         return;
     }
-    // if (params ==)
+    if (params == "list") {
+        modInput.msgType = 25;
+        socket.send(modInput);
+        return;
+    }
+    if (params == "deco") {
+        modInput.msgType = 22;
+        modInput.bytes[0] = 1;
+        socket.send(modInput);
+        return;
+    }
 }
+
+static void threadFn(std::shared_ptr<RType::Utils::SocketHandler> socket, bool &toStop)
+{
+    while (!toStop) {
+        RType::Utils::MessageParsed_s msg = socket->receive();
+        std::cout << "Receive with status " << static_cast<int>(msg.msgType) << std::endl; 
+    }
+}
+
 
 int main(int av, char **ar)
 {
@@ -41,8 +62,10 @@ int main(int av, char **ar)
         return 1;
     std::srand(std::time(nullptr));
     int port = 4242 + std::rand() % 1000;
+    bool toStop = false;
     RType::Utils::SocketHandler handler("127.0.0.1", port);
     RType::Utils::MessageParsed_s toSend;
+    std::thread newThread(threadFn, handler.getInstance(), std::ref(toStop));
     toSend.msgType = static_cast<unsigned char>(std::atoi(ar[1]));
     toSend.senderIp = "127.0.0.1";
     toSend.senderPort = 4000;
@@ -53,6 +76,8 @@ int main(int av, char **ar)
         transformInput(toSend, actualLine, handler, port);
         actualLine = get_input();
     }
-
+    toStop = true;
+    transformInput(toSend, "deco", handler, port);
+    newThread.join();
     return 0;
 }
