@@ -2,12 +2,15 @@ version: '3'
 services:
   server:
     image: gcc:latest
+    environment:
+      - SERVER_PORT=8732
+      - SERVER_ARGS=
     volumes:
       - .:/app
     working_dir: /app/build
-    command: bash -c "apt-get update && apt-get install -y cmake libboost-dev && cmake .. && make && ./serverTest"
+    command: bash -c "apt-get update && apt-get install -y cmake libboost-dev && cmake .. && make && ./serverTest $SERVER_ARGS"
     ports:
-      - "8732:8732"
+      - "${SERVER_PORT}:${SERVER_PORT}"
     networks:
       - mynet
 networks:
