@@ -18,7 +18,7 @@ class Player : public IEntity {
     public:
         Player(Position position);
         ~Player() {};
-        void accept(SystemVisitor &v);
+        void accept(IVisitor &v);
 
         Shoot shoot() const;
 

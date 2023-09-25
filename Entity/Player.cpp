@@ -32,7 +32,7 @@ void Player::handleInput(std::unique_ptr<sf::RenderWindow> &window)
         this->_controlable.handleInput(sfevent, window);
 }
 
-void Player::accept(SystemVisitor &v)
+void Player::accept(IVisitor &v)
 {
     v.visitPlayer(*this);
 }

@@ -8,9 +8,9 @@
 #pragma once
 #include <fstream>
 #include <iostream>
-#include "../Visitor/SystemVisitor.hpp"
+#include "../Visitor/IVisitor.hpp"
 
 class IEntity {
     public:
-        virtual void accept(SystemVisitor &v) = 0;
+        virtual void accept(IVisitor &v) = 0;
 };
