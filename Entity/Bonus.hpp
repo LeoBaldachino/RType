@@ -10,7 +10,7 @@
 #include "../Components/Moveable.hpp"
 #include "../Components/Position.hpp"
 #include "../Components/State.hpp"
-#include "../Components/AIShoot.hpp"
+#include "AIShoot.hpp"
 #include "../Components/Hitbox.hpp"
 
 class Bonus {
