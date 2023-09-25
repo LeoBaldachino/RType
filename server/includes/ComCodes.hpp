@@ -1,6 +1,10 @@
 #pragma once
 
 namespace RType {
+    /**
+     * @brief all the communications codes, see the documentation about thoses codes at 
+     * 
+     */
     enum ComCodes {
         move = 11,
         valueChange = 12,
