@@ -1,0 +1,19 @@
+name: Build and Test
+
+on:
+    push:
+        branches:
+        - networking
+    pull_request:
+        branches:
+        - networking
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@v3
+        - name: Install dependencies
+          run: apt-get install -y cmake libboost-dev
+        - name: Build
+          run: cd build/ && cmake .. && make
