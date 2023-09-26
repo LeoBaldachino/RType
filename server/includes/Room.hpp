@@ -130,6 +130,11 @@ namespace RType {
                  * @param msg the message to send
                  */
                 void notifyAllPlayer(const Utils::MessageParsed_s &msg);
+                /**
+                 * @brief Set the willBeDestroy to true, so destroy the room
+                 * 
+                 */
+                void setDestroy();
             private:
                 /**
                  * @brief run the room inside of a thread, method launched at the constructor 

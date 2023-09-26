@@ -19,5 +19,6 @@ namespace RType {
         destroyedRoom = 26,
         playerPing = 27,
         illegalAction = 31,
+        serverStop = 32,
     };
 }

@@ -103,7 +103,7 @@ void RType::Server::Room::runRoom()
             }
             return;
         }
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        // std::this_thread::sleep_for(std::chrono::milliseconds(1000));
         std::cout<< "Room " << static_cast<int>(this->_id) << "is running" << std::endl;
         std::cout << "Members of the team --" << std::endl;
         for (auto &it : this->_allPlayers) {
@@ -203,4 +203,10 @@ void RType::Server::Room::messagePing(const Utils::MessageParsed_s &msg)
             this->_playerOnline[i] = true;
             return;
         }
+}
+
+void RType::Server::Room::setDestroy()
+{
+    std::unique_lock<std::mutex> lock(this->_mutex);
+    this->_willBeDestroyed = true;
 }

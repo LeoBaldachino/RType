@@ -7,6 +7,21 @@
 
 #include "../includes/CoreServer.hpp"
 
+bool runServer = true;
+std::pair<std::string, int> ipPortServer = {};
+
+void SigIntHandler(int signal_num)
+{
+    std::cout << "Server stopped" << std::endl;
+    RType::Utils::SocketHandler socket(ipPortServer.first, ipPortServer.second + 1);
+    RType::Utils::MessageParsed_s msg;
+    msg.msgType = RType::serverStop;
+    msg.senderIp = ipPortServer.first;
+    msg.senderPort = ipPortServer.second;
+    socket.send(msg);
+    runServer = false;
+    return;
+}
 
 RType::CoreServer::CoreServer(int ar, char **av)
 {
@@ -15,9 +30,11 @@ RType::CoreServer::CoreServer(int ar, char **av)
     int port = std::atoi(av[2]);
     if (port < 100)
         throw std::invalid_argument("Port is not valid");
-    this->_socket = std::make_unique<Utils::SocketHandler>(av[1], port);
+    this->_socket = std::make_unique<Utils::SocketHandler>((std::string(av[1]) == "localhost" ? "127.0.0.1" : av[1]), port);
     this->_threadPool = std::make_unique<Server::ThreadPool>(std::thread::hardware_concurrency() - 1);
+    ipPortServer = this->_socket->getIpAndPort();
     this->_threadPool->InitThreadPool();
+    std::signal(SIGINT, SigIntHandler);
     this->run();
 }
 
@@ -28,8 +45,12 @@ RType::CoreServer::~CoreServer()
 
 void RType::CoreServer::run()
 {
-    while (1) {
+    while (runServer) {
+        std::cout << "Server is running..." << std::endl;
         RType::Utils::MessageParsed_s tmpMsg = this->_socket->receive();
+        std::cout << "message receive !" << std::endl;
+        if (tmpMsg.msgType == serverStop)
+            break;
         auto it = this->_clients.begin();
         std::pair<std::string, int> tmpPair = {tmpMsg.senderIp, tmpMsg.senderPort};
         for (; it < this->_clients.end(); it++)
@@ -39,6 +60,15 @@ void RType::CoreServer::run()
             _clients.push_back(tmpPair);
         this->_threadPool->AddTask([this, tmpMsg]{this->threadMethod(tmpMsg);});
     }
+    Utils::MessageParsed_s stopMsg;
+    stopMsg.msgType = serverStop;
+    for (auto &it : this->_rooms) {
+        for (int i = 0; i < 5; ++i)
+            it->notifyAllPlayer(stopMsg);
+        it->setDestroy();
+    }
+    for (auto &it : this->_rooms)
+        it->waitForDestroy();
 }
 
 void RType::CoreServer::threadMethod(const Utils::MessageParsed_s &msg)

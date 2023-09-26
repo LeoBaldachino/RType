@@ -37,6 +37,7 @@ static void transformInput(RType::Utils::MessageParsed_s &modInput, const std::s
     if (param == "")
         return;
     std::vector<std::string> params = parseString(param, ' ');
+    std::cout << "Message send..." << std::endl;
     if (params[0] == "connect") {
         modInput.msgType = 21;
         modInput.bytes[0] = std::stoi(params[1]);
@@ -84,6 +85,8 @@ static void threadFn(std::shared_ptr<RType::Utils::SocketHandler> socket, bool &
             msg.senderPort = 4000;
             socket->send(msg);
         }
+        if (msg.msgType == 32)
+            toStop = true;
     }
 }
 
@@ -104,7 +107,7 @@ int main(int av, char **ar)
     for (int i = 0; i < 7; ++i)
         toSend.bytes[i] = 0;
     std::string actualLine = get_input();
-    while (actualLine != "") {
+    while (actualLine != "" && !toStop) {
         transformInput(toSend, actualLine, handler, port);
         actualLine = get_input();
     }
