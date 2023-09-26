@@ -15,6 +15,8 @@ class Position {
         ~Position() {};
         int getX() const { return this->_pos_x; }
         int getY() const { return this->_pos_y; }
+        void setX(int x) { this->_pos_x = x; }
+        void setY(int y) { this->_pos_y = y; }
     private:
         int _pos_x;
         int _pos_y;
