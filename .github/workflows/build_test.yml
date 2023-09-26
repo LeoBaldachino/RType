@@ -4,6 +4,7 @@ on:
     push:
         branches:
         - networking
+        - main
     pull_request:
         branches:
         - networking
