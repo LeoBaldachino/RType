@@ -11,6 +11,7 @@
 
 class Drawable {
     public:
+        Drawable() {};
         Drawable(std::string textureFile) {
             this->_texture.loadFromFile(textureFile.c_str());
             this->_sprite.setTexture(this->_texture);
