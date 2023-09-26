@@ -25,6 +25,14 @@ void SigIntHandler(int signal_num)
 
 RType::CoreServer::CoreServer(int ar, char **av)
 {
+    if (ar == 2) {
+        std::string arg(av[1]);
+        if (arg == "-h" || arg == "--h" || arg == "--help" || arg == "-help") {
+            std::cout << "R-Type Server\nUSAGE :\n ./r-type_server IP PORT" << std::endl;
+            return;
+        }
+        throw std::invalid_argument("Invalid argument");
+    }
     if (ar < 3)
         throw std::invalid_argument("Not enough arguments");
     int port = std::atoi(av[2]);
@@ -40,7 +48,8 @@ RType::CoreServer::CoreServer(int ar, char **av)
 
 RType::CoreServer::~CoreServer()
 {
-    this->_threadPool->CloseThreadPool();
+    if (static_cast<bool>(this->_threadPool))
+        this->_threadPool->CloseThreadPool();
 }
 
 void RType::CoreServer::run()
