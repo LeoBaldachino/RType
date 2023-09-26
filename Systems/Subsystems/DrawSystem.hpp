@@ -14,7 +14,7 @@ class DrawSystem {
         ~DrawSystem() {};
         void setDrawable(const Drawable &drawable);
         void setPosition(const Position &position);
-        void draw(std::unique_ptr<sf::RenderWindow> window);
+        void draw(std::unique_ptr<sf::RenderWindow> &window);
     private:
         Drawable _drawable;
         Position _position;

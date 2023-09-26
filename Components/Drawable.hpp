@@ -8,6 +8,8 @@
 #pragma once
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
+#include <iostream>
+#include <fstream>
 
 class Drawable {
     public:
@@ -18,7 +20,7 @@ class Drawable {
         }
         sf::Sprite getSprite(void) const { return(this->_sprite); }
         sf::Texture getTexture(void) const { return(this->_texture); }
-        ~Drawable() {};
+        ~Drawable() {std::cout << "ESTOY DESTRUDOS" << std::endl;};
     private:
         sf::Texture _texture;
         sf::Sprite _sprite;

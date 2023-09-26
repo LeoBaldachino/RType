@@ -13,12 +13,14 @@
 #include "../Components/Controlable.hpp"
 // #include "../Components/Hitbox.hpp"
 #include "../Components/Moveable.hpp"
+#include "../Components/Drawable.hpp"
 
 class Player : public IEntity {
     public:
         Player(Position position);
+        Player() {};
         ~Player() {};
-        void accept(IVisitor &v);
+        void accept(IVisitor &v, std::unique_ptr<sf::RenderWindow> &window);
 
         Shoot shoot() const;
 
@@ -38,11 +40,15 @@ class Player : public IEntity {
         void setMoveable(Moveable moveable);
         Moveable getMoveable() const;
 
+        void setDrawable(Drawable drawable);
+        Drawable getDrawable() const;
+
     private:
         State _state;
         Position _position;
         Moveable _movement;
         Controlable _controlable;
+        Drawable _drawable;
         int _velocity;
         // Hitbox _hitbox;
         int _shootDmg = 10;

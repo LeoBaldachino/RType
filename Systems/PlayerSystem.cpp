@@ -6,3 +6,14 @@
 */
 
 #include "PlayerSystem.hpp"
+
+PlayerSystem::PlayerSystem(const Player &player)
+{
+    this->_player = player;
+}
+
+void PlayerSystem::draw(std::unique_ptr<sf::RenderWindow> &window)
+{
+    DrawSystem tmpDraw(this->_player.getDrawable(), this->_player.getPosition());
+    tmpDraw.draw(window);
+}

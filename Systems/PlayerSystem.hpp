@@ -6,13 +6,15 @@
 */
 
 #pragma once
+#include "../Entity/Player.hpp"
+#include "Subsystems/DrawSystem.hpp"
 
 class PlayerSystem {
     public:
-        PlayerSystem();
-        ~PlayerSystem();
-
-
-
+        PlayerSystem() {};
+        PlayerSystem(const Player &player);
+        ~PlayerSystem() {};
+        void draw(std::unique_ptr<sf::RenderWindow> &window);
     private:
+        Player _player;
 };

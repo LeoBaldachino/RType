@@ -23,7 +23,7 @@ void DrawSystem::setPosition(const Position &position)
     this->_position = position;
 }
 
-void DrawSystem::draw(std::unique_ptr<sf::RenderWindow> window)
+void DrawSystem::draw(std::unique_ptr<sf::RenderWindow> &window)
 {
     sf::Sprite tmpSprite = this->_drawable.getSprite();
     tmpSprite.setPosition(sf::Vector2f(this->_position.getX(), this->_position.getY()));

@@ -7,10 +7,12 @@
 
 #pragma once
 #include "IVisitor.hpp"
+#include "../Systems/PlayerSystem.hpp"
 
 class SystemVisitor : public IVisitor {
     public:
-        void visitPlayer(Player &p) {
-            std::cout << "PLAYER" << std::endl;
+        void visitPlayer(Player &p, std::unique_ptr<sf::RenderWindow> &window) {
+            PlayerSystem tmpPlayerSystem(p);
+            tmpPlayerSystem.draw(window);
         }
 };

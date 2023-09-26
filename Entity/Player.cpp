@@ -12,6 +12,7 @@ Player::Player(Position position)
     this->_position = position;
     this->_state = State(100);
     this->_velocity = 1;
+    this->_drawable = Drawable("oe2.jpg");
 }
 
 Shoot Player::shoot() const
@@ -32,9 +33,9 @@ void Player::handleInput(std::unique_ptr<sf::RenderWindow> &window)
         this->_controlable.handleInput(sfevent, window);
 }
 
-void Player::accept(IVisitor &v)
+void Player::accept(IVisitor &v, std::unique_ptr<sf::RenderWindow> &window)
 {
-    v.visitPlayer(*this);
+    v.visitPlayer(*this, window);
 }
 
 void Player::move(Vector2d direction)
@@ -84,4 +85,16 @@ void Player::setMoveable(Moveable moveable)
 Moveable Player::getMoveable() const
 {
     return this->_movement;
+}
+
+/* Player draw methods */
+
+void Player::setDrawable(Drawable drawable)
+{
+    this->_drawable = drawable;
+}
+
+Drawable Player::getDrawable() const
+{
+    return this->_drawable;
 }
