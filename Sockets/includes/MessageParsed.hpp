@@ -10,11 +10,28 @@
 
 namespace RType {
     namespace Utils {
-        struct MessageParsed_s {
-            unsigned char msgType;
-            unsigned char bytes[7];
-            std::string senderIp;
-            unsigned short senderPort;
+        class MessageParsed_s {
+            public :
+                MessageParsed_s() {
+                    for (int i = 0; i < 7; ++i)
+                        this->bytes[i] = 0;
+                    senderIp = "";
+                    senderPort = 0;
+                    msgType = 0;
+                };
+                ~MessageParsed_s() {};
+                MessageParsed_s &operator=(const MessageParsed_s &newMsg) {
+                    msgType = newMsg.msgType;
+                    for (int i = 0; i < 7; ++i)
+                        this->bytes[i] = newMsg.bytes[i];
+                    senderIp = newMsg.senderIp;
+                    senderPort = newMsg.senderPort;
+                    return *this;
+                }
+                unsigned char msgType;
+                unsigned char bytes[7];
+                std::string senderIp;
+                unsigned short senderPort;
         };
     }
 }

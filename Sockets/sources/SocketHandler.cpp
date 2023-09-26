@@ -14,6 +14,7 @@ RType::Utils::SocketHandler::SocketHandler(const std::string &ipAdress, int port
     _socket->open(boost::asio::ip::udp::v4());
     _socket->bind(boost::asio::ip::udp::endpoint(boost::asio::ip::address::from_string(ipAdress), port));
     _mutex = std::make_shared<std::mutex>();
+    this->_ipPort = {ipAdress, port};
     this->_instance = std::make_shared<SocketHandler>(*this);
 }
 
@@ -79,4 +80,9 @@ void RType::Utils::SocketHandler::send(const struct MessageParsed_s &toSend)
 std::shared_ptr<RType::Utils::SocketHandler> RType::Utils::SocketHandler::getInstance() const
 {
     return this->_instance;
+}
+
+const std::pair<std::string, int> &RType::Utils::SocketHandler::getIpAndPort() const
+{
+    return this->_ipPort;
 }

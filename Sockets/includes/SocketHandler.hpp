@@ -61,12 +61,19 @@ namespace RType {
                  * @return std::shared_ptr<SocketHandler> the instance
                  */
                 std::shared_ptr<SocketHandler> getInstance() const;
+                /**
+                 * @brief Get the Ip And Port 
+                 * 
+                 * @return const std::pair<std::string, int> ip, port
+                 */
+                const std::pair<std::string, int> &getIpAndPort() const;
             protected:
                 boost::asio::io_service _ioService;
                 std::shared_ptr<boost::asio::ip::udp::socket> _socket;
                 boost::asio::ip::udp::endpoint _Endpoint;
                 std::shared_ptr<SocketHandler> _instance;
                 std::shared_ptr<std::mutex> _mutex;
+                std::pair<std::string, int> _ipPort;
         };
     }
 }
