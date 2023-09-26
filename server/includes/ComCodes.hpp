@@ -17,6 +17,7 @@ namespace RType {
         listOfRooms = 24,
         getListOfRooms = 25,
         destroyedRoom = 26,
+        playerPing = 27,
         illegalAction = 31,
     };
 }

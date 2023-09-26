@@ -27,8 +27,15 @@ std::vector<std::string> parseString(const std::string &str, char parseTo)
     return parsed;
 }
 
+static void displayTeam(const RType::Utils::MessageParsed_s &msg)
+{
+    std::cout << "Team id = " << static_cast<int>(msg.bytes[0]) << " Users " << static_cast<int>(msg.bytes[1]) << " / " << static_cast<int>(msg.bytes[2]) << std::endl;
+}
+
 static void transformInput(RType::Utils::MessageParsed_s &modInput, const std::string &param, RType::Utils::SocketHandler &socket, int port)
 {
+    if (param == "")
+        return;
     std::vector<std::string> params = parseString(param, ' ');
     if (params[0] == "connect") {
         modInput.msgType = 21;
@@ -68,7 +75,15 @@ static void threadFn(std::shared_ptr<RType::Utils::SocketHandler> socket, bool &
 {
     while (!toStop) {
         RType::Utils::MessageParsed_s msg = socket->receive();
-        std::cout << "Receive with status " << static_cast<int>(msg.msgType) << std::endl; 
+        std::cout << "Receive with status " << static_cast<int>(msg.msgType) << std::endl;
+        if (msg.msgType == 24)
+            displayTeam(msg);
+        if (msg.msgType == 27) {
+            std::cout << "Send ping msg" << std::endl;
+            msg.senderIp = "127.0.0.1";
+            msg.senderPort = 4000;
+            socket->send(msg);
+        }
     }
 }
 
@@ -94,7 +109,7 @@ int main(int av, char **ar)
         actualLine = get_input();
     }
     toStop = true;
-    transformInput(toSend, "deco", handler, port);
+    // transformInput(toSend, "deco", handler, port);
     newThread.join();
     return 0;
 }

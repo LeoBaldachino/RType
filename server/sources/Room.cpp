@@ -13,6 +13,8 @@ RType::Server::Room::Room(unsigned char id, unsigned char maxSize, std::shared_p
     this->_id = id;
     this->_maxSize = maxSize;
     this->_isOpen = true;
+    this->_actualPing = 0;
+    this->_pingTime = std::chrono::steady_clock::now();
     this->_roomThread = std::make_unique<std::thread>(&RType::Server::Room::runRoom, this);
 }
 
@@ -34,6 +36,7 @@ bool RType::Server::Room::addToRoom(const std::pair<std::string, int> &newPlayer
     std::unique_lock<std::mutex> lock(this->_mutex);
     std::cout << "add client to room " << newPlayer.second << std::endl;
     this->_allPlayers.push_back(newPlayer);
+    this->_playerOnline.insert({this->_allPlayers.size() - 1, true});
     return true;
 }
 
@@ -58,6 +61,10 @@ bool RType::Server::Room::sendMessageToRoom(const Utils::MessageParsed_s &msg)
     if (this->_willBeDestroyed)
         return false;
     std::cout << "message incoming" << std::endl;
+    if (msg.msgType == playerPing) {
+        this->messagePing(msg);
+        return true;
+    }
     std::pair<std::string, int> toFind({msg.senderIp, msg.senderPort});
     auto it = this->_allPlayers.begin();
     for (; it < this->_allPlayers.end(); it++)
@@ -102,6 +109,10 @@ void RType::Server::Room::runRoom()
         for (auto &it : this->_allPlayers) {
             std::cout << "player : " << it.second << std::endl;
         }
+        if (std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now() - this->_pingTime).count() >= static_cast<int>(CHECK_CRASHED_SECONDS)) {
+            this->checkCrashed();
+            this->_pingTime = std::chrono::steady_clock::now();
+        }
         //need the ecs to do actions
     }
 }
@@ -144,4 +155,52 @@ int RType::Server::Room::getMaxPlayers() const
 int RType::Server::Room::getNumberOfPlayer() const
 {
     return this->_allPlayers.size();
+}
+
+void RType::Server::Room::notifyAllPlayer(const Utils::MessageParsed_s &msg)
+{
+    auto newMsg = msg;
+    for (auto &it : this->_allPlayers) {
+        newMsg.senderIp = it.first;
+        newMsg.senderPort = it.second;
+        this->_socket->send(newMsg);
+    }
+}
+
+void RType::Server::Room::checkCrashed()
+{
+    Utils::MessageParsed_s msg;
+    msg.msgType = playerPing;
+    if (_actualPing < static_cast<int>(CHECK_CRASHED_TIMES)) {
+        this->_actualPing++;
+        return this->notifyAllPlayer(msg);
+    }
+    _actualPing = 0;
+    std::cout << "Check Players deconnected" << std::endl;
+    std::queue<int> playerDisconnected;
+    for (auto &it : this->_playerOnline) {
+        if (!it.second)
+            playerDisconnected.push(it.first);
+        it.second = false;
+    }
+    while (!playerDisconnected.empty()) {
+        std::unique_lock<std::mutex> lock(this->_mutex);
+        std::cout << "Player " << (this->_allPlayers.begin() + playerDisconnected.front())->second << " not pinged, so disconnect" << std::endl;
+        this->_allPlayers.erase(this->_allPlayers.begin() + playerDisconnected.front());
+        this->_playerOnline.erase(playerDisconnected.front());
+        if (playerDisconnected.front() == 0)
+            this->_willBeDestroyed = true;
+        playerDisconnected.pop();
+    }
+}
+
+void RType::Server::Room::messagePing(const Utils::MessageParsed_s &msg)
+{
+    for (size_t i = 0; i < this->_allPlayers.size(); ++i)
+        if (this->_allPlayers[i].first == msg.senderIp && this->_allPlayers[i].second == msg.senderPort) {
+            std::unique_lock<std::mutex> lock(this->_mutex);
+            std::cout << "Receive ping from " << msg.senderPort << std::endl;
+            this->_playerOnline[i] = true;
+            return;
+        }
 }

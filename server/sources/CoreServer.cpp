@@ -78,7 +78,7 @@ void RType::CoreServer::newRoomCreated(const Utils::MessageParsed_s &msg)
             return;
         }
     std::cerr << "Team " << static_cast<int>(msg.bytes[0]) << " is created !" << std::endl;
-    this->_rooms.push_back(std::make_unique<Server::Room>(msg.bytes[0], ROOM_MAX_SIZE, this->_socket->getInstance()));
+    this->_rooms.push_back(std::make_unique<Server::Room>(msg.bytes[0], Server::ROOM_MAX_SIZE, this->_socket->getInstance()));
     this->_rooms.back()->addToRoom({msg.senderIp, msg.senderPort});
     return;
 }

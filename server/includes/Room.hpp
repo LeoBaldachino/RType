@@ -14,12 +14,23 @@
 #include <thread>
 #include <condition_variable>
 #include "../includes/ComCodes.hpp"
+#include <chrono>
+#include <unordered_map>
+#include <queue>
 
-#define ROOM_MAX_SIZE 4
-#define DESTROYED_NB_MSG_SEND 5;
 
 namespace RType {
     namespace Server {
+        /**
+         * @brief base values for the room class
+         * 
+         */
+        enum basesValues {
+            ROOM_MAX_SIZE = 4,
+            DESTROYED_NB_MSG_SEND = 5,
+            CHECK_CRASHED_SECONDS = 3,
+            CHECK_CRASHED_TIMES = 3,
+        };
         /**
          * @brief class who controls one room
          * 
@@ -113,14 +124,32 @@ namespace RType {
                  * @return int number of player
                  */
                 int getMaxPlayers() const;
+                /**
+                 * @brief send a message to all the players of the room
+                 * 
+                 * @param msg the message to send
+                 */
+                void notifyAllPlayer(const Utils::MessageParsed_s &msg);
             private:
                 /**
                  * @brief run the room inside of a thread, method launched at the constructor 
                  * 
                  */
                 void runRoom();
+                /**
+                 * @brief function that send and receive ping of the players for check if they crashed or not
+                 * 
+                 */
+                void checkCrashed();
+                /**
+                 * @brief handle of the ping message
+                 * 
+                 * @param msg the message received
+                 */
+                void messagePing(const Utils::MessageParsed_s &msg);
                 std::unique_ptr<std::thread> _roomThread;
                 std::vector<std::pair<std::string, int>> _allPlayers;
+                std::unordered_map<int, bool> _playerOnline;
                 std::shared_ptr<Utils::SocketHandler> _socket;
                 std::mutex _mutex;
                 bool _isOpen;
@@ -128,6 +157,8 @@ namespace RType {
                 unsigned char _id;
                 unsigned char _maxSize;
                 bool _willBeDestroyed;
+                unsigned char _actualPing;
+                std::chrono::time_point<std::chrono::_V2::steady_clock, std::chrono::_V2::steady_clock::duration> _pingTime;
         };
     }
 }
