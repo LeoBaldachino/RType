@@ -21,7 +21,7 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y autoconf libtool
-        sudo apt-get install -y automake
+        sudo apt-get install -y automake pkg-config
 
     - name: Setup vcpkg
       uses: lukka/run-vcpkg@v6
