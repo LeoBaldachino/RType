@@ -3,3 +3,4 @@
 vgcore*
 /build/
 /vcpkg_installed/
+*.out
