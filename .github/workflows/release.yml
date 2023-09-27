@@ -23,6 +23,8 @@ jobs:
         vcpkgDirectory: '${{ runner.workspace }}/vcpkg/'
         vcpkgGitCommitId: '51311744be7a9c2bd62c4eae50183493bd82b6bb'
         appendedCacheKey: ${{ hashFiles(env.vcpkgResponseFile) }}
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
 
     - name: Configure CMake
       run: cmake -B ${{ github.workspace }}/build -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
@@ -51,4 +53,5 @@ jobs:
         asset_path: ./build/r-type
         asset_name: r-type
         asset_content_type: application/octet-stream
+
 
