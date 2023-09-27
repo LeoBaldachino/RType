@@ -11,14 +11,16 @@
 #include <SFML/Window/Event.hpp>
 #include <chrono>
 #include <SFML/Graphics.hpp>
+#include "../../Entity/Player.hpp"
 
 class InputSystem {
-public:
-    InputSystem() = default;
-    ~InputSystem() = default;
-    void handleInput(sf::Event event, std::unique_ptr<sf::RenderWindow> &window);
+    public:
+        InputSystem() : _inputs() {};
+        ~InputSystem() = default;
+        void handleInput(sf::Event event, std::unique_ptr<sf::RenderWindow> &window);
+        void updatePlayer(Player &player);
 
-    Inputs _inputs;
-    std::chrono::time_point<std::chrono::_V2::steady_clock, std::chrono::_V2::steady_clock::duration> shotTime;
-    bool shooting = false;
+        Inputs _inputs;
+        std::chrono::time_point<std::chrono::_V2::steady_clock, std::chrono::_V2::steady_clock::duration> shotTime;
+        bool shooting = false;
 };

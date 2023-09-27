@@ -9,8 +9,6 @@
 
 void InputSystem::handleInput(sf::Event event, std::unique_ptr<sf::RenderWindow> &window)
 {
-    if (this->_inputs.getEvents().size() == 0)
-        this->_inputs.addEvents(Inputs::Events::Unknown);
     if (event.type == sf::Event::KeyReleased)
         if (this->shooting && event.key.code == sf::Keyboard::Space) {
             std::chrono::time_point<std::chrono::_V2::steady_clock, std::chrono::_V2::steady_clock::duration>
@@ -36,5 +34,31 @@ void InputSystem::handleInput(sf::Event event, std::unique_ptr<sf::RenderWindow>
             this->shotTime = std::chrono::steady_clock::now();
             this->shooting = true;
         }
+    }
+}
+
+void InputSystem::updatePlayer(Player &player)
+{
+    if (this->_inputs.getEvents().size() == 0)
+        return;
+    if (this->_inputs.getEvents().front() == Inputs::Events::Up) {
+        player.setPosition(Position(player.getPosition().getX(), player.getPosition().getY() - (1 * player.getVelocity())));
+        this->_inputs.popEvent();
+        return;
+    }
+    if (this->_inputs.getEvents().front() == Inputs::Events::Down) {
+        player.setPosition(Position(player.getPosition().getX(), player.getPosition().getY() + (1 * player.getVelocity())));
+        this->_inputs.popEvent();
+        return;
+    }
+    if (this->_inputs.getEvents().front() == Inputs::Events::Left) {
+        player.setPosition(Position(player.getPosition().getX() - (1 * player.getVelocity()), player.getPosition().getY()));
+        this->_inputs.popEvent();
+        return;
+    }
+    if (this->_inputs.getEvents().front() == Inputs::Events::Right) {
+        player.setPosition(Position(player.getPosition().getX() + (1 * player.getVelocity()), player.getPosition().getY()));
+        this->_inputs.popEvent();
+        return;
     }
 }

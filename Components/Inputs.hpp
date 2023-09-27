@@ -8,7 +8,7 @@
 #pragma once
 #include <fstream>
 #include <iostream>
-#include <vector>
+#include <queue>
 
 class Inputs {
     public:
@@ -24,8 +24,9 @@ class Inputs {
         };
         Inputs() {};
         ~Inputs() {};
-        std::vector<Events> getEvents(void) const { return(this->_events); }
-        void addEvents(const Events event) { this->_events.push_back(event); }
+        std::queue<Events> getEvents(void) const { return(this->_events); }
+        void addEvents(const Events event) { this->_events.push(event); }
+        void popEvent(void) { this->_events.pop(); }
     private:
-        std::vector<Events> _events;
+        std::queue<Events> _events;
 };

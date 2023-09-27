@@ -11,8 +11,11 @@
 
 class SystemVisitor : public IVisitor {
     public:
+        SystemVisitor(Player &p) : _playerSystem(p) {};
         void visitPlayer(Player &p, std::unique_ptr<sf::RenderWindow> &window) {
-            PlayerSystem tmpPlayerSystem(p);
-            tmpPlayerSystem.draw(window);
+            this->_playerSystem.draw(window);
+            this->_playerSystem.updatePos(window);
         }
+    private:
+        PlayerSystem _playerSystem;
 };

@@ -10,7 +10,6 @@
 #include "../Components/Shoot.hpp"
 #include "../Components/Position.hpp"
 #include "../Components/State.hpp"
-#include "../Components/Controlable.hpp"
 // #include "../Components/Hitbox.hpp"
 #include "../Components/Moveable.hpp"
 #include "../Components/Drawable.hpp"
@@ -23,8 +22,6 @@ class Player : public IEntity {
         void accept(IVisitor &v, std::unique_ptr<sf::RenderWindow> &window);
 
         Shoot shoot() const;
-
-        void handleInput(std::unique_ptr<sf::RenderWindow> &window);
 
         void move(Vector2d direction);
 
@@ -43,11 +40,13 @@ class Player : public IEntity {
         void setDrawable(Drawable drawable);
         Drawable getDrawable() const;
 
+        void setVelocity(int velocity);
+        int getVelocity(void) const;
+
     private:
         State _state;
         Position _position;
         Moveable _movement;
-        Controlable _controlable;
         Drawable _drawable;
         int _velocity;
         // Hitbox _hitbox;

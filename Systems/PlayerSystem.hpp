@@ -8,6 +8,7 @@
 #pragma once
 #include "../Entity/Player.hpp"
 #include "Subsystems/DrawSystem.hpp"
+#include "Subsystems/InputSystem.hpp"
 
 class PlayerSystem {
     public:
@@ -15,6 +16,8 @@ class PlayerSystem {
         PlayerSystem(const Player &player);
         ~PlayerSystem() {};
         void draw(std::unique_ptr<sf::RenderWindow> &window);
+        void updatePos(std::unique_ptr<sf::RenderWindow> &window);
     private:
         Player _player;
+        InputSystem _inputSystem;
 };

@@ -7,12 +7,11 @@
 
 #include "Player.hpp"
 
-Player::Player(Position position)
+Player::Player(Position position) : _drawable("oe.png")
 {
     this->_position = position;
     this->_state = State(100);
-    this->_velocity = 1;
-    this->_drawable = Drawable("oe2.jpg");
+    this->_velocity = 15;
 }
 
 Shoot Player::shoot() const
@@ -20,17 +19,7 @@ Shoot Player::shoot() const
     Vector2d shootDirection = {1, 0};
     Vector2d playerPos = {this->_position.getX(), this->_position.getY()};
 
-
     return Shoot(shootDirection, playerPos, this->_shootDmg, this->_shootVelocity, this->_shootGravity, true);
-}
-/* Player position methods */
-
-void Player::handleInput(std::unique_ptr<sf::RenderWindow> &window)
-{
-    sf::Event sfevent;
-
-    while (window->pollEvent(sfevent))
-        this->_controlable.handleInput(sfevent, window);
 }
 
 void Player::accept(IVisitor &v, std::unique_ptr<sf::RenderWindow> &window)
@@ -97,4 +86,16 @@ void Player::setDrawable(Drawable drawable)
 Drawable Player::getDrawable() const
 {
     return this->_drawable;
+}
+
+/* Player velocity methods */
+
+void Player::setVelocity(int velocity)
+{
+    this->_velocity = velocity;
+}
+
+int Player::getVelocity(void) const
+{
+    return (this->_velocity);
 }
