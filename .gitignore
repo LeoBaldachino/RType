@@ -1,3 +1,5 @@
 .vscode
 *.o
 vgcore*
+/build/
+/vcpkg_installed/
