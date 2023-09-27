@@ -8,6 +8,7 @@
 #pragma once
 #include "IVisitor.hpp"
 #include "../Systems/PlayerSystem.hpp"
+#include "../Systems/BydosSystem.hpp"
 
 class SystemVisitor : public IVisitor {
     public:
@@ -25,6 +26,15 @@ class SystemVisitor : public IVisitor {
             this->_playerSystem.createPiercingShots();
             p = this->_playerSystem.getPlayer();
         }
+        void visitBydos(Bydos &b, Player &p, std::unique_ptr<sf::RenderWindow> &window) {
+            this->_bydosSystem.draw(window);
+            this->_bydosSystem.drawShots(window);
+            // this->_bydosSystem.updatePos();
+            this->_bydosSystem.updateShots();
+            this->_bydosSystem.createShots(p);
+        };
     private:
         PlayerSystem _playerSystem;
+        BydosSystem _bydosSystem;
+
 };

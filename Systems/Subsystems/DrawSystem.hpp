@@ -7,9 +7,10 @@
 
 #include "../../Components/Drawable.hpp"
 #include "../../Components/Position.hpp"
-
+ 
 class DrawSystem {
     public:
+        DrawSystem() {};
         DrawSystem(const Drawable &drawable, const Position &position);
         ~DrawSystem() {};
         void setDrawable(const Drawable &drawable);
