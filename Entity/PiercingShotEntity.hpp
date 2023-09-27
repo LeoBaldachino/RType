@@ -15,6 +15,12 @@ class PiercingShotEntity {
     public:
         PiercingShotEntity(Shoot &shoot);
         ~PiercingShotEntity() {};
+
+        Shoot getShoot(void) const;
+        void setShoot(const Shoot &shoot);
+
+        Drawable getDrawable(void) const;
+        void setDrawable(const Drawable &drawable);
     private:
         Shoot _shoot;
         Drawable _drawable;

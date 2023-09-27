@@ -40,6 +40,27 @@ void PlayerSystem::createShots(void)
     }
 }
 
+void PlayerSystem::updatePiercingShots(void)
+{
+    for (int i = 0; i != this->_piercingShots.size(); ++i)
+        this->_piercingShots[i].updatePos();
+}
+
+void PlayerSystem::drawPiercingShots(std::unique_ptr<sf::RenderWindow> &window)
+{
+    for (int i = 0; i != this->_piercingShots.size(); ++i)
+        this->_piercingShots[i].draw(window);
+}
+
+void PlayerSystem::createPiercingShots(void)
+{
+    while (!this->_inputSystem._inputs.getEvents().empty() && this->_inputSystem._inputs.getEvents().front() == Inputs::Events::PiercingShoot) {
+        this->_inputSystem._inputs.popEvent();
+        Shoot tmpShoot(this->_player.shoot());
+        this->_piercingShots.push_back(PiercingShotSystem(PiercingShotEntity(tmpShoot)));
+    }
+}
+
 void PlayerSystem::updatePos(void)
 {
     this->_inputSystem.updatePlayer(this->_player);

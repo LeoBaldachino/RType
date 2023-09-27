@@ -10,3 +10,23 @@
 PiercingShotEntity::PiercingShotEntity(Shoot &shoot) : _drawable("Assets/piercingShot.png", 1), _shoot(shoot)
 {
 }
+
+Shoot PiercingShotEntity::getShoot(void) const
+{
+    return (this->_shoot);
+}
+
+void PiercingShotEntity::setShoot(const Shoot &shoot)
+{
+    this->_shoot = shoot;
+}
+
+Drawable PiercingShotEntity::getDrawable(void) const
+{
+    return (this->_drawable);
+}
+
+void PiercingShotEntity::setDrawable(const Drawable &drawable)
+{
+    this->_drawable = drawable;
+}
