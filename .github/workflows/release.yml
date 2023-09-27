@@ -21,7 +21,7 @@ jobs:
       with:
         vcpkgArguments: 'sfml'
         vcpkgDirectory: '${{ runner.workspace }}/vcpkg/'
-        vcpkgGitCommitId: '51311744be7a9c2bd62c4eae50183493bd82b6bb'
+        vcpkgGitCommitId: 'master'
         appendedCacheKey: ${{ hashFiles(env.vcpkgResponseFile) }}
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
