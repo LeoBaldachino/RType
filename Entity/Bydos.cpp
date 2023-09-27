@@ -20,9 +20,9 @@ Shoot Bydos::shoot(const Position &playerPos) const
     return aiShoot.shootLogic();
 }
 
-void Bydos::accept(IVisitor &v, std::unique_ptr<sf::RenderWindow> &window)
+void Bydos::accept(IVisitor &v, Player &p, std::unique_ptr<sf::RenderWindow> &window)
 {
-    v.visitBydos(*this, window);
+    v.visitBydos(*this, p, window);
 }
 
 void Bydos::setPosition(Position position)

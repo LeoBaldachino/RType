@@ -11,15 +11,16 @@
 #include "../Components/Position.hpp"
 #include "../Components/State.hpp"
 #include "../Systems/Subsystems/AIShoot.hpp"
-#include "../Components/Hitbox.hpp"
+// #include "../Components/Hitbox.hpp"
 #include "../Components/Drawable.hpp"
+#include "../Entity/Player.hpp"
 
 class Bydos : public IEntity {
     public:
         Bydos() {};
         Bydos(Position position, int velocity, Vector2d moveDirection);
         ~Bydos() {};
-        void accept(IVisitor &v, std::unique_ptr<sf::RenderWindow> &window);
+        void accept(IVisitor &v, Player &p, std::unique_ptr<sf::RenderWindow> &window);
 
         Shoot shoot(const Position &playerPos) const;
 
