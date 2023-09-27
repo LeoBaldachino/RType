@@ -1,0 +1,32 @@
+name: Build test
+
+on:
+  push:
+    branches:
+      - ECS
+  pull_request:
+    branches:
+      - ECS
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Setup CMake
+      uses: lukka/get-cmake@v3.19.2
+
+    - name: Install Dependencies
+      run: |
+            sudo apt-get update
+            sudo apt-get install -y libsfml-dev
+            
+
+    - name: Build
+      run: |
+            mkdir build
+            cd build
+            cmake ..
+            make
