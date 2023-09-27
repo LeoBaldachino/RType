@@ -22,11 +22,12 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y autoconf libtool
         sudo apt-get install -y automake pkg-config
+        sudo apt-get install -y freetype
 
     - name: Setup vcpkg
       uses: lukka/run-vcpkg@v6
       with:
-        vcpkgArguments: 'sfml'
+        vcpkgArguments: 'sfml freetype'
         vcpkgDirectory: '${{ runner.workspace }}/vcpkg/'
         vcpkgGitCommitId: 'master'
         appendedCacheKey: ${{ hashFiles(env.vcpkgResponseFile) }}
@@ -61,6 +62,7 @@ jobs:
         asset_path: ./build/r-type
         asset_name: r-type
         asset_content_type: application/octet-stream
+
 
 
 
