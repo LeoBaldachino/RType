@@ -20,5 +20,6 @@ namespace RType {
         playerPing = 27,
         illegalAction = 31,
         serverStop = 32,
+        cannotRead = 33,
     };
 }

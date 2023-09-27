@@ -58,15 +58,10 @@ void RType::CoreServer::run()
         std::cout << "Server is running..." << std::endl;
         RType::Utils::MessageParsed_s tmpMsg = this->_socket->receive();
         std::cout << "message receive !" << std::endl;
+        if (tmpMsg.msgType == cannotRead)
+            continue;
         if (tmpMsg.msgType == serverStop)
             break;
-        auto it = this->_clients.begin();
-        std::pair<std::string, int> tmpPair = {tmpMsg.senderIp, tmpMsg.senderPort};
-        for (; it < this->_clients.end(); it++)
-            if (*it == tmpPair)
-                break;
-        if (it == this->_clients.end())
-            _clients.push_back(tmpPair);
         this->_threadPool->AddTask([this, tmpMsg]{this->threadMethod(tmpMsg);});
     }
     Utils::MessageParsed_s stopMsg;

@@ -32,7 +32,6 @@ RType::Utils::SocketHandler::~SocketHandler()
 
 unsigned long long compressFromMessage(RType::Utils::MessageParsed_s msg) 
 {
-    unsigned long long newMsg = 0;
     return 
        static_cast<unsigned long long>(msg.bytes[6]) << 56 |
        static_cast<unsigned long long>(msg.bytes[5]) << 48 |
@@ -55,6 +54,8 @@ RType::Utils::MessageParsed_s decompressFromMessage(unsigned long long toParse)
     msg.bytes[4] = (toParse & 0x00ff0000000000) >> 40;
     msg.bytes[5] = (toParse & 0xff000000000000) >> 48;
     msg.bytes[6] = (toParse & 0xff00000000000000) >> 56;
+    if (msg.msgType == 0)
+        msg.msgType = 33;
     return msg;
 }
 
