@@ -7,8 +7,9 @@
 
 #include "ShotSystem.hpp"
 
-ShotSystem::ShotSystem(const ShotEntity &shotEntity) : _shotEntity(shotEntity), _drawSystem(shotEntity.getDrawable(), Position(0, 0))
+ShotSystem::ShotSystem(const ShotEntity &shotEntity) : _shotEntity(shotEntity)
 {
+    this->_drawSystem = std::make_unique<DrawSystem>(shotEntity.getDrawable(), Position(0, 0));
 }
 
 void ShotSystem::updatePos(void)
@@ -21,6 +22,6 @@ void ShotSystem::updatePos(void)
 
 void ShotSystem::draw(std::unique_ptr<sf::RenderWindow> &window)
 {
-    this->_drawSystem.setPosition(Position(this->_shotEntity.getShoot().getOrigin().x, this->_shotEntity.getShoot().getOrigin().y));
-    this->_drawSystem.draw(window);
+    this->_drawSystem->setPosition(Position(this->_shotEntity.getShoot().getOrigin().x, this->_shotEntity.getShoot().getOrigin().y));
+    this->_drawSystem->draw(window);
 }

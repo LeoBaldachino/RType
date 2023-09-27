@@ -6,6 +6,7 @@
 */
 
 #pragma once
+#include <memory>
 #include "../../Entity/ShotEntity.hpp"
 #include "DrawSystem.hpp"
 
@@ -16,5 +17,5 @@ class ShotSystem {
         void draw(std::unique_ptr<sf::RenderWindow> &window);
     private:
         ShotEntity _shotEntity;
-        DrawSystem _drawSystem;
+        std::unique_ptr<DrawSystem> _drawSystem;
 };

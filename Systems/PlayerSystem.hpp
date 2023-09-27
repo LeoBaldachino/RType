@@ -6,6 +6,7 @@
 */
 
 #pragma once
+#include <memory>
 #include "../Entity/Player.hpp"
 #include "Subsystems/InputSystem.hpp"
 #include "Subsystems/ShotSystem.hpp"
@@ -28,6 +29,6 @@ class PlayerSystem {
         Player _player;
         InputSystem _inputSystem;
         DrawSystem _drawSystem;
-        std::vector<ShotSystem> _shots;
-        std::vector<PiercingShotSystem> _piercingShots;
+        std::vector<std::unique_ptr<ShotSystem>> _shots;
+        std::vector<std::unique_ptr<PiercingShotSystem>> _piercingShots;
 };
