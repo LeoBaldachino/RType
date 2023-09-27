@@ -99,3 +99,8 @@ int Player::getVelocity(void) const
 {
     return (this->_velocity);
 }
+
+const unsigned char Player::returnType(void)
+{
+    return (this->_type);
+}

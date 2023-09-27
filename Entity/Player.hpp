@@ -52,6 +52,7 @@ class Player : public IEntity {
         void setShootGravity(int shootGravity);
         int getShootGravity(void) const;
 
+        const unsigned char returnType(void);
     private:
         State _state;
         Position _position;
@@ -62,4 +63,5 @@ class Player : public IEntity {
         int _shootDmg = 10;
         int _shootVelocity = 5;
         int _shootGravity = 0;
+        const unsigned char _type = TYPE_PLAYER;
 };
