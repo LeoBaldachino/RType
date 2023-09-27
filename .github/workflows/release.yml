@@ -2,8 +2,11 @@ name: Create Release
 
 on:
   push:
-    tags:
-      - '*'
+    branches:
+      - ECS
+  pull_request:
+    branches:
+      - ECS
 
 jobs:
   build:
@@ -47,3 +50,4 @@ jobs:
         asset_path: ./build/r-type
         asset_name: r-type
         asset_content_type: application/octet-stream
+
