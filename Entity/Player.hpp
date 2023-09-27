@@ -43,6 +43,15 @@ class Player : public IEntity {
         void setVelocity(int velocity);
         int getVelocity(void) const;
 
+        void setShootDmg(int shootDmg);
+        int getShootDmg(void) const;
+
+        void setShootVelocity(int shootVelocity);
+        int getShootVelocity(void) const;
+
+        void setShootGravity(int shootGravity);
+        int getShootGravity(void) const;
+
     private:
         State _state;
         Position _position;
