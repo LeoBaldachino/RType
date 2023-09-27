@@ -12,7 +12,7 @@ int main(void)
 {
     std::unique_ptr<sf::RenderWindow> _window = std::make_unique<sf::RenderWindow>(sf::VideoMode::getDesktopMode(), "R-Type");
     Player p(Position(0, 0, 1080, 1920));
-    SystemVisitor v(p);
+    SystemVisitor v;
     while (_window->isOpen()) {
         _window->clear();
         p.accept(v, _window);

@@ -14,8 +14,10 @@
 
 class PlayerSystem {
     public:
-        PlayerSystem(const Player &player);
+        PlayerSystem() {};
         ~PlayerSystem() {};
+        void setPlayer(const Player &p);
+        Player getPlayer(void) const;
         void draw(std::unique_ptr<sf::RenderWindow> &window);
         void getInputs(std::unique_ptr<sf::RenderWindow> &window);
         void updatePos(void);
@@ -28,7 +30,7 @@ class PlayerSystem {
     private:
         Player _player;
         InputSystem _inputSystem;
-        DrawSystem _drawSystem;
+        std::unique_ptr<DrawSystem> _drawSystem;
         std::vector<std::unique_ptr<ShotSystem>> _shots;
         std::vector<std::unique_ptr<PiercingShotSystem>> _piercingShots;
 };

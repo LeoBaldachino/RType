@@ -7,9 +7,15 @@
 
 #include "PlayerSystem.hpp"
 
-PlayerSystem::PlayerSystem(const Player &player) : _drawSystem(player.getDrawable(), player.getPosition())
+void PlayerSystem::setPlayer(const Player &p)
 {
-    this->_player = player;
+    this->_player = p;
+    this->_drawSystem = std::make_unique<DrawSystem>(p.getDrawable(), p.getPosition());
+}
+
+Player PlayerSystem::getPlayer(void) const
+{
+    return (this->_player);
 }
 
 void PlayerSystem::getInputs(std::unique_ptr<sf::RenderWindow> &window)
@@ -68,6 +74,6 @@ void PlayerSystem::updatePos(void)
 
 void PlayerSystem::draw(std::unique_ptr<sf::RenderWindow> &window)
 {
-    this->_drawSystem.setPosition(this->_player.getPosition());
-    this->_drawSystem.draw(window);
+    this->_drawSystem->setPosition(this->_player.getPosition());
+    this->_drawSystem->draw(window);
 }

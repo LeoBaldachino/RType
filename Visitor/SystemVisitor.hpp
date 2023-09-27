@@ -11,8 +11,9 @@
 
 class SystemVisitor : public IVisitor {
     public:
-        SystemVisitor(Player &p) : _playerSystem(p) {};
+        SystemVisitor(){};
         void visitPlayer(Player &p, std::unique_ptr<sf::RenderWindow> &window) {
+            this->_playerSystem.setPlayer(p);
             this->_playerSystem.draw(window);
             this->_playerSystem.drawShots(window);
             this->_playerSystem.drawPiercingShots(window);
@@ -22,6 +23,7 @@ class SystemVisitor : public IVisitor {
             this->_playerSystem.updatePiercingShots();
             this->_playerSystem.createShots();
             this->_playerSystem.createPiercingShots();
+            p = this->_playerSystem.getPlayer();
         }
     private:
         PlayerSystem _playerSystem;
