@@ -7,7 +7,7 @@
 
 #include "Player.hpp"
 
-Player::Player(Position position) : _drawable("oe.png")
+Player::Player(Position position) : _drawable("Assets/player.png", 2)
 {
     this->_position = position;
     this->_state = State(100);

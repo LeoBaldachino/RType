@@ -61,7 +61,7 @@ class Player : public IEntity {
         int _velocity;
         // Hitbox _hitbox;
         int _shootDmg = 10;
-        int _shootVelocity = 10;
+        int _shootVelocity = 5;
         int _shootGravity = 0;
         const unsigned char _type = TYPE_PLAYER;
 };

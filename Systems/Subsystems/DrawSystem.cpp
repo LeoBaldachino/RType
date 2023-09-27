@@ -7,10 +7,8 @@
 
 #include "DrawSystem.hpp"
 
-DrawSystem::DrawSystem(const Drawable &drawable, const Position &position)
+DrawSystem::DrawSystem(const Drawable &drawable, const Position &position) : _drawable(drawable), _position(position)
 {
-    this->_drawable = drawable;
-    this->_position = position;
 }
 
 void DrawSystem::setDrawable(const Drawable &drawable)
