@@ -23,8 +23,14 @@ jobs:
         vcpkgDirectory: '${{ runner.workspace }}/vcpkg/'
         vcpkgGitCommitId: 'master'
         appendedCacheKey: ${{ hashFiles(env.vcpkgResponseFile) }}
+        vcpkgTriplet: 'x64-linux'
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y autoconf libtool
 
     - name: Configure CMake
       run: cmake -B ${{ github.workspace }}/build -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
@@ -53,5 +59,6 @@ jobs:
         asset_path: ./build/r-type
         asset_name: r-type
         asset_content_type: application/octet-stream
+
 
 
