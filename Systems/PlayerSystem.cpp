@@ -33,7 +33,7 @@ void PlayerSystem::drawShots(std::unique_ptr<sf::RenderWindow> &window)
 
 void PlayerSystem::createShots(void)
 {
-    while (this->_inputSystem._inputs.getEvents().front() == Inputs::Events::Shoot) {
+    while (!this->_inputSystem._inputs.getEvents().empty() && this->_inputSystem._inputs.getEvents().front() == Inputs::Events::Shoot) {
         this->_inputSystem._inputs.popEvent();
         Shoot tmpShoot(this->_player.shoot());
         this->_shots.push_back(ShotSystem(ShotEntity(tmpShoot)));
