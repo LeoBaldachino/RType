@@ -21,7 +21,7 @@ class Bydos : public IEntity {
         ~Bydos() {};
         void accept(IVisitor &v, std::unique_ptr<sf::RenderWindow> &window);
 
-        // Shoot shoot(const Position &playerPos) const;
+        Shoot shoot(const Position &playerPos) const;
 
         void setPosition(Position position);
         Position getPosition() const;
@@ -49,7 +49,6 @@ class Bydos : public IEntity {
         Position _position;
         Moveable _movement;
         Drawable _drawable;
-        // AIShoot _aishoot;
         int _velocity;
         int _shootDmg = 10;
         int _shootVelocity = 5;

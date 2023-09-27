@@ -14,11 +14,11 @@ Bydos::Bydos(Position position, int velocity, Vector2d moveDirection) : _drawabl
     this->_movement = Moveable(Vector2d(this->_position.getX(), this->_position.getY()), moveDirection, velocity);
 }
 
-// Shoot Bydos::shoot(const Position &playerPos) const
-// {   
-//     AIShoot aiShoot(playerPos, this->_position);
-//     return aiShoot.shootLogic();
-// }
+Shoot Bydos::shoot(const Position &playerPos) const
+{   
+    AIShoot aiShoot(playerPos, this->_position);
+    return aiShoot.shootLogic();
+}
 
 void Bydos::accept(IVisitor &v, std::unique_ptr<sf::RenderWindow> &window)
 {
