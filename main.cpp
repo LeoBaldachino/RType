@@ -15,7 +15,7 @@ int main(void)
     SystemVisitor v;
     while (_window->isOpen()) {
         _window->clear();
-        p.accept(v, _window);
+        p.accept(v, p, _window);
         _window->display();
     }
 }

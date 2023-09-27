@@ -19,7 +19,7 @@ class Player : public IEntity {
         Player(Position position);
         Player() {};
         ~Player() {};
-        void accept(IVisitor &v, std::unique_ptr<sf::RenderWindow> &window);
+        void accept(IVisitor &v, Player &p ,std::unique_ptr<sf::RenderWindow> &window);
 
         Shoot shoot() const;
 
@@ -63,5 +63,5 @@ class Player : public IEntity {
         int _shootDmg = 10;
         int _shootVelocity = 5;
         int _shootGravity = 0;
-        const unsigned char _type = TYPE_PLAYER;
+        // const unsigned char _type = TYPE_PLAYER;
 };
