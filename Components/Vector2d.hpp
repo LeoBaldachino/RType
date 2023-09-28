@@ -11,9 +11,9 @@
 
 class Vector2d {
     public:
-        Vector2d(int x, int y) { this->x = x; this->y = y; };
+        Vector2d(float x, float y) { this->x = x; this->y = y; };
         Vector2d() { this->x = 0; this->y = 0; };
         ~Vector2d() {};
-        int x;
-        int y;
+        float x;
+        float y;
 };
