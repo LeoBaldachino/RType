@@ -21,6 +21,11 @@ void ShotSystem::updatePos(void)
     this->_shotEntity->setShoot(tmpShoot);
 }
 
+Position ShotSystem::getPos(void) const
+{
+    return (Position(this->_shotEntity->getShoot().getOrigin().x, this->_shotEntity->getShoot().getOrigin().y));
+}
+
 void ShotSystem::draw(std::unique_ptr<sf::RenderWindow> &window)
 {
     // A FIX

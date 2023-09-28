@@ -13,8 +13,10 @@
 class ShotSystem {
     public:
         ShotSystem(const ShotEntity &shotEntity);
+        ~ShotSystem() {};
         void updatePos(void);
         void draw(std::unique_ptr<sf::RenderWindow> &window);
+        Position getPos(void) const;
     private:
         std::unique_ptr<ShotEntity> _shotEntity;
         std::unique_ptr<DrawSystem> _drawSystem;

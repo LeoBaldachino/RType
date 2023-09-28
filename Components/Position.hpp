@@ -15,6 +15,8 @@ class Position {
         ~Position() {};
         int getX() const { return this->_pos_x; }
         int getY() const { return this->_pos_y; }
+        int getHeight() const { return this->_height; }
+        int getWidth() const { return this->_width; }
         void setX(int x) { this->_pos_x = x; }
         void setY(int y) { this->_pos_y = y; }
     private:
