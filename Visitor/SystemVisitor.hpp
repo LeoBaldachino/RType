@@ -33,7 +33,8 @@ class SystemVisitor : public IVisitor {
             this->_bydosSystem.drawShots(window);
             this->_bydosSystem.updatePos();
             this->_bydosSystem.updateShots();
-            // this->_bydosSystem.createShots(this->_playerSystem.getPlayer());
+            // this->_bydosSystem.createShots(this->_playerSystem.getPlayer()); DEFINIR CLOCK
+            this->_bydosSystem.clearShots();
             b = this->_bydosSystem.getBydos();
         };
     private:
