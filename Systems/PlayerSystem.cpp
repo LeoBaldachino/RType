@@ -81,6 +81,16 @@ void PlayerSystem::createPiercingShots(void)
 void PlayerSystem::updatePos(void)
 {
     this->_inputSystem.updatePlayer(this->_player);
+    Position tmpPosition(this->_player.getPosition());
+    if (this->_player.getPosition().getX() < 0)
+        tmpPosition.setX(0);
+    if (this->_player.getPosition().getY() < 0)
+        tmpPosition.setY(0);
+    if (this->_player.getPosition().getX() > this->_player.getPosition().getWidth() - 64)
+        tmpPosition.setX(this->_player.getPosition().getWidth() - 64);
+    if (this->_player.getPosition().getY() > this->_player.getPosition().getHeight() - 28)
+        tmpPosition.setY(this->_player.getPosition().getHeight() - 28);
+    this->_player.setPosition(tmpPosition);
 }
 
 void PlayerSystem::draw(std::unique_ptr<sf::RenderWindow> &window)

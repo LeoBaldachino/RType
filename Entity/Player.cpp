@@ -17,7 +17,7 @@ Player::Player(Position position) : _drawable("Assets/player.png", 2)
 Shoot Player::shoot() const
 {
     Vector2d shootDirection = {1, 0};
-    Vector2d playerPos = {this->_position.getX() + 20, this->_position.getY() + 15};
+    Vector2d playerPos = {this->_position.getX() + 32, this->_position.getY() + 14};
 
     return Shoot(shootDirection, playerPos, this->_shootDmg, this->_shootVelocity, this->_shootGravity, true);
 }
