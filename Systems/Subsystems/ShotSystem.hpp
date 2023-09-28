@@ -15,7 +15,7 @@ class ShotSystem {
         ShotSystem(const ShotEntity &shotEntity);
         ~ShotSystem() {};
         void updatePos(void);
-        void draw(std::unique_ptr<sf::RenderWindow> &window);
+        void draw(std::unique_ptr<sf::RenderWindow> &window, std::string fileName);
         Position getPos(void) const;
     private:
         std::unique_ptr<ShotEntity> _shotEntity;

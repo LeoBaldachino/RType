@@ -7,8 +7,6 @@
 
 #pragma once
 #include "IEntity.hpp"
-#include "../Components/Moveable.hpp"
-#include "../Components/Position.hpp"
 #include "../Components/State.hpp"
 #include "../Systems/Subsystems/AIShoot.hpp"
 // #include "../Components/Hitbox.hpp"
@@ -24,7 +22,7 @@ class Bydos : public IEntity {
 
         Shoot shoot(const Position &playerPos) const;
 
-        void setPosition(Position position);
+        void setPosition(const Position &position);
         Position getPosition() const;
 
         void setState(State state);
@@ -44,6 +42,9 @@ class Bydos : public IEntity {
 
         void setShootGravity(int shootGravity);
         int getShootGravity(void) const;
+
+        void setMoveable(const Moveable &moveable);
+        Moveable getMoveable(void) const;
 
     private:
         State _state;

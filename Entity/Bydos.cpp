@@ -11,6 +11,7 @@ Bydos::Bydos(Position position, int velocity, Vector2d moveDirection) : _drawabl
 {
     this->_position = position;
     this->_state = State(100);
+    this->_velocity = velocity;
     this->_movement = Moveable(Vector2d(this->_position.getX(), this->_position.getY()), moveDirection, velocity);
 }
 
@@ -25,7 +26,7 @@ void Bydos::accept(IVisitor &v, std::unique_ptr<sf::RenderWindow> &window)
     v.visitBydos(*this, window);
 }
 
-void Bydos::setPosition(Position position)
+void Bydos::setPosition(const Position &position)
 {
     this->_position = position;
 }
@@ -95,3 +96,12 @@ int Bydos::getShootGravity(void) const
     return this->_shootGravity;
 }
 
+void Bydos::setMoveable(const Moveable &moveable)
+{
+    this->_movement = moveable;
+}
+
+Moveable Bydos::getMoveable(void) const
+{
+    return (this->_movement);
+}

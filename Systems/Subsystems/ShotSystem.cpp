@@ -16,8 +16,8 @@ ShotSystem::ShotSystem(const ShotEntity &shotEntity)
 void ShotSystem::updatePos(void)
 {
     Shoot tmpShoot = this->_shotEntity->getShoot();
-    tmpShoot.setOrigin(Vector2d(tmpShoot.getOrigin().x + tmpShoot.getDirection().x
-    * tmpShoot.getVelocity(), tmpShoot.getOrigin().y + tmpShoot.getDirection().y * tmpShoot.getVelocity()));
+        tmpShoot.setOrigin(Vector2d(tmpShoot.getOrigin().x + tmpShoot.getDirection().x
+        * tmpShoot.getVelocity(), tmpShoot.getOrigin().y + tmpShoot.getDirection().y * tmpShoot.getVelocity()));
     this->_shotEntity->setShoot(tmpShoot);
 }
 
@@ -26,13 +26,10 @@ Position ShotSystem::getPos(void) const
     return (Position(this->_shotEntity->getShoot().getOrigin().x, this->_shotEntity->getShoot().getOrigin().y));
 }
 
-void ShotSystem::draw(std::unique_ptr<sf::RenderWindow> &window)
+void ShotSystem::draw(std::unique_ptr<sf::RenderWindow> &window, std::string fileName)
 {
-    // A FIX
-    // this->_drawSystem->setPosition(Position(this->_shotEntity->getShoot().getOrigin().x, this->_shotEntity->getShoot().getOrigin().y));
-    // this->_drawSystem->draw(window);
     sf::Texture text;
-    text.loadFromFile("Assets/shot.png");
+    text.loadFromFile(fileName);
     sf::Sprite s;
     s.setTexture(text);
     s.setPosition(this->_shotEntity->getShoot().getOrigin().x, this->_shotEntity->getShoot().getOrigin().y);

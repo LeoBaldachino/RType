@@ -6,7 +6,7 @@
 */
 
 #pragma once
-
+#include "../../Entity/IEntity.hpp"
 #include "../../Components/Moveable.hpp"
 #include "../../Components/Position.hpp"
 
@@ -16,9 +16,7 @@ class MovementSystem {
         MovementSystem();
         ~MovementSystem();
 
-        void updatePosition();
+        void updatePosition(IEntity &entity);
 
     private:
-        Moveable _moveable;
-        Position _position;
 };

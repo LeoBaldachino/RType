@@ -31,7 +31,7 @@ class SystemVisitor : public IVisitor {
             this->_bydosSystem.setBydos(b);
             this->_bydosSystem.draw(window);
             this->_bydosSystem.drawShots(window);
-            // this->_bydosSystem.updatePos();
+            this->_bydosSystem.updatePos();
             this->_bydosSystem.updateShots();
             // this->_bydosSystem.createShots(this->_playerSystem.getPlayer());
             b = this->_bydosSystem.getBydos();

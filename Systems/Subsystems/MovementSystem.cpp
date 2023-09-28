@@ -17,8 +17,9 @@ MovementSystem::~MovementSystem()
 
 }
 
-void MovementSystem::updatePosition()
+void MovementSystem::updatePosition(IEntity &entity)
 {
-    this->_position.setX(this->_position.getX() + this->_moveable.getDirection().x * this->_moveable.getVelocity());
-    this->_position.setY(this->_position.getY() + this->_moveable.getDirection().y * this->_moveable.getVelocity());
+    entity.setPosition(Position(entity.getPosition().getX() + entity.getMoveable().getDirection().x * entity.getMoveable().getVelocity(),
+    entity.getPosition().getY() + entity.getMoveable().getDirection().y * entity.getMoveable().getVelocity(),
+    entity.getPosition().getHeight(), entity.getPosition().getWidth()));
 }

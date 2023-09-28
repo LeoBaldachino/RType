@@ -32,7 +32,7 @@ void Player::move(Vector2d direction)
 
 }
 
-void Player::setPosition(Position position)
+void Player::setPosition(const Position &position)
 {
     this->_position = position;
 }
@@ -66,7 +66,7 @@ State Player::getState() const
 
 /* Player movements methods */
 
-void Player::setMoveable(Moveable moveable)
+void Player::setMoveable(const Moveable &moveable)
 {
     this->_movement = moveable;
 }

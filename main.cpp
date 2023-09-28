@@ -14,8 +14,8 @@ int main(void)
     SystemVisitor v;
     std::vector<std::unique_ptr<IEntity>> entities;
     entities.push_back(std::make_unique<Player>(Position(0, 0, 1080, 1920)));
-    entities.push_back(std::make_unique<Bydos>(Position(1900, 100, 1080, 1920), 10, Vector2d(-1, 0)));
-    entities.push_back(std::make_unique<Bydos>(Position(1900, 300, 1080, 1920), 10, Vector2d(-1, 0)));
+    entities.push_back(std::make_unique<Bydos>(Position(1900, 100, 1080, 1920), 1, Vector2d(-1, 0)));
+    entities.push_back(std::make_unique<Bydos>(Position(1900, 300, 1080, 1920), 1, Vector2d(-1, 0)));
     while (_window->isOpen()) {
         _window->clear();
         for (int i = 0; i != entities.size(); ++i)

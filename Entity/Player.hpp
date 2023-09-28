@@ -8,10 +8,8 @@
 #pragma once
 #include "IEntity.hpp"
 #include "../Components/Shoot.hpp"
-#include "../Components/Position.hpp"
 #include "../Components/State.hpp"
 // #include "../Components/Hitbox.hpp"
-#include "../Components/Moveable.hpp"
 #include "../Components/Drawable.hpp"
 
 class Player : public IEntity {
@@ -25,8 +23,8 @@ class Player : public IEntity {
 
         void move(Vector2d direction);
 
-        void setPosition(Position position);
-        Position getPosition() const;
+        void setPosition(const Position &position);
+        Position getPosition(void) const;
 
         // void setHitbox(Hitbox hitbox);
         // Hitbox getHitbox() const;
@@ -34,7 +32,7 @@ class Player : public IEntity {
         void setState(State state);
         State getState() const;
 
-        void setMoveable(Moveable moveable);
+        void setMoveable(const Moveable &moveable);
         Moveable getMoveable() const;
 
         void setDrawable(Drawable drawable);

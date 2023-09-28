@@ -24,10 +24,10 @@ Bydos BydosSystem::getBydos(void) const
     return (this->_bydos);
 }
 
-// void BydosSystem::updatePos(void)
-// {
-//     this->_bydos.;
-// }
+void BydosSystem::updatePos(void)
+{
+    this->_movementSystem.updatePosition(this->_bydos);
+}
 
 void BydosSystem::updateShots(void)
 {
@@ -38,11 +38,24 @@ void BydosSystem::updateShots(void)
 void BydosSystem::drawShots(std::unique_ptr<sf::RenderWindow> &window)
 {
     for (int i = 0; i != this->_shots.size(); ++i)
-        this->_shots[i]->draw(window);
+        this->_shots[i]->draw(window, "Assets/enemyShot.png");
 }
 
 void BydosSystem::createShots(const Player &player)
 {
     Shoot tmpShoot(this->_bydos.shoot(player.getPosition()));
     this->_shots.push_back(std::make_unique<ShotSystem>(ShotEntity(tmpShoot)));
+}
+
+void BydosSystem::clearShots(void)
+{
+    for (int i = 0; i != this->_shots.size(); ++i) {
+        if (this->_shots[i] == NULL || this->_shots[i] == nullptr)
+            continue;
+        if (this->_shots[i]->getPos().getX() <= 0
+        || this->_shots[i]->getPos().getY() <= 0
+        || this->_shots[i]->getPos().getX() >= this->_bydos.getPosition().getWidth()
+        || this->_shots[i]->getPos().getY() >= this->_bydos.getPosition().getHeight())
+            this->_shots.erase(std::find(std::begin(this->_shots), std::end(this->_shots), this->_shots[i]));
+    }
 }

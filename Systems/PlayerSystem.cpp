@@ -45,7 +45,7 @@ void PlayerSystem::updateShots(void)
 void PlayerSystem::drawShots(std::unique_ptr<sf::RenderWindow> &window)
 {
     for (int i = 0; i != this->_shots.size(); ++i)
-        this->_shots[i]->draw(window);
+        this->_shots[i]->draw(window, "Assets/shot.png");
 }
 
 void PlayerSystem::createShots(void)
