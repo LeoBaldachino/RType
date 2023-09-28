@@ -19,7 +19,7 @@ class Player : public IEntity {
         Player(Position position);
         Player() {};
         ~Player() {};
-        void accept(IVisitor &v, Player &p ,std::unique_ptr<sf::RenderWindow> &window);
+        void accept(IVisitor &v, std::unique_ptr<sf::RenderWindow> &window);
 
         Shoot shoot() const;
 

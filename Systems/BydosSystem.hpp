@@ -13,8 +13,9 @@
 class BydosSystem {
     public:
         BydosSystem() {};
-        BydosSystem(const Bydos &bydos);
         ~BydosSystem() {};
+        void setBydos(const Bydos &b);
+        Bydos getBydos(void) const;
         void draw(std::unique_ptr<sf::RenderWindow> &window);
         void updatePos(void);
         void updateShots(void);
@@ -23,7 +24,7 @@ class BydosSystem {
 
     private:
         Bydos _bydos;
-        DrawSystem _drawSystem;
+        std::unique_ptr<DrawSystem> _drawSystem;
         std::vector<std::unique_ptr<ShotSystem>> _shots;
 
 };

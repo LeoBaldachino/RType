@@ -7,15 +7,21 @@
 
 #include "BydosSystem.hpp"
 
-BydosSystem::BydosSystem(const Bydos &bydos) : _drawSystem(bydos.getDrawable(), bydos.getPosition())
-{
-    this->_bydos = bydos;
-}
-
 void BydosSystem::draw(std::unique_ptr<sf::RenderWindow> &window)
 {
-    this->_drawSystem.setPosition(this->_bydos.getPosition());
-    this->_drawSystem.draw(window);
+    this->_drawSystem->setPosition(this->_bydos.getPosition());
+    this->_drawSystem->draw(window);
+}
+
+void BydosSystem::setBydos(const Bydos &b)
+{
+    this->_bydos = b;
+    this->_drawSystem = std::make_unique<DrawSystem>(b.getDrawable(), b.getPosition());
+}
+
+Bydos BydosSystem::getBydos(void) const
+{
+    return (this->_bydos);
 }
 
 // void BydosSystem::updatePos(void)

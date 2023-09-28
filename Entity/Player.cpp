@@ -22,7 +22,7 @@ Shoot Player::shoot() const
     return Shoot(shootDirection, playerPos, this->_shootDmg, this->_shootVelocity, this->_shootGravity, true);
 }
 
-void Player::accept(IVisitor &v, Player &p, std::unique_ptr<sf::RenderWindow> &window)
+void Player::accept(IVisitor &v, std::unique_ptr<sf::RenderWindow> &window)
 {
     v.visitPlayer(*this, window);
 }

@@ -12,6 +12,6 @@
 
 class IEntity {
     public:
-        // virtual void accept(IVisitor &v, std::unique_ptr<sf::RenderWindow> &window) = 0;
-        virtual void accept(IVisitor &v, Player &p, std::unique_ptr<sf::RenderWindow> &window) = 0;
+        virtual void accept(IVisitor &v, std::unique_ptr<sf::RenderWindow> &window) = 0;
+        // virtual void accept(IVisitor &v, Player &p, std::unique_ptr<sf::RenderWindow> &window) = 0;
 };

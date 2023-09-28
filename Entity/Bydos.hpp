@@ -20,7 +20,7 @@ class Bydos : public IEntity {
         Bydos() {};
         Bydos(Position position, int velocity, Vector2d moveDirection);
         ~Bydos() {};
-        void accept(IVisitor &v, Player &p, std::unique_ptr<sf::RenderWindow> &window);
+        void accept(IVisitor &v, std::unique_ptr<sf::RenderWindow> &window);
 
         Shoot shoot(const Position &playerPos) const;
 

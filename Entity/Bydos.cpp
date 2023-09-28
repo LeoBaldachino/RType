@@ -7,7 +7,7 @@
 
 #include "Bydos.hpp"
 
-Bydos::Bydos(Position position, int velocity, Vector2d moveDirection) : _drawable("Assets/player.png", 2)
+Bydos::Bydos(Position position, int velocity, Vector2d moveDirection) : _drawable("Assets/bydos.png", 2)
 {
     this->_position = position;
     this->_state = State(100);
@@ -20,9 +20,9 @@ Shoot Bydos::shoot(const Position &playerPos) const
     return aiShoot.shootLogic();
 }
 
-void Bydos::accept(IVisitor &v, Player &p, std::unique_ptr<sf::RenderWindow> &window)
+void Bydos::accept(IVisitor &v, std::unique_ptr<sf::RenderWindow> &window)
 {
-    v.visitBydos(*this, p, window);
+    v.visitBydos(*this, window);
 }
 
 void Bydos::setPosition(Position position)
