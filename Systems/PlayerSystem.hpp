@@ -27,6 +27,7 @@ class PlayerSystem {
         void updatePiercingShots(void);
         void drawPiercingShots(std::unique_ptr<sf::RenderWindow> &window);
         void createPiercingShots(void);
+        void clearShots(void);
     private:
         Player _player;
         InputSystem _inputSystem;

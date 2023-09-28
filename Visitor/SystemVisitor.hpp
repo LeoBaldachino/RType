@@ -24,14 +24,17 @@ class SystemVisitor : public IVisitor {
             this->_playerSystem.updatePiercingShots();
             this->_playerSystem.createShots();
             this->_playerSystem.createPiercingShots();
+            this->_playerSystem.clearShots();
             p = this->_playerSystem.getPlayer();
         }
-        void visitBydos(Bydos &b, Player &p, std::unique_ptr<sf::RenderWindow> &window) {
+        void visitBydos(Bydos &b, std::unique_ptr<sf::RenderWindow> &window) {
+            this->_bydosSystem.setBydos(b);
             this->_bydosSystem.draw(window);
             this->_bydosSystem.drawShots(window);
             // this->_bydosSystem.updatePos();
             this->_bydosSystem.updateShots();
-            this->_bydosSystem.createShots(p);
+            // this->_bydosSystem.createShots(this->_playerSystem.getPlayer());
+            b = this->_bydosSystem.getBydos();
         };
     private:
         PlayerSystem _playerSystem;

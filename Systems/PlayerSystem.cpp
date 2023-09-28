@@ -25,6 +25,17 @@ void PlayerSystem::getInputs(std::unique_ptr<sf::RenderWindow> &window)
         this->_inputSystem.handleInput(event, window);
 }
 
+void PlayerSystem::clearShots(void)
+{
+    for (auto& i: this->_shots) {
+        if (i == NULL || i == nullptr)
+            continue;
+        if (i->getPos().getX() >= this->_player.getPosition().getWidth()
+        || i->getPos().getY() >= this->_player.getPosition().getHeight())
+            this->_shots.erase(std::find(std::begin(this->_shots), std::end(this->_shots), i));
+    }
+}
+
 void PlayerSystem::updateShots(void)
 {
     for (int i = 0; i != this->_shots.size(); ++i)
