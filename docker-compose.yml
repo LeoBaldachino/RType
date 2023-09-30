@@ -1,0 +1,15 @@
+version: '3'
+services:
+  server:
+    image: gcc:latest
+    volumes:
+      - .:/app
+    working_dir: /app/build
+    command: bash -c "apt-get update && apt-get install -y cmake libboost-dev && cmake .. && make && ./serverTest 127.0.0.1 4000"
+    ports:
+      - 4000:4000
+    networks:
+      - mynet
+networks:
+  mynet:
+    driver: bridge

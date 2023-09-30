@@ -3,3 +3,5 @@
 vgcore*
 a.out
 serverTest
+r-type_server
+build/
