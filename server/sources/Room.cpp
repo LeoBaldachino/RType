@@ -35,6 +35,10 @@ bool RType::Server::Room::addToRoom(const std::pair<std::string, int> &newPlayer
             return false;
     std::unique_lock<std::mutex> lock(this->_mutex);
     std::cout << "add client to room " << newPlayer.second << std::endl;
+    Utils::MessageParsed_s msg;
+    msg.msgType = newPlayerConnected;
+    //todo -> put his player id
+    this->notifyAllPlayer(msg);
     this->_allPlayers.push_back(newPlayer);
     this->_playerOnline.insert({this->_allPlayers.size() - 1, true});
     return true;

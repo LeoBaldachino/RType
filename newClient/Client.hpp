@@ -11,6 +11,7 @@
 #include "../Sockets/includes/SocketHandler.hpp"
 #include "../Sockets/includes/MessageParsed.hpp"
 #include "../server/includes/ComCodes.hpp"
+#include <unordered_map>
 
 namespace RType {
     class Client {
@@ -22,9 +23,10 @@ namespace RType {
             void infosThread();
             void createRoom(unsigned char roomNb);
             void joinRoom(unsigned char roomNb);
-            void sendPing();
+            void sendPing(const Utils::MessageParsed_s &msg);
             void handleNonAuthorized(const Utils::MessageParsed_s &msg);
             Utils::MessageParsed_s buildEmptyMsg(const RType::ComCodes &code);
+            void newPlayerToTeam(const Utils::MessageParsed_s &msg);
             std::unique_ptr<std::thread> _infosThread;
             std::shared_ptr<Utils::SocketHandler> _socket;
             std::unique_ptr<sf::RenderWindow> _window = std::make_unique<sf::RenderWindow>(sf::VideoMode::getDesktopMode(), "R-Type");
@@ -35,5 +37,6 @@ namespace RType {
             int _serverPort;
             bool _threadIsOpen;
             unsigned char _actualRoom;
+            std::unordered_map<int, void (RType::Client::*)(const Utils::MessageParsed_s &)> _commands;
     };
 }

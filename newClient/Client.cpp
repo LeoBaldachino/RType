@@ -7,7 +7,12 @@
 
 #include "Client.hpp"
 
-RType::Client::Client(int ac, char **av)
+RType::Client::Client(int ac, char **av) : 
+_commands({
+{(playerPing), &RType::Client::sendPing},
+{illegalAction, &RType::Client::handleNonAuthorized},
+{newPlayerConnected, &RType::Client::newPlayerToTeam}
+})
 {
     std::srand(std::time(NULL));
     if (ac < 3)
@@ -44,18 +49,16 @@ void RType::Client::infosThread()
         std::cout << "Ready to take some messages !" << std::endl;
         Utils::MessageParsed_s msg = this->_socket->receive();
         std::cout << "Receive message " << static_cast<int>(msg.msgType) << std::endl;
-        if (msg.msgType == playerPing) {
-            this->sendPing();
+        auto it = this->_commands.find(msg.msgType);
+        if (it == this->_commands.end()) {
+            std::cout << "Get an unhandled message " << static_cast<int>(msg.msgType) << std::endl;
             continue;
         }
-        if (msg.msgType == illegalAction) {
-            this->handleNonAuthorized(msg);
-            continue;
-        }
+        (this->*it->second)(msg);
     }
 }
 
-void RType::Client::sendPing()
+void RType::Client::sendPing(const Utils::MessageParsed_s &recMsg)
 {
     auto msg = this->buildEmptyMsg(playerPing);
     this->_socket->send(msg);
@@ -99,4 +102,11 @@ void RType::Client::createRoom(unsigned char roomNb)
     this->_socket->send(msg);
     std::unique_lock<std::mutex> lock(*this->_mutex);
     this->_actualRoom = 1;
+}
+
+void RType::Client::newPlayerToTeam(const Utils::MessageParsed_s &msg)
+{
+    std::cout << "New player connected !!" << std::endl;
+    this->_entities.push_back(std::make_unique<Player>(Position(0, 0, 1080, 1920)));
+    //todo -> store the player id for know wich one is moving
 }
