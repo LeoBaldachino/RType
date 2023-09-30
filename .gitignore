@@ -1,6 +1,9 @@
 .vscode
 *.o
 vgcore*
+/build/
+/vcpkg_installed/
+*.out
 a.out
 serverTest
 r-type_server

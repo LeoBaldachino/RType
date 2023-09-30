@@ -1,0 +1,121 @@
+/*
+** EPITECH PROJECT, 2023
+** B-CPP-500-MLH-5-1-rtype-robin.denni
+** File description:
+** InputSystem.cpp
+*/
+
+#include "InputSystem.hpp"
+
+void InputSystem::handleInput(sf::Event event, std::unique_ptr<sf::RenderWindow> &window)
+{
+    if (event.type == sf::Event::KeyReleased) {
+        if (this->shooting && event.key.code == sf::Keyboard::Space) {
+            std::chrono::time_point<std::chrono::_V2::steady_clock, std::chrono::_V2::steady_clock::duration>
+            time = std::chrono::steady_clock::now();
+            if (std::chrono::duration_cast<std::chrono::seconds>(time - this->shotTime).count() >= 1)
+                this->_inputs.addEvents(Inputs::Events::PiercingShoot);
+            else
+                this->_inputs.addEvents(Inputs::Events::Shoot);
+            this->shooting = false;
+        }
+        if (event.key.code == sf::Keyboard::Up)
+            this->_keysDown[Inputs::Events::Up] = false;
+        if (event.key.code == sf::Keyboard::Down)
+            this->_keysDown[Inputs::Events::Down] = false;
+        if (event.key.code == sf::Keyboard::Left)
+            this->_keysDown[Inputs::Events::Left] = false;
+        if (event.key.code == sf::Keyboard::Right)
+            this->_keysDown[Inputs::Events::Right] = false;
+    }
+    if (event.type == sf::Event::KeyPressed) {
+        if (event.key.code == sf::Keyboard::Up)
+            this->_keysDown[Inputs::Events::Up] = true;
+        if (event.key.code == sf::Keyboard::Down)
+            this->_keysDown[Inputs::Events::Down] = true;
+        if (event.key.code == sf::Keyboard::Left)
+            this->_keysDown[Inputs::Events::Left] = true;
+        if (event.key.code == sf::Keyboard::Right)
+            this->_keysDown[Inputs::Events::Right] = true;
+        if (event.key.code == sf::Keyboard::Escape)
+            this->_inputs.addEvents(Inputs::Events::CloseWindow);
+        if (!this->shooting && event.key.code == sf::Keyboard::Space) {
+            this->shotTime = std::chrono::steady_clock::now();
+            this->shooting = true;
+        }
+    }
+}
+
+void InputSystem::updatePlayer(Player &player)
+{
+    if (this->_keysDown[Inputs::Events::Up])
+        this->_inputs.addEvents(Inputs::Events::Up);
+    if (this->_keysDown[Inputs::Events::Left] && !this->_keysDown[Inputs::Events::Right])
+        this->_inputs.addEvents(Inputs::Events::Left);
+    if (this->_keysDown[Inputs::Events::Down] && !this->_keysDown[Inputs::Events::Up])
+        this->_inputs.addEvents(Inputs::Events::Down);
+    if (this->_keysDown[Inputs::Events::Right])
+        this->_inputs.addEvents(Inputs::Events::Right);
+    if (this->_inputs.getEvents().size() == 0)
+        return;
+    if (this->_inputs.getEvents().front() == Inputs::Events::Up) {
+        this->_inputs.popEvent();
+        int add = 0;
+        if (this->_inputs.getEvents().size() != 0) {
+            if (this->_inputs.getEvents().front() == Inputs::Left) {
+                this->_inputs.popEvent();
+                add = -1 * player.getVelocity();
+            } else if (this->_inputs.getEvents().front() == Inputs::Right) {
+                this->_inputs.popEvent();
+                add = 1 * player.getVelocity();
+            }
+        }
+        player.setPosition(Position(player.getPosition().getX() + add, player.getPosition().getY() - (1 * player.getVelocity())));
+        return;
+    }
+    if (this->_inputs.getEvents().front() == Inputs::Events::Down) {
+        this->_inputs.popEvent();
+        int add = 0;
+        if (this->_inputs.getEvents().size() != 0) {
+            if (this->_inputs.getEvents().front() == Inputs::Left) {
+                this->_inputs.popEvent();
+                add = -1 * player.getVelocity();
+            } else if (this->_inputs.getEvents().front() == Inputs::Right) {
+                this->_inputs.popEvent();
+                add = 1 * player.getVelocity();
+            }
+        }
+        player.setPosition(Position(player.getPosition().getX() + add, player.getPosition().getY() + (1 * player.getVelocity())));
+        return;
+    }
+    if (this->_inputs.getEvents().front() == Inputs::Events::Left) {
+        this->_inputs.popEvent();
+        int add = 0;
+        if (this->_inputs.getEvents().size() != 0) {
+            if (this->_inputs.getEvents().front() == Inputs::Up) {
+                this->_inputs.popEvent();
+                add = -1 * player.getVelocity();
+            } else if (this->_inputs.getEvents().front() == Inputs::Down) {
+                this->_inputs.popEvent();
+                add = 1 * player.getVelocity();
+            }
+        }
+        player.setPosition(Position(player.getPosition().getX() - (1 * player.getVelocity()), player.getPosition().getY() + add));
+        return;
+    }
+    if (this->_inputs.getEvents().front() == Inputs::Events::Right) {
+        this->_inputs.popEvent();
+        int add = 0;
+        if (this->_inputs.getEvents().size() != 0) {
+            if (this->_inputs.getEvents().front() == Inputs::Up) {
+                this->_inputs.popEvent();
+                add = -1 * player.getVelocity();
+            } else if (this->_inputs.getEvents().front() == Inputs::Down) {
+                this->_inputs.popEvent();
+                add = 1 * player.getVelocity();
+            }
+        }
+        player.setPosition(Position(player.getPosition().getX() + (1 * player.getVelocity()), player.getPosition().getY() + add));
+        return;
+    }
+}
