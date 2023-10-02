@@ -21,7 +21,7 @@ include_directories(Sockets/includes)
 set(Boost_USE_STATIC_LIBS ON) 
 set(Boost_USE_MULTITHREADED ON)  
 set(Boost_USE_STATIC_RUNTIME OFF) 
-find_package(Boost 1.45.0) 
+find_package(Boost 1.83.0) 
 
 if(Boost_FOUND)
     include_directories(${Boost_INCLUDE_DIRS}) 
@@ -32,3 +32,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build/server)
 
 # Add your executable
 add_executable(r-type_server ${SERVER_SOURCES} ${SOCKET_SOURCES})
+
+# Link your executable against the libraries
+target_link_libraries(r-type_server ${Boost_LIBRARIES})
+
