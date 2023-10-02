@@ -7,9 +7,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 # Set the compile flag to "-g"
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 
-# Server build
-project(r-type_server)
-
 # Add your source files
 file(GLOB SERVER_SOURCES "server/sources/*.cpp")
 file(GLOB SOCKET_SOURCES "Sockets/sources/*.cpp")
