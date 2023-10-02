@@ -32,7 +32,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build/server)
 add_executable(r-type_server ${SERVER_SOURCES} ${SOCKET_SOURCES})
 
 # Link your executable against the libraries
-target_link_libraries(r-type_server ${Boost_LIBRARIES})
+target_link_libraries(r-type_server ${Boost_LIBRARIES} pthread)
 
 # Client build
 project(r-type_client)
@@ -59,6 +59,7 @@ add_executable(r-type_client ${CLIENT_SOURCES})
 
 # Link your executable against the libraries
 target_link_libraries(r-type_client ${Boost_LIBRARIES} sfml-graphics sfml-audio)
+
 
 
 
