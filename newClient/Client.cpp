@@ -42,20 +42,36 @@ RType::Client::~Client()
 void RType::Client::updateInputs(void)
 {
     this->handleInputs();
-    if (this->_keysDown[Events::Up])
-        this->_inputs.push_back(Events::Up);
-    if (this->_keysDown[Events::Left] && !this->_keysDown[Events::Right])
-        this->_inputs.push_back(Events::Left);
-    if (this->_keysDown[Events::Down] && !this->_keysDown[Events::Up])
-        this->_inputs.push_back(Events::Down);
-    if (this->_keysDown[Events::Right])
-        this->_inputs.push_back(Events::Right);
+        if (this->_keysDown[Events::Up])
+            this->_inputs.push_back(Events::Up);
+        if (this->_keysDown[Events::Left] && !this->_keysDown[Events::Right])
+            this->_inputs.push_back(Events::Left);
+        if (this->_keysDown[Events::Down] && !this->_keysDown[Events::Up])
+            this->_inputs.push_back(Events::Down);
+        if (this->_keysDown[Events::Right])
+            this->_inputs.push_back(Events::Right);
 }
 
 void RType::Client::handleInputs(void)
 {
     sf::Event event;
     while (this->_window->pollEvent(event)) {
+        if (event.type == sf::Event::KeyPressed) {
+            if (event.key.code == sf::Keyboard::Up)
+                this->_keysDown[Events::Up] = true;
+            if (event.key.code == sf::Keyboard::Down)
+                this->_keysDown[Events::Down] = true;
+            if (event.key.code == sf::Keyboard::Left)
+                this->_keysDown[Events::Left] = true;
+            if (event.key.code == sf::Keyboard::Right)
+                this->_keysDown[Events::Right] = true;
+            if (event.key.code == sf::Keyboard::Escape)
+                this->_inputs.push_back(Events::CloseWindow);
+            if (!this->shooting && event.key.code == sf::Keyboard::Space) {
+                this->shotTime = std::chrono::steady_clock::now();
+                this->shooting = true;
+            }
+        }
         if (event.type == sf::Event::KeyReleased) {
             if (this->shooting && event.key.code == sf::Keyboard::Space) {
                 std::chrono::time_point<std::chrono::_V2::steady_clock, std::chrono::_V2::steady_clock::duration>
@@ -74,22 +90,6 @@ void RType::Client::handleInputs(void)
                 this->_keysDown[Events::Left] = false;
             if (event.key.code == sf::Keyboard::Right)
                 this->_keysDown[Events::Right] = false;
-        }
-        if (event.type == sf::Event::KeyPressed) {
-            if (event.key.code == sf::Keyboard::Up)
-                this->_keysDown[Events::Up] = true;
-            if (event.key.code == sf::Keyboard::Down)
-                this->_keysDown[Events::Down] = true;
-            if (event.key.code == sf::Keyboard::Left)
-                this->_keysDown[Events::Left] = true;
-            if (event.key.code == sf::Keyboard::Right)
-                this->_keysDown[Events::Right] = true;
-            if (event.key.code == sf::Keyboard::Escape)
-                this->_inputs.push_back(Events::CloseWindow);
-            if (!this->shooting && event.key.code == sf::Keyboard::Space) {
-                this->shotTime = std::chrono::steady_clock::now();
-                this->shooting = true;
-            }
         }
     }
 }
