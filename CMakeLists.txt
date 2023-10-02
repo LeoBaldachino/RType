@@ -15,6 +15,8 @@ file(GLOB CORE_SOURCES "Core/*.cpp")
 file(GLOB ENTITY_SOURCES "Entity/*.cpp")
 file(GLOB SYSTEM_SOURCES "Systems/*.cpp")
 file(GLOB SUBSYSTEM_SOURCES "Systems/Subsystems/*.cpp")
+file(GLOB GAME_LOOP_SOURCES "gameLoop/*.cpp")
+file(GLOB RTYPE_LOOP_SOURCES "gameLoop/RTypeGameLoop/*.cpp")
 
 find_package(SFML COMPONENTS system graphics window REQUIRED)
 # Add your include directories
@@ -26,7 +28,7 @@ find_package(Boost REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
 
 # Create the executable
-add_executable(r-type_server ${SERVER_SOURCES} ${SOCKET_SOURCES} ${CORE_SOURCES} ${ENTITY_SOURCES} ${SYSTEM_SOURCES} ${SUBSYSTEM_SOURCES})
+add_executable(r-type_server ${SERVER_SOURCES} ${SOCKET_SOURCES} ${CORE_SOURCES} ${ENTITY_SOURCES} ${SYSTEM_SOURCES} ${SUBSYSTEM_SOURCES} ${GAME_LOOP_SOURCES} ${RTYPE_LOOP_SOURCES})
 
 # Link the Boost library
 target_link_libraries(r-type_server PRIVATE ${Boost_LIBRARIES})

@@ -17,6 +17,8 @@
 #include <unordered_map>
 #include <queue>
 #include "../../Core/Core.hpp"
+#include "../../gameLoop/IGameLoop.hpp"
+#include "../../gameLoop/RTypeGameLoop/RTypeGameLoop.hpp"
 
 
 namespace RType {
@@ -170,6 +172,8 @@ namespace RType {
                 bool _willBeDestroyed;
                 unsigned char _actualPing;
                 std::chrono::time_point<std::chrono::_V2::steady_clock, std::chrono::_V2::steady_clock::duration> _pingTime;
+                std::unique_ptr<IGameLoop> _gameLoop;
+                std::queue<Utils::MessageParsed_s> _toSendToGameLoop;
         };
     }
 }
