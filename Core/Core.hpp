@@ -15,9 +15,8 @@ class Core {
     public:
         Core();
         ~Core() {};
-        void addEntity(const std::shared_ptr<IEntity> &entity);
+        void addEntity(const std::shared_ptr<IEntity> &entity, unsigned short index);
         std::unordered_map<unsigned short, std::shared_ptr<IEntity>> _entities;
     private:
         SystemVisitor _systemVisitor;
-        unsigned short _entityCount = 0;
 };
