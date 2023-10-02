@@ -16,6 +16,11 @@ file(GLOB SOCKET_SOURCES "Sockets/sources/*.cpp")
 include_directories(server/includes)
 include_directories(Sockets/includes)
 
+# Add git submodules directories
+add_subdirectory(SFML)
+add_subdirectory(CMake)
+add_subdirectory(boost)
+
 # Find the Boost library
 find_package(Boost REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
@@ -49,3 +54,4 @@ Systems/Subsystems/MovementSystem.cpp)
 
 target_link_libraries(r-type PRIVATE sfml-system sfml-graphics sfml-window) # Link SFML libraries
 set(CMAKE_BUILD_TYPE Debug) # Enable debugging
+
