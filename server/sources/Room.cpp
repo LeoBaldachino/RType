@@ -16,6 +16,8 @@ RType::Server::Room::Room(unsigned char id, unsigned char maxSize, std::shared_p
     this->_actualPing = 0;
     this->_pingTime = std::chrono::steady_clock::now();
     this->_core.addEntity(std::make_shared<Player>(Position(0, 0, 1920, 1080)), 0);
+    this->_mutexQueue = std::make_unique<std::mutex>();
+    this->_toSendToGameLoop = std::make_unique<std::queue<std::pair<unsigned short, Utils::MessageParsed_s>>>();
     //to change when used
     this->_gameLoop = std::make_unique<RTypeGameLoop>(this->_core);
     this->_roomThread = std::make_unique<std::thread>(&RType::Server::Room::runRoom, this);
@@ -69,6 +71,7 @@ bool RType::Server::Room::isInRoom(const std::pair<std::string, int> &toSearch) 
 {
     if (this->_willBeDestroyed)
         return false;
+    std::cout << "Search for room..." << std::endl;
     auto it = this->_allPlayers.begin();
     for (; it != this->_allPlayers.end(); it++)
         if (it->first == toSearch)
@@ -80,20 +83,20 @@ bool RType::Server::Room::sendMessageToRoom(const Utils::MessageParsed_s &msg)
 {
     if (this->_willBeDestroyed)
         return false;
-    std::cout << "message incoming" << std::endl;
     if (msg.msgType == playerPing) {
         this->messagePing(msg);
         return true;
     }
-    std::pair<std::string, int> toFind({msg.senderIp, msg.senderPort});
-    auto it = this->_allPlayers.begin();
-    for (; it != this->_allPlayers.end(); it++)
-        if (it->first == toFind) {
-            std::cout << "The player with the port " << it->second << " got a message with the " << static_cast<int>(msg.msgType) << " type " << std::endl;
-            this->_toSendToGameLoop.push({it->second, msg});
-            return true;
-        }
-    return false;
+    std::cout << "Other message " << static_cast<int>(msg.msgType) << std::endl;
+    auto it = this->_allPlayers.find({msg.senderIp, msg.senderPort});
+    if (it == this->_allPlayers.end()) {
+        std::cout << "Not in room..." << std::endl;
+        return false;
+    }
+    std::cout << "Message Pushed !" << "Message queue size = " << this->_toSendToGameLoop->size() << std::endl;
+    std::unique_lock<std::mutex> lock(*this->_mutexQueue);
+    this->_toSendToGameLoop->push({it->second, msg});
+    return true;
 }
 
 bool RType::Server::Room::isFull() const 
@@ -127,9 +130,10 @@ void RType::Server::Room::runRoom()
             this->checkCrashed();
             this->_pingTime = std::chrono::steady_clock::now();
         }
-        auto ret = this->_gameLoop->updateGameLoop(this->_toSendToGameLoop);
-        std::queue<std::pair<unsigned short, RType::Utils::MessageParsed_s>> empty;
-        std::swap(this->_toSendToGameLoop, empty);
+        std::unique_lock<std::mutex> lock(*this->_mutexQueue);
+        auto ret = this->_gameLoop->updateGameLoop(*this->_toSendToGameLoop);
+        this->_toSendToGameLoop = std::make_unique<std::queue<std::pair<unsigned short, Utils::MessageParsed_s>>>();
+        // std::cout << "Game loop updated..." << std::endl;
     }
 }
 

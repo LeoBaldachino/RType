@@ -58,5 +58,6 @@ namespace RType {
             bool shooting = false;
             std::chrono::time_point<std::chrono::_V2::steady_clock, std::chrono::_V2::steady_clock::duration> shotTime;
             std::vector<Events> _inputs;
+            std::chrono::time_point<std::chrono::_V2::steady_clock, std::chrono::_V2::steady_clock::duration> _sendInputTime;
     };
 }

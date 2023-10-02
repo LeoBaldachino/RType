@@ -23,6 +23,7 @@ _commands({
             {Events::Down, false},
             {Events::Left, false},
             {Events::Right, false}};
+    this->_sendInputTime = std::chrono::steady_clock::now();
     this->_serverIp = av[1];
     this->_serverPort = std::stoi(av[2]);
     this->_mutex = std::make_unique<std::mutex>();
@@ -96,11 +97,24 @@ void RType::Client::handleInputs(void)
 void RType::Client::run()
 {
     this->createRoom(1);
+    auto msgKeyPressed = this->buildEmptyMsg(keyPressed);
     while (_window->isOpen()) {
         _window->clear();
+        this->handleInputs();
         for (auto &it : this->_entities._entities)
             it.second->accept(this->_visitor, _window);
         _window->display();
+        if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - this->_sendInputTime).count() >= 100) {
+            for (auto it : this->_keysDown)
+                if (it.second) {
+                    std::cout << "Press key sended..." << std::endl;
+                    msgKeyPressed.setFirstShort(static_cast<unsigned short>(it.first));
+                    this->_socket->send(msgKeyPressed);
+                }
+            // msgKeyPressed.setFirstShort(static_cast<unsigned short>(1));
+            // this->_socket->send(msgKeyPressed);
+            this->_sendInputTime = std::chrono::steady_clock::now();
+        }
     }
 }
 
