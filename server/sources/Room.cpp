@@ -16,6 +16,8 @@ RType::Server::Room::Room(unsigned char id, unsigned char maxSize, std::shared_p
     this->_actualPing = 0;
     this->_pingTime = std::chrono::steady_clock::now();
     this->_core.addEntity(std::make_shared<Player>(Position(0, 0, 1920, 1080)), 0);
+    //to change when used
+    this->_gameLoop = std::make_unique<RTypeGameLoop>(this->_core);
     this->_roomThread = std::make_unique<std::thread>(&RType::Server::Room::runRoom, this);
 }
 
@@ -121,17 +123,11 @@ void RType::Server::Room::runRoom()
             }
             return;
         }
-        // std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-        std::cout<< "Room " << static_cast<int>(this->_id) << "is running" << std::endl;
-        std::cout << "Members of the team --" << std::endl;
-        for (auto &it : this->_allPlayers) {
-            std::cout << "player : " << it.second << std::endl;
-        }
         if (std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now() - this->_pingTime).count() >= static_cast<int>(CHECK_CRASHED_SECONDS)) {
             this->checkCrashed();
             this->_pingTime = std::chrono::steady_clock::now();
         }
-        //need the ecs to do actions
+        auto ret = this->_gameLoop->updateGameLoop(this->_toSendToGameLoop);
     }
 }
 
