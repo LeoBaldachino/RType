@@ -12,8 +12,8 @@
 namespace RType {
     class IGameLoop {
         public:
-            virtual std::queue<Utils::MessageParsed_s> updateGameLoop(std::queue<Utils::MessageParsed_s> newMessages) = 0;
+            virtual std::queue<Utils::MessageParsed_s> updateGameLoop(std::queue<std::pair<unsigned short, Utils::MessageParsed_s>> newMessages) = 0;
         protected :
-            virtual std::queue<Utils::MessageParsed_s> runAfterUpdate(std::queue<Utils::MessageParsed_s> newMessages) = 0;
+            virtual std::queue<Utils::MessageParsed_s> runAfterUpdate(std::queue<std::pair<unsigned short, Utils::MessageParsed_s>> newMessages) = 0;
     };
 }

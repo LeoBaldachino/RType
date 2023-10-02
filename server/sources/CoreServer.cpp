@@ -55,9 +55,7 @@ RType::CoreServer::~CoreServer()
 void RType::CoreServer::run()
 {
     while (runServer) {
-        std::cout << "Server is running..." << std::endl;
         RType::Utils::MessageParsed_s tmpMsg = this->_socket->receive();
-        std::cout << "message receive !" << std::endl;
         if (tmpMsg.msgType == cannotRead)
             continue;
         if (tmpMsg.msgType == serverStop)
@@ -77,7 +75,6 @@ void RType::CoreServer::run()
 
 void RType::CoreServer::threadMethod(const Utils::MessageParsed_s &msg)
 {
-    std::cout << "message received " << msg.msgType << std::endl;
     if (msg.msgType == newPlayerConnected)
         return this->connectToRoom(msg);
     if (msg.msgType == newRoomIsCreated)
