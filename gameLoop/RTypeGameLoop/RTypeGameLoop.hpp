@@ -14,7 +14,7 @@ namespace RType {
             RTypeGameLoop(Core &core);
             ~RTypeGameLoop();
         protected :
-            std::queue<Utils::MessageParsed_s> runAfterUpdate(std::queue<Utils::MessageParsed_s> newMessages);
+            std::queue<Utils::MessageParsed_s> runAfterUpdate(std::queue<std::pair<unsigned short, Utils::MessageParsed_s>> newMessages);
         private :
 
     };

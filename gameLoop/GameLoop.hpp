@@ -14,12 +14,12 @@ namespace RType {
         public:
             GameLoop(Core &setCore);
             ~GameLoop();
-            std::queue<Utils::MessageParsed_s> updateGameLoop(std::queue<Utils::MessageParsed_s> newMessages);
+            std::queue<Utils::MessageParsed_s> updateGameLoop(std::queue<std::pair<unsigned short, Utils::MessageParsed_s>> newMessages);
         protected:
-            void setPositionEntityFromMsg(const Utils::MessageParsed_s &msg);
-            void spawnEntityFromMsg(const Utils::MessageParsed_s &msg);
+            void setPositionEntityFromMsg(const Utils::MessageParsed_s &msg, unsigned short id);
+            void spawnEntityFromMsg(const Utils::MessageParsed_s &msg, unsigned short id);
             Core &_core;
         private : 
-            std::unordered_map<int, void (RType::GameLoop::*)(const Utils::MessageParsed_s &)> _commands;
+            std::unordered_map<int, void (RType::GameLoop::*)(const Utils::MessageParsed_s &msg, unsigned short)> _commands;
     };
 }

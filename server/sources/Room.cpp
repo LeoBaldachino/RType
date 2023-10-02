@@ -90,7 +90,7 @@ bool RType::Server::Room::sendMessageToRoom(const Utils::MessageParsed_s &msg)
     for (; it != this->_allPlayers.end(); it++)
         if (it->first == toFind) {
             std::cout << "The player with the port " << it->second << " got a message with the " << static_cast<int>(msg.msgType) << " type " << std::endl;
-            //need the ecs to do an action on a certain client when a message is send to him
+            this->_toSendToGameLoop.push({it->second, msg});
             return true;
         }
     return false;
@@ -128,6 +128,8 @@ void RType::Server::Room::runRoom()
             this->_pingTime = std::chrono::steady_clock::now();
         }
         auto ret = this->_gameLoop->updateGameLoop(this->_toSendToGameLoop);
+        std::queue<std::pair<unsigned short, RType::Utils::MessageParsed_s>> empty;
+        std::swap(this->_toSendToGameLoop, empty);
     }
 }
 
