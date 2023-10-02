@@ -12,8 +12,7 @@ Core::Core()
 
 }
 
-void Core::addEntity(const std::shared_ptr<IEntity> &entity)
+void Core::addEntity(const std::shared_ptr<IEntity> &entity, unsigned short index)
 {
-    this->_entities[this->_entityCount] = entity;
-    ++this->_entityCount;
+    this->_entities[index] = entity;
 }

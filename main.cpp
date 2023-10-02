@@ -12,9 +12,9 @@
 int main(void)
 {
     Core core;
-    core.addEntity(std::make_shared<Player>(Position(0, 0, 1080, 1920)));
-    core.addEntity(std::make_shared<Bydos>(Position(1900, 100, 1080, 1920), 1, Vector2d(-1, 0)));
-    core.addEntity(std::make_shared<Bydos>(Position(1900, 300, 1080, 1920), 1, Vector2d(-1, 0)));
+    core.addEntity(std::make_shared<Player>(Position(0, 0, 1080, 1920)), 0);
+    core.addEntity(std::make_shared<Bydos>(Position(1900, 100, 1080, 1920), 1, Vector2d(-1, 0)), 1);
+    core.addEntity(std::make_shared<Bydos>(Position(1900, 300, 1080, 1920), 1, Vector2d(-1, 0)), 2);
     std::unique_ptr<sf::RenderWindow> _window = std::make_unique<sf::RenderWindow>(sf::VideoMode::getDesktopMode(), "R-Type");
     SystemVisitor v;
     while (_window->isOpen()) {
