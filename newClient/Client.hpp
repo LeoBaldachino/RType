@@ -17,9 +17,21 @@
 namespace RType {
     class Client {
         public:
+            enum Events {
+                Up,
+                Down,
+                Left,
+                Right,
+                Shoot,
+                PiercingShoot,
+                CloseWindow,
+                Unknown
+            };
             Client(int ac, char **av);
             ~Client();
         private:
+            void handleInputs(void);
+            void updateInputs(void);
             void run();
             void infosThread();
             void createRoom(unsigned char roomNb);
@@ -32,7 +44,7 @@ namespace RType {
             bool checkAsId();
             std::unique_ptr<std::thread> _infosThread;
             std::shared_ptr<Utils::SocketHandler> _socket;
-            std::unique_ptr<sf::RenderWindow> _window = std::make_unique<sf::RenderWindow>(sf::VideoMode::getDesktopMode(), "R-Type");
+            std::unique_ptr<sf::RenderWindow> _window;
             SystemVisitor _visitor;
             Core _entities;
             std::unique_ptr<std::mutex> _mutex;
@@ -42,5 +54,9 @@ namespace RType {
             unsigned char _actualRoom;
             std::unordered_map<int, void (RType::Client::*)(const Utils::MessageParsed_s &)> _commands;
             unsigned short _actualId;
+            std::unordered_map<Events, bool> _keysDown;
+            bool shooting = false;
+            std::chrono::time_point<std::chrono::_V2::steady_clock, std::chrono::_V2::steady_clock::duration> shotTime;
+            std::vector<Events> _inputs;
     };
 }

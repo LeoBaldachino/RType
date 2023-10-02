@@ -18,6 +18,11 @@ _commands({
     std::srand(std::time(NULL));
     if (ac < 3)
         throw std::invalid_argument("Not enought arguments");
+    this->_keysDown = {
+            {Events::Up, false},
+            {Events::Down, false},
+            {Events::Left, false},
+            {Events::Right, false}};
     this->_serverIp = av[1];
     this->_serverPort = std::stoi(av[2]);
     this->_mutex = std::make_unique<std::mutex>();
@@ -31,6 +36,61 @@ _commands({
 
 RType::Client::~Client()
 {
+}
+
+void RType::Client::updateInputs(void)
+{
+    this->handleInputs();
+    if (this->_keysDown[Events::Up])
+        this->_inputs.push_back(Events::Up);
+    if (this->_keysDown[Events::Left] && !this->_keysDown[Events::Right])
+        this->_inputs.push_back(Events::Left);
+    if (this->_keysDown[Events::Down] && !this->_keysDown[Events::Up])
+        this->_inputs.push_back(Events::Down);
+    if (this->_keysDown[Events::Right])
+        this->_inputs.push_back(Events::Right);
+}
+
+void RType::Client::handleInputs(void)
+{
+    sf::Event event;
+    while (this->_window->pollEvent(event)) {
+        if (event.type == sf::Event::KeyReleased) {
+            if (this->shooting && event.key.code == sf::Keyboard::Space) {
+                std::chrono::time_point<std::chrono::_V2::steady_clock, std::chrono::_V2::steady_clock::duration>
+                time = std::chrono::steady_clock::now();
+                if (std::chrono::duration_cast<std::chrono::seconds>(time - this->shotTime).count() >= 1)
+                    this->_inputs.push_back(Events::PiercingShoot);
+                else
+                    this->_inputs.push_back(Events::Shoot);
+                this->shooting = false;
+            }
+            if (event.key.code == sf::Keyboard::Up)
+                this->_keysDown[Events::Up] = false;
+            if (event.key.code == sf::Keyboard::Down)
+                this->_keysDown[Events::Down] = false;
+            if (event.key.code == sf::Keyboard::Left)
+                this->_keysDown[Events::Left] = false;
+            if (event.key.code == sf::Keyboard::Right)
+                this->_keysDown[Events::Right] = false;
+        }
+        if (event.type == sf::Event::KeyPressed) {
+            if (event.key.code == sf::Keyboard::Up)
+                this->_keysDown[Events::Up] = true;
+            if (event.key.code == sf::Keyboard::Down)
+                this->_keysDown[Events::Down] = true;
+            if (event.key.code == sf::Keyboard::Left)
+                this->_keysDown[Events::Left] = true;
+            if (event.key.code == sf::Keyboard::Right)
+                this->_keysDown[Events::Right] = true;
+            if (event.key.code == sf::Keyboard::Escape)
+                this->_inputs.push_back(Events::CloseWindow);
+            if (!this->shooting && event.key.code == sf::Keyboard::Space) {
+                this->shotTime = std::chrono::steady_clock::now();
+                this->shooting = true;
+            }
+        }
+    }
 }
 
 void RType::Client::run()
