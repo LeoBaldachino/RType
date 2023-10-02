@@ -25,39 +25,11 @@ RType::Utils::SocketHandler::SocketHandler(const SocketHandler &socket) : _socke
     this->_mutex = socket._mutex;
     this->_socket = socket._socket;
 }
+
 RType::Utils::SocketHandler::~SocketHandler()
 {
     _socket->close();
 }
-
-// unsigned long long compressFromMessage(RType::Utils::MessageParsed_s msg) 
-// {
-//     return 
-//        static_cast<unsigned long long>(msg.bytes[6]) << 56 |
-//        static_cast<unsigned long long>(msg.bytes[5]) << 48 |
-//        static_cast<unsigned long long>(msg.bytes[4]) << 40 |
-//        static_cast<unsigned long long>(msg.bytes[3]) << 32 |
-//        static_cast<unsigned long long>(msg.bytes[2]) << 24 |
-//        static_cast<unsigned long long>(msg.bytes[1]) << 16 |
-//        static_cast<unsigned long long>(msg.bytes[0]) << 8  |
-//        static_cast<unsigned long long>(msg.msgType);
-// }
-
-// RType::Utils::MessageParsed_s decompressFromMessage(unsigned long long toParse)
-// {
-//     RType::Utils::MessageParsed_s msg;
-//     msg.msgType = (toParse & 0x0000000000000ff);
-//     msg.bytes[0] = (toParse & 0x0000000000ff00) >> 8;
-//     msg.bytes[1] = (toParse & 0x00000000ff0000) >> 16;
-//     msg.bytes[2] = (toParse & 0x000000ff000000) >> 24;
-//     msg.bytes[3] = (toParse & 0x0000ff00000000) >> 32;
-//     msg.bytes[4] = (toParse & 0x00ff0000000000) >> 40;
-//     msg.bytes[5] = (toParse & 0xff000000000000) >> 48;
-//     msg.bytes[6] = (toParse & 0xff00000000000000) >> 56;
-//     if (msg.msgType == 0)
-//         msg.msgType = 33;
-//     return msg;
-// }
 
 RType::Utils::MessageParsed_s RType::Utils::SocketHandler::receive()
 {
@@ -73,7 +45,11 @@ void RType::Utils::SocketHandler::send(const struct MessageParsed_s &toSend)
     unsigned long long compressed = toSend.encode();
     boost::asio::const_buffer buffer(&compressed, sizeof(compressed));
     std::unique_lock<std::mutex> lock(*this->_mutex);
-    _socket->send_to(buffer, boost::asio::ip::udp::endpoint(boost::asio::ip::address::from_string(toSend.senderIp), toSend.senderPort));
+    try {
+        _socket->send_to(buffer, boost::asio::ip::udp::endpoint(boost::asio::ip::address::from_string(toSend.senderIp), toSend.senderPort));
+    } catch (const boost::system::system_error &err) {
+        std::cerr << "Send error " << err.what() << std::endl; 
+    }
 }
 
 std::shared_ptr<RType::Utils::SocketHandler> RType::Utils::SocketHandler::getInstance() const

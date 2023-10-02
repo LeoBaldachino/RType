@@ -11,7 +11,8 @@ RType::Client::Client(int ac, char **av) :
 _commands({
 {(playerPing), &RType::Client::sendPing},
 {illegalAction, &RType::Client::handleNonAuthorized},
-{newPlayerConnected, &RType::Client::newPlayerToTeam}
+{newPlayerConnected, &RType::Client::newPlayerToRoom},
+{givePlayerId, &RType::Client::newPlayerToRoom},
 })
 {
     std::srand(std::time(NULL));
@@ -21,9 +22,9 @@ _commands({
     this->_serverPort = std::stoi(av[2]);
     this->_mutex = std::make_unique<std::mutex>();
     this->_window = std::make_unique<sf::RenderWindow>(sf::VideoMode::getDesktopMode(), "R-Type");
-    this->_entities.push_back(std::make_unique<Player>(Position(0, 0, 1080, 1920)));
     this->_socket = std::make_unique<Utils::SocketHandler>("127.0.0.1", 4001 + std::rand() % 3000);
     this->_threadIsOpen = true;
+    this->_actualId = 0;
     this->_infosThread = std::make_unique<std::thread>(&RType::Client::infosThread, this);
     this->run();
 }
@@ -37,8 +38,8 @@ void RType::Client::run()
     this->createRoom(1);
     while (_window->isOpen()) {
         _window->clear();
-        for (auto &it : this->_entities)
-            it->accept(this->_visitor, _window);
+        for (auto &it : this->_entities._entities)
+            it.second->accept(this->_visitor, _window);
         _window->display();
     }
 }
@@ -102,11 +103,40 @@ void RType::Client::createRoom(unsigned char roomNb)
     this->_socket->send(msg);
     std::unique_lock<std::mutex> lock(*this->_mutex);
     this->_actualRoom = 1;
+    this->_entities.addEntity(std::make_shared<Player>(Position(0, 0, 1080, 1920)), 0);
 }
 
-void RType::Client::newPlayerToTeam(const Utils::MessageParsed_s &msg)
+void RType::Client::newPlayerToRoom(const Utils::MessageParsed_s &msg)
 {
     std::cout << "New player connected !!" << std::endl;
-    this->_entities.push_back(std::make_unique<Player>(Position(0, 0, 1080, 1920)));
+    this->_entities.addEntity(std::make_shared<Player>(Position(0, 0, 1080, 1920)), msg.getFirstShort());
     //todo -> store the player id for know wich one is moving
+}
+
+void RType::Client::getNewId(const Utils::MessageParsed_s &msg)
+{
+    std::unique_lock<std::mutex> lock(*this->_mutex);
+    this->_actualId = msg.getFirstShort();
+    auto find = this->_entities._entities.find(0);
+    auto ptrFind = find->second;
+    this->_entities._entities.erase(find);
+    this->_entities.addEntity(ptrFind, this->_actualId);
+}
+
+
+/*
+
+quand système d'id sera fonctionnel, utiliser cette fonction tant que le client n'a pas reçu d'id et ne faire aucune action
+si le client n'a pas d'id pour ne pas faire d'erreurs
+
+idem pour toutes les entitées -> tant qu'on ne sait pas qui elles sont continuer à demander et ne pas faire d'action sur elles
+
+*/
+bool RType::Client::checkAsId()
+{
+    if (this->_actualId != 0)
+        return true;
+    auto msg = this->buildEmptyMsg(playerGetId);
+    this->_socket->send(msg);
+    return false;
 }

@@ -18,6 +18,8 @@ namespace RType {
         getListOfRooms = 25,
         destroyedRoom = 26,
         playerPing = 27,
+        playerGetId = 28,
+        givePlayerId = 29,
         illegalAction = 31,
         serverStop = 32,
         cannotRead = 33,

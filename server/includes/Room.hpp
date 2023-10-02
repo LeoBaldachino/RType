@@ -6,7 +6,6 @@
 */
 
 #pragma once
-#include <vector>
 #include <iostream>
 #include "../../Sockets/includes/MessageParsed.hpp"
 #include "../../Sockets/includes/SocketHandler.hpp"
@@ -17,6 +16,7 @@
 #include <chrono>
 #include <unordered_map>
 #include <queue>
+#include "../../Core/Core.hpp"
 
 
 namespace RType {
@@ -152,13 +152,19 @@ namespace RType {
                  * @param msg the message received
                  */
                 void messagePing(const Utils::MessageParsed_s &msg);
+                /**
+                 * @brief handle of the 
+                 * 
+                 * @param msg 
+                 */
+                void getEntityDetails(const Utils::MessageParsed_s &msg);
                 std::unique_ptr<std::thread> _roomThread;
-                std::vector<std::pair<std::string, int>> _allPlayers;
-                std::unordered_map<int, bool> _playerOnline;
+                std::map<std::pair<std::string, int>, unsigned short> _allPlayers;
+                std::map<std::pair<std::string, int>, bool> _playerOnline;
                 std::shared_ptr<Utils::SocketHandler> _socket;
                 std::mutex _mutex;
                 bool _isOpen;
-                void *gameState;
+                Core _core;
                 unsigned char _id;
                 unsigned char _maxSize;
                 bool _willBeDestroyed;

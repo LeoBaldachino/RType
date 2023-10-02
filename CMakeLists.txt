@@ -11,7 +11,12 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 # Add your source files
 file(GLOB SERVER_SOURCES "server/sources/*.cpp")
 file(GLOB SOCKET_SOURCES "Sockets/sources/*.cpp")
+file(GLOB CORE_SOURCES "Core/*.cpp")
+file(GLOB ENTITY_SOURCES "Entity/*.cpp")
+file(GLOB SYSTEM_SOURCES "Systems/*.cpp")
+file(GLOB SUBSYSTEM_SOURCES "Systems/Subsystems/*.cpp")
 
+find_package(SFML COMPONENTS system graphics window REQUIRED)
 # Add your include directories
 include_directories(server/includes)
 include_directories(Sockets/includes)
@@ -21,10 +26,11 @@ find_package(Boost REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
 
 # Create the executable
-add_executable(r-type_server ${SERVER_SOURCES} ${SOCKET_SOURCES})
+add_executable(r-type_server ${SERVER_SOURCES} ${SOCKET_SOURCES} ${CORE_SOURCES} ${ENTITY_SOURCES} ${SYSTEM_SOURCES} ${SUBSYSTEM_SOURCES})
 
 # Link the Boost library
 target_link_libraries(r-type_server PRIVATE ${Boost_LIBRARIES})
+target_link_libraries(r-type_server PRIVATE sfml-system sfml-graphics sfml-window)
 
 # Link the pthread library
 set(THREADS_PREFER_PTHREAD_FLAG ON)
@@ -45,7 +51,7 @@ Systems/Subsystems/DrawSystem.cpp Systems/Subsystems/InputSystem.cpp
 Systems/Subsystems/ShotSystem.cpp Entity/ShotEntity.cpp
 Systems/Subsystems/PiercingShotSystem.cpp Entity/PiercingShotEntity.cpp
 Entity/Bydos.cpp Systems/BydosSystem.cpp Systems/Subsystems/AIShoot.cpp
-Systems/Subsystems/MovementSystem.cpp Core/Core.cpp)
+Systems/Subsystems/MovementSystem.cpp Core/Core.cpp Core/Core.cpp)
 
 target_link_libraries(r-type PRIVATE sfml-system sfml-graphics sfml-window) # Link SFML libraries
 set(CMAKE_BUILD_TYPE Debug) # Enable debugging
