@@ -10,6 +10,10 @@
 #include <iostream>
 #include "../Components/Shoot.hpp"
 #include "../Components/Drawable.hpp"
+#include "IEntity.hpp"
+
+#define SHOT_X 32
+#define SHOT_Y 12
 
 class ShotEntity {
     public:
@@ -21,7 +25,10 @@ class ShotEntity {
 
         Drawable getDrawable(void) const;
         void setDrawable(const Drawable &drawable);
+        Vector2d getSize(void);
+        bool isColidingWith(IEntity &entity);
     private:
         Shoot _shoot;
         Drawable _drawable;
+        Vector2d _size;
 };

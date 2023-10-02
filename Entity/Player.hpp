@@ -11,6 +11,10 @@
 #include "../Components/State.hpp"
 // #include "../Components/Hitbox.hpp"
 #include "../Components/Drawable.hpp"
+#include "../Components/Vector2d.hpp"
+
+#define PLAYER_X 32 * SIZE_SCALE
+#define PLAYER_Y 14 * SIZE_SCALE
 
 class Player : public IEntity {
     public:
@@ -51,6 +55,10 @@ class Player : public IEntity {
         int getShootGravity(void) const;
 
         const unsigned char returnType(void);
+
+        bool isColidingWith(IEntity &entity);
+
+        Vector2d getSize(void);
     private:
         State _state;
         Position _position;
@@ -62,4 +70,5 @@ class Player : public IEntity {
         int _shootVelocity = 5;
         int _shootGravity = 0;
         // const unsigned char _type = TYPE_PLAYER;
+        Vector2d _size;
 };

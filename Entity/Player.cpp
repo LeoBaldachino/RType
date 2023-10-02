@@ -7,7 +7,7 @@
 
 #include "Player.hpp"
 
-Player::Player(Position position) : _drawable("Assets/player.png", 2)
+Player::Player(Position position) : _drawable("Assets/player.png", 2), _size(PLAYER_X, PLAYER_Y)
 {
     this->_position = position;
     this->_state = State(100);
@@ -98,6 +98,23 @@ void Player::setVelocity(int velocity)
 int Player::getVelocity(void) const
 {
     return (this->_velocity);
+}
+
+Vector2d Player::getSize(void)
+{
+    return (this->_size);
+}
+
+bool Player::isColidingWith(IEntity &entity)
+{
+    for (int i = entity.getPosition().getX(); i <= entity.getPosition().getX() + entity.getSize().x; i++)
+        for (int j = entity.getPosition().getY(); j <= entity.getPosition().getY() + entity.getSize().y; j++)
+            if (this->_position.getX() < i &&
+                this->_position.getY() < j &&
+                this->_position.getY() + this->_size.y >= j &&
+                this->_position.getX() + this->_size.x >= i)
+                return (true);
+    return (false);
 }
 
 // const unsigned char Player::returnType(void)
