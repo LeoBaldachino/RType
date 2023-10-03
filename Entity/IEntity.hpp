@@ -23,4 +23,6 @@ class IEntity {
         virtual Position getPosition(void) const = 0;
         virtual void addMessage(RType::Utils::MessageParsed_s &message) = 0;
         virtual void popMessage(void) = 0;
+        virtual void setVelocity(int velocity) = 0;
+        virtual int getVelocity(void) const = 0;
 };

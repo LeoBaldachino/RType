@@ -25,16 +25,16 @@ RType::Utils::MessageParsed_s RType::RTypeGameLoop::updatePlayerPos(std::pair<un
     msg.second.msgType == 14;
     msg.second.getFirstShort();
     if (msg.second.getFirstShort() == 3 && posTmp.getX() < 1920) {
-        posTmp.setX(posTmp.getX() + 1);
+        posTmp.setX(posTmp.getX() + 1 * player->getVelocity());
     }
     if (msg.second.getFirstShort() == 2 && posTmp.getX() > 0) {
-        posTmp.setX(posTmp.getX() - 1);
+        posTmp.setX(posTmp.getX() - 1 * player->getVelocity());
     }
     if (msg.second.getFirstShort() == 1 && posTmp.getY() < 1080) {
-        posTmp.setY(posTmp.getY() + 1);
+        posTmp.setY(posTmp.getY() + 1 * player->getVelocity());
     }
     if (msg.second.getFirstShort() == 0 && posTmp.getY() > 0) {
-        posTmp.setY(posTmp.getY() - 1);
+        posTmp.setY(posTmp.getY() - 1 * player->getVelocity());
     }
     player->setPosition(posTmp);
     msgReturned.setFirstShort(posTmp.getX());
