@@ -54,7 +54,6 @@ void RType::Client::updateInputs(void)
 
 void RType::Client::handleInputs(void)
 {
-    this->_keysDown.clear();
     sf::Event event;
     while (this->_window->pollEvent(event)) {
         if (event.type == sf::Event::KeyPressed) {
@@ -83,14 +82,14 @@ void RType::Client::handleInputs(void)
                     this->_inputs.push_back(Events::Shoot);
                 this->shooting = false;
             }
-            // if (event.key.code == sf::Keyboard::Up)
-            //     this->_keysDown[Events::Up] = false;
-            // if (event.key.code == sf::Keyboard::Down)
-            //     this->_keysDown[Events::Down] = false;
-            // if (event.key.code == sf::Keyboard::Left)
-            //     this->_keysDown[Events::Left] = false;
-            // if (event.key.code == sf::Keyboard::Right)
-            //     this->_keysDown[Events::Right] = false;
+            if (event.key.code == sf::Keyboard::Up)
+                this->_keysDown[Events::Up] = false;
+            if (event.key.code == sf::Keyboard::Down)
+                this->_keysDown[Events::Down] = false;
+            if (event.key.code == sf::Keyboard::Left)
+                this->_keysDown[Events::Left] = false;
+            if (event.key.code == sf::Keyboard::Right)
+                this->_keysDown[Events::Right] = false;
         }
     }
 }

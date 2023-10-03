@@ -23,7 +23,7 @@ class InputSystem {
             {Inputs::Events::Right, false}};
         };
         ~InputSystem() = default;
-        void handleInput(sf::Event event, std::unique_ptr<sf::RenderWindow> &window);
+        void handleInput(sf::Event &event, std::unique_ptr<sf::RenderWindow> &window);
         void updatePlayer(Player &player);
 
         Inputs _inputs;

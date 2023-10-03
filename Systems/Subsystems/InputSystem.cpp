@@ -7,7 +7,7 @@
 
 #include "InputSystem.hpp"
 
-void InputSystem::handleInput(sf::Event event, std::unique_ptr<sf::RenderWindow> &window)
+void InputSystem::handleInput(sf::Event &event, std::unique_ptr<sf::RenderWindow> &window)
 {
     if (event.type == sf::Event::KeyReleased) {
         if (this->shooting && event.key.code == sf::Keyboard::Space) {
