@@ -22,8 +22,9 @@ bool Core::addEntity(const std::shared_ptr<IEntity> &entity, unsigned short inde
 
 unsigned short Core::getAvailabeIndex()
 {
-    if (this->_presentIndex.empty())
+    if (this->_presentIndex.empty()) {
         return static_cast<unsigned short>(this->_entities.size());
+    }
     unsigned short newId = this->_presentIndex.front();
     this->_presentIndex.pop();
     return newId;
