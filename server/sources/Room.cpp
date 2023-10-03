@@ -101,13 +101,11 @@ bool RType::Server::Room::sendMessageToRoom(const Utils::MessageParsed_s &msg)
         this->sendPlayerId(msg);
         return true;
     }
-    std::cout << "Other message " << static_cast<int>(msg.msgType) << std::endl;
     auto it = this->_allPlayers.find({msg.senderIp, msg.senderPort});
     if (it == this->_allPlayers.end()) {
         std::cout << "Not in room..." << std::endl;
         return false;
     }
-    std::cout << "Message Pushed !" << "Message queue size = " << this->_toSendToGameLoop->size() << std::endl;
     std::unique_lock<std::mutex> lock(*this->_mutexQueue);
     this->_toSendToGameLoop->push({it->second, msg});
     return true;

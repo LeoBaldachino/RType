@@ -41,7 +41,10 @@ namespace RType {
             Utils::MessageParsed_s buildEmptyMsg(const RType::ComCodes &code);
             void newPlayerToRoom(const Utils::MessageParsed_s &msg);
             void getNewId(const Utils::MessageParsed_s &msg);
+            void moveEntity(const Utils::MessageParsed_s &msg);
             bool checkAsId();
+            void quitRoom(const Utils::MessageParsed_s &msg);
+            void serverStopped(const Utils::MessageParsed_s &msg);
             std::unique_ptr<std::thread> _infosThread;
             std::shared_ptr<Utils::SocketHandler> _socket;
             std::unique_ptr<sf::RenderWindow> _window;

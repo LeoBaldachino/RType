@@ -13,6 +13,9 @@ _commands({
 {illegalAction, &RType::Client::handleNonAuthorized},
 {newPlayerConnected, &RType::Client::newPlayerToRoom},
 {givePlayerId, &RType::Client::newPlayerToRoom},
+{moveAnEntity, &RType::Client::moveEntity},
+{destroyedRoom, &RType::Client::quitRoom},
+{serverStop, &RType::Client::serverStopped}
 })
 {
     std::srand(std::time(NULL));
@@ -102,7 +105,7 @@ void RType::Client::run()
         _window->clear();
         this->handleInputs();
         for (auto &it : this->_entities._entities)
-            it.second->accept(this->_visitor, _window);
+            it.second->accept(this->_visitor);
         _window->display();
         if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - this->_sendInputTime).count() >= 100) {
             for (auto it : this->_keysDown)
@@ -213,4 +216,26 @@ bool RType::Client::checkAsId()
     auto msg = this->buildEmptyMsg(playerGetId);
     this->_socket->send(msg);
     return false;
+}
+
+void RType::Client::moveEntity(const Utils::MessageParsed_s &msg)
+{
+    this->_entities._entities[msg.getThirdShort()]->setPosition(Position(msg.getFirstShort(), msg.getSecondShort(),1080, 1920));
+    std::cout << "Entity " << msg.getThirdShort() << " moves x = " << msg.getFirstShort() << " y = " << msg.getSecondShort() << std::endl; 
+}
+
+void RType::Client::quitRoom(const Utils::MessageParsed_s &msg)
+{
+    (void)msg;
+    this->_actualId = 0;
+    this->_threadIsOpen = false;
+    this->_window->close();
+}
+
+void RType::Client::serverStopped(const Utils::MessageParsed_s &msg)
+{
+    (void)msg;
+    this->_actualId = 0;
+    this->_threadIsOpen = false;
+    this->_window->close();   
 }

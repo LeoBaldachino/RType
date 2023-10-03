@@ -6,7 +6,7 @@ namespace RType {
      * 
      */
     enum ComCodes {
-        move = 11,
+        moveAnEntity = 11,
         valueChange = 12,
         touchingObject = 13,
         keyPressed = 14,
