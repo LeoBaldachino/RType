@@ -53,7 +53,16 @@ bool RType::Server::Room::addToRoom(const std::pair<std::string, int> &newPlayer
         std::cout << "new id " << newId << std::endl;
         this->_core.addEntity(std::make_shared<Player>(Position(0, 0, 1920, 1080)), newId);
         for (auto &it : this->_allPlayers) {
+            msg.msgType = newPlayerConnected;
             msg.setFirstShort(it.second);
+            this->_socket->send(msg);
+            msg.msgType = moveAnEntity;
+            auto coreIt = this->_core._entities.find(it.second);
+            if (coreIt == this->_core._entities.end())
+                continue;
+            msg.setThirdShort(it.second);
+            msg.setSecondShort(coreIt->second->getPosition().getY());
+            msg.setFirstShort(coreIt->second->getPosition().getX());
             this->_socket->send(msg);
         }
         msg.setFirstShort(newId);

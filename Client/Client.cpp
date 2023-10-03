@@ -118,7 +118,7 @@ void RType::Client::run()
         for (auto &it : this->_entities._entities)
             it.second->accept(this->_visitor);
         _window->display();
-        if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - this->_sendInputTime).count() >= 100) {
+        if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - this->_sendInputTime).count() >= 10) {
             for (auto it : this->_keysDown)
                 if (it.second) {
                     std::cout << "Press key sended..." << std::endl;
