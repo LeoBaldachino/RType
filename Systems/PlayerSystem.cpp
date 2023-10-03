@@ -18,7 +18,7 @@ Player PlayerSystem::getPlayer(void) const
     return (this->_player);
 }
 
-void PlayerSystem::getInputs(std::unique_ptr<sf::RenderWindow> &window)
+void PlayerSystem::getInputs()
 {
     // // sf::Event event;
     // // while (window->pollEvent(event))
@@ -42,11 +42,11 @@ void PlayerSystem::updateShots(void)
         this->_shots[i]->updatePos();
 }
 
-void PlayerSystem::drawShots(std::unique_ptr<sf::RenderWindow> &window)
-{
-    for (int i = 0; i != this->_shots.size(); ++i)
-        this->_shots[i]->draw(window, "Assets/shot.png");
-}
+// void PlayerSystem::drawShots(std::unique_ptr<sf::RenderWindow> &window)
+// {
+//     for (int i = 0; i != this->_shots.size(); ++i)
+//         this->_shots[i]->draw(window, "Assets/shot.png");
+// }
 
 void PlayerSystem::createShots(void)
 {
@@ -63,11 +63,11 @@ void PlayerSystem::updatePiercingShots(void)
         this->_piercingShots[i]->updatePos();
 }
 
-void PlayerSystem::drawPiercingShots(std::unique_ptr<sf::RenderWindow> &window)
-{
-    for (int i = 0; i != this->_piercingShots.size(); ++i)
-        this->_piercingShots[i]->draw(window);
-}
+// void PlayerSystem::drawPiercingShots(std::unique_ptr<sf::RenderWindow> &window)
+// {
+//     for (int i = 0; i != this->_piercingShots.size(); ++i)
+//         this->_piercingShots[i]->draw(window);
+// }
 
 void PlayerSystem::createPiercingShots(void)
 {
@@ -93,8 +93,8 @@ void PlayerSystem::updatePos(void)
     this->_player.setPosition(tmpPosition);
 }
 
-void PlayerSystem::draw(std::unique_ptr<sf::RenderWindow> &window)
-{
-    this->_drawSystem->setPosition(this->_player.getPosition());
-    this->_drawSystem->draw(window);
-}
+// void PlayerSystem::draw(std::unique_ptr<sf::RenderWindow> &window)
+// {
+//     this->_drawSystem->setPosition(this->_player.getPosition());
+//     this->_drawSystem->draw(window);
+// }

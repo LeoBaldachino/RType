@@ -7,11 +7,11 @@
 
 #include "BydosSystem.hpp"
 
-void BydosSystem::draw(std::unique_ptr<sf::RenderWindow> &window)
-{
-    this->_drawSystem->setPosition(this->_bydos.getPosition());
-    this->_drawSystem->draw(window);
-}
+// void BydosSystem::draw(std::unique_ptr<sf::RenderWindow> &window)
+// {
+//     this->_drawSystem->setPosition(this->_bydos.getPosition());
+//     this->_drawSystem->draw(window);
+// }
 
 void BydosSystem::setBydos(const Bydos &b)
 {
@@ -35,11 +35,11 @@ void BydosSystem::updateShots(void)
         this->_shots[i]->updatePos();
 }
 
-void BydosSystem::drawShots(std::unique_ptr<sf::RenderWindow> &window)
-{
-    for (int i = 0; i != this->_shots.size(); ++i)
-        this->_shots[i]->draw(window, "Assets/enemyShot.png");
-}
+// void BydosSystem::drawShots(std::unique_ptr<sf::RenderWindow> &window)
+// {
+//     for (int i = 0; i != this->_shots.size(); ++i)
+//         this->_shots[i]->draw(window, "Assets/enemyShot.png");
+// }
 
 void BydosSystem::createShots(const Player &player)
 {
