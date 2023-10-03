@@ -39,6 +39,7 @@ RType::Utils::MessageParsed_s RType::RTypeGameLoop::updatePlayerPos(std::pair<un
     player->setPosition(posTmp);
     msgReturned.setFirstShort(posTmp.getX());
     msgReturned.setSecondShort(posTmp.getY());
+    msgReturned.setThirdShort(msg.first);
     msgReturned.msgType = 14;
     return msgReturned;
 }
