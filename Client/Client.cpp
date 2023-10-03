@@ -101,8 +101,19 @@ void RType::Client::run()
 {
     this->createRoom(1);
     auto msgKeyPressed = this->buildEmptyMsg(keyPressed);
+    sf::Texture text;
+    text.loadFromFile("../Assets/player.png");
     while (_window->isOpen()) {
         _window->clear();
+
+        for (auto it : this->_entities._entities) {
+            sf::Sprite sprite;
+            sprite.setTexture(text);
+            sprite.setScale(2, 2);
+            sprite.setPosition(it.second->getPosition().getX(), it.second->getPosition().getY());
+            _window->draw(sprite);
+        }
+        
         this->handleInputs();
         for (auto &it : this->_entities._entities)
             it.second->accept(this->_visitor);
