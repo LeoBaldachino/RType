@@ -22,9 +22,9 @@ Shoot Player::shoot() const
     return Shoot(shootDirection, playerPos, this->_shootDmg, this->_shootVelocity, this->_shootGravity, true);
 }
 
-void Player::accept(IVisitor &v, std::unique_ptr<sf::RenderWindow> &window)
+void Player::accept(IVisitor &v)
 {
-    v.visitPlayer(*this, window);
+    v.visitPlayer(*this);
 }
 
 void Player::move(Vector2d direction)
@@ -98,6 +98,26 @@ void Player::setVelocity(int velocity)
 int Player::getVelocity(void) const
 {
     return (this->_velocity);
+}
+
+void Player::addMessage(RType::Utils::MessageParsed_s &message)
+{
+    this->_messages.push(message);
+}
+
+void Player::popMessage(void)
+{
+    this->_messages.pop();
+}
+
+RType::Utils::MessageParsed_s Player::getFirstMsg(void) const
+{
+    return (this->_messages.front());
+}
+
+bool Player::isMsgEmpty(void) const
+{
+    return (this->_messages.empty());
 }
 
 // const unsigned char Player::returnType(void)

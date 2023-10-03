@@ -21,9 +21,9 @@ Shoot Bydos::shoot(const Position &playerPos) const
     return aiShoot.shootLogic();
 }
 
-void Bydos::accept(IVisitor &v, std::unique_ptr<sf::RenderWindow> &window)
+void Bydos::accept(IVisitor &v)
 {
-    v.visitBydos(*this, window);
+    v.visitBydos(*this);
 }
 
 void Bydos::setPosition(const Position &position)
@@ -94,6 +94,16 @@ void Bydos::setShootGravity(int shootGravity)
 int Bydos::getShootGravity(void) const
 {
     return this->_shootGravity;
+}
+
+void Bydos::addMessage(RType::Utils::MessageParsed_s &message)
+{
+    this->_messages.push(message);
+}
+
+void Bydos::popMessage(void)
+{
+    this->_messages.pop();
 }
 
 void Bydos::setMoveable(const Moveable &moveable)
