@@ -20,9 +20,9 @@ Player PlayerSystem::getPlayer(void) const
 
 void PlayerSystem::getInputs(std::unique_ptr<sf::RenderWindow> &window)
 {
-    sf::Event event;
-    while (window->pollEvent(event))
-        this->_inputSystem.handleInput(event, window);
+    // sf::Event event;
+    // while (window->pollEvent(event))
+    //     this->_inputSystem.handleInput();
 }
 
 void PlayerSystem::clearShots(void)

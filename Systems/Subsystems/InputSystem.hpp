@@ -16,18 +16,9 @@
 
 class InputSystem {
     public:
-        InputSystem() : _inputs() { this->_keysDown = {
-            {Inputs::Events::Up, false},
-            {Inputs::Events::Down, false},
-            {Inputs::Events::Left, false},
-            {Inputs::Events::Right, false}};
-        };
+        InputSystem() : _inputs() {};
         ~InputSystem() = default;
-        void handleInput(sf::Event event, std::unique_ptr<sf::RenderWindow> &window);
+        void handleInput(void);
         void updatePlayer(Player &player);
-
         Inputs _inputs;
-        std::chrono::time_point<std::chrono::_V2::steady_clock, std::chrono::_V2::steady_clock::duration> shotTime;
-        bool shooting = false;
-        std::unordered_map<Inputs::Events, bool> _keysDown;
 };
