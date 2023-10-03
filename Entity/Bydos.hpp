@@ -18,7 +18,7 @@ class Bydos : public IEntity {
         Bydos() {};
         Bydos(Position position, int velocity, Vector2d moveDirection);
         ~Bydos() {};
-        void accept(IVisitor &v, std::unique_ptr<sf::RenderWindow> &window);
+        void accept(IVisitor &v);
 
         Shoot shoot(const Position &playerPos) const;
 
@@ -46,6 +46,9 @@ class Bydos : public IEntity {
         void setMoveable(const Moveable &moveable);
         Moveable getMoveable(void) const;
 
+        void addMessage(RType::Utils::MessageParsed_s &message);
+        void popMessage(void);
+
     private:
         State _state;
         Position _position;
@@ -55,4 +58,5 @@ class Bydos : public IEntity {
         int _shootDmg = 10;
         int _shootVelocity = 5;
         int _shootGravity = 0;
+        std::queue<RType::Utils::MessageParsed_s> _messages;
 };

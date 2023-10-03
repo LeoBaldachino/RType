@@ -17,6 +17,6 @@ namespace RType {
         protected :
             std::queue<Utils::MessageParsed_s> runAfterUpdate(std::queue<std::pair<unsigned short, Utils::MessageParsed_s>> newMessages);
         private :
-
+        
     };
 }

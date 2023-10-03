@@ -16,10 +16,10 @@ class BydosSystem {
         ~BydosSystem() {};
         void setBydos(const Bydos &b);
         Bydos getBydos(void) const;
-        void draw(std::unique_ptr<sf::RenderWindow> &window);
         void updatePos(void);
         void updateShots(void);
-        void drawShots(std::unique_ptr<sf::RenderWindow> &window);
+        // void draw(void);
+        // void drawShots(void);
         void createShots(const Player &player);
         void clearShots(void);
 

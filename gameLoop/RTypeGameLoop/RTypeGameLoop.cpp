@@ -9,7 +9,7 @@
 
 RType::RTypeGameLoop::RTypeGameLoop(Core &core) : GameLoop(core)
 {
-
+    
 }
 
 RType::RTypeGameLoop::~RTypeGameLoop()

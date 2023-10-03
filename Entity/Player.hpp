@@ -17,7 +17,7 @@ class Player : public IEntity {
         Player(Position position);
         Player() {};
         ~Player() {};
-        void accept(IVisitor &v, std::unique_ptr<sf::RenderWindow> &window);
+        void accept(IVisitor &v);
 
         Shoot shoot() const;
 
@@ -50,6 +50,11 @@ class Player : public IEntity {
         void setShootGravity(int shootGravity);
         int getShootGravity(void) const;
 
+        void addMessage(RType::Utils::MessageParsed_s &message);
+        void popMessage(void);
+        RType::Utils::MessageParsed_s getFirstMsg(void) const;
+        bool isMsgEmpty(void) const;
+
         const unsigned char returnType(void);
     private:
         State _state;
@@ -61,5 +66,6 @@ class Player : public IEntity {
         int _shootDmg = 10;
         int _shootVelocity = 5;
         int _shootGravity = 0;
+        std::queue<RType::Utils::MessageParsed_s> _messages;
         // const unsigned char _type = TYPE_PLAYER;
 };

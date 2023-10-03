@@ -13,12 +13,12 @@
 class SystemVisitor : public IVisitor {
     public:
         SystemVisitor(){};
-        void visitPlayer(Player &p, std::unique_ptr<sf::RenderWindow> &window) {
+        void visitPlayer(Player &p) {
             this->_playerSystem.setPlayer(p);
-            this->_playerSystem.draw(window);
-            this->_playerSystem.drawShots(window);
-            this->_playerSystem.drawPiercingShots(window);
-            this->_playerSystem.getInputs(window);
+            // this->_playerSystem.draw(window);
+            // this->_playerSystem.drawShots(window);
+            // this->_playerSystem.drawPiercingShots(window);
+            this->_playerSystem.getInputs();
             this->_playerSystem.updatePos();
             this->_playerSystem.updateShots();
             this->_playerSystem.updatePiercingShots();
@@ -27,10 +27,10 @@ class SystemVisitor : public IVisitor {
             this->_playerSystem.clearShots();
             p = this->_playerSystem.getPlayer();
         }
-        void visitBydos(Bydos &b, std::unique_ptr<sf::RenderWindow> &window) {
+        void visitBydos(Bydos &b) {
             this->_bydosSystem.setBydos(b);
-            this->_bydosSystem.draw(window);
-            this->_bydosSystem.drawShots(window);
+            // this->_bydosSystem.draw(window);
+            // this->_bydosSystem.drawShots(window);
             this->_bydosSystem.updatePos();
             this->_bydosSystem.updateShots();
             // this->_bydosSystem.createShots(this->_playerSystem.getPlayer()); DEFINIR CLOCK
@@ -40,5 +40,4 @@ class SystemVisitor : public IVisitor {
     private:
         PlayerSystem _playerSystem;
         BydosSystem _bydosSystem;
-
 };
