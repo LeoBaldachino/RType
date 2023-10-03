@@ -147,7 +147,10 @@ void RType::Server::Room::runRoom()
         std::unique_lock<std::mutex> lock(*this->_mutexQueue);
         auto ret = this->_gameLoop->updateGameLoop(*this->_toSendToGameLoop);
         this->_toSendToGameLoop = std::make_unique<std::queue<std::pair<unsigned short, Utils::MessageParsed_s>>>();
-        // std::cout << "Game loop updated..." << std::endl;
+        while (!ret.empty()) {
+            this->notifyAllPlayer(ret.front());
+            ret.pop();
+        }
     }
 }
 
