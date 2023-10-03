@@ -97,6 +97,10 @@ bool RType::Server::Room::sendMessageToRoom(const Utils::MessageParsed_s &msg)
         this->messagePing(msg);
         return true;
     }
+    if (msg.msgType == playerGetId) {
+        this->sendPlayerId(msg);
+        return true;
+    }
     std::cout << "Other message " << static_cast<int>(msg.msgType) << std::endl;
     auto it = this->_allPlayers.find({msg.senderIp, msg.senderPort});
     if (it == this->_allPlayers.end()) {
@@ -240,4 +244,17 @@ void RType::Server::Room::setDestroy()
 {
     std::unique_lock<std::mutex> lock(this->_mutex);
     this->_willBeDestroyed = true;
+}
+
+void RType::Server::Room::sendPlayerId(const Utils::MessageParsed_s &msg)
+{
+    Utils::MessageParsed_s newMsg(msg);
+    newMsg.msgType = givePlayerId;
+    auto it = this->_allPlayers.find({msg.senderIp, msg.senderPort});
+    if (it == this->_allPlayers.end()) {
+        std::cout << "This player is not in this room" << std::endl;
+        return;
+    }
+    newMsg.setFirstShort(it->second);
+    this->_socket->send(newMsg);
 }

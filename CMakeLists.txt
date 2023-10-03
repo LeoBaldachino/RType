@@ -48,12 +48,16 @@ set(CMAKE_CXX_STANDARD 14)
 
 find_package(SFML COMPONENTS system graphics window REQUIRED) # Find SFML
 
-add_executable(r-type main.cpp Entity/Player.cpp Systems/PlayerSystem.cpp
+add_executable(r-type Client/main.cpp Entity/Player.cpp Systems/PlayerSystem.cpp
 Systems/Subsystems/DrawSystem.cpp Systems/Subsystems/InputSystem.cpp
 Systems/Subsystems/ShotSystem.cpp Entity/ShotEntity.cpp
 Systems/Subsystems/PiercingShotSystem.cpp Entity/PiercingShotEntity.cpp
 Entity/Bydos.cpp Systems/BydosSystem.cpp Systems/Subsystems/AIShoot.cpp
-Systems/Subsystems/MovementSystem.cpp Core/Core.cpp Core/Core.cpp)
+Systems/Subsystems/MovementSystem.cpp Core/Core.cpp Sockets/sources/MessageParsed.cpp
+Sockets/sources/SocketHandler.cpp Client/Client.cpp)
 
 target_link_libraries(r-type PRIVATE sfml-system sfml-graphics sfml-window) # Link SFML libraries
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+target_link_libraries(r-type PRIVATE Threads::Threads)
 set(CMAKE_BUILD_TYPE Debug) # Enable debugging

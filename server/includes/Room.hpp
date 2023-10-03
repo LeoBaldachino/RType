@@ -137,6 +137,8 @@ namespace RType {
                  * 
                  */
                 void setDestroy();
+
+                void sendPlayerId(const Utils::MessageParsed_s &msg);
             private:
                 /**
                  * @brief run the room inside of a thread, method launched at the constructor 
@@ -154,12 +156,7 @@ namespace RType {
                  * @param msg the message received
                  */
                 void messagePing(const Utils::MessageParsed_s &msg);
-                /**
-                 * @brief handle of the 
-                 * 
-                 * @param msg 
-                 */
-                void getEntityDetails(const Utils::MessageParsed_s &msg);
+
                 std::unique_ptr<std::thread> _roomThread;
                 std::map<std::pair<std::string, int>, unsigned short> _allPlayers;
                 std::map<std::pair<std::string, int>, bool> _playerOnline;
@@ -176,6 +173,7 @@ namespace RType {
                 std::unique_ptr<std::mutex> _mutexQueue;
                 std::unique_ptr<std::queue<std::pair<unsigned short, Utils::MessageParsed_s>>> _toSendToGameLoop;
                 std::pair<std::string, int> _firstClient;
+
         };
     }
 }
