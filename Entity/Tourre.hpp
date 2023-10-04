@@ -6,21 +6,58 @@
 */
 
 #pragma once
-
-#include "../Components/Moveable.hpp"
-#include "../Components/Position.hpp"
+#include "IEntity.hpp"
 #include "../Components/State.hpp"
 #include "../Systems/Subsystems/AIShoot.hpp"
-#include "../Components/Hitbox.hpp"
+#include "../Components/Drawable.hpp"
+#include "../Entity/Player.hpp"
+// #include "../Components/Hitbox.hpp"
 
-class Tourre {
+class Tourre : public IEntity {
     public:
+        Tourre() {};
         Tourre(Position position, int velocity, Vector2d moveDirection);
         ~Tourre(){};
+
+        void accept(IVisitor &v);
+
         Shoot shoot(const Position &playerPos) const;
+
+        void setPosition(const Position &position);
+        Position getPosition() const;
+
+        void setState(State state);
+        State getState() const;
+
+        void setDrawable(Drawable drawable);
+        Drawable getDrawable() const;
+
+        void setVelocity(int velocity);
+        int getVelocity(void) const;
+
+        void setShootDmg(int shootDmg);
+        int getShootDmg(void) const;
+
+        void setShootVelocity(int shootVelocity);
+        int getShootVelocity(void) const;
+
+        void setShootGravity(int shootGravity);
+        int getShootGravity(void) const;
+
+        void setMoveable(const Moveable &moveable);
+        Moveable getMoveable(void) const;
+
+        void addMessage(RType::Utils::MessageParsed_s &message);
+        void popMessage(void);
+
     private:
         State _state;
         Position _position;
         Moveable _movement;
-        // Hitbox _hitbox;
+        Drawable _drawable;
+        int _velocity;
+        int _shootDmg = 10;
+        int _shootVelocity = 5;
+        int _shootGravity = 0;
+        std::queue<RType::Utils::MessageParsed_s> _messages;
 };
