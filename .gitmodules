@@ -4,6 +4,6 @@
 [submodule "CMake"]
 	path = CMake
 	url = https://github.com/Kitware/CMake.git
-[submodule "asio"]
-	path = asio
-	url = https://github.com/chriskohlhoff/asio.git
+[submodule "boost"]
+	path = boost
+	url = https://github.com/boostorg/boost.git
