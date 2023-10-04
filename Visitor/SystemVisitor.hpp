@@ -9,6 +9,7 @@
 #include "IVisitor.hpp"
 #include "../Systems/PlayerSystem.hpp"
 #include "../Systems/BydosSystem.hpp"
+#include "../Systems/TourreSystem.hpp"
 
 class SystemVisitor : public IVisitor {
     public:
@@ -37,7 +38,16 @@ class SystemVisitor : public IVisitor {
             this->_bydosSystem.clearShots();
             b = this->_bydosSystem.getBydos();
         };
+        void visitTourre(Tourre &t) {
+            this->_tourreSystem.setTourre(t);
+            this->_tourreSystem.updatePos();
+            this->_tourreSystem.updateShots();
+            // this->_tourreSystem.createShots(this->_playerSystem.getPlayer());
+            this->_tourreSystem.clearShots();
+            t = this->_tourreSystem.getTourre();
+        };
     private:
         PlayerSystem _playerSystem;
         BydosSystem _bydosSystem;
+        TourreSystem _tourreSystem;
 };

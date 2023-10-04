@@ -18,5 +18,5 @@ class IVisitor {
     public:
         virtual void visitPlayer(Player &p) = 0;
         virtual void visitBydos(Bydos &b) = 0;
-        // virtual void visitTourre(Tourre &t, Player &p, std::unique_ptr<sf::RenderWindow> &window) = 0;
+        virtual void visitTourre(Tourre &t) = 0;
 };
