@@ -19,7 +19,7 @@
 #include "../../Core/Core.hpp"
 #include "../../gameLoop/IGameLoop.hpp"
 #include "../../gameLoop/RTypeGameLoop/RTypeGameLoop.hpp"
-
+#include "../includes/EntityTypes.hpp"
 
 namespace RType {
     namespace Server {
@@ -157,6 +157,7 @@ namespace RType {
                  */
                 void messagePing(const Utils::MessageParsed_s &msg);
 
+                void sendEntityType(const Utils::MessageParsed_s &msg);
                 std::unique_ptr<std::thread> _roomThread;
                 std::map<std::pair<std::string, int>, unsigned short> _allPlayers;
                 std::map<std::pair<std::string, int>, bool> _playerOnline;

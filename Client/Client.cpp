@@ -12,10 +12,11 @@ _commands({
 {(playerPing), &RType::Client::sendPing},
 {illegalAction, &RType::Client::handleNonAuthorized},
 {newPlayerConnected, &RType::Client::newPlayerToRoom},
-{givePlayerId, &RType::Client::newPlayerToRoom},
+{givePlayerId, &RType::Client::getNewId},
 {moveAnEntity, &RType::Client::moveEntity},
 {destroyedRoom, &RType::Client::quitRoom},
-{serverStop, &RType::Client::serverStopped}
+{serverStop, &RType::Client::serverStopped},
+{entityType, &RType::Client::setEntityType}
 })
 {
     std::srand(std::time(NULL));
@@ -198,7 +199,6 @@ void RType::Client::newPlayerToRoom(const Utils::MessageParsed_s &msg)
 {
     std::cout << "New player connected !!" << std::endl;
     this->_entities.addEntity(std::make_shared<Player>(Position(0, 0, 1080, 1920)), msg.getFirstShort());
-    //todo -> store the player id for know wich one is moving
 }
 
 void RType::Client::getNewId(const Utils::MessageParsed_s &msg)
@@ -231,7 +231,15 @@ bool RType::Client::checkAsId()
 
 void RType::Client::moveEntity(const Utils::MessageParsed_s &msg)
 {
-    this->_entities._entities[msg.getThirdShort()]->setPosition(Position(msg.getFirstShort(), msg.getSecondShort(),1080, 1920));
+    // if (!checkAsId())
+    //     return;
+    auto it = this->_entities._entities.find(msg.getThirdShort());
+    if (it == this->_entities._entities.end()) {
+        this->getEntityType(msg.getThirdShort());
+        std::cout << "The entity with the id " << msg.getThirdShort() << " does not exist" << std::endl;
+        return;
+    }
+    it->second->setPosition(Position(msg.getFirstShort(), msg.getSecondShort(), 1080, 1920));
     std::cout << "Entity " << msg.getThirdShort() << " moves x = " << msg.getFirstShort() << " y = " << msg.getSecondShort() << std::endl; 
 }
 
@@ -249,4 +257,18 @@ void RType::Client::serverStopped(const Utils::MessageParsed_s &msg)
     this->_actualId = 0;
     this->_threadIsOpen = false;
     this->_window->close();   
+}
+
+void RType::Client::getEntityType(unsigned short entity)
+{
+    auto msg = this->buildEmptyMsg(entityType);
+    msg.setFirstShort(entity);
+    this->_socket->send(msg);
+}
+
+void RType::Client::setEntityType(const Utils::MessageParsed_s &msg)
+{
+    if (msg.getSecondShort() == RType::player)
+        return this->newPlayerToRoom(msg);
+    std::cout << "Set the type of the entity " << msg.getFirstShort() << " for the type " << msg.getSecondShort() << std::endl;
 }

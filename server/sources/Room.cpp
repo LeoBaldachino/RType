@@ -110,6 +110,10 @@ bool RType::Server::Room::sendMessageToRoom(const Utils::MessageParsed_s &msg)
         this->sendPlayerId(msg);
         return true;
     }
+    if (msg.msgType == entityType) {
+        this->sendEntityType(msg);
+        return true;
+    }
     auto it = this->_allPlayers.find({msg.senderIp, msg.senderPort});
     if (it == this->_allPlayers.end()) {
         std::cout << "Not in room..." << std::endl;
@@ -266,5 +270,15 @@ void RType::Server::Room::sendPlayerId(const Utils::MessageParsed_s &msg)
         return;
     }
     newMsg.setFirstShort(it->second);
+    this->_socket->send(newMsg);
+}
+
+void RType::Server::Room::sendEntityType(const Utils::MessageParsed_s &msg)
+{
+    Utils::MessageParsed_s newMsg(msg);
+    auto it = this->_core._entities.find(msg.getFirstShort());
+    if (it == this->_core._entities.end())
+        return;
+    newMsg.setSecondShort(this->_gameLoop->getEntityType(msg.getFirstShort()));
     this->_socket->send(newMsg);
 }

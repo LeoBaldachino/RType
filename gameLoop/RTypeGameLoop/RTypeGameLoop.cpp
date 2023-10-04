@@ -57,3 +57,12 @@ std::queue<RType::Utils::MessageParsed_s> RType::RTypeGameLoop::runAfterUpdate(s
     }
     return toReturn;
 }
+
+RType::EntityTypes RType::RTypeGameLoop::getEntityType(unsigned short id)
+{
+    for (auto it : this->_playerArray)
+        if (it == id)
+            return player;
+    //search for other types in other arrays
+    return player;
+}

@@ -10,7 +10,7 @@ namespace RType {
         valueChange = 12,
         touchingObject = 13,
         keyPressed = 14,
-
+        entityType = 16,
         newPlayerConnected = 21,
         playerDeconnected = 22,
         newRoomIsCreated = 23,
