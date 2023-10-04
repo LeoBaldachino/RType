@@ -54,7 +54,7 @@ Systems/Subsystems/ShotSystem.cpp Entity/ShotEntity.cpp
 Systems/Subsystems/PiercingShotSystem.cpp Entity/PiercingShotEntity.cpp
 Entity/Bydos.cpp Systems/BydosSystem.cpp Systems/Subsystems/AIShoot.cpp
 Systems/Subsystems/MovementSystem.cpp Core/Core.cpp Sockets/sources/MessageParsed.cpp
-Sockets/sources/SocketHandler.cpp Client/Client.cpp)
+Sockets/sources/SocketHandler.cpp Client/Client.cpp Entity/Tourre.cpp Systems/TourreSystem.cpp)
 
 target_link_libraries(r-type PRIVATE sfml-system sfml-graphics sfml-window) # Link SFML libraries
 set(THREADS_PREFER_PTHREAD_FLAG ON)

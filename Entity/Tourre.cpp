@@ -106,3 +106,13 @@ Moveable Tourre::getMoveable(void) const
 {
     return (this->_movement);
 }
+
+void Tourre::addMessage(RType::Utils::MessageParsed_s &message)
+{
+    this->_messages.push(message);
+}
+
+void Tourre::popMessage(void)
+{
+    this->_messages.pop();
+}
