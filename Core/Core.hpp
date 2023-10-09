@@ -6,17 +6,21 @@
 */
 
 #pragma once
-#include <memory>
-#include "../Entity/Player.hpp"
-#include "../Entity/Bydos.hpp"
+#include "../Entity/IEntity.hpp"
+#include <unordered_map>
 #include "../Visitor/SystemVisitor.hpp"
+#include <memory>
+#include <climits>
+#include <list>
 
 class Core {
     public:
-        Core();
+        Core() {};
         ~Core() {};
-        void addEntity(const std::shared_ptr<IEntity> &entity, unsigned short index);
+        bool addEntity(const std::shared_ptr<IEntity> &entity, unsigned short index);
         std::unordered_map<unsigned short, std::shared_ptr<IEntity>> _entities;
+        unsigned short getAvailabeIndex();
+        bool removeEntity(unsigned short index);
     private:
-        SystemVisitor _systemVisitor;
+        std::queue<unsigned short> _presentIndex;
 };
