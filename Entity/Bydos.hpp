@@ -9,16 +9,18 @@
 #include "IEntity.hpp"
 #include "../Components/State.hpp"
 #include "../Systems/Subsystems/AIShoot.hpp"
-// #include "../Components/Hitbox.hpp"
 #include "../Components/Drawable.hpp"
 #include "../Entity/Player.hpp"
+
+#define BYDOS_X 21 * SIZE_SCALE
+#define BYDOS_Y 24 * SIZE_SCALE
 
 class Bydos : public IEntity {
     public:
         Bydos() {};
         Bydos(Position position, int velocity, Vector2d moveDirection);
         ~Bydos() {};
-        void accept(IVisitor &v, std::unique_ptr<sf::RenderWindow> &window);
+        void accept(IVisitor &v, Core &core);
 
         Shoot shoot(const Position &playerPos) const;
 
@@ -46,6 +48,11 @@ class Bydos : public IEntity {
         void setMoveable(const Moveable &moveable);
         Moveable getMoveable(void) const;
 
+        bool isColidingWith(IEntity &entity);
+        Vector2d getSize(void);
+
+        void drawEntity(std::unique_ptr<sf::RenderWindow> &window);
+
     private:
         State _state;
         Position _position;
@@ -55,4 +62,5 @@ class Bydos : public IEntity {
         int _shootDmg = 10;
         int _shootVelocity = 5;
         int _shootGravity = 0;
+        Vector2d _size;
 };

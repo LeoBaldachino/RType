@@ -7,55 +7,17 @@
 
 #include "InputSystem.hpp"
 
-void InputSystem::handleInput(sf::Event event, std::unique_ptr<sf::RenderWindow> &window)
-{
-    if (event.type == sf::Event::KeyReleased) {
-        if (this->shooting && event.key.code == sf::Keyboard::Space) {
-            std::chrono::time_point<std::chrono::_V2::steady_clock, std::chrono::_V2::steady_clock::duration>
-            time = std::chrono::steady_clock::now();
-            if (std::chrono::duration_cast<std::chrono::seconds>(time - this->shotTime).count() >= 1)
-                this->_inputs.addEvents(Inputs::Events::PiercingShoot);
-            else
-                this->_inputs.addEvents(Inputs::Events::Shoot);
-            this->shooting = false;
-        }
-        if (event.key.code == sf::Keyboard::Up)
-            this->_keysDown[Inputs::Events::Up] = false;
-        if (event.key.code == sf::Keyboard::Down)
-            this->_keysDown[Inputs::Events::Down] = false;
-        if (event.key.code == sf::Keyboard::Left)
-            this->_keysDown[Inputs::Events::Left] = false;
-        if (event.key.code == sf::Keyboard::Right)
-            this->_keysDown[Inputs::Events::Right] = false;
-    }
-    if (event.type == sf::Event::KeyPressed) {
-        if (event.key.code == sf::Keyboard::Up)
-            this->_keysDown[Inputs::Events::Up] = true;
-        if (event.key.code == sf::Keyboard::Down)
-            this->_keysDown[Inputs::Events::Down] = true;
-        if (event.key.code == sf::Keyboard::Left)
-            this->_keysDown[Inputs::Events::Left] = true;
-        if (event.key.code == sf::Keyboard::Right)
-            this->_keysDown[Inputs::Events::Right] = true;
-        if (event.key.code == sf::Keyboard::Escape)
-            this->_inputs.addEvents(Inputs::Events::CloseWindow);
-        if (!this->shooting && event.key.code == sf::Keyboard::Space) {
-            this->shotTime = std::chrono::steady_clock::now();
-            this->shooting = true;
-        }
-    }
-}
+// void InputSystem::convertMsgToInputs(Player &player)
+// {
+//     while (!player.isMsgEmpty()) {
+//         if (player.getFirstMsg().msgType == 14)
+//             this->_inputs.addEvents((Inputs::Events) player.getFirstMsg().getFirstShort());
+//         player.popMessage();
+//     }
+// }
 
 void InputSystem::updatePlayer(Player &player)
 {
-    if (this->_keysDown[Inputs::Events::Up])
-        this->_inputs.addEvents(Inputs::Events::Up);
-    if (this->_keysDown[Inputs::Events::Left] && !this->_keysDown[Inputs::Events::Right])
-        this->_inputs.addEvents(Inputs::Events::Left);
-    if (this->_keysDown[Inputs::Events::Down] && !this->_keysDown[Inputs::Events::Up])
-        this->_inputs.addEvents(Inputs::Events::Down);
-    if (this->_keysDown[Inputs::Events::Right])
-        this->_inputs.addEvents(Inputs::Events::Right);
     if (this->_inputs.getEvents().size() == 0)
         return;
     if (this->_inputs.getEvents().front() == Inputs::Events::Up) {

@@ -9,15 +9,17 @@
 #include "IEntity.hpp"
 #include "../Components/Shoot.hpp"
 #include "../Components/State.hpp"
-// #include "../Components/Hitbox.hpp"
 #include "../Components/Drawable.hpp"
+
+#define PLAYER_X 32 * SIZE_SCALE
+#define PLAYER_Y 14 * SIZE_SCALE
 
 class Player : public IEntity {
     public:
         Player(Position position);
         Player() {};
         ~Player() {};
-        void accept(IVisitor &v, std::unique_ptr<sf::RenderWindow> &window);
+        void accept(IVisitor &v, Core &core);
 
         Shoot shoot() const;
 
@@ -25,9 +27,6 @@ class Player : public IEntity {
 
         void setPosition(const Position &position);
         Position getPosition(void) const;
-
-        // void setHitbox(Hitbox hitbox);
-        // Hitbox getHitbox() const;
 
         void setState(State state);
         State getState() const;
@@ -50,16 +49,22 @@ class Player : public IEntity {
         void setShootGravity(int shootGravity);
         int getShootGravity(void) const;
 
+        void drawEntity(std::unique_ptr<sf::RenderWindow> &window);
+
         const unsigned char returnType(void);
+
+        bool isColidingWith(IEntity &entity);
+
+        Vector2d getSize(void);
     private:
         State _state;
         Position _position;
         Moveable _movement;
         Drawable _drawable;
         int _velocity;
-        // Hitbox _hitbox;
         int _shootDmg = 10;
         int _shootVelocity = 5;
         int _shootGravity = 0;
         // const unsigned char _type = TYPE_PLAYER;
+        Vector2d _size;
 };

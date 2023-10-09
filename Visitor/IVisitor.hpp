@@ -9,17 +9,19 @@
 #include <fstream>
 #include <iostream>
 #include <memory>
-#include <SFML/System.hpp>
-#include <SFML/Window.hpp>
-#include <SFML/Graphics.hpp>
 
+class Core;
 class Player;
 class Bydos;
 class Tourre;
+class ShotEntity;
+class PiercingShotEntity;
 
 class IVisitor {
     public:
-        virtual void visitPlayer(Player &p, std::unique_ptr<sf::RenderWindow> &window) = 0;
-        virtual void visitBydos(Bydos &b, std::unique_ptr<sf::RenderWindow> &window) = 0;
-        // virtual void visitTourre(Tourre &t, Player &p, std::unique_ptr<sf::RenderWindow> &window) = 0;
+        virtual void visitPlayer(Player &p, Core &core) = 0;
+        virtual void visitBydos(Bydos &b, Core &core) = 0;
+        virtual void visitTourre(Tourre &t, Core &core) = 0;
+        virtual void visitShot(ShotEntity &s, Core &core) = 0;
+        virtual void visitPiercingShot(PiercingShotEntity &pS, Core &core) = 0;
 };

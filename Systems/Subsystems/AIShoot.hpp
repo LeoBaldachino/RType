@@ -24,6 +24,6 @@ class AIShoot {
         Position _playerPos;
         Position _shooterPos;
         int _dmg;
-        int _velocity;
+        float _velocity = 1;
         int _gravity;
 };

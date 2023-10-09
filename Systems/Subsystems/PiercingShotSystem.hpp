@@ -11,10 +11,9 @@
 
 class PiercingShotSystem {
     public:
-        PiercingShotSystem(const PiercingShotEntity &piercingShotEntity);
-        void updatePos(void);
-        void draw(std::unique_ptr<sf::RenderWindow> &window);
+        PiercingShotSystem() {};
+        ~PiercingShotSystem() {};
+        void updatePos(PiercingShotEntity &pS);
+        Position getPos(PiercingShotEntity &pS) const;
     private:
-        PiercingShotEntity _piercingShotEntity;
-        DrawSystem _drawSystem;
 };

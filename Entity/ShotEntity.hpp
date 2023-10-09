@@ -10,18 +10,35 @@
 #include <iostream>
 #include "../Components/Shoot.hpp"
 #include "../Components/Drawable.hpp"
+#include "IEntity.hpp"
 
-class ShotEntity {
+#define SHOT_X 32
+#define SHOT_Y 12
+
+class ShotEntity : public IEntity {
     public:
         ShotEntity(Shoot &shoot);
         ~ShotEntity() {};
+
+        void accept(IVisitor &v, Core &core);
+        void drawEntity(std::unique_ptr<sf::RenderWindow> &window);
 
         Shoot getShoot(void) const;
         void setShoot(const Shoot &shoot);
 
         Drawable getDrawable(void) const;
         void setDrawable(const Drawable &drawable);
+
+        Vector2d getSize(void);
+        bool isColidingWith(IEntity &entity);
+
+        Moveable getMoveable(void) const;
+        void setMoveable(const Moveable &moveable);
+
+        Position getPosition(void) const;
+        void setPosition(const Position &position);
     private:
         Shoot _shoot;
         Drawable _drawable;
+        Vector2d _size;
 };
