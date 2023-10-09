@@ -21,9 +21,9 @@ Shoot Bydos::shoot(const Position &playerPos) const
     return aiShoot.shootLogic();
 }
 
-void Bydos::accept(IVisitor &v, std::unique_ptr<sf::RenderWindow> &window)
+void Bydos::accept(IVisitor &v, Core &core)
 {
-    v.visitBydos(*this, window);
+    v.visitBydos(*this, core);
 }
 
 void Bydos::setPosition(const Position &position)
@@ -121,4 +121,11 @@ bool Bydos::isColidingWith(IEntity &entity)
                 this->_position.getX() + this->_size.x >= i)
                 return (true);
     return (false);
+}
+
+void Bydos::drawEntity(std::unique_ptr<sf::RenderWindow> &window)
+{
+    sf::Sprite sprite = this->_drawable.getSprite();
+    sprite.setPosition(this->_position.getX(), this->_position.getY());
+    window->draw(sprite);
 }

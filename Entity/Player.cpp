@@ -11,7 +11,7 @@ Player::Player(Position position) : _drawable("Assets/player.png", 2), _size(PLA
 {
     this->_position = position;
     this->_state = State(100);
-    this->_velocity = 2;
+    this->_velocity = 5;
 }
 
 Shoot Player::shoot() const
@@ -22,9 +22,9 @@ Shoot Player::shoot() const
     return Shoot(shootDirection, playerPos, this->_shootDmg, this->_shootVelocity, this->_shootGravity, true);
 }
 
-void Player::accept(IVisitor &v, std::unique_ptr<sf::RenderWindow> &window)
+void Player::accept(IVisitor &v, Core &core)
 {
-    v.visitPlayer(*this, window);
+    v.visitPlayer(*this, core);
 }
 
 void Player::move(Vector2d direction)
@@ -41,18 +41,6 @@ Position Player::getPosition() const
 {
     return this->_position;
 }
-
-/* Player Hitbox & State methods */
-
-// void Player::setHitbox(Hitbox hitbox)
-// {
-//     // this->_hitbox = hitbox;
-// }
-
-// Hitbox Player::getHitbox() const
-// {
-//     // return this->_hitbox;
-// }
 
 void Player::setState(State state)
 {
@@ -115,6 +103,13 @@ bool Player::isColidingWith(IEntity &entity)
                 this->_position.getX() + this->_size.x >= i)
                 return (true);
     return (false);
+}
+
+void Player::drawEntity(std::unique_ptr<sf::RenderWindow> &window)
+{
+    sf::Sprite sprite = this->_drawable.getSprite();
+    sprite.setPosition(this->_position.getX(), this->_position.getY());
+    window->draw(sprite);
 }
 
 // const unsigned char Player::returnType(void)
