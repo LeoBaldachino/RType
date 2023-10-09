@@ -13,11 +13,11 @@ namespace RType {
         public:
             RTypeGameLoop(Core &core);
             ~RTypeGameLoop();
-            RType::Utils::MessageParsed_s updatePlayerPos(std::pair<unsigned short, Utils::MessageParsed_s> msg);
             EntityTypes getEntityType(unsigned short id);
         protected :
             std::queue<Utils::MessageParsed_s> runAfterUpdate(std::queue<std::pair<unsigned short, Utils::MessageParsed_s>> newMessages);
         private :
+            RType::Utils::MessageParsed_s updatePlayerPos(std::pair<unsigned short, Utils::MessageParsed_s> msg);
         
     };
 }

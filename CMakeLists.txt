@@ -1,5 +1,4 @@
 cmake_minimum_required(VERSION 3.10) # You can change this to your minimum required version
-project(r-type_server)
 
 # Specify the C++ standard
 set(CMAKE_CXX_STANDARD 14)
@@ -27,37 +26,5 @@ include_directories(Sockets/includes)
 find_package(Boost REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
 
-# Create the executable
-add_executable(r-type_server ${SERVER_SOURCES} ${SOCKET_SOURCES} ${CORE_SOURCES} ${ENTITY_SOURCES} ${SYSTEM_SOURCES} ${SUBSYSTEM_SOURCES} ${GAME_LOOP_SOURCES} ${RTYPE_LOOP_SOURCES})
-
-# Link the Boost library
-target_link_libraries(r-type_server PRIVATE ${Boost_LIBRARIES})
-target_link_libraries(r-type_server PRIVATE sfml-system sfml-graphics sfml-window)
-
-# Link the pthread library
-set(THREADS_PREFER_PTHREAD_FLAG ON)
-find_package(Threads REQUIRED)
-target_link_libraries(r-type_server PRIVATE Threads::Threads)
-
-# If you have any libraries to link in the future, you can use the following command:
-# target_link_libraries(r-type_server PRIVATE your_library)
-cmake_minimum_required(VERSION 3.10)
-project(r-type)
-
-set(CMAKE_CXX_STANDARD 14)
-
-find_package(SFML COMPONENTS system graphics window REQUIRED) # Find SFML
-
-add_executable(r-type Client/main.cpp Entity/Player.cpp Systems/PlayerSystem.cpp
-Systems/Subsystems/DrawSystem.cpp Systems/Subsystems/InputSystem.cpp
-Systems/Subsystems/ShotSystem.cpp Entity/ShotEntity.cpp
-Systems/Subsystems/PiercingShotSystem.cpp Entity/PiercingShotEntity.cpp
-Entity/Bydos.cpp Systems/BydosSystem.cpp Systems/Subsystems/AIShoot.cpp
-Systems/Subsystems/MovementSystem.cpp Core/Core.cpp Sockets/sources/MessageParsed.cpp
-Sockets/sources/SocketHandler.cpp Client/Client.cpp Entity/Tourre.cpp Systems/TourreSystem.cpp)
-
-target_link_libraries(r-type PRIVATE sfml-system sfml-graphics sfml-window) # Link SFML libraries
-set(THREADS_PREFER_PTHREAD_FLAG ON)
-find_package(Threads REQUIRED)
-target_link_libraries(r-type PRIVATE Threads::Threads)
-set(CMAKE_BUILD_TYPE Debug) # Enable debugging
+# Add your executable
+add_executable(r-type_server ${SERVER_SOURCES} ${SOCKET_SOURCES})

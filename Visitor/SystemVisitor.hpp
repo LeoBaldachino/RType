@@ -34,9 +34,11 @@ class SystemVisitor : public IVisitor {
             // this->_bydosSystem.drawShots(window);
             this->_bydosSystem.updatePos();
             this->_bydosSystem.updateShots();
-            // this->_bydosSystem.createShots(this->_playerSystem.getPlayer()); DEFINIR CLOCK
+            if (test <= 1)
+                this->_bydosSystem.createShots(this->_playerSystem.getPlayer()); // DEFINIR CLOCK
             this->_bydosSystem.clearShots();
             b = this->_bydosSystem.getBydos();
+            ++test;
         };
         void visitTourre(Tourre &t) {
             this->_tourreSystem.setTourre(t);
@@ -47,6 +49,7 @@ class SystemVisitor : public IVisitor {
             t = this->_tourreSystem.getTourre();
         };
     private:
+        int test = 0;
         PlayerSystem _playerSystem;
         BydosSystem _bydosSystem;
         TourreSystem _tourreSystem;

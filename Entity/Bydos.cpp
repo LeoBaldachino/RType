@@ -7,7 +7,7 @@
 
 #include "Bydos.hpp"
 
-Bydos::Bydos(Position position, int velocity, Vector2d moveDirection) : _drawable("Assets/bydos.png", 2)
+Bydos::Bydos(Position position, int velocity, Vector2d moveDirection) : _drawable("Assets/bydos.png", 2), _size(BYDOS_X, BYDOS_Y)
 {
     this->_position = position;
     this->_state = State(100);
@@ -114,4 +114,21 @@ void Bydos::setMoveable(const Moveable &moveable)
 Moveable Bydos::getMoveable(void) const
 {
     return (this->_movement);
+}
+
+Vector2d Bydos::getSize(void)
+{
+    return (this->_size);
+}
+
+bool Bydos::isColidingWith(IEntity &entity)
+{
+    for (int i = entity.getPosition().getX(); i <= entity.getPosition().getX() + entity.getSize().x; i++)
+        for (int j = entity.getPosition().getY(); j <= entity.getPosition().getY() + entity.getSize().y; j++)
+            if (this->_position.getX() < i &&
+                this->_position.getY() < j &&
+                this->_position.getY() + this->_size.y >= j &&
+                this->_position.getX() + this->_size.x >= i)
+                return (true);
+    return (false);
 }

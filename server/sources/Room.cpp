@@ -81,7 +81,7 @@ bool RType::Server::Room::addToRoom(const std::pair<std::string, int> &newPlayer
     return true;
 }
 
-int RType::Server::Room::getId() const
+unsigned char RType::Server::Room::getId() const
 {
     return this->_id;
 }

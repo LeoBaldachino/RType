@@ -27,7 +27,7 @@ namespace RType {
              * @param ar first param of the main function
              * @param av the second param of the main function
              */
-            CoreServer(int ar, char **av);
+            CoreServer(int ac, char **av);
             /**
              * @brief Destroy the Core Server object
              * 

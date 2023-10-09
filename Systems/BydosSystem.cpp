@@ -49,13 +49,12 @@ void BydosSystem::createShots(const Player &player)
 
 void BydosSystem::clearShots(void)
 {
-    for (int i = 0; i != this->_shots.size(); ++i) {
-        if (this->_shots[i] == NULL || this->_shots[i] == nullptr)
+    for (auto& i: this->_shots) {
+        if (i == NULL || i == nullptr)
             continue;
-        if (this->_shots[i]->getPos().getX() <= 0
-        || this->_shots[i]->getPos().getY() <= 0
-        || this->_shots[i]->getPos().getX() >= this->_bydos.getPosition().getWidth()
-        || this->_shots[i]->getPos().getY() >= this->_bydos.getPosition().getHeight())
-            this->_shots.erase(std::find(std::begin(this->_shots), std::end(this->_shots), this->_shots[i]));
+        if (i->getPos().getX() <= 0 || i->getPos().getY() <= 0
+        || i->getPos().getX() >= this->_bydos.getPosition().getWidth()
+        || i->getPos().getY() >= this->_bydos.getPosition().getHeight())
+            this->_shots.erase(std::find(std::begin(this->_shots), std::end(this->_shots), i));
     }
 }

@@ -93,7 +93,7 @@ namespace RType {
                  * 
                  * @return int id of the room
                  */
-                int getId() const;
+                unsigned char getId() const;
                 /**
                  * @brief remove a player from a room
                  * 
@@ -137,7 +137,11 @@ namespace RType {
                  * 
                  */
                 void setDestroy();
-
+                /**
+                 * @brief responds to a player who asked for his in game id
+                 * 
+                 * @param msg the message from the player
+                 */
                 void sendPlayerId(const Utils::MessageParsed_s &msg);
             private:
                 /**
@@ -156,7 +160,11 @@ namespace RType {
                  * @param msg the message received
                  */
                 void messagePing(const Utils::MessageParsed_s &msg);
-
+                /**
+                 * @brief send the entity type of the id asked by a player
+                 * 
+                 * @param msg the message from the player
+                 */
                 void sendEntityType(const Utils::MessageParsed_s &msg);
                 std::unique_ptr<std::thread> _roomThread;
                 std::map<std::pair<std::string, int>, unsigned short> _allPlayers;

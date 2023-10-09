@@ -64,5 +64,5 @@ RType::EntityTypes RType::RTypeGameLoop::getEntityType(unsigned short id)
         if (it == id)
             return player;
     //search for other types in other arrays
-    return player;
+    return none;
 }

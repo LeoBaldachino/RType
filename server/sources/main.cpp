@@ -13,7 +13,7 @@ int main(int ar, char **av)
         RType::CoreServer server(ar, av);
     } catch (const std::exception &err) {
         std::cerr << err.what() << std::endl;
-        return 84;
+        return 1;
     }
     return 0;
 }

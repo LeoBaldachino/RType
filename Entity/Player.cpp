@@ -7,7 +7,7 @@
 
 #include "Player.hpp"
 
-Player::Player(Position position) : _drawable("Assets/player.png", 2)
+Player::Player(Position position) : _drawable("Assets/player.png", 2), _size(PLAYER_X, PLAYER_Y)
 {
     this->_position = position;
     this->_state = State(100);
@@ -100,24 +100,21 @@ int Player::getVelocity(void) const
     return (this->_velocity);
 }
 
-void Player::addMessage(RType::Utils::MessageParsed_s &message)
+Vector2d Player::getSize(void)
 {
-    this->_messages.push(message);
+    return (this->_size);
 }
 
-void Player::popMessage(void)
+bool Player::isColidingWith(IEntity &entity)
 {
-    this->_messages.pop();
-}
-
-RType::Utils::MessageParsed_s Player::getFirstMsg(void) const
-{
-    return (this->_messages.front());
-}
-
-bool Player::isMsgEmpty(void) const
-{
-    return (this->_messages.empty());
+    for (int i = entity.getPosition().getX(); i <= entity.getPosition().getX() + entity.getSize().x; i++)
+        for (int j = entity.getPosition().getY(); j <= entity.getPosition().getY() + entity.getSize().y; j++)
+            if (this->_position.getX() < i &&
+                this->_position.getY() < j &&
+                this->_position.getY() + this->_size.y >= j &&
+                this->_position.getX() + this->_size.x >= i)
+                return (true);
+    return (false);
 }
 
 // const unsigned char Player::returnType(void)
