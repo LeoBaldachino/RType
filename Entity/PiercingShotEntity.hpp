@@ -15,7 +15,7 @@
 #define PIERCING_SHOT_X 80
 #define PIERCING_SHOT_Y 16
 
-class PiercingShotEntity {
+class PiercingShotEntity : public IEntity {
     public:
         PiercingShotEntity(Shoot &shoot);
         ~PiercingShotEntity() {};
