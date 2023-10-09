@@ -7,17 +7,14 @@
 
 #pragma once
 #include <memory>
+#include "../../Components/Position.hpp"
 #include "../../Entity/ShotEntity.hpp"
-#include "DrawSystem.hpp"
 
 class ShotSystem {
     public:
-        ShotSystem(const ShotEntity &shotEntity);
+        ShotSystem() {};
         ~ShotSystem() {};
-        void updatePos(void);
-        void draw(std::unique_ptr<sf::RenderWindow> &window, std::string fileName);
-        Position getPos(void) const;
+        void updatePos(ShotEntity &s);
+        Position getPos(ShotEntity &s) const;
     private:
-        std::unique_ptr<ShotEntity> _shotEntity;
-        std::unique_ptr<DrawSystem> _drawSystem;
 };

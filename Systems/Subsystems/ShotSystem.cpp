@@ -7,31 +7,15 @@
 
 #include "ShotSystem.hpp"
 
-ShotSystem::ShotSystem(const ShotEntity &shotEntity)
+void ShotSystem::updatePos(ShotEntity &s)
 {
-    this->_shotEntity = std::make_unique<ShotEntity>(shotEntity);
-    this->_drawSystem = std::make_unique<DrawSystem>(shotEntity.getDrawable(), Position(0, 0));
-}
-
-void ShotSystem::updatePos(void)
-{
-    Shoot tmpShoot = this->_shotEntity->getShoot();
+    Shoot tmpShoot = s.getShoot();
         tmpShoot.setOrigin(Vector2d(tmpShoot.getOrigin().x + tmpShoot.getDirection().x
         * tmpShoot.getVelocity(), tmpShoot.getOrigin().y + tmpShoot.getDirection().y * tmpShoot.getVelocity()));
-    this->_shotEntity->setShoot(tmpShoot);
+    s.setShoot(tmpShoot);
 }
 
-Position ShotSystem::getPos(void) const
+Position ShotSystem::getPos(ShotEntity &s) const
 {
-    return (Position(this->_shotEntity->getShoot().getOrigin().x, this->_shotEntity->getShoot().getOrigin().y));
-}
-
-void ShotSystem::draw(std::unique_ptr<sf::RenderWindow> &window, std::string fileName)
-{
-    sf::Texture text;
-    text.loadFromFile(fileName);
-    sf::Sprite s;
-    s.setTexture(text);
-    s.setPosition(this->_shotEntity->getShoot().getOrigin().x, this->_shotEntity->getShoot().getOrigin().y);
-    window->draw(s);
+    return (Position(s.getShoot().getOrigin().x, s.getShoot().getOrigin().y));
 }

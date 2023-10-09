@@ -18,20 +18,11 @@ class PlayerSystem {
         ~PlayerSystem() {};
         void setPlayer(const Player &p);
         Player getPlayer(void) const;
-        void draw(std::unique_ptr<sf::RenderWindow> &window);
-        void getInputs(std::unique_ptr<sf::RenderWindow> &window);
+        void getInputs(void);
         void updatePos(void);
-        void updateShots(void);
-        void drawShots(std::unique_ptr<sf::RenderWindow> &window);
-        void createShots(void);
-        void updatePiercingShots(void);
-        void drawPiercingShots(std::unique_ptr<sf::RenderWindow> &window);
+        void createShots(Core &core);
         void createPiercingShots(void);
-        void clearShots(void);
     private:
         Player _player;
         InputSystem _inputSystem;
-        std::unique_ptr<DrawSystem> _drawSystem;
-        std::vector<std::unique_ptr<ShotSystem>> _shots;
-        std::vector<std::unique_ptr<PiercingShotSystem>> _piercingShots;
 };
