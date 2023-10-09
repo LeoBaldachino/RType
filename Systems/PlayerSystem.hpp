@@ -17,13 +17,10 @@ class PlayerSystem {
     public:
         PlayerSystem() {};
         ~PlayerSystem() {};
-        void setPlayer(const Player &p);
-        Player getPlayer(void) const;
-        void getInputs(void);
-        void updatePos(void);
-        void createShots(Core &core);
-        void createPiercingShots(Core &core);
+        void getInputs(Player &p);
+        void updatePos(Player &p);
+        void createShots(Player &p, Core &core);
+        void createPiercingShots(Player &p, Core &core);
     private:
-        Player _player;
         InputSystem _inputSystem;
 };

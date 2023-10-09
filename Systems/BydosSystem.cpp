@@ -7,24 +7,14 @@
 
 #include "BydosSystem.hpp"
 
-void BydosSystem::setBydos(const Bydos &b)
+void BydosSystem::updatePos(Bydos &b)
 {
-    this->_bydos = b;
+    this->_movementSystem.updatePosition(b);
 }
 
-Bydos BydosSystem::getBydos(void) const
+void BydosSystem::createShots(Bydos &b, const Player &player, Core &core)
 {
-    return (this->_bydos);
-}
-
-void BydosSystem::updatePos(void)
-{
-    this->_movementSystem.updatePosition(this->_bydos);
-}
-
-void BydosSystem::createShots(const Player &player, Core &core)
-{
-    Shoot tmpShoot(this->_bydos.shoot(player.getPosition()));
+    Shoot tmpShoot(b.shoot(player.getPosition()));
     core.addEntity(std::make_shared<ShotEntity>(tmpShoot, "Assets/enemyShot.png"), core.getAvailabeIndex());
 }
 
