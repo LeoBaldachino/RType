@@ -53,15 +53,14 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 #include_directories(${CMAKE_CURRENT_SOURCE_DIR}/boost/libs/stacktrace/include)
 #add_definitions(-D_HAS_AUTO_PTR_ETC=1)
 
-# Build client
 project(r-type_client)
 
-# Add your source files
 set(SFML_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/SFML)
-if(GIT_SUBMODULE)
-    message(STATUS "SFML submodule update")
-    execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
-                    WORKING_DIRECTORY ${SFML_ROOT}
+if(NOT EXISTS "${SFML_ROOT}")
+    # SFML not found. Download and install it.
+    message(STATUS "SFML not found. Downloading...")
+    execute_process(COMMAND git submodule update --init --recursive
+                    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
                     RESULT_VARIABLE GIT_SUBMOD_RESULT)
     if(NOT GIT_SUBMOD_RESULT EQUAL "0")
         message(FATAL_ERROR "git submodule update --init --recursive failed with ${GIT_SUBMOD_RESULT}, please checkout submodules")
@@ -69,15 +68,15 @@ if(GIT_SUBMODULE)
 endif()
 
 set(SFML_INCLUDE_DIR "${SFML_ROOT}/include")
-set(SFML_LIBRARY_DIR "${SFML_ROOT}/lib")
 link_directories(${SFML_LIBRARY_DIR})
 
-set(CLIENT_SOURCES main.cpp Core/Core.cpp Entity/Player.cpp Entity/Bydos.cpp Entity/ShotEntity.cpp Entity/PiercingShotEntity.cpp Systems/PlayerSystem.cpp Systems/BydosSystem.cpp Systems/Subsystems/DrawSystem.cpp Systems/Subsystems/InputSystem.cpp Systems/Subsystems/PiercingShotSystem.cpp Systems/Subsystems/ShotSystem.cpp Systems/Subsystems/MovementSystem.cpp Systems/Subsystems/AIShoot.cpp)
+file(GLOB CLIENT_SOURCES "*.cpp" "Core/*.cpp" "Entity/*.cpp" "Systems/*.cpp" "Systems/Subsystems/*.cpp")
 add_executable(r-type_client ${CLIENT_SOURCES})
 target_include_directories(r-type_client PRIVATE ${SFML_INCLUDE_DIR})
 target_link_libraries(r-type_client sfml-system sfml-graphics sfml-window)
 
-# Specify the C++ standard
 set_property(TARGET r-type_client PROPERTY CXX_STANDARD 17)
 set_property(TARGET r-type_client PROPERTY CXX_STANDARD_REQUIRED ON)
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -l")
 
