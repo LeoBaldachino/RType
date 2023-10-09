@@ -11,8 +11,10 @@ SRC	=	main.cpp									\
 		Entity/Bydos.cpp							\
 		Entity/ShotEntity.cpp						\
 		Entity/PiercingShotEntity.cpp				\
+		Entity/Tourre.cpp							\
 		Systems/PlayerSystem.cpp					\
 		Systems/BydosSystem.cpp						\
+		Systems/TourreSystem.cpp					\
 		Systems/Subsystems/DrawSystem.cpp			\
 		Systems/Subsystems/InputSystem.cpp			\
 		Systems/Subsystems/PiercingShotSystem.cpp	\
