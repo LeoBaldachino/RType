@@ -1,4 +1,35 @@
-cmake_minimum_required(VERSION 3.10) # You can change this to your minimum required version
+cmake_minimum_required(VERSION 3.10)
+
+find_package(Git QUIET)
+if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
+    option(GIT_SUBMODULE "Check submodules during build" ON)
+    if(GIT_SUBMODULE)
+        message(STATUS "Submodule update")
+        execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
+                        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                        RESULT_VARIABLE GIT_SUBMOD_RESULT)
+        if(NOT GIT_SUBMOD_RESULT EQUAL "0")
+            message(FATAL_ERROR "git submodule update --init --recursive failed with ${GIT_SUBMOD_RESULT}, please checkout submodules")
+        endif()
+    endif()
+endif()
+
+# Include downloaded libraries via submodule
+project(r-type_server)
+
+# Run boost setup
+set(BOOST_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/boost)
+execute_process(COMMAND ${BOOST_ROOT}/bootstrap.sh WORKING_DIRECTORY ${BOOST_ROOT})
+execute_process(COMMAND ${BOOST_ROOT}/b2 WORKING_DIRECTORY ${BOOST_ROOT})
+
+# Make sure boost is accessible after running the setup
+SET(CMAKE_INCLUDE_PATH ${CMAKE_INCLUDE_PATH} "${BOOST_ROOT}/include")
+SET(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} "${BOOST_ROOT}/lib")
+find_package(Boost)
+if (Boost_FOUND)
+    INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
+    ADD_DEFINITIONS( "-DHAS_BOOST" )
+endif()
 
 # Specify the C++ standard
 set(CMAKE_CXX_STANDARD 14)
@@ -7,59 +38,17 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 # Set the compile flag to "-g"
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 
-# Server build
-project(r-type_server)
-
 # Add your source files
 file(GLOB SERVER_SOURCES "server/sources/*.cpp")
 file(GLOB SOCKET_SOURCES "Sockets/sources/*.cpp")
 
-# Add your include directories
-include_directories(server/includes)
-include_directories(Sockets/includes)
+# Add your include files
+file(GLOB SERVER_INCLUDES "server/includes/*.hpp")
+file(GLOB SOCKET_INCLUDES "Sockets/includes/*.hpp")
 
-set(Boost_USE_STATIC_LIBS ON) 
-set(Boost_USE_MULTITHREADED ON)  
-set(Boost_USE_STATIC_RUNTIME OFF) 
-set(Boost_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/boost)
-set(Boost_LIBRARY_DIR ${CMAKE_SOURCE_DIR}/boost/stage/lib)
-link_directories(${Boost_LIBRARY_DIR})
-
-# Set the output directory for the build executables
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build/server)
-
-# Add your executable
+# Add your executable target
 add_executable(r-type_server ${SERVER_SOURCES} ${SOCKET_SOURCES})
 
-# Link your executable against the libraries
-target_link_libraries(r-type_server ${Boost_LIBRARIES} pthread)
-
-# Client build
-project(r-type_client)
-
-file(GLOB CLIENT_SOURCES "main.cpp" "Core/Core.cpp" "Entity/Player.cpp" "Entity/Bydos.cpp" "Entity/ShotEntity.cpp" "Entity/PiercingShotEntity.cpp" "Systems/PlayerSystem.cpp" "Systems/BydosSystem.cpp" "Systems/Subsystems/DrawSystem.cpp" "Systems/Subsystems/InputSystem.cpp" "Systems/Subsystems/PiercingShotSystem.cpp" "Systems/Subsystems/ShotSystem.cpp" "Systems/Subsystems/MovementSystem.cpp" "Systems/Subsystems/AIShoot.cpp")
-
-# Find SFML
-set(SFML_DIR "${CMAKE_SOURCE_DIR}/SFML")
-set(SFML_DIR "${CMAKE_SOURCE_DIR}/SFML")
-if(NOT EXISTS "${SFML_DIR}")
-  execute_process(COMMAND git submodule update --init SFML
-                  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
-endif()
-find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
-
-# Set the output directory for the build executables
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build/client)
-
-# Copy Assets to the build directory
-file(COPY ${CMAKE_SOURCE_DIR}/Assets DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
-
-# Add your executable
-add_executable(r-type_client ${CLIENT_SOURCES})
-
-# Link your executable against the libraries
-target_link_libraries(r-type_client ${Boost_LIBRARIES} sfml-graphics sfml-audio)
-
-
-
-
+# Include cstdint for uintptr_t
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/boost/libs/stacktrace/include)
+add_definitions(-D_HAS_AUTO_PTR_ETC=1)
