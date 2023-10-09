@@ -7,14 +7,14 @@
 
 #include "InputSystem.hpp"
 
-void InputSystem::convertMsgToInputs(Player &player)
-{
-    while (!player.isMsgEmpty()) {
-        if (player.getFirstMsg().msgType == 14)
-            this->_inputs.addEvents((Inputs::Events) player.getFirstMsg().getFirstShort());
-        player.popMessage();
-    }
-}
+// void InputSystem::convertMsgToInputs(Player &player)
+// {
+//     while (!player.isMsgEmpty()) {
+//         if (player.getFirstMsg().msgType == 14)
+//             this->_inputs.addEvents((Inputs::Events) player.getFirstMsg().getFirstShort());
+//         player.popMessage();
+//     }
+// }
 
 void InputSystem::updatePlayer(Player &player)
 {

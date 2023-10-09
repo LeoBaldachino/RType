@@ -21,9 +21,9 @@ Shoot Bydos::shoot(const Position &playerPos) const
     return aiShoot.shootLogic();
 }
 
-void Bydos::accept(IVisitor &v)
+void Bydos::accept(IVisitor &v, Core &core)
 {
-    v.visitBydos(*this);
+    v.visitBydos(*this, core);
 }
 
 void Bydos::setPosition(const Position &position)
@@ -96,16 +96,6 @@ int Bydos::getShootGravity(void) const
     return this->_shootGravity;
 }
 
-void Bydos::addMessage(RType::Utils::MessageParsed_s &message)
-{
-    this->_messages.push(message);
-}
-
-void Bydos::popMessage(void)
-{
-    this->_messages.pop();
-}
-
 void Bydos::setMoveable(const Moveable &moveable)
 {
     this->_movement = moveable;
@@ -131,4 +121,11 @@ bool Bydos::isColidingWith(IEntity &entity)
                 this->_position.getX() + this->_size.x >= i)
                 return (true);
     return (false);
+}
+
+void Bydos::drawEntity(std::unique_ptr<sf::RenderWindow> &window)
+{
+    sf::Sprite sprite = this->_drawable.getSprite();
+    sprite.setPosition(this->_position.getX(), this->_position.getY());
+    window->draw(sprite);
 }

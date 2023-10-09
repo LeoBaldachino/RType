@@ -7,11 +7,6 @@
 
 #include "Core.hpp"
 
-Core::Core()
-{
-
-}
-
 bool Core::addEntity(const std::shared_ptr<IEntity> &entity, unsigned short index)
 {
     if (this->_entities.find(index) != this->_entities.end())

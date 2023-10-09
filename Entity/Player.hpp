@@ -9,9 +9,7 @@
 #include "IEntity.hpp"
 #include "../Components/Shoot.hpp"
 #include "../Components/State.hpp"
-// #include "../Components/Hitbox.hpp"
 #include "../Components/Drawable.hpp"
-#include "../Components/Vector2d.hpp"
 
 #define PLAYER_X 32 * SIZE_SCALE
 #define PLAYER_Y 14 * SIZE_SCALE
@@ -21,7 +19,7 @@ class Player : public IEntity {
         Player(Position position);
         Player() {};
         ~Player() {};
-        void accept(IVisitor &v);
+        void accept(IVisitor &v, Core &core);
 
         Shoot shoot() const;
 
@@ -29,9 +27,6 @@ class Player : public IEntity {
 
         void setPosition(const Position &position);
         Position getPosition(void) const;
-
-        // void setHitbox(Hitbox hitbox);
-        // Hitbox getHitbox() const;
 
         void setState(State state);
         State getState() const;
@@ -54,10 +49,7 @@ class Player : public IEntity {
         void setShootGravity(int shootGravity);
         int getShootGravity(void) const;
 
-        void addMessage(RType::Utils::MessageParsed_s &message);
-        void popMessage(void);
-        RType::Utils::MessageParsed_s getFirstMsg(void) const;
-        bool isMsgEmpty(void) const;
+        void drawEntity(std::unique_ptr<sf::RenderWindow> &window);
 
         const unsigned char returnType(void);
 
@@ -70,11 +62,9 @@ class Player : public IEntity {
         Moveable _movement;
         Drawable _drawable;
         int _velocity;
-        // Hitbox _hitbox;
         int _shootDmg = 10;
         int _shootVelocity = 5;
         int _shootGravity = 0;
-        std::queue<RType::Utils::MessageParsed_s> _messages;
         // const unsigned char _type = TYPE_PLAYER;
         Vector2d _size;
 };

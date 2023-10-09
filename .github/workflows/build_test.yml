@@ -3,18 +3,36 @@ name: Build and Test
 on:
     push:
         branches:
-        - networking
         - main
     pull_request:
         branches:
-        - networking
+        - main
 
 jobs:
     build:
         runs-on: ubuntu-latest
         steps:
         - uses: actions/checkout@v3
+          with:
+            submodules: false
+        - name: Update submodules
+          run: |
+            git submodule deinit -f .
+            git submodule update --init --recursive
         - name: Install dependencies
-          run: sudo apt-get update && sudo apt-get install -y libboost-dev cmake
+          run: |
+            sudo apt update
+            sudo apt install -y \
+                libxrandr-dev \
+                libxcursor-dev \
+                libudev-dev \
+                libopenal-dev \
+                libflac-dev \
+                libvorbis-dev \
+                libgl1-mesa-dev \
+                libegl1-mesa-dev \
+                libdrm-dev \
+                libgbm-dev \
+                cmake
         - name: Build
           run: mkdir build/ && cd build/ && cmake .. && make

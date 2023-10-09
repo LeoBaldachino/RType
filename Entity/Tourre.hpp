@@ -11,7 +11,6 @@
 #include "../Systems/Subsystems/AIShoot.hpp"
 #include "../Components/Drawable.hpp"
 #include "../Entity/Player.hpp"
-// #include "../Components/Hitbox.hpp"
 
 class Tourre : public IEntity {
     public:
@@ -19,7 +18,7 @@ class Tourre : public IEntity {
         Tourre(Position position, int velocity, Vector2d moveDirection);
         ~Tourre(){};
 
-        void accept(IVisitor &v);
+        void accept(IVisitor &v, Core &core);
 
         Shoot shoot(const Position &playerPos) const;
 
@@ -47,8 +46,9 @@ class Tourre : public IEntity {
         void setMoveable(const Moveable &moveable);
         Moveable getMoveable(void) const;
 
-        void addMessage(RType::Utils::MessageParsed_s &message);
-        void popMessage(void);
+        void drawEntity(std::unique_ptr<sf::RenderWindow> &window);
+        
+        Vector2d getSize(void) { return (Vector2d(0, 0)); };
 
     private:
         State _state;
@@ -59,5 +59,4 @@ class Tourre : public IEntity {
         int _shootDmg = 10;
         int _shootVelocity = 5;
         int _shootGravity = 0;
-        std::queue<RType::Utils::MessageParsed_s> _messages;
 };

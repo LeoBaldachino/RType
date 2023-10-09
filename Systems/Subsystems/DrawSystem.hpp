@@ -5,6 +5,7 @@
 ** DrawSystem.hpp
 */
 
+#include <memory>
 #include "../../Components/Drawable.hpp"
 #include "../../Components/Position.hpp"
  

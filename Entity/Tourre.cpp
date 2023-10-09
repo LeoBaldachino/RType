@@ -7,7 +7,6 @@
 
 #include "Tourre.hpp"
 
-
 Tourre::Tourre(Position position, int velocity, Vector2d moveDirection) : _drawable("Assets/tourre.png", 2)
 {
     this->_position = position;
@@ -22,9 +21,9 @@ Shoot Tourre::shoot(const Position &playerPos) const
     return aiShoot.shootLogic();
 }
 
-void Tourre::accept(IVisitor &v)
+void Tourre::accept(IVisitor &v, Core &core)
 {
-    v.visitTourre(*this);
+    v.visitTourre(*this, core);
 }
 
 void Tourre::setPosition(const Position &position)
@@ -107,12 +106,9 @@ Moveable Tourre::getMoveable(void) const
     return (this->_movement);
 }
 
-void Tourre::addMessage(RType::Utils::MessageParsed_s &message)
+void Tourre::drawEntity(std::unique_ptr<sf::RenderWindow> &window)
 {
-    this->_messages.push(message);
-}
-
-void Tourre::popMessage(void)
-{
-    this->_messages.pop();
+    sf::Sprite sprite = this->_drawable.getSprite();
+    sprite.setPosition(this->_position.getX(), this->_position.getY());
+    window->draw(sprite);
 }

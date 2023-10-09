@@ -7,6 +7,7 @@
 
 #pragma once
 #include "../Entity/Bydos.hpp"
+#include "../Core/Core.hpp"
 #include "Subsystems/MovementSystem.hpp"
 #include "Subsystems/ShotSystem.hpp"
 
@@ -17,16 +18,11 @@ class BydosSystem {
         void setBydos(const Bydos &b);
         Bydos getBydos(void) const;
         void updatePos(void);
-        void updateShots(void);
-        // void draw(void);
-        // void drawShots(void);
-        void createShots(const Player &player);
-        void clearShots(void);
+        void createShots(const Player &player, Core &core);
 
     private:
         Bydos _bydos;
         MovementSystem _movementSystem;
-        std::unique_ptr<DrawSystem> _drawSystem;
         std::vector<std::unique_ptr<ShotSystem>> _shots;
 
 };
