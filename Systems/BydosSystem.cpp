@@ -25,7 +25,7 @@ void BydosSystem::updatePos(void)
 void BydosSystem::createShots(const Player &player, Core &core)
 {
     Shoot tmpShoot(this->_bydos.shoot(player.getPosition()));
-    core.addEntity(std::make_shared<ShotEntity>(tmpShoot), core.getAvailabeIndex());
+    core.addEntity(std::make_shared<ShotEntity>(tmpShoot, "Assets/enemyShot.png"), core.getAvailabeIndex());
 }
 
 // void BydosSystem::clearShots(void)
