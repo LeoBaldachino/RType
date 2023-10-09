@@ -5,14 +5,14 @@
 ** main
 */
 
-#include "../includes/CoreServer.hpp"
+#include "Client.hpp"
 
-int main(int ar, char **av)
+int main(int ac, char **av)
 {
     try {
-        RType::CoreServer server(ar, av);
+        RType::Client(ac, av);
     } catch (const std::exception &err) {
-        std::cerr << err.what() << std::endl;
+        std::cout << "Error " << err.what() << std::endl;
         return 1;
     }
     return 0;

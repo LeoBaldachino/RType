@@ -1,11 +1,11 @@
-/*
-** EPITECH PROJECT, 2023
-** B-CPP-500-MLH-5-1-rtype-robin.denni
-** File description:
-** Bonus.cpp
-*/
+// /*
+// ** EPITECH PROJECT, 2023
+// ** B-CPP-500-MLH-5-1-rtype-robin.denni
+// ** File description:
+// ** Bonus.cpp
+// */
 
-#include "Bonus.hpp"
+// #include "Bonus.hpp"
 
 Bonus::Bonus(Position position, int velocity, Vector2d moveDirection) : _size(0, 0)
 {

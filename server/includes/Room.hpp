@@ -6,7 +6,6 @@
 */
 
 #pragma once
-#include <vector>
 #include <iostream>
 #include "../../Sockets/includes/MessageParsed.hpp"
 #include "../../Sockets/includes/SocketHandler.hpp"
@@ -17,7 +16,10 @@
 #include <chrono>
 #include <unordered_map>
 #include <queue>
-
+#include "../../Core/Core.hpp"
+#include "../../gameLoop/IGameLoop.hpp"
+#include "../../gameLoop/RTypeGameLoop/RTypeGameLoop.hpp"
+#include "../includes/EntityTypes.hpp"
 
 namespace RType {
     namespace Server {
@@ -91,7 +93,7 @@ namespace RType {
                  * 
                  * @return int id of the room
                  */
-                int getId() const;
+                unsigned char getId() const;
                 /**
                  * @brief remove a player from a room
                  * 
@@ -135,6 +137,12 @@ namespace RType {
                  * 
                  */
                 void setDestroy();
+                /**
+                 * @brief responds to a player who asked for his in game id
+                 * 
+                 * @param msg the message from the player
+                 */
+                void sendPlayerId(const Utils::MessageParsed_s &msg);
             private:
                 /**
                  * @brief run the room inside of a thread, method launched at the constructor 
@@ -152,18 +160,29 @@ namespace RType {
                  * @param msg the message received
                  */
                 void messagePing(const Utils::MessageParsed_s &msg);
+                /**
+                 * @brief send the entity type of the id asked by a player
+                 * 
+                 * @param msg the message from the player
+                 */
+                void sendEntityType(const Utils::MessageParsed_s &msg);
                 std::unique_ptr<std::thread> _roomThread;
-                std::vector<std::pair<std::string, int>> _allPlayers;
-                std::unordered_map<int, bool> _playerOnline;
+                std::map<std::pair<std::string, int>, unsigned short> _allPlayers;
+                std::map<std::pair<std::string, int>, bool> _playerOnline;
                 std::shared_ptr<Utils::SocketHandler> _socket;
                 std::mutex _mutex;
                 bool _isOpen;
-                void *gameState;
+                Core _core;
                 unsigned char _id;
                 unsigned char _maxSize;
                 bool _willBeDestroyed;
                 unsigned char _actualPing;
                 std::chrono::time_point<std::chrono::_V2::steady_clock, std::chrono::_V2::steady_clock::duration> _pingTime;
+                std::unique_ptr<IGameLoop> _gameLoop;
+                std::unique_ptr<std::mutex> _mutexQueue;
+                std::unique_ptr<std::queue<std::pair<unsigned short, Utils::MessageParsed_s>>> _toSendToGameLoop;
+                std::pair<std::string, int> _firstClient;
+
         };
     }
 }

@@ -70,6 +70,13 @@ static void transformInput(RType::Utils::MessageParsed_s &modInput, const std::s
         socket.send(modInput);
         return;
     }
+    if (params[0] == "input") {
+        std::cout << "Input send..." << std::endl;
+        modInput.msgType = 14;
+        modInput.setFirstShort(1);
+        socket.send(modInput);
+        return;
+    }
 }
 
 static void threadFn(std::shared_ptr<RType::Utils::SocketHandler> socket, bool &toStop)
