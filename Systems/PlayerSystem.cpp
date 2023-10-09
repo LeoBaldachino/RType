@@ -42,16 +42,16 @@ void PlayerSystem::createShots(Core &core)
     while (!this->_inputSystem._inputs.getEvents().empty() && this->_inputSystem._inputs.getEvents().front() == Inputs::Events::Shoot) {
         this->_inputSystem._inputs.popEvent();
         Shoot tmpShoot(this->_player.shoot());
-        // core.addEntity(std::make_shared<ShotEntity>(tmpShoot), core.getAvailabeIndex());
+        core.addEntity(std::make_shared<ShotEntity>(tmpShoot), core.getAvailabeIndex());
     }
 }
 
-void PlayerSystem::createPiercingShots(void)
+void PlayerSystem::createPiercingShots(Core &core)
 {
     while (!this->_inputSystem._inputs.getEvents().empty() && this->_inputSystem._inputs.getEvents().front() == Inputs::Events::PiercingShoot) {
         this->_inputSystem._inputs.popEvent();
         Shoot tmpShoot(this->_player.shoot());
-        // this->_piercingShots.push_back(std::make_unique<PiercingShotSystem>(PiercingShotEntity(tmpShoot)));
+        core.addEntity(std::make_shared<PiercingShotEntity>(tmpShoot), core.getAvailabeIndex());
     }
 }
 

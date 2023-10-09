@@ -22,10 +22,10 @@ void BydosSystem::updatePos(void)
     this->_movementSystem.updatePosition(this->_bydos);
 }
 
-void BydosSystem::createShots(const Player &player)
+void BydosSystem::createShots(const Player &player, Core &core)
 {
     Shoot tmpShoot(this->_bydos.shoot(player.getPosition()));
-    // this->_shots.push_back(std::make_unique<ShotSystem>(ShotEntity(tmpShoot)));
+    core.addEntity(std::make_shared<ShotEntity>(tmpShoot), core.getAvailabeIndex());
 }
 
 // void BydosSystem::clearShots(void)

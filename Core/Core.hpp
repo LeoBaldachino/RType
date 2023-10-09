@@ -8,7 +8,6 @@
 #pragma once
 #include "../Entity/IEntity.hpp"
 #include <unordered_map>
-#include "../Visitor/SystemVisitor.hpp"
 #include <memory>
 #include <climits>
 #include <list>

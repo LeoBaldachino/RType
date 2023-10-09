@@ -8,6 +8,7 @@
 #pragma once
 #include <memory>
 #include "../Entity/Player.hpp"
+#include "../Core/Core.hpp"
 #include "Subsystems/InputSystem.hpp"
 #include "Subsystems/ShotSystem.hpp"
 #include "Subsystems/PiercingShotSystem.hpp"
@@ -21,7 +22,7 @@ class PlayerSystem {
         void getInputs(void);
         void updatePos(void);
         void createShots(Core &core);
-        void createPiercingShots(void);
+        void createPiercingShots(Core &core);
     private:
         Player _player;
         InputSystem _inputSystem;

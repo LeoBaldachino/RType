@@ -22,10 +22,10 @@ void TourreSystem::updatePos(void)
     this->_movementSystem.updatePosition(this->_tourre);
 }
 
-void TourreSystem::createShots(const Player &player)
+void TourreSystem::createShots(const Player &player, Core &core)
 {
     Shoot tmpShoot(this->_tourre.shoot(player.getPosition()));
-    // this->_shots.push_back(std::make_unique<ShotSystem>(ShotEntity(tmpShoot)));
+    core.addEntity(std::make_shared<ShotEntity>(tmpShoot), core.getAvailabeIndex());
 }
 
 // void TourreSystem::clearShots(void)

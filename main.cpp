@@ -6,6 +6,7 @@
 */
 
 #include "Core/Core.hpp"
+#include "Visitor/SystemVisitor.hpp"
 
 int main(void)
 {

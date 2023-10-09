@@ -18,20 +18,20 @@ class SystemVisitor : public IVisitor {
             this->_playerSystem.setPlayer(p);
             this->_playerSystem.getInputs();
             this->_playerSystem.updatePos();
-            this->_playerSystem.createPiercingShots();
+            this->_playerSystem.createPiercingShots(core);
             this->_playerSystem.createShots(core);
             p = this->_playerSystem.getPlayer();
         }
         void visitBydos(Bydos &b, Core &core) {
             this->_bydosSystem.setBydos(b);
             this->_bydosSystem.updatePos();
-            // this->_bydosSystem.createShots(this->_playerSystem.getPlayer()); DEFINIR CLOCK
+            // this->_bydosSystem.createShots(this->_playerSystem.getPlayer(), core); DEFINIR CLOCK
             b = this->_bydosSystem.getBydos();
         };
         void visitTourre(Tourre &t, Core &core) {
             this->_tourreSystem.setTourre(t);
             this->_tourreSystem.updatePos();
-            // this->_tourreSystem.createShots(this->_playerSystem.getPlayer());
+            // this->_tourreSystem.createShots(this->_playerSystem.getPlayer(), core);
             t = this->_tourreSystem.getTourre();
         };
         void visitShot(ShotEntity &s, Core &core) {
