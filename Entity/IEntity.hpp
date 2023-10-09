@@ -25,7 +25,7 @@ class IEntity {
         virtual Moveable getMoveable(void) const = 0;
         virtual void setPosition(const Position &position) = 0;
         virtual Position getPosition(void) const = 0;
-        virtual bool isColidingWith(IEntity &entity) = 0; 
+        // virtual bool isColidingWith(IEntity &entity) = 0; 
         virtual Vector2d getSize(void) = 0;
         virtual void drawEntity(std::unique_ptr<sf::RenderWindow> &window) = 0;
 };

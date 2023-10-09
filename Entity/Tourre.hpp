@@ -47,6 +47,8 @@ class Tourre : public IEntity {
         Moveable getMoveable(void) const;
 
         void drawEntity(std::unique_ptr<sf::RenderWindow> &window);
+        
+        Vector2d getSize(void) { return (Vector2d(0, 0)); };
 
     private:
         State _state;
