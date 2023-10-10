@@ -7,36 +7,13 @@
 
 #include "TourreSystem.hpp"
 
-void TourreSystem::setTourre(const Tourre &b)
+void TourreSystem::updatePos(Tourre &t)
 {
-    this->_tourre = b;
+    this->_movementSystem.updatePosition(t);
 }
 
-Tourre TourreSystem::getTourre(void) const
+void TourreSystem::createShots(Tourre &t, const Player &player, Core &core)
 {
-    return (this->_tourre);
+    Shoot tmpShoot(t.shoot(player.getPosition()));
+    core.addEntity(std::make_shared<ShotEntity>(tmpShoot, "Assets/enemyShot.png"), core.getAvailabeIndex());
 }
-
-void TourreSystem::updatePos(void)
-{
-    this->_movementSystem.updatePosition(this->_tourre);
-}
-
-void TourreSystem::createShots(const Player &player, Core &core)
-{
-    Shoot tmpShoot(this->_tourre.shoot(player.getPosition()));
-    core.addEntity(std::make_shared<ShotEntity>(tmpShoot), core.getAvailabeIndex());
-}
-
-// void TourreSystem::clearShots(void)
-// {
-//     for (int i = 0; i != this->_shots.size(); ++i) {
-//         if (this->_shots[i] == NULL || this->_shots[i] == nullptr)
-//             continue;
-//         if (this->_shots[i]->getPos().getX() <= 0
-//         || this->_shots[i]->getPos().getY() <= 0
-//         || this->_shots[i]->getPos().getX() >= this->_tourre.getPosition().getWidth()
-//         || this->_shots[i]->getPos().getY() >= this->_tourre.getPosition().getHeight())
-//             this->_shots.erase(std::find(std::begin(this->_shots), std::end(this->_shots), this->_shots[i]));
-//     }
-// }

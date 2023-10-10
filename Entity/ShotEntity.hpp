@@ -17,7 +17,7 @@
 
 class ShotEntity : public IEntity {
     public:
-        ShotEntity(Shoot &shoot);
+        ShotEntity(Shoot &shoot, std::string spriteFile);
         ~ShotEntity() {};
 
         void accept(IVisitor &v, Core &core);

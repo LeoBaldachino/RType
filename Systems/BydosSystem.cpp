@@ -7,36 +7,13 @@
 
 #include "BydosSystem.hpp"
 
-void BydosSystem::setBydos(const Bydos &b)
+void BydosSystem::updatePos(Bydos &b)
 {
-    this->_bydos = b;
+    this->_movementSystem.updatePosition(b);
 }
 
-Bydos BydosSystem::getBydos(void) const
+void BydosSystem::createShots(Bydos &b, const Player &player, Core &core)
 {
-    return (this->_bydos);
+    Shoot tmpShoot(b.shoot(player.getPosition()));
+    core.addEntity(std::make_shared<ShotEntity>(tmpShoot, "Assets/enemyShot.png"), core.getAvailabeIndex());
 }
-
-void BydosSystem::updatePos(void)
-{
-    this->_movementSystem.updatePosition(this->_bydos);
-}
-
-void BydosSystem::createShots(const Player &player, Core &core)
-{
-    Shoot tmpShoot(this->_bydos.shoot(player.getPosition()));
-    core.addEntity(std::make_shared<ShotEntity>(tmpShoot), core.getAvailabeIndex());
-}
-
-// void BydosSystem::clearShots(void)
-// {
-//     for (int i = 0; i != this->_shots.size(); ++i) {
-//         if (this->_shots[i] == NULL || this->_shots[i] == nullptr)
-//             continue;
-//         if (this->_shots[i]->getPos().getX() <= 0
-//         || this->_shots[i]->getPos().getY() <= 0
-//         || this->_shots[i]->getPos().getX() >= this->_bydos.getPosition().getWidth()
-//         || this->_shots[i]->getPos().getY() >= this->_bydos.getPosition().getHeight())
-//             this->_shots.erase(std::find(std::begin(this->_shots), std::end(this->_shots), this->_shots[i]));
-//     }
-// }

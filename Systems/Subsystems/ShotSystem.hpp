@@ -7,6 +7,7 @@
 
 #pragma once
 #include <memory>
+#include "../../Core/Core.hpp"
 #include "../../Components/Position.hpp"
 #include "../../Entity/ShotEntity.hpp"
 
@@ -15,6 +16,7 @@ class ShotSystem {
         ShotSystem() {};
         ~ShotSystem() {};
         void updatePos(ShotEntity &s);
+        void clearShots(ShotEntity &s, Core &core);
         Position getPos(ShotEntity &s) const;
     private:
 };

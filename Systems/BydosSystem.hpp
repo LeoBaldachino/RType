@@ -15,13 +15,10 @@ class BydosSystem {
     public:
         BydosSystem() {};
         ~BydosSystem() {};
-        void setBydos(const Bydos &b);
-        Bydos getBydos(void) const;
-        void updatePos(void);
-        void createShots(const Player &player, Core &core);
+        void updatePos(Bydos &b);
+        void createShots(Bydos &b, const Player &player, Core &core);
 
     private:
-        Bydos _bydos;
         MovementSystem _movementSystem;
         std::vector<std::unique_ptr<ShotSystem>> _shots;
 
