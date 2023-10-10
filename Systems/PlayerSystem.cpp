@@ -9,8 +9,8 @@
 
 void PlayerSystem::getInputs(Player &p)
 {
-    int rE = rand() % 6;
-    this->_inputSystem._inputs.addEvents((Inputs::Events) rE);
+    // int rE = rand() % 6;
+    // this->_inputSystem._inputs.addEvents((Inputs::Events) rE);
     // // sf::Event event;
     // // while (window->pollEvent(event))
     // //     this->_inputSystem.handleInput();
@@ -47,4 +47,10 @@ void PlayerSystem::updatePos(Player &p)
     if (p.getPosition().getY() > p.getPosition().getHeight() - 28)
         tmpPosition.setY(p.getPosition().getHeight() - 28);
     p.setPosition(tmpPosition);
+}
+
+void PlayerSystem::checkCollision(Player &p, IEntity &entity)
+{
+    if (this->_hitBoxSystem.entityIntersect(p, entity))
+        std::cout << "Touch !" << std::endl;
 }

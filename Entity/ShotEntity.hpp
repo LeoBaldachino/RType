@@ -11,6 +11,7 @@
 #include "../Components/Shoot.hpp"
 #include "../Components/Drawable.hpp"
 #include "IEntity.hpp"
+#include "EntityType.hpp"
 
 #define SHOT_X 32
 #define SHOT_Y 12
@@ -37,6 +38,7 @@ class ShotEntity : public IEntity {
 
         Position getPosition(void) const;
         void setPosition(const Position &position);
+        inline unsigned char getEntityType() {return enemyShoot;}
     private:
         Shoot _shoot;
         Drawable _drawable;

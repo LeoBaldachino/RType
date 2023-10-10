@@ -28,4 +28,5 @@ class IEntity {
         // virtual bool isColidingWith(IEntity &entity) = 0; 
         virtual Vector2d getSize(void) = 0;
         virtual void drawEntity(std::unique_ptr<sf::RenderWindow> &window) = 0;
+        virtual inline unsigned char getEntityType() = 0;
 };

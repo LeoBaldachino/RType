@@ -7,6 +7,11 @@
 
 #include "BydosSystem.hpp"
 
+BydosSystem::BydosSystem()
+{
+    this->_shootClock = std::chrono::steady_clock::now();
+}
+
 void BydosSystem::updatePos(Bydos &b)
 {
     this->_movementSystem.updatePosition(b);
@@ -14,6 +19,8 @@ void BydosSystem::updatePos(Bydos &b)
 
 void BydosSystem::createShots(Bydos &b, const Player &player, Core &core)
 {
+    if (!b.readyToShoot())
+        return;
     Shoot tmpShoot(b.shoot(player.getPosition()));
     core.addEntity(std::make_shared<ShotEntity>(tmpShoot, "Assets/enemyShot.png"), core.getAvailabeIndex());
 }

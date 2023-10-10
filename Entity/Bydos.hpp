@@ -11,13 +11,15 @@
 #include "../Systems/Subsystems/AIShoot.hpp"
 #include "../Components/Drawable.hpp"
 #include "../Entity/Player.hpp"
-
+#include "EntityType.hpp"
+#include "../Components/IsReady.hpp"
+#define SHOOT_SPEED 600
 #define BYDOS_X 21 * SIZE_SCALE
 #define BYDOS_Y 24 * SIZE_SCALE
 
 class Bydos : public IEntity {
     public:
-        Bydos() {};
+        Bydos();
         Bydos(Position position, int velocity, Vector2d moveDirection);
         ~Bydos() {};
         void accept(IVisitor &v, Core &core);
@@ -52,7 +54,8 @@ class Bydos : public IEntity {
         Vector2d getSize(void);
 
         void drawEntity(std::unique_ptr<sf::RenderWindow> &window);
-
+        inline unsigned char getEntityType() {return bydos;}
+        inline bool readyToShoot() {return this->_ready.clockOk();};
     private:
         State _state;
         Position _position;
@@ -63,4 +66,5 @@ class Bydos : public IEntity {
         int _shootVelocity = 5;
         int _shootGravity = 0;
         Vector2d _size;
+        IsReady _ready;
 };

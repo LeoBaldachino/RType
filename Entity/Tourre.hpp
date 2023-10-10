@@ -49,7 +49,7 @@ class Tourre : public IEntity {
         void drawEntity(std::unique_ptr<sf::RenderWindow> &window);
         
         Vector2d getSize(void) { return (Vector2d(0, 0)); };
-
+        inline unsigned char getEntityType() {return tourre;}
     private:
         State _state;
         Position _position;
