@@ -18,7 +18,7 @@ RType::RTypeGameLoop::~RTypeGameLoop()
 
 RType::Utils::MessageParsed_s RType::RTypeGameLoop::updatePlayerPos(std::pair<unsigned short, Utils::MessageParsed_s> msg)
 {
-    std::shared_ptr<Player> player = std::make_shared<Player>(dynamic_cast<Player *>(this->_core._entities[msg.first].get()));
+    std::shared_ptr<Player> player = std::dynamic_pointer_cast<Player>(this->_core._entities[msg.first]);
     Position posTmp = player->getPosition();
     RType::Utils::MessageParsed_s msgReturned;
 
@@ -42,6 +42,8 @@ std::queue<RType::Utils::MessageParsed_s> RType::RTypeGameLoop::runAfterUpdate(s
             toReturn.push(this->updatePlayerPos(newMessages.front()));
         newMessages.pop();
     }
+    for (auto it : this->_playerArray)
+        this->v.visitPlayer(*std::dynamic_pointer_cast<Player>(this->_core._entities[it]), this->_core);
     return toReturn;
 }
 

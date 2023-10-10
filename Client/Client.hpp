@@ -46,6 +46,8 @@ namespace RType {
             void serverStopped(const Utils::MessageParsed_s &msg);
             void getEntityType(unsigned short id);
             void setEntityType(const Utils::MessageParsed_s &msg);
+            void handleInputs(void);
+            void updateInputs(void);
             std::unique_ptr<std::thread> _infosThread;
             std::shared_ptr<Utils::SocketHandler> _socket;
             std::unique_ptr<sf::RenderWindow> _window;
@@ -57,7 +59,7 @@ namespace RType {
             bool _threadIsOpen;
             unsigned char _actualRoom;
             std::unordered_map<int, void (RType::Client::*)(const Utils::MessageParsed_s &)> _commands;
-            unsigned short _actualId;
+            int _actualId;
             std::unordered_map<Events, bool> _keysDown;
             bool shooting = false;
             std::chrono::time_point<std::chrono::_V2::steady_clock, std::chrono::_V2::steady_clock::duration> shotTime;

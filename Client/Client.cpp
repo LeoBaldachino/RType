@@ -34,7 +34,7 @@ _commands({
     this->_window = std::make_unique<sf::RenderWindow>(sf::VideoMode::getDesktopMode(), "R-Type");
     this->_socket = std::make_unique<Utils::SocketHandler>("127.0.0.1", 4001 + std::rand() % 3000);
     this->_threadIsOpen = true;
-    this->_actualId = 0;
+    this->_actualId = -1;
     this->_infosThread = std::make_unique<std::thread>(&RType::Client::infosThread, this);
     this->run();
 }
@@ -43,17 +43,71 @@ RType::Client::~Client()
 {
 }
 
+void RType::Client::updateInputs(void)
+{
+    this->handleInputs();
+        if (this->_keysDown[Events::Up])
+            this->_inputs.push_back(Events::Up);
+        if (this->_keysDown[Events::Left] && !this->_keysDown[Events::Right])
+            this->_inputs.push_back(Events::Left);
+        if (this->_keysDown[Events::Down] && !this->_keysDown[Events::Up])
+            this->_inputs.push_back(Events::Down);
+        if (this->_keysDown[Events::Right])
+            this->_inputs.push_back(Events::Right);
+}
+
+void RType::Client::handleInputs(void)
+{
+    sf::Event event;
+    while (this->_window->pollEvent(event)) {
+        if (event.type == sf::Event::KeyPressed) {
+            if (event.key.code == sf::Keyboard::Up)
+                this->_keysDown[Events::Up] = true;
+            if (event.key.code == sf::Keyboard::Down)
+                this->_keysDown[Events::Down] = true;
+            if (event.key.code == sf::Keyboard::Left)
+                this->_keysDown[Events::Left] = true;
+            if (event.key.code == sf::Keyboard::Right)
+                this->_keysDown[Events::Right] = true;
+            if (event.key.code == sf::Keyboard::Escape)
+                this->_inputs.push_back(Events::CloseWindow);
+            if (!this->shooting && event.key.code == sf::Keyboard::Space) {
+                this->shotTime = std::chrono::steady_clock::now();
+                this->shooting = true;
+            }
+        }
+        if (event.type == sf::Event::KeyReleased) {
+            if (this->shooting && event.key.code == sf::Keyboard::Space) {
+                std::chrono::time_point<std::chrono::_V2::steady_clock, std::chrono::_V2::steady_clock::duration>
+                time = std::chrono::steady_clock::now();
+                if (std::chrono::duration_cast<std::chrono::seconds>(time - this->shotTime).count() >= 1)
+                    this->_inputs.push_back(Events::PiercingShoot);
+                else
+                    this->_inputs.push_back(Events::Shoot);
+                this->shooting = false;
+            }
+            if (event.key.code == sf::Keyboard::Up)
+                this->_keysDown[Events::Up] = false;
+            if (event.key.code == sf::Keyboard::Down)
+                this->_keysDown[Events::Down] = false;
+            if (event.key.code == sf::Keyboard::Left)
+                this->_keysDown[Events::Left] = false;
+            if (event.key.code == sf::Keyboard::Right)
+                this->_keysDown[Events::Right] = false;
+        }
+    }
+}
+
 void RType::Client::run()
 {
     this->createRoom(1);
     auto msgKeyPressed = this->buildEmptyMsg(keyPressed);
     while (_window->isOpen()) {
         _window->clear();        
-        for (auto &it : this->_entities._entities) {
-            it.second->accept(this->_visitor, this->_entities);
+        for (auto &it : this->_entities._entities)
             it.second->drawEntity(this->_window);
-        }
         _window->display();
+        this->updateInputs();
         if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - this->_sendInputTime).count() >= 10) {
             for (auto it : this->_keysDown)
                 if (it.second) {
@@ -155,7 +209,7 @@ idem pour toutes les entitées -> tant qu'on ne sait pas qui elles sont continue
 */
 bool RType::Client::checkAsId()
 {
-    if (this->_actualId != 0)
+    if (this->_actualId != -1)
         return true;
     auto msg = this->buildEmptyMsg(playerGetId);
     this->_socket->send(msg);
@@ -179,7 +233,7 @@ void RType::Client::moveEntity(const Utils::MessageParsed_s &msg)
 void RType::Client::quitRoom(const Utils::MessageParsed_s &msg)
 {
     (void)msg;
-    this->_actualId = 0;
+    this->_actualId = -1;
     this->_threadIsOpen = false;
     this->_window->close();
 }
@@ -187,7 +241,7 @@ void RType::Client::quitRoom(const Utils::MessageParsed_s &msg)
 void RType::Client::serverStopped(const Utils::MessageParsed_s &msg)
 {
     (void)msg;
-    this->_actualId = 0;
+    this->_actualId = -1;
     this->_threadIsOpen = false;
     this->_window->close();   
 }
