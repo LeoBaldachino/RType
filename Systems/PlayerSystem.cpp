@@ -16,17 +16,6 @@ void PlayerSystem::getInputs(Player &p)
     // //     this->_inputSystem.handleInput();
 }
 
-// void PlayerSystem::clearShots(void)
-// {
-//     for (auto& i: this->_shots) {
-//         if (i == NULL || i == nullptr)
-//             continue;
-//         if (i->getPos().getX() >= this->_player.getPosition().getWidth()
-//         || i->getPos().getY() >= this->_player.getPosition().getHeight())
-//             this->_shots.erase(std::find(std::begin(this->_shots), std::end(this->_shots), i));
-//     }
-// }
-
 void PlayerSystem::createShots(Player &p, Core &core)
 {
     while (!this->_inputSystem._inputs.getEvents().empty() && this->_inputSystem._inputs.getEvents().front() == Inputs::Events::Shoot) {

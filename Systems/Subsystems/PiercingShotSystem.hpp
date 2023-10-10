@@ -7,6 +7,7 @@
 
 #pragma once
 #include "../../Entity/PiercingShotEntity.hpp"
+#include "../../Core/Core.hpp"
 #include "ShotSystem.hpp"
 
 class PiercingShotSystem {
@@ -14,6 +15,7 @@ class PiercingShotSystem {
         PiercingShotSystem() {};
         ~PiercingShotSystem() {};
         void updatePos(PiercingShotEntity &pS);
+        void clearShots(PiercingShotEntity &pS, Core &core);
         Position getPos(PiercingShotEntity &pS) const;
     private:
 };

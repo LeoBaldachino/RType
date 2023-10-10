@@ -31,11 +31,11 @@ class SystemVisitor : public IVisitor {
         };
         void visitShot(ShotEntity &s, Core &core) {
             this->_shotSystem.updatePos(s);
-            // this->_shotSystem.clearShots(s);
+            this->_shotSystem.clearShots(s, core);
         };
         void visitPiercingShot(PiercingShotEntity &pS, Core &core) {
             this->_piercingShotSystem.updatePos(pS);
-            // this->_piercingShotSystem.clearShots(pS);
+            this->_piercingShotSystem.clearShots(pS, core);
         };
     private:
         Player _lastPlayer;
