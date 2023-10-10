@@ -25,6 +25,19 @@ unsigned short Core::getAvailabeIndex()
     return newId;
 }
 
+bool Core::removeEntity(IEntity &entity)
+{
+    for (auto it : this->_entities)
+        if (it.second.get() == &entity) {
+            unsigned short tmpId = it.first;
+            auto suppr = this->_entities.find(it.first);
+            this->_entities.erase(suppr);
+            this->_presentIndex.push(tmpId);
+            return (true);
+        }
+    return (false);
+}
+
 bool Core::removeEntity(unsigned short id)
 {
     auto it = this->_entities.find(id);
@@ -33,4 +46,34 @@ bool Core::removeEntity(unsigned short id)
     this->_entities.erase(it);
     this->_presentIndex.push(id);
     return true;
+}
+
+bool Core::removeEntityLater(IEntity &entity)
+{
+    for (auto it : this->_entities)
+        if (it.second.get() == &entity) {
+            unsigned short tmpId = it.first;
+            auto suppr = this->_entities.find(it.first);
+            this->_erase.push(tmpId);
+            return (true);
+        }
+    return (false);
+}
+
+bool Core::removeEntityLater(unsigned short id)
+{
+    auto it = this->_entities.find(id);
+    if (it == this->_entities.end())
+        return false;
+    this->_erase.push(id);
+    return true;
+}
+
+void Core::eraseEntity(void)
+{
+    while (!this->_erase.empty()) {
+        this->_entities.erase(this->_erase.front());
+        this->_presentIndex.push(this->_erase.front());
+        this->_erase.pop();
+    }
 }
