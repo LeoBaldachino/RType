@@ -43,81 +43,16 @@ RType::Client::~Client()
 {
 }
 
-void RType::Client::updateInputs(void)
-{
-    this->handleInputs();
-        if (this->_keysDown[Events::Up])
-            this->_inputs.push_back(Events::Up);
-        if (this->_keysDown[Events::Left] && !this->_keysDown[Events::Right])
-            this->_inputs.push_back(Events::Left);
-        if (this->_keysDown[Events::Down] && !this->_keysDown[Events::Up])
-            this->_inputs.push_back(Events::Down);
-        if (this->_keysDown[Events::Right])
-            this->_inputs.push_back(Events::Right);
-}
-
-void RType::Client::handleInputs(void)
-{
-    sf::Event event;
-    while (this->_window->pollEvent(event)) {
-        if (event.type == sf::Event::KeyPressed) {
-            if (event.key.code == sf::Keyboard::Up)
-                this->_keysDown[Events::Up] = true;
-            if (event.key.code == sf::Keyboard::Down)
-                this->_keysDown[Events::Down] = true;
-            if (event.key.code == sf::Keyboard::Left)
-                this->_keysDown[Events::Left] = true;
-            if (event.key.code == sf::Keyboard::Right)
-                this->_keysDown[Events::Right] = true;
-            if (event.key.code == sf::Keyboard::Escape)
-                this->_inputs.push_back(Events::CloseWindow);
-            if (!this->shooting && event.key.code == sf::Keyboard::Space) {
-                this->shotTime = std::chrono::steady_clock::now();
-                this->shooting = true;
-            }
-        }
-        if (event.type == sf::Event::KeyReleased) {
-            if (this->shooting && event.key.code == sf::Keyboard::Space) {
-                std::chrono::time_point<std::chrono::_V2::steady_clock, std::chrono::_V2::steady_clock::duration>
-                time = std::chrono::steady_clock::now();
-                if (std::chrono::duration_cast<std::chrono::seconds>(time - this->shotTime).count() >= 1)
-                    this->_inputs.push_back(Events::PiercingShoot);
-                else
-                    this->_inputs.push_back(Events::Shoot);
-                this->shooting = false;
-            }
-            if (event.key.code == sf::Keyboard::Up)
-                this->_keysDown[Events::Up] = false;
-            if (event.key.code == sf::Keyboard::Down)
-                this->_keysDown[Events::Down] = false;
-            if (event.key.code == sf::Keyboard::Left)
-                this->_keysDown[Events::Left] = false;
-            if (event.key.code == sf::Keyboard::Right)
-                this->_keysDown[Events::Right] = false;
-        }
-    }
-}
-
 void RType::Client::run()
 {
     this->createRoom(1);
     auto msgKeyPressed = this->buildEmptyMsg(keyPressed);
-    sf::Texture text;
-    text.loadFromFile("../Assets/player.png");
     while (_window->isOpen()) {
-        _window->clear();
-
-        for (auto it : this->_entities._entities) {
-            sf::Sprite sprite;
-            sprite.setTexture(text);
-            sprite.setScale(2, 2);
-            sprite.setPosition(it.second->getPosition().getX(), it.second->getPosition().getY());
-            _window->draw(sprite);
+        _window->clear();        
+        for (auto &it : this->_entities._entities) {
+            it.second->accept(this->_visitor, this->_entities);
+            it.second->drawEntity(this->_window);
         }
-        
-        this->handleInputs();
-        for (auto &it : this->_entities._entities)
-            it.second->accept(this->_visitor);
         _window->display();
         if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - this->_sendInputTime).count() >= 10) {
             for (auto it : this->_keysDown)
@@ -126,8 +61,6 @@ void RType::Client::run()
                     msgKeyPressed.setFirstShort(static_cast<unsigned short>(it.first));
                     this->_socket->send(msgKeyPressed);
                 }
-            // msgKeyPressed.setFirstShort(static_cast<unsigned short>(1));
-            // this->_socket->send(msgKeyPressed);
             this->_sendInputTime = std::chrono::steady_clock::now();
         }
     }

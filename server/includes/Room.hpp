@@ -19,7 +19,8 @@
 #include "../../Core/Core.hpp"
 #include "../../gameLoop/IGameLoop.hpp"
 #include "../../gameLoop/RTypeGameLoop/RTypeGameLoop.hpp"
-#include "../includes/EntityTypes.hpp"
+#include "EntityTypes.hpp"
+#include "../../Entity/Player.hpp"
 
 namespace RType {
     namespace Server {

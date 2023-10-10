@@ -31,8 +31,6 @@ namespace RType {
             Client(int ac, char **av);
             ~Client();
         private:
-            void handleInputs(void);
-            void updateInputs(void);
             void run();
             void infosThread();
             void createRoom(unsigned char roomNb);

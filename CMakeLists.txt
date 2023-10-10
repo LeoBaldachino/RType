@@ -70,13 +70,20 @@ endif()
 set(SFML_INCLUDE_DIR "${SFML_ROOT}/include")
 link_directories(${SFML_LIBRARY_DIR})
 
-file(GLOB CLIENT_SOURCES "*.cpp" "Core/*.cpp" "Entity/*.cpp" "Systems/*.cpp" "Systems/Subsystems/*.cpp")
-add_executable(r-type_client ${CLIENT_SOURCES})
+file(GLOB SUBSYSTEMS "Systems/Subsystems/*.cpp")
+file(GLOB SYSTEMS "Systems/*.cpp")
+file(GLOB ENTITY "Entity/*.cpp")
+file(GLOB CORE "Core/*.cpp")
+file(GLOB CLIENT_FILES  "Client/*.cpp")
+file(GLOB SOCKET_FILES "Sockets/sources/*.cpp")
+
+add_executable(r-type_client ${CORE} ${CLIENT_FILES} ${ENTITY} ${SUBSYSTEMS} ${SYSTEMS} ${SOCKET_FILES})
 target_include_directories(r-type_client PRIVATE ${SFML_INCLUDE_DIR})
 target_link_libraries(r-type_client sfml-system sfml-graphics sfml-window)
+target_link_libraries(r-type_client pthread)
 
-set_property(TARGET r-type_client PROPERTY CXX_STANDARD 17)
-set_property(TARGET r-type_client PROPERTY CXX_STANDARD_REQUIRED ON)
+# set_property(TARGET r-type_client PROPERTY CXX_STANDARD 17)
+# set_property(TARGET r-type_client PROPERTY CXX_STANDARD_REQUIRED ON)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -l")
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -l")
 
