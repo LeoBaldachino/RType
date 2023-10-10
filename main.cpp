@@ -23,6 +23,7 @@ int main(void)
             it.second->accept(v, core);
             it.second->drawEntity(_window);
         }
+        core.eraseEntity();
         _window->display();
     }
     return (0);
