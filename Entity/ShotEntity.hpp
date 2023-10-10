@@ -12,9 +12,11 @@
 #include "../Components/Drawable.hpp"
 #include "IEntity.hpp"
 #include "EntityType.hpp"
+#include "../Components/ClockTimer.hpp"
 
 #define SHOT_X 32
 #define SHOT_Y 12
+#define MOVE_SHOT 1
 
 class ShotEntity : public IEntity {
     public:
@@ -39,8 +41,10 @@ class ShotEntity : public IEntity {
         Position getPosition(void) const;
         void setPosition(const Position &position);
         inline unsigned char getEntityType() {return enemyShoot;}
+        inline bool readyToMove() {return this->_clockMove.clockOk();};
     private:
         Shoot _shoot;
         Drawable _drawable;
         Vector2d _size;
+        ClockTimer _clockMove;
 };

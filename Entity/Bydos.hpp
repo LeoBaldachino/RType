@@ -12,7 +12,7 @@
 #include "../Components/Drawable.hpp"
 #include "../Entity/Player.hpp"
 #include "EntityType.hpp"
-#include "../Components/IsReady.hpp"
+#include "../Components/ClockTimer.hpp"
 #define SHOOT_SPEED 600
 #define MOVE_SPEED 3
 #define BYDOS_X 21 * SIZE_SCALE
@@ -68,6 +68,6 @@ class Bydos : public IEntity {
         int _shootVelocity = 5;
         int _shootGravity = 0;
         Vector2d _size;
-        IsReady _readyShoot;
-        IsReady _readyMove;
+        ClockTimer _readyShoot;
+        ClockTimer _readyMove;
 };

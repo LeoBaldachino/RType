@@ -2,19 +2,19 @@
 ** EPITECH PROJECT, 2023
 ** B-CPP-500-MLH-5-1-rtype-robin.denni
 ** File description:
-** IsReady
+** ClockTimer
 */
 
 #pragma once
 #include <chrono>
 
-class IsReady {
+class ClockTimer {
     public:
-        IsReady(size_t timeout) {
+        ClockTimer(size_t timeout) {
             this->_baseClock = std::chrono::steady_clock::now();
             this->_baseTimeout = timeout;
         };
-        ~IsReady() {};
+        ~ClockTimer() {};
         bool clockOk() {
             auto clock = std::chrono::steady_clock::now();
             if (std::chrono::duration_cast<std::chrono::milliseconds>(clock - this->_baseClock).count() < this->_baseTimeout)

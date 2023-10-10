@@ -11,7 +11,7 @@
 #include "../Systems/BydosSystem.hpp"
 #include "../Systems/TourreSystem.hpp"
 #include "../Entity/EntityType.hpp"
-#include "../Components/IsReady.hpp"
+#include "../Components/ClockTimer.hpp"
 
 class SystemVisitor : public IVisitor {
     public:
