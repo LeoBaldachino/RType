@@ -9,11 +9,12 @@
 
 BydosSystem::BydosSystem()
 {
-    this->_shootClock = std::chrono::steady_clock::now();
 }
 
 void BydosSystem::updatePos(Bydos &b)
 {
+    if (!b.readyToMove())
+        return;
     this->_movementSystem.updatePosition(b);
 }
 

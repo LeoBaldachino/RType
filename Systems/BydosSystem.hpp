@@ -21,5 +21,4 @@ class BydosSystem {
 
     private:
         MovementSystem _movementSystem;
-        std::chrono::steady_clock::time_point _shootClock;
 };

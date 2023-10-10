@@ -11,10 +11,11 @@
 #include "../Systems/BydosSystem.hpp"
 #include "../Systems/TourreSystem.hpp"
 #include "../Entity/EntityType.hpp"
+#include "../Components/IsReady.hpp"
 
 class SystemVisitor : public IVisitor {
     public:
-        SystemVisitor(){};
+        SystemVisitor() {};
         void visitPlayer(Player &p, Core &core) {
             this->_playerSystem.getInputs(p);
             this->_playerSystem.updatePos(p);
@@ -26,7 +27,7 @@ class SystemVisitor : public IVisitor {
         }
         void visitBydos(Bydos &b, Core &core) {
             this->_bydosSystem.updatePos(b);
-            this->_bydosSystem.createShots(b, this->_lastPlayer, core); //todo DEFINIR CLOCK
+            this->_bydosSystem.createShots(b, this->_lastPlayer, core);
         };
         void visitTourre(Tourre &t, Core &core) {
             this->_tourreSystem.updatePos(t);

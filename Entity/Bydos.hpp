@@ -14,6 +14,7 @@
 #include "EntityType.hpp"
 #include "../Components/IsReady.hpp"
 #define SHOOT_SPEED 600
+#define MOVE_SPEED 3
 #define BYDOS_X 21 * SIZE_SCALE
 #define BYDOS_Y 24 * SIZE_SCALE
 
@@ -55,7 +56,8 @@ class Bydos : public IEntity {
 
         void drawEntity(std::unique_ptr<sf::RenderWindow> &window);
         inline unsigned char getEntityType() {return bydos;}
-        inline bool readyToShoot() {return this->_ready.clockOk();};
+        inline bool readyToShoot() {return this->_readyShoot.clockOk();};
+        inline bool readyToMove() {return this->_readyMove.clockOk();};
     private:
         State _state;
         Position _position;
@@ -66,5 +68,6 @@ class Bydos : public IEntity {
         int _shootVelocity = 5;
         int _shootGravity = 0;
         Vector2d _size;
-        IsReady _ready;
+        IsReady _readyShoot;
+        IsReady _readyMove;
 };
