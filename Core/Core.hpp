@@ -6,7 +6,7 @@
 */
 
 #pragma once
-#include "../Entity/IEntity.hpp"
+#include "../Entity/Player.hpp"
 #include <unordered_map>
 #include <memory>
 #include <climits>

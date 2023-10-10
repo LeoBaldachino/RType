@@ -16,9 +16,7 @@
 
 class InputSystem {
     public:
-        InputSystem() : _inputs() {};
+        InputSystem() {};
         ~InputSystem() = default;
         void updatePlayer(Player &player);
-        // void convertMsgToInputs(Player &player);
-        Inputs _inputs;
 };

@@ -15,7 +15,6 @@ class SystemVisitor : public IVisitor {
     public:
         SystemVisitor(){};
         void visitPlayer(Player &p, Core &core) {
-            this->_playerSystem.getInputs(p);
             this->_playerSystem.updatePos(p);
             this->_playerSystem.createPiercingShots(p, core);
             this->_playerSystem.createShots(p, core);

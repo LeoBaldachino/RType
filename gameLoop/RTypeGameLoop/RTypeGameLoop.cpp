@@ -18,25 +18,12 @@ RType::RTypeGameLoop::~RTypeGameLoop()
 
 RType::Utils::MessageParsed_s RType::RTypeGameLoop::updatePlayerPos(std::pair<unsigned short, Utils::MessageParsed_s> msg)
 {
-    std::shared_ptr<IEntity> player = this->_core._entities[msg.first];
+    std::shared_ptr<Player> player = std::make_shared<Player>(dynamic_cast<Player *>(this->_core._entities[msg.first].get()));
     Position posTmp = player->getPosition();
     RType::Utils::MessageParsed_s msgReturned;
 
     msg.second.msgType == 14;
-    msg.second.getFirstShort();
-    if (msg.second.getFirstShort() == 3 && posTmp.getX() < 1920) {
-        posTmp.setX(posTmp.getX() + 1);
-    }
-    if (msg.second.getFirstShort() == 2 && posTmp.getX() > 0) {
-        posTmp.setX(posTmp.getX() - 1);
-    }
-    if (msg.second.getFirstShort() == 1 && posTmp.getY() < 1080) {
-        posTmp.setY(posTmp.getY() + 1);
-    }
-    if (msg.second.getFirstShort() == 0 && posTmp.getY() > 0) {
-        posTmp.setY(posTmp.getY() - 1);
-    }
-    player->setPosition(posTmp);
+    player->_inputs.addEvents((Inputs::Events) msg.second.getFirstShort());
     msgReturned.setFirstShort(posTmp.getX());
     msgReturned.setSecondShort(posTmp.getY());
     msgReturned.setThirdShort(msg.first);
