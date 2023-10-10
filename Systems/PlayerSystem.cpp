@@ -7,17 +7,7 @@
 
 #include "PlayerSystem.hpp"
 
-void PlayerSystem::setPlayer(const Player &p)
-{
-    this->_player = p;
-}
-
-Player PlayerSystem::getPlayer(void) const
-{
-    return (this->_player);
-}
-
-void PlayerSystem::getInputs()
+void PlayerSystem::getInputs(Player &p)
 {
     int rE = rand() % 6;
     this->_inputSystem._inputs.addEvents((Inputs::Events) rE);
@@ -37,35 +27,35 @@ void PlayerSystem::getInputs()
 //     }
 // }
 
-void PlayerSystem::createShots(Core &core)
+void PlayerSystem::createShots(Player &p, Core &core)
 {
     while (!this->_inputSystem._inputs.getEvents().empty() && this->_inputSystem._inputs.getEvents().front() == Inputs::Events::Shoot) {
         this->_inputSystem._inputs.popEvent();
-        Shoot tmpShoot(this->_player.shoot());
-        core.addEntity(std::make_shared<ShotEntity>(tmpShoot), core.getAvailabeIndex());
+        Shoot tmpShoot(p.shoot());
+        core.addEntity(std::make_shared<ShotEntity>(tmpShoot, "Assets/shot.png"), core.getAvailabeIndex());
     }
 }
 
-void PlayerSystem::createPiercingShots(Core &core)
+void PlayerSystem::createPiercingShots(Player &p, Core &core)
 {
     while (!this->_inputSystem._inputs.getEvents().empty() && this->_inputSystem._inputs.getEvents().front() == Inputs::Events::PiercingShoot) {
         this->_inputSystem._inputs.popEvent();
-        Shoot tmpShoot(this->_player.shoot());
+        Shoot tmpShoot(p.shoot());
         core.addEntity(std::make_shared<PiercingShotEntity>(tmpShoot), core.getAvailabeIndex());
     }
 }
 
-void PlayerSystem::updatePos(void)
+void PlayerSystem::updatePos(Player &p)
 {
-    this->_inputSystem.updatePlayer(this->_player);
-    Position tmpPosition(this->_player.getPosition());
-    if (this->_player.getPosition().getX() < 0)
+    this->_inputSystem.updatePlayer(p);
+    Position tmpPosition(p.getPosition());
+    if (p.getPosition().getX() < 0)
         tmpPosition.setX(0);
-    if (this->_player.getPosition().getY() < 0)
+    if (p.getPosition().getY() < 0)
         tmpPosition.setY(0);
-    if (this->_player.getPosition().getX() > this->_player.getPosition().getWidth() - 64)
-        tmpPosition.setX(this->_player.getPosition().getWidth() - 64);
-    if (this->_player.getPosition().getY() > this->_player.getPosition().getHeight() - 28)
-        tmpPosition.setY(this->_player.getPosition().getHeight() - 28);
-    this->_player.setPosition(tmpPosition);
+    if (p.getPosition().getX() > p.getPosition().getWidth() - 64)
+        tmpPosition.setX(p.getPosition().getWidth() - 64);
+    if (p.getPosition().getY() > p.getPosition().getHeight() - 28)
+        tmpPosition.setY(p.getPosition().getHeight() - 28);
+    p.setPosition(tmpPosition);
 }

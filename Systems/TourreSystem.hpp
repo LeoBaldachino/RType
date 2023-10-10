@@ -15,13 +15,10 @@ class TourreSystem {
     public:
         TourreSystem() {};
         ~TourreSystem() {};
-        void setTourre(const Tourre &t);
-        Tourre getTourre(void) const;
-        void updatePos(void);
-        void createShots(const Player &player, Core &core);
+        void updatePos(Tourre &t);
+        void createShots(Tourre &t, const Player &player, Core &core);
 
     private:
-        Tourre _tourre;
         MovementSystem _movementSystem;
         std::vector<std::unique_ptr<ShotSystem>> _shots;
 };

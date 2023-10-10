@@ -15,24 +15,19 @@ class SystemVisitor : public IVisitor {
     public:
         SystemVisitor(){};
         void visitPlayer(Player &p, Core &core) {
-            this->_playerSystem.setPlayer(p);
-            this->_playerSystem.getInputs();
-            this->_playerSystem.updatePos();
-            this->_playerSystem.createPiercingShots(core);
-            this->_playerSystem.createShots(core);
-            p = this->_playerSystem.getPlayer();
+            this->_playerSystem.getInputs(p);
+            this->_playerSystem.updatePos(p);
+            this->_playerSystem.createPiercingShots(p, core);
+            this->_playerSystem.createShots(p, core);
+            this->_lastPlayer = p;
         }
         void visitBydos(Bydos &b, Core &core) {
-            this->_bydosSystem.setBydos(b);
-            this->_bydosSystem.updatePos();
-            // this->_bydosSystem.createShots(this->_playerSystem.getPlayer(), core); DEFINIR CLOCK
-            b = this->_bydosSystem.getBydos();
+            this->_bydosSystem.updatePos(b);
+            // this->_bydosSystem.createShots(b, this->_lastPlayer, core); DEFINIR CLOCK
         };
         void visitTourre(Tourre &t, Core &core) {
-            this->_tourreSystem.setTourre(t);
-            this->_tourreSystem.updatePos();
-            // this->_tourreSystem.createShots(this->_playerSystem.getPlayer(), core);
-            t = this->_tourreSystem.getTourre();
+            this->_tourreSystem.updatePos(t);
+            // this->_tourreSystem.createShots(t, this->_lastPlayer, core);
         };
         void visitShot(ShotEntity &s, Core &core) {
             this->_shotSystem.updatePos(s);
@@ -43,6 +38,7 @@ class SystemVisitor : public IVisitor {
             // this->_piercingShotSystem.clearShots(pS);
         };
     private:
+        Player _lastPlayer;
         PlayerSystem _playerSystem;
         BydosSystem _bydosSystem;
         TourreSystem _tourreSystem;

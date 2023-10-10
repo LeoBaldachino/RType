@@ -7,25 +7,15 @@
 
 #include "TourreSystem.hpp"
 
-void TourreSystem::setTourre(const Tourre &b)
+void TourreSystem::updatePos(Tourre &t)
 {
-    this->_tourre = b;
+    this->_movementSystem.updatePosition(t);
 }
 
-Tourre TourreSystem::getTourre(void) const
+void TourreSystem::createShots(Tourre &t, const Player &player, Core &core)
 {
-    return (this->_tourre);
-}
-
-void TourreSystem::updatePos(void)
-{
-    this->_movementSystem.updatePosition(this->_tourre);
-}
-
-void TourreSystem::createShots(const Player &player, Core &core)
-{
-    Shoot tmpShoot(this->_tourre.shoot(player.getPosition()));
-    core.addEntity(std::make_shared<ShotEntity>(tmpShoot), core.getAvailabeIndex());
+    Shoot tmpShoot(t.shoot(player.getPosition()));
+    core.addEntity(std::make_shared<ShotEntity>(tmpShoot, "Assets/enemyShot.png"), core.getAvailabeIndex());
 }
 
 // void TourreSystem::clearShots(void)
