@@ -73,6 +73,7 @@ namespace RType {
                 boost::asio::ip::udp::endpoint _Endpoint;
                 std::shared_ptr<SocketHandler> _instance;
                 std::shared_ptr<std::mutex> _mutex;
+                std::shared_ptr<std::mutex> _receiverMutex;
                 std::pair<std::string, int> _ipPort;
         };
     }

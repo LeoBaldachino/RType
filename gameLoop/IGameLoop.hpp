@@ -8,7 +8,7 @@
 #pragma once
 #include "../Core/Core.hpp"
 #include "../Sockets/includes/MessageParsed.hpp"
-#include "../server/includes/EntityTypes.hpp"
+#include "../EntityTypes/EntityTypes.hpp"
 
 namespace RType {
     class IGameLoop {

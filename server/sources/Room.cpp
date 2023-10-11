@@ -9,6 +9,7 @@
 
 RType::Server::Room::Room(unsigned char id, unsigned char maxSize, std::shared_ptr<Utils::SocketHandler> setSocket) : _socket(setSocket)
 {
+    std::unique_lock<std::mutex> lock(this->_mutex);
     this->_willBeDestroyed = false;
     this->_id = id;
     this->_maxSize = maxSize;
@@ -16,7 +17,7 @@ RType::Server::Room::Room(unsigned char id, unsigned char maxSize, std::shared_p
     this->_actualPing = 0;
     this->_firstClient = {"", -1};
     this->_pingTime = std::chrono::steady_clock::now();
-    this->_core.addEntity(std::make_shared<Player>(Position(0, 0, 1920, 1080)), 0);
+    // this->_core.addEntity(std::make_shared<Player>(Position(0, 0, 1920, 1080)), 0);
     this->_mutexQueue = std::make_unique<std::mutex>();
     this->_toSendToGameLoop = std::make_unique<std::queue<std::pair<unsigned short, Utils::MessageParsed_s>>>();
     //to change when used
@@ -43,14 +44,12 @@ bool RType::Server::Room::addToRoom(const std::pair<std::string, int> &newPlayer
     unsigned short newId;
     {
         std::unique_lock<std::mutex> lock(this->_mutex);
-        std::cout << "add client to room " << newPlayer.second << std::endl;
         msg.msgType = newPlayerConnected;
         msg.senderIp = newPlayer.first;
         msg.senderPort = newPlayer.second;
         if (this->_firstClient.first == "" && this->_firstClient.second == -1)
             this->_firstClient = newPlayer;
         newId = this->_core.getAvailabeIndex();
-        std::cout << "new id " << newId << std::endl;
         this->_core.addEntity(std::make_shared<Player>(Position(0, 0, 1920, 1080)), newId);
         for (auto &it : this->_allPlayers) {
             msg.msgType = newPlayerConnected;
@@ -115,7 +114,6 @@ bool RType::Server::Room::sendMessageToRoom(const Utils::MessageParsed_s &msg)
     }
     auto it = this->_allPlayers.find({msg.senderIp, msg.senderPort});
     if (it == this->_allPlayers.end()) {
-        std::cout << "Not in room..." << std::endl;
         return false;
     }
     std::unique_lock<std::mutex> lock(*this->_mutexQueue);
@@ -171,10 +169,10 @@ bool RType::Server::Room::removeFromRoom(const std::pair<std::string, int> &toRe
         return false;
     for (auto it = this->_allPlayers.begin(); it != this->_allPlayers.end(); it++) {
         if (it->first == toRemove) {
-            std::cout << "Player " << toRemove.first << " " << toRemove.second << " has been removed from team" << this->_id << std::endl;
             this->_core.removeEntity(it->second);
             if (it->first == this->_firstClient) {
                 isFirst = true;
+                std::unique_lock<std::mutex> lock(this->_mutex);
                 _willBeDestroyed = true;
             }
             {
@@ -232,7 +230,6 @@ void RType::Server::Room::checkCrashed()
         return this->notifyAllPlayer(msg);
     }
     _actualPing = 0;
-    std::cout << "Check Players deconnected" << std::endl;
     std::queue<std::pair<std::string, int>> playerDisconnected;
     for (auto &it : this->_playerOnline) {
         if (!it.second)
@@ -248,7 +245,6 @@ void RType::Server::Room::checkCrashed()
 void RType::Server::Room::messagePing(const Utils::MessageParsed_s &msg)
 {
     std::unique_lock<std::mutex> lock(this->_mutex);
-    std::cout << "Receive ping from " << msg.senderPort << std::endl;
     this->_playerOnline[{msg.senderIp, msg.senderPort}] = true;
     return;
 }
@@ -265,7 +261,6 @@ void RType::Server::Room::sendPlayerId(const Utils::MessageParsed_s &msg)
     newMsg.msgType = givePlayerId;
     auto it = this->_allPlayers.find({msg.senderIp, msg.senderPort});
     if (it == this->_allPlayers.end()) {
-        std::cout << "This player is not in this room" << std::endl;
         return;
     }
     newMsg.setFirstShort(it->second);
@@ -278,7 +273,9 @@ void RType::Server::Room::sendEntityType(const Utils::MessageParsed_s &msg)
     auto it = this->_core._entities.find(msg.getFirstShort());
     if (it == this->_core._entities.end())
         return;
-    std::cout << "Send entity type..." << std::endl;
-    newMsg.setSecondShort(this->_gameLoop->getEntityType(msg.getFirstShort()));
+    {
+        std::unique_lock<std::mutex> lock(this->_mutex);
+        newMsg.setSecondShort(this->_gameLoop->getEntityType(msg.getFirstShort()));
+    }
     this->_socket->send(newMsg);
 }

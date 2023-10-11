@@ -14,6 +14,7 @@ RType::Utils::SocketHandler::SocketHandler(const std::string &ipAdress, int port
     _socket->open(boost::asio::ip::udp::v4());
     _socket->bind(boost::asio::ip::udp::endpoint(boost::asio::ip::address::from_string(ipAdress), port));
     _mutex = std::make_shared<std::mutex>();
+    this->_receiverMutex = std::make_shared<std::mutex>();
     this->_ipPort = {ipAdress, port};
     this->_instance = std::make_shared<SocketHandler>(*this);
 }
@@ -24,6 +25,7 @@ RType::Utils::SocketHandler::SocketHandler(const SocketHandler &socket) : _socke
     this->_instance = socket._instance;
     this->_mutex = socket._mutex;
     this->_socket = socket._socket;
+    this->_receiverMutex = socket._receiverMutex;
 }
 
 RType::Utils::SocketHandler::~SocketHandler()
@@ -35,6 +37,7 @@ RType::Utils::MessageParsed_s RType::Utils::SocketHandler::receive()
 {
     unsigned long long data;
     boost::asio::mutable_buffer buffer(&data, sizeof(data));
+    std::unique_lock<std::mutex> lock(*this->_receiverMutex);
     _socket->receive_from(buffer, _Endpoint);
     Utils::MessageParsed_s msg(data, _Endpoint.address().to_v4().to_string(), _Endpoint.port());
     return msg;

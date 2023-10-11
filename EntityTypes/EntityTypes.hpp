@@ -14,7 +14,6 @@ namespace RType {
         playerShoot,
         bydos,
         bydosShoot,
-
-        
     };
+    EntityTypes castEntity(unsigned char c) ;
 }

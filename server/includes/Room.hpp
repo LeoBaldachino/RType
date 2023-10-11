@@ -19,7 +19,7 @@
 #include "../../Core/Core.hpp"
 #include "../../gameLoop/IGameLoop.hpp"
 #include "../../gameLoop/RTypeGameLoop/RTypeGameLoop.hpp"
-#include "EntityTypes.hpp"
+#include "../../EntityTypes/EntityTypes.hpp"
 #include "../../Entity/Player.hpp"
 
 namespace RType {
