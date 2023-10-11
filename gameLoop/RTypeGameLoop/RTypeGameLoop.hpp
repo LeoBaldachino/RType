@@ -19,6 +19,8 @@ namespace RType {
             std::queue<Utils::MessageParsed_s> runAfterUpdate(std::queue<std::pair<unsigned short, Utils::MessageParsed_s>> newMessages);
         private :
             RType::Utils::MessageParsed_s updatePlayerPos(std::pair<unsigned short, Utils::MessageParsed_s> msg);
+            void handleBydos(std::queue<Utils::MessageParsed_s> &toReturn);
             SystemVisitor v;
+            std::vector<unsigned short> _bydos;
     };
 }

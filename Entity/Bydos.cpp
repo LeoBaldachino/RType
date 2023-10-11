@@ -7,7 +7,11 @@
 
 #include "Bydos.hpp"
 
-Bydos::Bydos(Position position, int velocity, Vector2d moveDirection) : _drawable("Assets/bydos.png", 2), _size(BYDOS_X, BYDOS_Y)
+Bydos::Bydos(Position position, int velocity, Vector2d moveDirection) : 
+_drawable("Assets/bydos.png", 2),
+_size(BYDOS_X, BYDOS_Y),
+_readyShoot(SHOOT_SPEED),
+_readyMove(MOVE_SPEED)
 {
     this->_position = position;
     this->_state = State(100);
@@ -16,7 +20,7 @@ Bydos::Bydos(Position position, int velocity, Vector2d moveDirection) : _drawabl
 }
 
 Shoot Bydos::shoot(const Position &playerPos) const
-{   
+{
     AIShoot aiShoot(playerPos, this->_position);
     return aiShoot.shootLogic();
 }
@@ -129,3 +133,4 @@ void Bydos::drawEntity(std::unique_ptr<sf::RenderWindow> &window)
     sprite.setPosition(this->_position.getX(), this->_position.getY());
     window->draw(sprite);
 }
+

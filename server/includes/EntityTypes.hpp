@@ -11,8 +11,10 @@ namespace RType {
     enum EntityTypes {
         none,
         player,
-        enemy,
-        shoot,
+        playerShoot,
+        bydos,
+        bydosShoot,
+
         
     };
 }

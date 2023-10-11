@@ -11,6 +11,7 @@
 #include "../Components/Shoot.hpp"
 #include "../Components/Drawable.hpp"
 #include "IEntity.hpp"
+#include "EntityType.hpp"
 
 #define PIERCING_SHOT_X 80
 #define PIERCING_SHOT_Y 16
@@ -37,6 +38,7 @@ class PiercingShotEntity : public IEntity {
 
         Position getPosition(void) const;
         void setPosition(const Position &position);
+        inline unsigned char getEntityType() {return percingShoot;}
     private:
         Shoot _shoot;
         Drawable _drawable;

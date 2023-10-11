@@ -16,7 +16,8 @@ _commands({
 {moveAnEntity, &RType::Client::moveEntity},
 {destroyedRoom, &RType::Client::quitRoom},
 {serverStop, &RType::Client::serverStopped},
-{entityType, &RType::Client::setEntityType}
+{entityType, &RType::Client::setEntityType},
+{removeEntity, &RType::Client::removeAnEntity}
 })
 {
     std::srand(std::time(NULL));
@@ -198,15 +199,6 @@ void RType::Client::getNewId(const Utils::MessageParsed_s &msg)
     this->_entities.addEntity(ptrFind, this->_actualId);
 }
 
-
-/*
-
-quand système d'id sera fonctionnel, utiliser cette fonction tant que le client n'a pas reçu d'id et ne faire aucune action
-si le client n'a pas d'id pour ne pas faire d'erreurs
-
-idem pour toutes les entitées -> tant qu'on ne sait pas qui elles sont continuer à demander et ne pas faire d'action sur elles
-
-*/
 bool RType::Client::checkAsId()
 {
     if (this->_actualId != -1)
@@ -257,5 +249,20 @@ void RType::Client::setEntityType(const Utils::MessageParsed_s &msg)
 {
     if (msg.getSecondShort() == RType::player)
         return this->newPlayerToRoom(msg);
+    if (msg.getSecondShort() == RType::bydos)
+        return this->newBydosToRoom(msg);
     std::cout << "Set the type of the entity " << msg.getFirstShort() << " for the type " << msg.getSecondShort() << std::endl;
+}
+
+void RType::Client::newBydosToRoom(const Utils::MessageParsed_s &msg)
+{
+    auto it = this->_entities._entities.find(msg.getFirstShort());
+    if (it == this->_entities._entities.end())
+        return;
+    this->_entities.addEntity(std::make_shared<Bydos>(Position(1900, 100, 1080, 1920), 1, Vector2d(-1, 0)), msg.getFirstShort());
+}
+
+void RType::Client::removeAnEntity(const Utils::MessageParsed_s &msg)
+{
+    this->_entities.removeEntity(msg.getFirstShort());
 }

@@ -48,6 +48,8 @@ namespace RType {
             void setEntityType(const Utils::MessageParsed_s &msg);
             void handleInputs(void);
             void updateInputs(void);
+            void newBydosToRoom(const Utils::MessageParsed_s &msg);
+            void removeAnEntity(const Utils::MessageParsed_s &msg);
             std::unique_ptr<std::thread> _infosThread;
             std::shared_ptr<Utils::SocketHandler> _socket;
             std::unique_ptr<sf::RenderWindow> _window;
