@@ -81,3 +81,14 @@ void PiercingShotEntity::accept(IVisitor &v, Core &core)
 {
     v.visitPiercingShot(*this, core);
 }
+
+bool PiercingShotEntity::getHasMoved(void)
+{
+    bool tmpHasMoved = this->_hasMoved;
+    this->_hasMoved = !this->_hasMoved ? true : false;
+    return (tmpHasMoved);
+}
+void PiercingShotEntity::setHasMoved(bool state)
+{
+    this->_hasMoved = state;
+}

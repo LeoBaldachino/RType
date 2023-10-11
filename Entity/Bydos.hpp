@@ -53,6 +53,9 @@ class Bydos : public IEntity {
 
         void drawEntity(std::unique_ptr<sf::RenderWindow> &window);
 
+        bool getHasMoved(void);
+        void setHasMoved(bool state);
+
     private:
         State _state;
         Position _position;
@@ -63,4 +66,5 @@ class Bydos : public IEntity {
         int _shootVelocity = 5;
         int _shootGravity = 0;
         Vector2d _size;
+        bool _hasMoved = false;
 };

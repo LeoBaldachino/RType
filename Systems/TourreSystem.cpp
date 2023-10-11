@@ -10,6 +10,7 @@
 void TourreSystem::updatePos(Tourre &t)
 {
     this->_movementSystem.updatePosition(t);
+    t.setHasMoved(true);
 }
 
 void TourreSystem::createShots(Tourre &t, const Player &player, Core &core)

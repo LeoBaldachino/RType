@@ -112,3 +112,14 @@ void Tourre::drawEntity(std::unique_ptr<sf::RenderWindow> &window)
     sprite.setPosition(this->_position.getX(), this->_position.getY());
     window->draw(sprite);
 }
+
+bool Tourre::getHasMoved(void)
+{
+    bool tmpHasMoved = this->_hasMoved;
+    this->_hasMoved = !this->_hasMoved ? true : false;
+    return (tmpHasMoved);
+}
+void Tourre::setHasMoved(bool state)
+{
+    this->_hasMoved = state;
+}

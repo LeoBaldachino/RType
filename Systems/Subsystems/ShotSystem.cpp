@@ -13,6 +13,7 @@ void ShotSystem::updatePos(ShotEntity &s)
         tmpShoot.setOrigin(Vector2d(tmpShoot.getOrigin().x + tmpShoot.getDirection().x
         * tmpShoot.getVelocity(), tmpShoot.getOrigin().y + tmpShoot.getDirection().y * tmpShoot.getVelocity()));
     s.setShoot(tmpShoot);
+    s.setHasMoved(true);
 }
 
 Position ShotSystem::getPos(ShotEntity &s) const

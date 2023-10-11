@@ -37,8 +37,13 @@ class PiercingShotEntity : public IEntity {
 
         Position getPosition(void) const;
         void setPosition(const Position &position);
+
+        bool getHasMoved(void);
+        void setHasMoved(bool state);
+
     private:
         Shoot _shoot;
         Drawable _drawable;
         Vector2d _size;
+        bool _hasMoved = false;
 };
