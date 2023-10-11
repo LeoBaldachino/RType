@@ -25,6 +25,13 @@ void ShotSystem::clearShots(ShotEntity &s, Core &core)
         core.removeEntityLater(s);
 }
 
+void ShotSystem::clearShots(ShotEntity &s, Core &core)
+{
+    if (s.getPosition().getX() <= 0 || s.getPosition().getY() <= 0
+    || s.getPosition().getX() >= s.getPosition().getWidth() || s.getPosition().getY() >= s.getPosition().getHeight())
+        core.removeEntityLater(s);
+}
+
 Position ShotSystem::getPos(ShotEntity &s) const
 {
     return (Position(s.getShoot().getOrigin().x, s.getShoot().getOrigin().y));

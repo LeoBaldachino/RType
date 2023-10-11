@@ -23,6 +23,13 @@ void PiercingShotSystem::clearShots(PiercingShotEntity &pS, Core &core)
         core.removeEntityLater(pS);
 }
 
+void PiercingShotSystem::clearShots(PiercingShotEntity &pS, Core &core)
+{
+    if (pS.getPosition().getX() <= 0 || pS.getPosition().getY() <= 0
+    || pS.getPosition().getX() >= pS.getPosition().getWidth() || pS.getPosition().getY() >= pS.getPosition().getHeight())
+        core.removeEntityLater(pS);
+}
+
 Position PiercingShotSystem::getPos(PiercingShotEntity &pS) const
 {
     return (Position(pS.getShoot().getOrigin().x, pS.getShoot().getOrigin().y));
