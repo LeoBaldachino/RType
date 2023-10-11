@@ -116,3 +116,14 @@ void Player::drawEntity(std::unique_ptr<sf::RenderWindow> &window)
 // {
 //     return (this->_type);
 // }
+
+bool Player::getHasMoved(void)
+{
+    bool tmpHasMoved = this->_hasMoved;
+    this->_hasMoved = !this->_hasMoved ? true : false;
+    return (tmpHasMoved);
+}
+void Player::setHasMoved(bool state)
+{
+    this->_hasMoved = state;
+}

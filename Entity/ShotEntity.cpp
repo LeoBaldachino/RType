@@ -7,7 +7,7 @@
 
 #include "ShotEntity.hpp"
 
-ShotEntity::ShotEntity(Shoot &shoot, std::string spriteFile) : _drawable(spriteFile, 1), _shoot(shoot), _size(SHOT_X, SHOT_Y)
+ShotEntity::ShotEntity(Shoot &shoot, std::string spriteFile) : _drawable(spriteFile, 1), _shoot(shoot), _size(SHOT_X, SHOT_Y), _clockMove(MOVE_SHOT)
 {
 }
 
@@ -80,4 +80,15 @@ void ShotEntity::drawEntity(std::unique_ptr<sf::RenderWindow> &window)
 void ShotEntity::accept(IVisitor &v, Core &core)
 {
     v.visitShot(*this, core);
+}
+
+bool ShotEntity::getHasMoved(void)
+{
+    bool tmpHasMoved = this->_hasMoved;
+    this->_hasMoved = !this->_hasMoved ? true : false;
+    return (tmpHasMoved);
+}
+void ShotEntity::setHasMoved(bool state)
+{
+    this->_hasMoved = state;
 }

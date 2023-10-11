@@ -49,6 +49,9 @@ class Tourre : public IEntity {
         void drawEntity(std::unique_ptr<sf::RenderWindow> &window);
         
         Vector2d getSize(void) { return (Vector2d(0, 0)); };
+        inline unsigned char getEntityType() {return tourre;}
+        bool getHasMoved(void);
+        void setHasMoved(bool state);
 
     private:
         State _state;
@@ -59,4 +62,5 @@ class Tourre : public IEntity {
         int _shootDmg = 10;
         int _shootVelocity = 5;
         int _shootGravity = 0;
+        bool _hasMoved = false;
 };

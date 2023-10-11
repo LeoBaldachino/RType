@@ -16,7 +16,8 @@ _commands({
 {moveAnEntity, &RType::Client::moveEntity},
 {destroyedRoom, &RType::Client::quitRoom},
 {serverStop, &RType::Client::serverStopped},
-{entityType, &RType::Client::setEntityType}
+{entityType, &RType::Client::setEntityType},
+{removeEntity, &RType::Client::removeAnEntity}
 })
 {
     std::srand(std::time(NULL));
@@ -34,7 +35,7 @@ _commands({
     this->_window = std::make_unique<sf::RenderWindow>(sf::VideoMode::getDesktopMode(), "R-Type");
     this->_socket = std::make_unique<Utils::SocketHandler>("127.0.0.1", 4001 + std::rand() % 3000);
     this->_threadIsOpen = true;
-    this->_actualId = 0;
+    this->_actualId = -1;
     this->_infosThread = std::make_unique<std::thread>(&RType::Client::infosThread, this);
     this->run();
 }
@@ -102,32 +103,18 @@ void RType::Client::run()
 {
     this->createRoom(1);
     auto msgKeyPressed = this->buildEmptyMsg(keyPressed);
-    sf::Texture text;
-    text.loadFromFile("../Assets/player.png");
     while (_window->isOpen()) {
-        _window->clear();
-
-        for (auto it : this->_entities._entities) {
-            sf::Sprite sprite;
-            sprite.setTexture(text);
-            sprite.setScale(2, 2);
-            sprite.setPosition(it.second->getPosition().getX(), it.second->getPosition().getY());
-            _window->draw(sprite);
-        }
-        
-        this->handleInputs();
+        _window->clear();        
         for (auto &it : this->_entities._entities)
-            it.second->accept(this->_visitor);
+            it.second->drawEntity(this->_window);
         _window->display();
+        this->updateInputs();
         if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - this->_sendInputTime).count() >= 10) {
             for (auto it : this->_keysDown)
                 if (it.second) {
-                    std::cout << "Press key sended..." << std::endl;
                     msgKeyPressed.setFirstShort(static_cast<unsigned short>(it.first));
                     this->_socket->send(msgKeyPressed);
                 }
-            // msgKeyPressed.setFirstShort(static_cast<unsigned short>(1));
-            // this->_socket->send(msgKeyPressed);
             this->_sendInputTime = std::chrono::steady_clock::now();
         }
     }
@@ -136,9 +123,7 @@ void RType::Client::run()
 void RType::Client::infosThread()
 {
     while (this->_threadIsOpen) {
-        std::cout << "Ready to take some messages !" << std::endl;
         Utils::MessageParsed_s msg = this->_socket->receive();
-        std::cout << "Receive message " << static_cast<int>(msg.msgType) << std::endl;
         auto it = this->_commands.find(msg.msgType);
         if (it == this->_commands.end()) {
             std::cout << "Get an unhandled message " << static_cast<int>(msg.msgType) << std::endl;
@@ -211,18 +196,9 @@ void RType::Client::getNewId(const Utils::MessageParsed_s &msg)
     this->_entities.addEntity(ptrFind, this->_actualId);
 }
 
-
-/*
-
-quand système d'id sera fonctionnel, utiliser cette fonction tant que le client n'a pas reçu d'id et ne faire aucune action
-si le client n'a pas d'id pour ne pas faire d'erreurs
-
-idem pour toutes les entitées -> tant qu'on ne sait pas qui elles sont continuer à demander et ne pas faire d'action sur elles
-
-*/
 bool RType::Client::checkAsId()
 {
-    if (this->_actualId != 0)
+    if (this->_actualId != -1)
         return true;
     auto msg = this->buildEmptyMsg(playerGetId);
     this->_socket->send(msg);
@@ -233,20 +209,20 @@ void RType::Client::moveEntity(const Utils::MessageParsed_s &msg)
 {
     // if (!checkAsId())
     //     return;
+    std::unique_lock<std::mutex> lock(*this->_mutex);
     auto it = this->_entities._entities.find(msg.getThirdShort());
     if (it == this->_entities._entities.end()) {
         this->getEntityType(msg.getThirdShort());
-        std::cout << "The entity with the id " << msg.getThirdShort() << " does not exist" << std::endl;
         return;
     }
     it->second->setPosition(Position(msg.getFirstShort(), msg.getSecondShort(), 1080, 1920));
-    std::cout << "Entity " << msg.getThirdShort() << " moves x = " << msg.getFirstShort() << " y = " << msg.getSecondShort() << std::endl; 
+    // std::cout << "Entity " << msg.getThirdShort() << " moves x = " << msg.getFirstShort() << " y = " << msg.getSecondShort() << std::endl; 
 }
 
 void RType::Client::quitRoom(const Utils::MessageParsed_s &msg)
 {
     (void)msg;
-    this->_actualId = 0;
+    this->_actualId = -1;
     this->_threadIsOpen = false;
     this->_window->close();
 }
@@ -254,21 +230,63 @@ void RType::Client::quitRoom(const Utils::MessageParsed_s &msg)
 void RType::Client::serverStopped(const Utils::MessageParsed_s &msg)
 {
     (void)msg;
-    this->_actualId = 0;
+    this->_actualId = -1;
     this->_threadIsOpen = false;
     this->_window->close();   
 }
 
 void RType::Client::getEntityType(unsigned short entity)
 {
+    auto it = this->_getIdLimiters.find(entity);
+    if (it == this->_getIdLimiters.end())
+        this->_getIdLimiters.insert({entity, std::chrono::steady_clock::now()});
+    else if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - it->second).count() < GET_ID_LIMIT_TIME)
+        return;
+    std::cout << "The entity with the id " << entity << " does not exist" << std::endl;
     auto msg = this->buildEmptyMsg(entityType);
     msg.setFirstShort(entity);
     this->_socket->send(msg);
+    if (it != this->_getIdLimiters.end())
+        it->second = std::chrono::steady_clock::now();
 }
 
 void RType::Client::setEntityType(const Utils::MessageParsed_s &msg)
 {
     if (msg.getSecondShort() == RType::player)
         return this->newPlayerToRoom(msg);
-    std::cout << "Set the type of the entity " << msg.getFirstShort() << " for the type " << msg.getSecondShort() << std::endl;
+    if (msg.getSecondShort() == RType::bydos)
+        return this->newBydosToRoom(msg);
+    if (msg.getSecondShort() == RType::bydosShoot)
+        return this->newEnemyShoot(msg);
+    std::cout << "Unknown entity type " << (msg.getSecondShort()) << std::endl;
+}
+
+void RType::Client::newBydosToRoom(const Utils::MessageParsed_s &msg)
+{
+    auto it = this->_entities._entities.find(msg.getFirstShort());
+    if (it != this->_entities._entities.end()) {
+        // std::cout << "Already in core with id " << msg.getFirstShort() << std::endl;
+        return;
+    }
+    std::unique_lock<std::mutex> lock(*this->_mutex);
+    this->_entities.addEntity(std::make_shared<Bydos>(Position(1900, 100, 1080, 1920), 1, Vector2d(-1, 0)), msg.getFirstShort());
+}
+
+void RType::Client::removeAnEntity(const Utils::MessageParsed_s &msg)
+{
+    this->_entities.removeEntity(msg.getFirstShort());
+}
+
+void RType::Client::newEnemyShoot(const Utils::MessageParsed_s &msg)
+{
+    auto it = this->_entities._entities.find(msg.getFirstShort());
+    if (it != this->_entities._entities.end()) {
+        // std::cout << "Already in core with id " << msg.getFirstShort() << std::endl;
+        return;
+    }
+    std::unique_lock<std::mutex> lock(*this->_mutex);
+    Position pos;
+    AIShoot aiShoot(pos, pos);
+    auto tmpShoot = aiShoot.shootLogic();
+    this->_entities.addEntity(std::make_shared<ShotEntity>(tmpShoot, "Assets/enemyShot.png"), msg.getFirstShort());
 }

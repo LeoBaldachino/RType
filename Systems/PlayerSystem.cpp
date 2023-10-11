@@ -9,8 +9,8 @@
 
 void PlayerSystem::getInputs(Player &p)
 {
-    int rE = rand() % 6;
-    this->_inputSystem._inputs.addEvents((Inputs::Events) rE);
+    // int rE = rand() % 6;
+    // this->_inputSystem._inputs.addEvents((Inputs::Events) rE);
     // // sf::Event event;
     // // while (window->pollEvent(event))
     // //     this->_inputSystem.handleInput();
@@ -18,8 +18,8 @@ void PlayerSystem::getInputs(Player &p)
 
 void PlayerSystem::createShots(Player &p, Core &core)
 {
-    while (!this->_inputSystem._inputs.getEvents().empty() && this->_inputSystem._inputs.getEvents().front() == Inputs::Events::Shoot) {
-        this->_inputSystem._inputs.popEvent();
+    while (!p._inputs.getEvents().empty() && p._inputs.getEvents().front() == Inputs::Events::Shoot) {
+        p._inputs.popEvent();
         Shoot tmpShoot(p.shoot());
         core.addEntity(std::make_shared<ShotEntity>(tmpShoot, "Assets/shot.png"), core.getAvailabeIndex());
     }
@@ -27,8 +27,8 @@ void PlayerSystem::createShots(Player &p, Core &core)
 
 void PlayerSystem::createPiercingShots(Player &p, Core &core)
 {
-    while (!this->_inputSystem._inputs.getEvents().empty() && this->_inputSystem._inputs.getEvents().front() == Inputs::Events::PiercingShoot) {
-        this->_inputSystem._inputs.popEvent();
+    while (!p._inputs.getEvents().empty() && p._inputs.getEvents().front() == Inputs::Events::PiercingShoot) {
+        p._inputs.popEvent();
         Shoot tmpShoot(p.shoot());
         core.addEntity(std::make_shared<PiercingShotEntity>(tmpShoot), core.getAvailabeIndex());
     }
@@ -36,6 +36,7 @@ void PlayerSystem::createPiercingShots(Player &p, Core &core)
 
 void PlayerSystem::updatePos(Player &p)
 {
+    Position tmpHasMoved(p.getPosition());
     this->_inputSystem.updatePlayer(p);
     Position tmpPosition(p.getPosition());
     if (p.getPosition().getX() < 0)
@@ -47,4 +48,11 @@ void PlayerSystem::updatePos(Player &p)
     if (p.getPosition().getY() > p.getPosition().getHeight() - 28)
         tmpPosition.setY(p.getPosition().getHeight() - 28);
     p.setPosition(tmpPosition);
+    if (tmpHasMoved.getX() != p.getPosition().getX() || tmpHasMoved.getY() != p.getPosition().getY())
+        p.setHasMoved(true);
+}
+
+void PlayerSystem::checkCollision(Player &p, IEntity &entity)
+{
+    // if (this->_hitBoxSystem.entityIntersect(p, entity))
 }

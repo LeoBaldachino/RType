@@ -10,20 +10,23 @@
 #include "../Systems/PlayerSystem.hpp"
 #include "../Systems/BydosSystem.hpp"
 #include "../Systems/TourreSystem.hpp"
+#include "../Entity/EntityType.hpp"
+#include "../Components/ClockTimer.hpp"
 
 class SystemVisitor : public IVisitor {
     public:
-        SystemVisitor(){};
+        SystemVisitor() {};
         void visitPlayer(Player &p, Core &core) {
-            this->_playerSystem.getInputs(p);
             this->_playerSystem.updatePos(p);
-            this->_playerSystem.createPiercingShots(p, core);
-            this->_playerSystem.createShots(p, core);
-            this->_lastPlayer = p;
+            // this->_playerSystem.createPiercingShots(p, core);
+            // this->_playerSystem.createShots(p, core);
+            for (auto it : core._entities)
+                if (it.second->getEntityType() == enemyShoot)
+                    this->_playerSystem.checkCollision(p, *it.second);
         }
         void visitBydos(Bydos &b, Core &core) {
             this->_bydosSystem.updatePos(b);
-            // this->_bydosSystem.createShots(b, this->_lastPlayer, core); DEFINIR CLOCK
+            this->_bydosSystem.createShots(b, this->_lastPlayer, core);
         };
         void visitTourre(Tourre &t, Core &core) {
             this->_tourreSystem.updatePos(t);

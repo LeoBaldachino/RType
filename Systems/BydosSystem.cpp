@@ -7,13 +7,22 @@
 
 #include "BydosSystem.hpp"
 
+BydosSystem::BydosSystem()
+{
+}
+
 void BydosSystem::updatePos(Bydos &b)
 {
+    if (!b.readyToMove())
+        return;
     this->_movementSystem.updatePosition(b);
+    b.setHasMoved(true);
 }
 
 void BydosSystem::createShots(Bydos &b, const Player &player, Core &core)
 {
+    if (!b.readyToShoot())
+        return;
     Shoot tmpShoot(b.shoot(player.getPosition()));
     core.addEntity(std::make_shared<ShotEntity>(tmpShoot, "Assets/enemyShot.png"), core.getAvailabeIndex());
 }

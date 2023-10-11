@@ -70,13 +70,60 @@ endif()
 set(SFML_INCLUDE_DIR "${SFML_ROOT}/include")
 link_directories(${SFML_LIBRARY_DIR})
 
-file(GLOB CLIENT_SOURCES "*.cpp" "Core/*.cpp" "Entity/*.cpp" "Systems/*.cpp" "Systems/Subsystems/*.cpp")
-add_executable(r-type_client ${CLIENT_SOURCES})
+file(GLOB SUBSYSTEMS "Systems/Subsystems/*.cpp")
+file(GLOB SYSTEMS "Systems/*.cpp")
+file(GLOB ENTITY "Entity/*.cpp")
+file(GLOB CORE "Core/*.cpp")
+file(GLOB CLIENT_FILES  "Client/*.cpp")
+file(GLOB SOCKET_FILES "Sockets/sources/*.cpp")
+file(GLOB ENTITY_TYPES "EntityTypes/*.cpp")
+
+add_executable(r-type_client ${CORE} ${CLIENT_FILES} ${ENTITY} ${SUBSYSTEMS} ${SYSTEMS} ${SOCKET_FILES} ${ENTITY_TYPES})
 target_include_directories(r-type_client PRIVATE ${SFML_INCLUDE_DIR})
 target_link_libraries(r-type_client sfml-system sfml-graphics sfml-window)
+target_link_libraries(r-type_client pthread)
 
-set_property(TARGET r-type_client PROPERTY CXX_STANDARD 17)
-set_property(TARGET r-type_client PROPERTY CXX_STANDARD_REQUIRED ON)
+# set_property(TARGET r-type_client PROPERTY CXX_STANDARD 17)
+# set_property(TARGET r-type_client PROPERTY CXX_STANDARD_REQUIRED ON)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -l")
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -l")
 
+cmake_minimum_required(VERSION 3.10)
+
+project(r-type_server)
+
+set(CMAKE_CXX_STANDARD 14)
+
+include_directories(includes)
+
+file(GLOB SOURCES "server/sources/*.cpp")
+file(GLOB CORE "Core/*.cpp")
+file(GLOB SOCKET "Sockets/sources/*.cpp")
+file(GLOB SYSTEMS "Systems/*.cpp")
+file(GLOB SUBSYSTEMS "Systems/Subsystems/*.cpp")
+file(GLOB ENTITY "Entity/*.cpp")
+file(GLOB GAMELOOP "gameLoop/*.cpp")
+file(GLOB RTYPEGAMELOOP "gameLoop/RTypeGameLoop/*.cpp")
+file(GLOB ENTITYTYPES "EntityTypes/*.cpp")
+
+set(SFML_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/SFML)
+if(NOT EXISTS "${SFML_ROOT}")
+    # SFML not found. Download and install it.
+    message(STATUS "SFML not found. Downloading...")
+    execute_process(COMMAND git submodule update --init --recursive
+                    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                    RESULT_VARIABLE GIT_SUBMOD_RESULT)
+    if(NOT GIT_SUBMOD_RESULT EQUAL "0")
+        message(FATAL_ERROR "git submodule update --init --recursive failed with ${GIT_SUBMOD_RESULT}, please checkout submodules")
+    endif()
+endif()
+
+set(SFML_INCLUDE_DIR "${SFML_ROOT}/include")
+link_directories(${SFML_LIBRARY_DIR})
+
+add_executable(r-type_server ${SOURCES} ${CORE} ${SOCKET} ${SYSTEMS} ${SUBSYSTEMS} ${ENTITY} ${GAMELOOP} ${RTYPEGAMELOOP} ${ENTITYTYPES})
+target_include_directories(r-type_server PRIVATE ${SFML_INCLUDE_DIR})
+target_link_libraries(r-type_server sfml-system sfml-graphics sfml-window)
+target_link_libraries(r-type_server pthread)
+set_property(TARGET r-type_server PROPERTY CXX_STANDARD 17)
+set_property(TARGET r-type_server PROPERTY CXX_STANDARD_REQUIRED ON)

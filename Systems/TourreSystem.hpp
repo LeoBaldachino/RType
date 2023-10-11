@@ -20,5 +20,4 @@ class TourreSystem {
 
     private:
         MovementSystem _movementSystem;
-        std::vector<std::unique_ptr<ShotSystem>> _shots;
 };

@@ -20,7 +20,8 @@ SRC	=	main.cpp									\
 		Systems/Subsystems/PiercingShotSystem.cpp	\
 		Systems/Subsystems/ShotSystem.cpp			\
 		Systems/Subsystems/MovementSystem.cpp		\
-		Systems/Subsystems/AIShoot.cpp
+		Systems/Subsystems/AIShoot.cpp				\
+		Systems/Subsystems/HitBox.cpp
 
 OBJ	=	$(SRC:.cpp=.o)
 CC	=	g++ -g

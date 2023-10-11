@@ -6,7 +6,7 @@
 */
 
 #pragma once
-#include "../Entity/IEntity.hpp"
+#include "../Entity/Player.hpp"
 #include <unordered_map>
 #include <memory>
 #include <climits>
@@ -24,6 +24,7 @@ class Core {
         bool removeEntityLater(unsigned short index);
         bool removeEntityLater(IEntity &entity);
         void eraseEntity(void);
+        inline std::queue<unsigned short> getToErase() {return this->_erase;};
     private:
         std::queue<unsigned short> _presentIndex;
         std::queue<unsigned short> _erase;

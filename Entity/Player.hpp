@@ -10,7 +10,8 @@
 #include "../Components/Shoot.hpp"
 #include "../Components/State.hpp"
 #include "../Components/Drawable.hpp"
-
+#include "EntityType.hpp"
+#include "../Components/Inputs.hpp"
 #define PLAYER_X 32 * SIZE_SCALE
 #define PLAYER_Y 14 * SIZE_SCALE
 
@@ -55,7 +56,12 @@ class Player : public IEntity {
 
         bool isColidingWith(IEntity &entity);
 
+        bool getHasMoved(void);
+        void setHasMoved(bool state);
+
         Vector2d getSize(void);
+        inline unsigned char getEntityType() {return player;}
+        Inputs _inputs;
     private:
         State _state;
         Position _position;
@@ -67,4 +73,5 @@ class Player : public IEntity {
         int _shootGravity = 0;
         // const unsigned char _type = TYPE_PLAYER;
         Vector2d _size;
+        bool _hasMoved = false;
 };
