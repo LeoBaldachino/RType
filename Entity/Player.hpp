@@ -56,6 +56,9 @@ class Player : public IEntity {
 
         bool isColidingWith(IEntity &entity);
 
+        bool getHasMoved(void);
+        void setHasMoved(bool state);
+
         Vector2d getSize(void);
         inline unsigned char getEntityType() {return player;}
         Inputs _inputs;
@@ -70,4 +73,5 @@ class Player : public IEntity {
         int _shootGravity = 0;
         // const unsigned char _type = TYPE_PLAYER;
         Vector2d _size;
+        bool _hasMoved = false;
 };

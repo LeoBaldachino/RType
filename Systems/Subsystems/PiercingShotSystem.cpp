@@ -13,6 +13,7 @@ void PiercingShotSystem::updatePos(PiercingShotEntity &pS)
     tmpShoot.setOrigin(Vector2d(tmpShoot.getOrigin().x + tmpShoot.getDirection().x
     * tmpShoot.getVelocity(), tmpShoot.getOrigin().y + tmpShoot.getDirection().y * tmpShoot.getVelocity()));
     pS.setShoot(tmpShoot);
+    pS.setHasMoved(true);
 }
 
 void PiercingShotSystem::clearShots(PiercingShotEntity &pS, Core &core)

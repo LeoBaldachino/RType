@@ -81,3 +81,14 @@ void ShotEntity::accept(IVisitor &v, Core &core)
 {
     v.visitShot(*this, core);
 }
+
+bool ShotEntity::getHasMoved(void)
+{
+    bool tmpHasMoved = this->_hasMoved;
+    this->_hasMoved = !this->_hasMoved ? true : false;
+    return (tmpHasMoved);
+}
+void ShotEntity::setHasMoved(bool state)
+{
+    this->_hasMoved = state;
+}

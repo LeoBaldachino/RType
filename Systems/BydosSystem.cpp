@@ -16,6 +16,7 @@ void BydosSystem::updatePos(Bydos &b)
     if (!b.readyToMove())
         return;
     this->_movementSystem.updatePosition(b);
+    b.setHasMoved(true);
 }
 
 void BydosSystem::createShots(Bydos &b, const Player &player, Core &core)

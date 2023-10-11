@@ -40,11 +40,16 @@ class ShotEntity : public IEntity {
 
         Position getPosition(void) const;
         void setPosition(const Position &position);
+
+        bool getHasMoved(void);
+        void setHasMoved(bool state);
+
         inline unsigned char getEntityType() {return enemyShoot;}
         inline bool readyToMove() {return this->_clockMove.clockOk();};
     private:
         Shoot _shoot;
         Drawable _drawable;
         Vector2d _size;
+        bool _hasMoved = false;
         ClockTimer _clockMove;
 };

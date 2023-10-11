@@ -58,6 +58,9 @@ class Bydos : public IEntity {
         inline unsigned char getEntityType() {return bydos;}
         inline bool readyToShoot() {return this->_readyShoot.clockOk();};
         inline bool readyToMove() {return this->_readyMove.clockOk();};
+        bool getHasMoved(void);
+        void setHasMoved(bool state);
+
     private:
         State _state;
         Position _position;
@@ -68,6 +71,7 @@ class Bydos : public IEntity {
         int _shootVelocity = 5;
         int _shootGravity = 0;
         Vector2d _size;
+        bool _hasMoved = false;
         ClockTimer _readyShoot;
         ClockTimer _readyMove;
 };

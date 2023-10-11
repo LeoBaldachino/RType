@@ -36,6 +36,7 @@ void PlayerSystem::createPiercingShots(Player &p, Core &core)
 
 void PlayerSystem::updatePos(Player &p)
 {
+    Position tmpHasMoved(p.getPosition());
     this->_inputSystem.updatePlayer(p);
     Position tmpPosition(p.getPosition());
     if (p.getPosition().getX() < 0)
@@ -47,6 +48,8 @@ void PlayerSystem::updatePos(Player &p)
     if (p.getPosition().getY() > p.getPosition().getHeight() - 28)
         tmpPosition.setY(p.getPosition().getHeight() - 28);
     p.setPosition(tmpPosition);
+    if (tmpHasMoved.getX() != p.getPosition().getX() || tmpHasMoved.getY() != p.getPosition().getY())
+        p.setHasMoved(true);
 }
 
 void PlayerSystem::checkCollision(Player &p, IEntity &entity)
