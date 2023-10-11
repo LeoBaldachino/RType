@@ -90,7 +90,6 @@ bool RType::Server::Room::isInRoom(const std::pair<std::string, int> &toSearch) 
 {
     if (this->_willBeDestroyed)
         return false;
-    std::cout << "Search for room..." << std::endl;
     auto it = this->_allPlayers.begin();
     for (; it != this->_allPlayers.end(); it++)
         if (it->first == toSearch)
@@ -279,6 +278,7 @@ void RType::Server::Room::sendEntityType(const Utils::MessageParsed_s &msg)
     auto it = this->_core._entities.find(msg.getFirstShort());
     if (it == this->_core._entities.end())
         return;
+    std::cout << "Send entity type..." << std::endl;
     newMsg.setSecondShort(this->_gameLoop->getEntityType(msg.getFirstShort()));
     this->_socket->send(newMsg);
 }

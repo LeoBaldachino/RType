@@ -112,7 +112,6 @@ void RType::Client::run()
         if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - this->_sendInputTime).count() >= 10) {
             for (auto it : this->_keysDown)
                 if (it.second) {
-                    std::cout << "Press key sended..." << std::endl;
                     msgKeyPressed.setFirstShort(static_cast<unsigned short>(it.first));
                     this->_socket->send(msgKeyPressed);
                 }
@@ -124,9 +123,7 @@ void RType::Client::run()
 void RType::Client::infosThread()
 {
     while (this->_threadIsOpen) {
-        std::cout << "Ready to take some messages !" << std::endl;
         Utils::MessageParsed_s msg = this->_socket->receive();
-        std::cout << "Receive message " << static_cast<int>(msg.msgType) << std::endl;
         auto it = this->_commands.find(msg.msgType);
         if (it == this->_commands.end()) {
             std::cout << "Get an unhandled message " << static_cast<int>(msg.msgType) << std::endl;
@@ -212,6 +209,7 @@ void RType::Client::moveEntity(const Utils::MessageParsed_s &msg)
 {
     // if (!checkAsId())
     //     return;
+    std::unique_lock<std::mutex> lock(*this->_mutex);
     auto it = this->_entities._entities.find(msg.getThirdShort());
     if (it == this->_entities._entities.end()) {
         this->getEntityType(msg.getThirdShort());
@@ -219,7 +217,7 @@ void RType::Client::moveEntity(const Utils::MessageParsed_s &msg)
         return;
     }
     it->second->setPosition(Position(msg.getFirstShort(), msg.getSecondShort(), 1080, 1920));
-    std::cout << "Entity " << msg.getThirdShort() << " moves x = " << msg.getFirstShort() << " y = " << msg.getSecondShort() << std::endl; 
+    // std::cout << "Entity " << msg.getThirdShort() << " moves x = " << msg.getFirstShort() << " y = " << msg.getSecondShort() << std::endl; 
 }
 
 void RType::Client::quitRoom(const Utils::MessageParsed_s &msg)
@@ -251,14 +249,17 @@ void RType::Client::setEntityType(const Utils::MessageParsed_s &msg)
         return this->newPlayerToRoom(msg);
     if (msg.getSecondShort() == RType::bydos)
         return this->newBydosToRoom(msg);
-    std::cout << "Set the type of the entity " << msg.getFirstShort() << " for the type " << msg.getSecondShort() << std::endl;
 }
 
 void RType::Client::newBydosToRoom(const Utils::MessageParsed_s &msg)
 {
     auto it = this->_entities._entities.find(msg.getFirstShort());
-    if (it == this->_entities._entities.end())
+    if (it != this->_entities._entities.end()) {
+        // std::cout << "Already in core with id " << msg.getFirstShort() << std::endl;
         return;
+    }
+    std::unique_lock<std::mutex> lock(*this->_mutex);
+    std::cout << "Add entity with the id " << msg.getFirstShort() << std::endl;
     this->_entities.addEntity(std::make_shared<Bydos>(Position(1900, 100, 1080, 1920), 1, Vector2d(-1, 0)), msg.getFirstShort());
 }
 

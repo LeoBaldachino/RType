@@ -27,7 +27,7 @@ RType::Utils::MessageParsed_s RType::RTypeGameLoop::updatePlayerPos(std::pair<un
     msgReturned.setFirstShort(posTmp.getX());
     msgReturned.setSecondShort(posTmp.getY());
     msgReturned.setThirdShort(msg.first);
-    msgReturned.msgType = 11;
+    msgReturned.msgType = moveAnEntity;
     return msgReturned;
 }
 
@@ -37,7 +37,6 @@ std::queue<RType::Utils::MessageParsed_s> RType::RTypeGameLoop::runAfterUpdate(s
     std::queue<RType::Utils::MessageParsed_s> toReturn;
     while (!newMessages.empty()) {
         unsigned short firstShort = newMessages.front().second.getFirstShort();
-        std::cout << "New message from id = " << newMessages.front().first << " with message id " << newMessages.front().second.msgType << " and first short" << firstShort << std::endl;
         if (newMessages.front().second.msgType == 14)
             toReturn.push(this->updatePlayerPos(newMessages.front()));
         newMessages.pop();
@@ -45,13 +44,14 @@ std::queue<RType::Utils::MessageParsed_s> RType::RTypeGameLoop::runAfterUpdate(s
     this->handleBydos(toReturn);
     for (auto it : this->_core._entities) {
         it.second->accept(this->v, this->_core);
-        if (true) {
+        if (it.second->getHasMoved()) {
             Position tmpPos = it.second->getPosition();
             Utils::MessageParsed_s msgReturned;
             msgReturned.setFirstShort(tmpPos.getX());
             msgReturned.setSecondShort(tmpPos.getY());
             msgReturned.setThirdShort(it.first);
-            msgReturned.msgType = 11;
+            msgReturned.msgType = moveAnEntity;
+            toReturn.push(msgReturned);
         }
     }
     return toReturn;
@@ -102,7 +102,8 @@ void RType::RTypeGameLoop::handleBydos(std::queue<RType::Utils::MessageParsed_s>
         unsigned short id = this->_core.getAvailabeIndex();
         this->_bydos.push_back(id);
         msg.setFirstShort(id);
-        msg.bytes[3] = bydos;
-        this->_core.addEntity(std::make_shared<Bydos>(Position(1900, 100, 1080, 1920), 1, Vector2d(-1, 0)), id);
+        msg.setSecondShort(bydos);
+        toReturn.push(msg);
+        this->_core.addEntity(std::make_shared<Bydos>(Position(1900, 100 * this->_bydos.size(), 1080, 1920), 1, Vector2d(-1, 0)), id);
     }
 }
