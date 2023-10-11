@@ -48,6 +48,12 @@ std::queue<RType::Utils::MessageParsed_s> RType::RTypeGameLoop::runAfterUpdate(s
             toReturn.push(msgReturned);
         }
     }
+    std::queue<unsigned short> toErase = this->_core.getToErase();
+    this->_core.eraseEntity();
+    while (!toErase.empty()) {
+        this->addRemoveEntity(toReturn, toErase.front());
+        toErase.pop();
+    }
     return toReturn;
 }
 
@@ -104,4 +110,12 @@ void RType::RTypeGameLoop::handleBydos(std::queue<RType::Utils::MessageParsed_s>
             std::cout << "Entity 0 is bydos !" << std::endl;
         this->_core.addEntity(std::make_shared<Bydos>(Position(1900, 100 * this->_bydos.size(), 1080, 1920), 1, Vector2d(-1, 0)), id);
     }
+}
+
+void RType::RTypeGameLoop::addRemoveEntity(std::queue<Utils::MessageParsed_s> &toReturn, unsigned short id)
+{
+    Utils::MessageParsed_s msg;
+    msg.msgType = removeEntity;
+    msg.setFirstShort(id);
+    toReturn.push(msg);
 }

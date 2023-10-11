@@ -7,4 +7,5 @@ vgcore*
 a.out
 serverTest
 r-type_server
+r-type_client
 build/
