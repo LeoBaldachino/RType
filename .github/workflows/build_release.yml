@@ -27,8 +27,8 @@ jobs:
           with:
               script: |
                   const fs = require('fs');
-                  const glob = require('glob');
-                  const filePaths = glob.sync('build/*.deb');
+                  const globSync = require('glob').sync;
+                  const filePaths = globSync('build/*.deb');
                   if (!filePaths.length) {
                       throw new Error('No .deb files found in build directory');
                   }
