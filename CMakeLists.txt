@@ -31,5 +31,12 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 target_link_libraries(r-type_server PRIVATE Threads::Threads)
 
-# If you have any libraries to link in the future, you can use the following command:
-# target_link_libraries(r-type_server PRIVATE your_library)
+include(InstallRequiredSystemLibraries)
+set(CPACK_PACKAGE_VERSION_MAJOR "1")
+set(CPACK_PACKAGE_VERSION_MINOR "0")
+set(CPACK_PACKAGE_VERSION_PATCH "0")
+set(CPACK_GENERATOR "DEB")
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Leoleo") # Change this to your name
+set(CPACK_PACKAGE_DESCRIPTION "R-TYPE SERVER") # Change this to your project description
+set(CPACK_PACKAGE_CONTACT "leo.baldachino@epitech.eu") # Change this to your contact information
+include(CPack)
