@@ -32,7 +32,7 @@ jobs:
               name: rtype-server
               path: build/
         - name: Release
-          uses: softprops/action-gh-release@v1
+          uses: marvinpinto/action-automatic-releases@latest
           with:
               files: build/*.deb
           env:
