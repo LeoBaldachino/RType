@@ -20,5 +20,29 @@ jobs:
         - name: Upload the package
           uses: actions/upload-artifact@v2
           with:
-              name: my-artifact
+              name: rtype-server
               path: build/*.deb
+        - name: Publish the package
+          uses: actions/github-script@v3
+          with:
+              script: |
+                  const fs = require('fs');
+                  const artifact = fs.readFileSync('build/*.deb');
+                  const octokit = github.getOctokit(core.getInput('token'));
+                  const { owner, repo } = github.context.repo;
+                  const release = await octokit.repos.createRelease({
+                      owner,
+                      repo,
+                      tag_name: 'v1.0.0',
+                      name: 'v1.0.0',
+                      body: 'Release of version 1.0.0',
+                      draft: false,
+                      prerelease: false
+                  });
+                  await octokit.repos.uploadReleaseAsset({
+                      owner,
+                      repo,
+                      release_id: release.data.id,
+                      name: 'rtype-server.deb',
+                      data: artifact
+                  });
