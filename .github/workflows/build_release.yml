@@ -27,12 +27,11 @@ jobs:
           with:
               script: |
                   const fs = require('fs');
-                  const globSync = require('glob').sync;
-                  const filePaths = globSync('build/*.deb');
+                  const filePaths = fs.readdirSync('build/').filter(fn => fn.endsWith('.deb'));
                   if (!filePaths.length) {
                       throw new Error('No .deb files found in build directory');
                   }
-                  const artifact = fs.readFileSync(filePaths[0]);
+                  const artifact = fs.readFileSync(`build/${filePaths[0]}`);
                   const octokit = github.getOctokit(core.getInput('token'));
                   const { owner, repo } = github.context.repo;
                   const release = await octokit.repos.createRelease({
