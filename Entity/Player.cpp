@@ -7,7 +7,12 @@
 
 #include "Player.hpp"
 
-Player::Player(Position position) : _drawable("Assets/player.png", 2), _size(PLAYER_X, PLAYER_Y)
+Player::Player() : Health(BASE_HEALTH)
+{
+
+}
+
+Player::Player(Position position) : _drawable("Assets/player.png", 2), _size(PLAYER_X, PLAYER_Y),  Health(BASE_HEALTH)
 {
     this->_position = position;
     this->_state = State(100);
@@ -123,6 +128,7 @@ bool Player::getHasMoved(void)
     this->_hasMoved = !this->_hasMoved ? true : false;
     return (tmpHasMoved);
 }
+
 void Player::setHasMoved(bool state)
 {
     this->_hasMoved = state;

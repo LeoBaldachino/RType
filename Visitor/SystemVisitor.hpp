@@ -21,8 +21,8 @@ class SystemVisitor : public IVisitor {
             // this->_playerSystem.createPiercingShots(p, core);
             // this->_playerSystem.createShots(p, core);
             for (auto it : core._entities)
-                if (it.second->getEntityType() == enemyShoot)
-                    this->_playerSystem.checkCollision(p, *it.second);
+                if (it.second->getEntityType() == enemyShoot || it.second->getEntityType() == bydos)
+                    this->_playerSystem.checkCollision(p, *it.second, core);
         }
         void visitBydos(Bydos &b, Core &core) {
             this->_bydosSystem.updatePos(b);

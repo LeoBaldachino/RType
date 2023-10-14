@@ -7,6 +7,11 @@
 
 #include "PlayerSystem.hpp"
 
+PlayerSystem::PlayerSystem()
+{
+
+}
+
 void PlayerSystem::getInputs(Player &p)
 {
     // int rE = rand() % 6;
@@ -52,7 +57,12 @@ void PlayerSystem::updatePos(Player &p)
         p.setHasMoved(true);
 }
 
-void PlayerSystem::checkCollision(Player &p, IEntity &entity)
+void PlayerSystem::checkCollision(Player &p, IEntity &entity, Core &core)
 {
-    // if (this->_hitBoxSystem.entityIntersect(p, entity))
+    if (this->_hitBoxSystem.entityIntersect(p, entity)) {
+        if (p.getLifes() > 1)
+            if (p.removeOneLife())
+                std::cout << "One life removed !" << std::endl;
+        core.removeEntityLater(entity);
+    }
 }

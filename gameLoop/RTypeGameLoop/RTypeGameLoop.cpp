@@ -119,3 +119,19 @@ void RType::RTypeGameLoop::addRemoveEntity(std::queue<Utils::MessageParsed_s> &t
     msg.setFirstShort(id);
     toReturn.push(msg);
 }
+
+void RType::RTypeGameLoop::checkPlayerStatus(std::queue<Utils::MessageParsed_s> &toReturn)
+{
+    Utils::MessageParsed_s msgToSend;
+    msgToSend.msgType = valueSet;
+    for (auto it : this->_playerArray) {
+        auto find = this->_core._entities.find(it);
+        if (find == this->_core._entities.end())
+            continue;
+        std::shared_ptr<Player> player = std::dynamic_pointer_cast<Player>(find->second);
+        msgToSend.setFirstShort(it);
+        msgToSend.bytes[3] = player->getLifes();
+        msgToSend.bytes[4] = player->actuallyInvincible() ? 1 : 0;
+        toReturn.push(msgToSend);
+    }
+}

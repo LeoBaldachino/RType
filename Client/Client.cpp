@@ -17,7 +17,8 @@ _commands({
 {destroyedRoom, &RType::Client::quitRoom},
 {serverStop, &RType::Client::serverStopped},
 {entityType, &RType::Client::setEntityType},
-{removeEntity, &RType::Client::removeAnEntity}
+{removeEntity, &RType::Client::removeAnEntity},
+{valueSet, &RType::Client::setValues},
 })
 {
     std::srand(std::time(NULL));
@@ -225,6 +226,7 @@ void RType::Client::quitRoom(const Utils::MessageParsed_s &msg)
     this->_actualId = -1;
     this->_threadIsOpen = false;
     this->_window->close();
+    exit(0);
 }
 
 void RType::Client::serverStopped(const Utils::MessageParsed_s &msg)
@@ -232,7 +234,8 @@ void RType::Client::serverStopped(const Utils::MessageParsed_s &msg)
     (void)msg;
     this->_actualId = -1;
     this->_threadIsOpen = false;
-    this->_window->close();   
+    this->_window->close();
+    exit(0);
 }
 
 void RType::Client::getEntityType(unsigned short entity)
@@ -289,4 +292,16 @@ void RType::Client::newEnemyShoot(const Utils::MessageParsed_s &msg)
     AIShoot aiShoot(pos, pos);
     auto tmpShoot = aiShoot.shootLogic();
     this->_entities.addEntity(std::make_shared<ShotEntity>(tmpShoot, "Assets/enemyShot.png"), msg.getFirstShort());
+}
+
+void RType::Client::setValues(const Utils::MessageParsed_s &msg)
+{
+    auto find = this->_entities._entities.find(msg.getFirstShort());
+    if (find == this->_entities._entities.end())
+        return;
+    if (find->second->getEntityType() == player) {
+        std::shared_ptr<Player> playerCasted = std::dynamic_pointer_cast<Player>(find->second);
+        playerCasted->setLife(msg.bytes[3]);
+        std::cout << "Player " << find->first << " as " << static_cast<int>(msg.bytes[3]) << " life" << std::endl;
+    }
 }
