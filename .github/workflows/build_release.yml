@@ -22,31 +22,18 @@ jobs:
           with:
               name: rtype-server
               path: build/*.deb
-        - name: Publish the package
-          uses: actions/github-script@v3
+    release:
+        needs: build
+        runs-on: ubuntu-latest
+        steps:
+        - name: Download the package
+          uses: actions/download-artifact@v2
           with:
-              script: |
-                  const fs = require('fs');
-                  const filePaths = fs.readdirSync('build/').filter(fn => fn.endsWith('.deb'));
-                  if (!filePaths.length) {
-                      throw new Error('No .deb files found in build directory');
-                  }
-                  const artifact = fs.readFileSync(`build/${filePaths[0]}`);
-                  const octokit = github.getOctokit(core.getInput('token'));
-                  const { owner, repo } = github.context.repo;
-                  const release = await octokit.repos.createRelease({
-                      owner,
-                      repo,
-                      tag_name: 'v1.0.0',
-                      name: 'v1.0.0',
-                      body: 'Release of version 1.0.0',
-                      draft: false,
-                      prerelease: false
-                  });
-                  await octokit.repos.uploadReleaseAsset({
-                      owner,
-                      repo,
-                      release_id: release.data.id,
-                      name: 'rtype-server.deb',
-                      data: artifact
-                  });
+              name: rtype-server
+              path: build/
+        - name: Release
+          uses: softprops/action-gh-release@v1
+          with:
+              files: build/*.deb
+          env:
+              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
