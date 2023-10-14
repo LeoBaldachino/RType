@@ -2,11 +2,8 @@ name: Build and Release
 
 on:
     push:
-        branches:
-        - networking
-    pull_request:
-        branches:
-        - networking
+        tags:
+        - '*' # Push events to all tags
 
 jobs:
     build:
