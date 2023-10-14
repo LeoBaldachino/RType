@@ -25,6 +25,8 @@ class SystemVisitor : public IVisitor {
                     this->_playerSystem.checkCollision(p, *it.second, core);
         }
         void visitBydos(Bydos &b, Core &core) {
+            if (b.getLifes() == 0)
+                return (void)core.removeEntityLater(b);
             this->_bydosSystem.updatePos(b);
             this->_bydosSystem.createShots(b, this->_lastPlayer, core);
             for (auto it : core._entities) {

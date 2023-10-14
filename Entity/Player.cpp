@@ -16,7 +16,7 @@ Player::Player(Position position) : _drawable("Assets/player.png", 2), _size(PLA
 {
     this->_position = position;
     this->_state = State(100);
-    this->_velocity = 5;
+    this->_velocity = 2;
 }
 
 Shoot Player::shoot() const

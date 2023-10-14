@@ -17,10 +17,8 @@ RType::Server::Room::Room(unsigned char id, unsigned char maxSize, std::shared_p
     this->_actualPing = 0;
     this->_firstClient = {"", -1};
     this->_pingTime = std::chrono::steady_clock::now();
-    // this->_core.addEntity(std::make_shared<Player>(Position(0, 0, 1920, 1080)), 0);
     this->_mutexQueue = std::make_unique<std::mutex>();
     this->_toSendToGameLoop = std::make_unique<std::queue<std::pair<unsigned short, Utils::MessageParsed_s>>>();
-    //to change when used
     this->_gameLoop = std::make_unique<RTypeGameLoop>(this->_core);
     this->_roomThread = std::make_unique<std::thread>(&RType::Server::Room::runRoom, this);
 }
@@ -100,10 +98,7 @@ bool RType::Server::Room::sendMessageToRoom(const Utils::MessageParsed_s &msg)
 {
     if (this->_willBeDestroyed)
         return false;
-    if (msg.msgType == playerPing) {
-        this->messagePing(msg);
-        return true;
-    }
+    this->messagePing(msg);
     if (msg.msgType == playerGetId) {
         this->sendPlayerId(msg);
         return true;

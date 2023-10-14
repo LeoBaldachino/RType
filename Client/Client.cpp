@@ -48,7 +48,7 @@ RType::Client::~Client()
 
 void RType::Client::updateInputs(void)
 {
-    if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - this->_sendInputTime).count() < 20)
+    if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - this->_sendInputTime).count() < 5)
         return;
     this->handleInputs();
     if (this->_keysDown[Events::Up])

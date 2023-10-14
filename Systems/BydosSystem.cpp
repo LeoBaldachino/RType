@@ -29,8 +29,6 @@ void BydosSystem::createShots(Bydos &b, const Player &player, Core &core)
 
 void BydosSystem::checkCollision(Bydos &b, IEntity &entity, Core &core, bool isPercing)
 {
-    if (b.getLifes() == 0)
-        core.removeEntityLater(b);
     if (this->_hitBoxSystem.entityIntersect(b, entity)) {
         if (b.getLifes() >= 1)
             if (b.removeOneLife())
