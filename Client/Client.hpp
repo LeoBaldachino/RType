@@ -54,6 +54,7 @@ namespace RType {
             void newEnemyShoot(const Utils::MessageParsed_s &msg);
             void setValues(const Utils::MessageParsed_s &msg);
             void newMyShoot(const Utils::MessageParsed_s &msg);
+            void newPercingShoot(const Utils::MessageParsed_s &msg);
             std::unique_ptr<std::thread> _infosThread;
             std::shared_ptr<Utils::SocketHandler> _socket;
             std::unique_ptr<sf::RenderWindow> _window;

@@ -265,6 +265,8 @@ void RType::Client::setEntityType(const Utils::MessageParsed_s &msg)
             return this->newEnemyShoot(msg);
         case RType::playerShoot :
             return this->newMyShoot(msg);
+        case RType::percingShoot :
+            return this->newPercingShoot(msg);
     }
     std::cout << "Unknown entity type " << (msg.getSecondShort()) << std::endl;
 }
@@ -323,4 +325,19 @@ void RType::Client::newMyShoot(const Utils::MessageParsed_s &msg)
     AIShoot aiShoot(pos, pos);
     auto tmpShoot = aiShoot.shootLogic();
     this->_entities.addEntity(std::make_shared<ShotEntity>(tmpShoot, "Assets/shot.png", false), msg.getFirstShort());  
+}
+
+void RType::Client::newPercingShoot(const Utils::MessageParsed_s &msg)
+{
+    auto it = this->_entities._entities.find(msg.getFirstShort());
+    if (it != this->_entities._entities.end()) {
+        // std::cout << "Already in core with id " << msg.getFirstShort() << std::endl;
+        return;
+    }
+    std::unique_lock<std::mutex> lock(*this->_mutex);
+    Position pos;
+    AIShoot aiShoot(pos, pos);
+    auto tmpShoot = aiShoot.shootLogic();
+    std::cout << "New percing shoot ?" << std::endl;
+    this->_entities.addEntity(std::make_shared<PiercingShotEntity>(tmpShoot), msg.getFirstShort());
 }
