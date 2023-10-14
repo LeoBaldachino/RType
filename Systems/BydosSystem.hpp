@@ -10,6 +10,8 @@
 #include "../Core/Core.hpp"
 #include "Subsystems/MovementSystem.hpp"
 #include "Subsystems/ShotSystem.hpp"
+#include "Subsystems/HitBox.hpp"
+
 #include <chrono>
 
 class BydosSystem {
@@ -18,7 +20,8 @@ class BydosSystem {
         ~BydosSystem() {};
         void updatePos(Bydos &b);
         void createShots(Bydos &b, const Player &player, Core &core);
-
+        void checkCollision(Bydos &b, IEntity &entity, Core &core);
     private:
         MovementSystem _movementSystem;
+        HitBox _hitBoxSystem;
 };

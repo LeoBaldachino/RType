@@ -11,7 +11,8 @@ Bydos::Bydos(Position position, int velocity, Vector2d moveDirection) :
 _drawable("Assets/bydos.png", 2),
 _size(BYDOS_X, BYDOS_Y),
 _readyShoot(SHOOT_SPEED),
-_readyMove(MOVE_SPEED)
+_readyMove(MOVE_SPEED),
+Health(BYDOS_HEALTH)
 {
     this->_position = position;
     this->_state = State(100);

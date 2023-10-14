@@ -13,12 +13,14 @@
 #include "../Entity/Player.hpp"
 #include "EntityType.hpp"
 #include "../Components/ClockTimer.hpp"
+#include "../Components/Health.hpp"
 #define SHOOT_SPEED 600
 #define MOVE_SPEED 3
 #define BYDOS_X 21 * SIZE_SCALE
 #define BYDOS_Y 24 * SIZE_SCALE
+#define BYDOS_HEALTH 2
 
-class Bydos : public IEntity {
+class Bydos : public IEntity, public Health {
     public:
         Bydos();
         Bydos(Position position, int velocity, Vector2d moveDirection);

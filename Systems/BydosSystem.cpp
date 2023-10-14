@@ -24,5 +24,15 @@ void BydosSystem::createShots(Bydos &b, const Player &player, Core &core)
     if (!b.readyToShoot())
         return;
     Shoot tmpShoot(b.shoot(player.getPosition()));
-    core.addEntity(std::make_shared<ShotEntity>(tmpShoot, "Assets/enemyShot.png"), core.getAvailabeIndex());
+    core.addEntity(std::make_shared<ShotEntity>(tmpShoot, "Assets/enemyShot.png", false), core.getAvailabeIndex());
+}
+
+void BydosSystem::checkCollision(Bydos &b, IEntity &entity, Core &core)
+{
+    if (this->_hitBoxSystem.entityIntersect(b, entity)) {
+        if (b.getLifes() >= 1)
+            if (b.removeOneLife())
+                std::cout << "One life removed from bydos" << std::endl;
+        core.removeEntityLater(entity);
+    }
 }

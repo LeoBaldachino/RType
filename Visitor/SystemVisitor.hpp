@@ -27,6 +27,9 @@ class SystemVisitor : public IVisitor {
         void visitBydos(Bydos &b, Core &core) {
             this->_bydosSystem.updatePos(b);
             this->_bydosSystem.createShots(b, this->_lastPlayer, core);
+            for (auto it : core._entities)
+                if (it.second->getEntityType() == myShoot)
+                    this->_bydosSystem.checkCollision(b, *it.second, core);
         };
         void visitTourre(Tourre &t, Core &core) {
             this->_tourreSystem.updatePos(t);
