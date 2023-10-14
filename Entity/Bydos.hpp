@@ -11,7 +11,7 @@
 #include "../Systems/Subsystems/AIShoot.hpp"
 #include "../Components/Drawable.hpp"
 #include "../Entity/Player.hpp"
-#include "EntityType.hpp"
+#include "../EntityTypes/EntityTypes.hpp"
 #include "../Components/ClockTimer.hpp"
 #include "../Components/Health.hpp"
 #define SHOOT_SPEED 600
@@ -57,7 +57,7 @@ class Bydos : public IEntity, public Health {
         Vector2d getSize(void);
 
         void drawEntity(std::unique_ptr<sf::RenderWindow> &window);
-        inline unsigned char getEntityType() {return bydos;}
+        inline unsigned char getEntityType() {return RType::bydos;}
         inline bool readyToShoot() {return this->_readyShoot.clockOk();};
         inline bool readyToMove() {return this->_readyMove.clockOk();};
         bool getHasMoved(void);

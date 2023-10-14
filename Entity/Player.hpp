@@ -10,7 +10,7 @@
 #include "../Components/Shoot.hpp"
 #include "../Components/State.hpp"
 #include "../Components/Drawable.hpp"
-#include "EntityType.hpp"
+#include "../EntityTypes/EntityTypes.hpp"
 #include "../Components/Inputs.hpp"
 #include "../Components/Health.hpp"
 
@@ -63,7 +63,7 @@ class Player : public IEntity, public Health {
         void setHasMoved(bool state);
 
         Vector2d getSize(void);
-        inline unsigned char getEntityType() {return player;}
+        inline unsigned char getEntityType() {return RType::player;}
         Inputs _inputs;
     private:
         State _state;
