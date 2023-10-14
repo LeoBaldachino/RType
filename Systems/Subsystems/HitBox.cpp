@@ -17,13 +17,13 @@ HitBox::~HitBox()
 
 bool HitBox::entityIntersect(IEntity &first, IEntity &sec)
 {
-    // Vector2d sizeFirst = first.getSize();
-    // Vector2d sizeSec = sec.getSize();
-    // Position placeFirst = first.getPosition();
-    // Position placeSecond = sec.getPosition();
-    // for (int x = placeFirst.getX(); x < sizeFirst.x + placeFirst.getX(); ++x)
-    //     for (int y = placeFirst.getY(); y < sizeFirst.y + placeFirst.getY(); ++y)
-    //         if ((x >= placeSecond.getX() && x <= placeSecond.getX() + sizeSec.x) && (y >= placeSecond.getY() && y <= placeSecond.getY() + sizeSec.y))
-    //             return true;
+    Vector2d sizeFirst = first.getSize();
+    Vector2d sizeSec = sec.getSize();
+    Position placeFirst = first.getPosition();
+    Position placeSecond = sec.getPosition();
+    for (int x = placeFirst.getX(); x < sizeFirst.x + placeFirst.getX(); ++x)
+        for (int y = placeFirst.getY(); y < sizeFirst.y + placeFirst.getY(); ++y)
+            if ((x >= placeSecond.getX() && x <= placeSecond.getX() + sizeSec.x) && (y >= placeSecond.getY() && y <= placeSecond.getY() + sizeSec.y))
+                return true;
     return false;
 }

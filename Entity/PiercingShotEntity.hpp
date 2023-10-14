@@ -11,7 +11,7 @@
 #include "../Components/Shoot.hpp"
 #include "../Components/Drawable.hpp"
 #include "IEntity.hpp"
-#include "EntityType.hpp"
+#include "../EntityTypes/EntityTypes.hpp"
 
 #define PIERCING_SHOT_X 80
 #define PIERCING_SHOT_Y 16
@@ -38,7 +38,7 @@ class PiercingShotEntity : public IEntity {
 
         Position getPosition(void) const;
         void setPosition(const Position &position);
-        inline unsigned char getEntityType() {return percingShoot;}
+        inline unsigned char getEntityType() {return RType::percingShoot;}
 
         bool getHasMoved(void);
         void setHasMoved(bool state);

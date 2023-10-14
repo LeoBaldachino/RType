@@ -10,15 +10,18 @@
 #include "../Components/Shoot.hpp"
 #include "../Components/State.hpp"
 #include "../Components/Drawable.hpp"
-#include "EntityType.hpp"
+#include "../EntityTypes/EntityTypes.hpp"
 #include "../Components/Inputs.hpp"
+#include "../Components/Health.hpp"
+
 #define PLAYER_X 32 * SIZE_SCALE
 #define PLAYER_Y 14 * SIZE_SCALE
+#define BASE_HEALTH 3
 
-class Player : public IEntity {
+class Player : public IEntity, public Health {
     public:
         Player(Position position);
-        Player() {};
+        Player();
         ~Player() {};
         void accept(IVisitor &v, Core &core);
 
@@ -60,7 +63,7 @@ class Player : public IEntity {
         void setHasMoved(bool state);
 
         Vector2d getSize(void);
-        inline unsigned char getEntityType() {return player;}
+        inline unsigned char getEntityType() {return RType::player;}
         Inputs _inputs;
     private:
         State _state;

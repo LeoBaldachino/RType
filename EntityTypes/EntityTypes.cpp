@@ -7,7 +7,6 @@
 
 #include "EntityTypes.hpp"
 
-
 RType::EntityTypes RType::castEntity(unsigned char c) 
 {
     switch (c)
@@ -20,6 +19,10 @@ RType::EntityTypes RType::castEntity(unsigned char c)
         return  RType::bydos;
     case  RType::bydosShoot :
         return  RType::bydosShoot;
+    case RType::percingShoot :
+        return RType::percingShoot;
+    case RType::tourre :
+        return RType::tourre;
     default:
         return  RType::none;
     }

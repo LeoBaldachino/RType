@@ -16,5 +16,5 @@ void TourreSystem::updatePos(Tourre &t)
 void TourreSystem::createShots(Tourre &t, const Player &player, Core &core)
 {
     Shoot tmpShoot(t.shoot(player.getPosition()));
-    core.addEntity(std::make_shared<ShotEntity>(tmpShoot, "Assets/enemyShot.png"), core.getAvailabeIndex());
+    core.addEntity(std::make_shared<ShotEntity>(tmpShoot, "Assets/enemyShot.png", false), core.getAvailabeIndex());
 }

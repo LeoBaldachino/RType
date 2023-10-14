@@ -17,7 +17,8 @@ _commands({
 {destroyedRoom, &RType::Client::quitRoom},
 {serverStop, &RType::Client::serverStopped},
 {entityType, &RType::Client::setEntityType},
-{removeEntity, &RType::Client::removeAnEntity}
+{removeEntity, &RType::Client::removeAnEntity},
+{valueSet, &RType::Client::setValues},
 })
 {
     std::srand(std::time(NULL));
@@ -29,6 +30,7 @@ _commands({
             {Events::Left, false},
             {Events::Right, false}};
     this->_sendInputTime = std::chrono::steady_clock::now();
+    this->_inputs = {};
     this->_serverIp = av[1];
     this->_serverPort = std::stoi(av[2]);
     this->_mutex = std::make_unique<std::mutex>();
@@ -46,15 +48,18 @@ RType::Client::~Client()
 
 void RType::Client::updateInputs(void)
 {
+    if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - this->_sendInputTime).count() < 5)
+        return;
     this->handleInputs();
-        if (this->_keysDown[Events::Up])
-            this->_inputs.push_back(Events::Up);
-        if (this->_keysDown[Events::Left] && !this->_keysDown[Events::Right])
-            this->_inputs.push_back(Events::Left);
-        if (this->_keysDown[Events::Down] && !this->_keysDown[Events::Up])
-            this->_inputs.push_back(Events::Down);
-        if (this->_keysDown[Events::Right])
-            this->_inputs.push_back(Events::Right);
+    if (this->_keysDown[Events::Up])
+        this->_inputs.push_back(Events::Up);
+    if (this->_keysDown[Events::Left] && !this->_keysDown[Events::Right])
+        this->_inputs.push_back(Events::Left);
+    if (this->_keysDown[Events::Down] && !this->_keysDown[Events::Up])
+        this->_inputs.push_back(Events::Down);
+    if (this->_keysDown[Events::Right])
+        this->_inputs.push_back(Events::Right);
+    this->_sendInputTime = std::chrono::steady_clock::now();
 }
 
 void RType::Client::handleInputs(void)
@@ -109,13 +114,10 @@ void RType::Client::run()
             it.second->drawEntity(this->_window);
         _window->display();
         this->updateInputs();
-        if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - this->_sendInputTime).count() >= 10) {
-            for (auto it : this->_keysDown)
-                if (it.second) {
-                    msgKeyPressed.setFirstShort(static_cast<unsigned short>(it.first));
-                    this->_socket->send(msgKeyPressed);
-                }
-            this->_sendInputTime = std::chrono::steady_clock::now();
+        while (!this->_inputs.empty()) {
+            msgKeyPressed.setFirstShort(static_cast<unsigned short>(this->_inputs.back()));
+            this->_socket->send(msgKeyPressed);
+            this->_inputs.pop_back();
         }
     }
 }
@@ -225,6 +227,7 @@ void RType::Client::quitRoom(const Utils::MessageParsed_s &msg)
     this->_actualId = -1;
     this->_threadIsOpen = false;
     this->_window->close();
+    exit(0);
 }
 
 void RType::Client::serverStopped(const Utils::MessageParsed_s &msg)
@@ -232,7 +235,8 @@ void RType::Client::serverStopped(const Utils::MessageParsed_s &msg)
     (void)msg;
     this->_actualId = -1;
     this->_threadIsOpen = false;
-    this->_window->close();   
+    this->_window->close();
+    exit(0);
 }
 
 void RType::Client::getEntityType(unsigned short entity)
@@ -252,12 +256,18 @@ void RType::Client::getEntityType(unsigned short entity)
 
 void RType::Client::setEntityType(const Utils::MessageParsed_s &msg)
 {
-    if (msg.getSecondShort() == RType::player)
-        return this->newPlayerToRoom(msg);
-    if (msg.getSecondShort() == RType::bydos)
-        return this->newBydosToRoom(msg);
-    if (msg.getSecondShort() == RType::bydosShoot)
-        return this->newEnemyShoot(msg);
+    switch (msg.getSecondShort()) {
+        case RType::player:
+            return this->newPlayerToRoom(msg);
+        case RType::bydos:
+            return this->newBydosToRoom(msg);
+        case RType::bydosShoot:
+            return this->newEnemyShoot(msg);
+        case RType::playerShoot :
+            return this->newMyShoot(msg);
+        case RType::percingShoot :
+            return this->newPercingShoot(msg);
+    }
     std::cout << "Unknown entity type " << (msg.getSecondShort()) << std::endl;
 }
 
@@ -288,5 +298,46 @@ void RType::Client::newEnemyShoot(const Utils::MessageParsed_s &msg)
     Position pos;
     AIShoot aiShoot(pos, pos);
     auto tmpShoot = aiShoot.shootLogic();
-    this->_entities.addEntity(std::make_shared<ShotEntity>(tmpShoot, "Assets/enemyShot.png"), msg.getFirstShort());
+    this->_entities.addEntity(std::make_shared<ShotEntity>(tmpShoot, "Assets/enemyShot.png", false), msg.getFirstShort());
+}
+
+void RType::Client::setValues(const Utils::MessageParsed_s &msg)
+{
+    auto find = this->_entities._entities.find(msg.getFirstShort());
+    if (find == this->_entities._entities.end())
+        return;
+    if (find->second->getEntityType() == player) {
+        std::shared_ptr<Player> playerCasted = std::dynamic_pointer_cast<Player>(find->second);
+        playerCasted->setLife(msg.bytes[3]);
+        std::cout << "Player " << find->first << " as " << static_cast<int>(msg.bytes[3]) << " life" << std::endl;
+    }
+}
+
+void RType::Client::newMyShoot(const Utils::MessageParsed_s &msg)
+{
+    auto it = this->_entities._entities.find(msg.getFirstShort());
+    if (it != this->_entities._entities.end()) {
+        // std::cout << "Already in core with id " << msg.getFirstShort() << std::endl;
+        return;
+    }
+    std::unique_lock<std::mutex> lock(*this->_mutex);
+    Position pos;
+    AIShoot aiShoot(pos, pos);
+    auto tmpShoot = aiShoot.shootLogic();
+    this->_entities.addEntity(std::make_shared<ShotEntity>(tmpShoot, "Assets/shot.png", false), msg.getFirstShort());  
+}
+
+void RType::Client::newPercingShoot(const Utils::MessageParsed_s &msg)
+{
+    auto it = this->_entities._entities.find(msg.getFirstShort());
+    if (it != this->_entities._entities.end()) {
+        // std::cout << "Already in core with id " << msg.getFirstShort() << std::endl;
+        return;
+    }
+    std::unique_lock<std::mutex> lock(*this->_mutex);
+    Position pos;
+    AIShoot aiShoot(pos, pos);
+    auto tmpShoot = aiShoot.shootLogic();
+    std::cout << "New percing shoot ?" << std::endl;
+    this->_entities.addEntity(std::make_shared<PiercingShotEntity>(tmpShoot), msg.getFirstShort());
 }

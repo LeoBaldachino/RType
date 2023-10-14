@@ -7,8 +7,9 @@
 
 #include "ShotEntity.hpp"
 
-ShotEntity::ShotEntity(Shoot &shoot, std::string spriteFile) : _drawable(spriteFile, 1), _shoot(shoot), _size(SHOT_X, SHOT_Y), _clockMove(MOVE_SHOT)
+ShotEntity::ShotEntity(Shoot &shoot, std::string spriteFile, bool playerShoot) : _drawable(spriteFile, 1), _shoot(shoot), _size(SHOT_X, SHOT_Y), _clockMove(MOVE_SHOT)
 {
+    this->_playerShoot = playerShoot;
 }
 
 Shoot ShotEntity::getShoot(void) const

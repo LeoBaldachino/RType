@@ -20,6 +20,7 @@ namespace RType {
             void updatePlayerPos(std::pair<unsigned short, Utils::MessageParsed_s> msg);
             void handleBydos(std::queue<Utils::MessageParsed_s> &toReturn);
             void addRemoveEntity(std::queue<Utils::MessageParsed_s> &toReturn, unsigned short id);
+            void checkPlayerStatus(std::queue<Utils::MessageParsed_s> &toReturn);
             SystemVisitor v;
             std::vector<unsigned short> _bydos;
     };

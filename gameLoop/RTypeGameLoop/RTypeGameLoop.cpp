@@ -99,16 +99,14 @@ void RType::RTypeGameLoop::handleBydos(std::queue<RType::Utils::MessageParsed_s>
         toDelete.pop();
     }
     msg.msgType = entityType;
-    if (this->_bydos.size() < 2) {
+    if (this->_bydos.size() < 3) {
         std::cout << "Add new bydos" << std::endl;
         unsigned short id = this->_core.getAvailabeIndex();
         this->_bydos.push_back(id);
         msg.setFirstShort(id);
         msg.setSecondShort(bydos);
         toReturn.push(msg);
-        if (id == 0)
-            std::cout << "Entity 0 is bydos !" << std::endl;
-        this->_core.addEntity(std::make_shared<Bydos>(Position(1900, 100 * this->_bydos.size(), 1080, 1920), 1, Vector2d(-1, 0)), id);
+        this->_core.addEntity(std::make_shared<Bydos>(Position(1900, std::rand() % 1000, 1080, 1920), 1, Vector2d(-1, 0)), id);
     }
 }
 
@@ -118,4 +116,20 @@ void RType::RTypeGameLoop::addRemoveEntity(std::queue<Utils::MessageParsed_s> &t
     msg.msgType = removeEntity;
     msg.setFirstShort(id);
     toReturn.push(msg);
+}
+
+void RType::RTypeGameLoop::checkPlayerStatus(std::queue<Utils::MessageParsed_s> &toReturn)
+{
+    Utils::MessageParsed_s msgToSend;
+    msgToSend.msgType = valueSet;
+    for (auto it : this->_playerArray) {
+        auto find = this->_core._entities.find(it);
+        if (find == this->_core._entities.end())
+            continue;
+        std::shared_ptr<Player> player = std::dynamic_pointer_cast<Player>(find->second);
+        msgToSend.setFirstShort(it);
+        msgToSend.bytes[3] = player->getLifes();
+        msgToSend.bytes[4] = player->actuallyInvincible() ? 1 : 0;
+        toReturn.push(msgToSend);
+    }
 }
