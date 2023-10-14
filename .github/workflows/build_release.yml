@@ -27,7 +27,12 @@ jobs:
           with:
               script: |
                   const fs = require('fs');
-                  const artifact = fs.readFileSync('build/*.deb');
+                  const glob = require('glob');
+                  const filePaths = glob.sync('build/*.deb');
+                  if (!filePaths.length) {
+                      throw new Error('No .deb files found in build directory');
+                  }
+                  const artifact = fs.readFileSync(filePaths[0]);
                   const octokit = github.getOctokit(core.getInput('token'));
                   const { owner, repo } = github.context.repo;
                   const release = await octokit.repos.createRelease({
