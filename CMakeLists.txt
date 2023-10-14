@@ -91,6 +91,9 @@ cmake_minimum_required(VERSION 3.10)
 
 project(r-type_server)
 
+set(CMAKE_C_COMPILER "/usr/bin/gcc")
+set(CMAKE_CXX_COMPILER "/usr/bin/g++")
+
 set(CMAKE_CXX_STANDARD 14)
 
 include_directories(includes)
@@ -125,3 +128,6 @@ target_link_libraries(r-type_server sfml-system sfml-graphics sfml-window)
 target_link_libraries(r-type_server pthread)
 set_property(TARGET r-type_server PROPERTY CXX_STANDARD 17)
 set_property(TARGET r-type_server PROPERTY CXX_STANDARD_REQUIRED ON)
+
+set(CMAKE_C_COMPILER "/usr/bin/gcc")
+set(CMAKE_CXX_COMPILER "/usr/bin/g++")
