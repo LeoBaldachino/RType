@@ -7,27 +7,33 @@
 
 #include "BydosSystem.hpp"
 
+BydosSystem::BydosSystem()
+{
+}
+
 void BydosSystem::updatePos(Bydos &b)
 {
+    if (!b.readyToMove())
+        return;
     this->_movementSystem.updatePosition(b);
     b.setHasMoved(true);
 }
 
 void BydosSystem::createShots(Bydos &b, const Player &player, Core &core)
 {
+    if (!b.readyToShoot())
+        return;
     Shoot tmpShoot(b.shoot(player.getPosition()));
-    core.addEntity(std::make_shared<ShotEntity>(tmpShoot, "Assets/enemyShot.png"), core.getAvailabeIndex());
+    core.addEntity(std::make_shared<ShotEntity>(tmpShoot, "Assets/enemyShot.png", false), core.getAvailabeIndex());
 }
 
-// void BydosSystem::clearShots(void)
-// {
-//     for (int i = 0; i != this->_shots.size(); ++i) {
-//         if (this->_shots[i] == NULL || this->_shots[i] == nullptr)
-//             continue;
-//         if (this->_shots[i]->getPos().getX() <= 0
-//         || this->_shots[i]->getPos().getY() <= 0
-//         || this->_shots[i]->getPos().getX() >= this->_bydos.getPosition().getWidth()
-//         || this->_shots[i]->getPos().getY() >= this->_bydos.getPosition().getHeight())
-//             this->_shots.erase(std::find(std::begin(this->_shots), std::end(this->_shots), this->_shots[i]));
-//     }
-// }
+void BydosSystem::checkCollision(Bydos &b, IEntity &entity, Core &core, bool isPercing)
+{
+    if (this->_hitBoxSystem.entityIntersect(b, entity)) {
+        if (b.getLifes() >= 1)
+            if (b.removeOneLife())
+                std::cout << "One life removed from bydos" << std::endl;
+        if (!isPercing)
+            core.removeEntityLater(entity);
+    }
+}

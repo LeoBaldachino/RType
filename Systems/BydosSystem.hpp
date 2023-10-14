@@ -10,16 +10,18 @@
 #include "../Core/Core.hpp"
 #include "Subsystems/MovementSystem.hpp"
 #include "Subsystems/ShotSystem.hpp"
+#include "Subsystems/HitBox.hpp"
+
+#include <chrono>
 
 class BydosSystem {
     public:
-        BydosSystem() {};
+        BydosSystem();
         ~BydosSystem() {};
         void updatePos(Bydos &b);
         void createShots(Bydos &b, const Player &player, Core &core);
-
+        void checkCollision(Bydos &b, IEntity &entity, Core &core, bool isPercing);
     private:
         MovementSystem _movementSystem;
-        std::vector<std::unique_ptr<ShotSystem>> _shots;
-
+        HitBox _hitBoxSystem;
 };

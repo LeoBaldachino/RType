@@ -13,7 +13,8 @@
 #include "../server/includes/ComCodes.hpp"
 #include <unordered_map>
 #include "../Core/Core.hpp"
-#include "../server/includes/EntityTypes.hpp"
+#include "../EntityTypes/EntityTypes.hpp"
+#define GET_ID_LIMIT_TIME 500
 
 namespace RType {
     class Client {
@@ -48,6 +49,12 @@ namespace RType {
             void setEntityType(const Utils::MessageParsed_s &msg);
             void handleInputs(void);
             void updateInputs(void);
+            void newBydosToRoom(const Utils::MessageParsed_s &msg);
+            void removeAnEntity(const Utils::MessageParsed_s &msg);
+            void newEnemyShoot(const Utils::MessageParsed_s &msg);
+            void setValues(const Utils::MessageParsed_s &msg);
+            void newMyShoot(const Utils::MessageParsed_s &msg);
+            void newPercingShoot(const Utils::MessageParsed_s &msg);
             std::unique_ptr<std::thread> _infosThread;
             std::shared_ptr<Utils::SocketHandler> _socket;
             std::unique_ptr<sf::RenderWindow> _window;
@@ -62,8 +69,9 @@ namespace RType {
             int _actualId;
             std::unordered_map<Events, bool> _keysDown;
             bool shooting = false;
-            std::chrono::time_point<std::chrono::_V2::steady_clock, std::chrono::_V2::steady_clock::duration> shotTime;
+            std::chrono::steady_clock::time_point shotTime;
             std::vector<Events> _inputs;
-            std::chrono::time_point<std::chrono::_V2::steady_clock, std::chrono::_V2::steady_clock::duration> _sendInputTime;
+            std::chrono::steady_clock::time_point _sendInputTime;
+            std::unordered_map<unsigned short, std::chrono::steady_clock::time_point> _getIdLimiters;
     };
 }

@@ -12,15 +12,19 @@
 #include "Subsystems/InputSystem.hpp"
 #include "Subsystems/ShotSystem.hpp"
 #include "Subsystems/PiercingShotSystem.hpp"
+#include "Subsystems/HitBox.hpp"
+
 
 class PlayerSystem {
     public:
-        PlayerSystem() {};
+        PlayerSystem();
         ~PlayerSystem() {};
         void getInputs(Player &p);
         void updatePos(Player &p);
         void createShots(Player &p, Core &core);
         void createPiercingShots(Player &p, Core &core);
+        void checkCollision(Player &p, IEntity &entity, Core &core);
     private:
         InputSystem _inputSystem;
+        HitBox _hitBoxSystem;
 };

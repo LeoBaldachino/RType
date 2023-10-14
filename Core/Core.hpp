@@ -20,6 +20,12 @@ class Core {
         std::unordered_map<unsigned short, std::shared_ptr<IEntity>> _entities;
         unsigned short getAvailabeIndex();
         bool removeEntity(unsigned short index);
+        bool removeEntity(IEntity &entity);
+        bool removeEntityLater(unsigned short index);
+        bool removeEntityLater(IEntity &entity);
+        void eraseEntity(void);
+        inline std::queue<unsigned short> getToErase() {return this->_erase;};
     private:
         std::queue<unsigned short> _presentIndex;
+        std::queue<unsigned short> _erase;
 };

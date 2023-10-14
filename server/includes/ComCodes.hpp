@@ -7,8 +7,8 @@ namespace RType {
      */
     enum ComCodes {
         moveAnEntity = 11,
-        valueChange = 12,
-        touchingObject = 13,
+        valueSet = 12,
+        removeEntity = 13,
         keyPressed = 14,
         entityType = 16,
         newPlayerConnected = 21,

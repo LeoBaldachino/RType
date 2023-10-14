@@ -8,7 +8,6 @@
 #pragma once
 #include "../GameLoop.hpp"
 #include "../../Visitor/SystemVisitor.hpp"
-
 namespace RType {
     class RTypeGameLoop : public GameLoop {
         public:
@@ -18,7 +17,11 @@ namespace RType {
         protected :
             std::queue<Utils::MessageParsed_s> runAfterUpdate(std::queue<std::pair<unsigned short, Utils::MessageParsed_s>> newMessages);
         private :
-            RType::Utils::MessageParsed_s updatePlayerPos(std::pair<unsigned short, Utils::MessageParsed_s> msg);
+            void updatePlayerPos(std::pair<unsigned short, Utils::MessageParsed_s> msg);
+            void handleBydos(std::queue<Utils::MessageParsed_s> &toReturn);
+            void addRemoveEntity(std::queue<Utils::MessageParsed_s> &toReturn, unsigned short id);
+            void checkPlayerStatus(std::queue<Utils::MessageParsed_s> &toReturn);
             SystemVisitor v;
+            std::vector<unsigned short> _bydos;
     };
 }

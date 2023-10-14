@@ -30,4 +30,5 @@ class IEntity {
         virtual bool getHasMoved(void) = 0;
         virtual void setHasMoved(bool state) = 0;
         virtual void drawEntity(std::unique_ptr<sf::RenderWindow> &window) = 0;
+        virtual inline unsigned char getEntityType() = 0;
 };

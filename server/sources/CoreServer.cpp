@@ -12,7 +12,6 @@ std::pair<std::string, int> ipPortServer = {};
 
 void SigIntHandler(int signal_num)
 {
-    std::cout << "Server stopped" << std::endl;
     RType::Utils::SocketHandler socket(ipPortServer.first, ipPortServer.second + 1);
     RType::Utils::MessageParsed_s msg;
     msg.msgType = RType::serverStop;
@@ -60,6 +59,7 @@ void RType::CoreServer::run()
             continue;
         if (tmpMsg.msgType == serverStop)
             break;
+        std::unique_lock<std::mutex> lock(this->_mutex);
         this->_threadPool->AddTask([this, tmpMsg]{this->threadMethod(tmpMsg);});
     }
     Utils::MessageParsed_s stopMsg;
@@ -67,6 +67,7 @@ void RType::CoreServer::run()
     for (auto &it : this->_rooms) {
         for (int i = 0; i < 5; ++i)
             it->notifyAllPlayer(stopMsg);
+        std::unique_lock<std::mutex> lock(this->_mutex);
         it->setDestroy();
     }
     for (auto &it : this->_rooms)
@@ -88,6 +89,7 @@ void RType::CoreServer::threadMethod(const Utils::MessageParsed_s &msg)
             it->sendMessageToRoom(msg);
             return;
         }
+    std::unique_lock<std::mutex> lock(this->_mutex);
     std::cerr << "This user is in no rooms" << std::endl;
 }
 
@@ -108,6 +110,7 @@ void RType::CoreServer::newRoomCreated(const Utils::MessageParsed_s &msg)
             this->_socket->send(newMsg);
             return;
         }
+    std::unique_lock<std::mutex> lock(this->_mutex);
     std::cerr << "Team " << static_cast<int>(msg.bytes[0]) << " is created !" << std::endl;
     this->_rooms.push_back(std::make_unique<Server::Room>(msg.bytes[0], Server::ROOM_MAX_SIZE, this->_socket->getInstance()));
     this->_rooms.back()->addToRoom({msg.senderIp, msg.senderPort});
