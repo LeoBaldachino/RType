@@ -35,5 +35,4 @@ jobs:
           uses: marvinpinto/action-automatic-releases@latest
           with:
               files: build/*.deb
-          env:
-              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              repo_token: ${{ secrets.GITHUB_TOKEN }}
