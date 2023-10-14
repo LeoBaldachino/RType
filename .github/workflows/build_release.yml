@@ -34,5 +34,6 @@ jobs:
         - name: Release
           uses: marvinpinto/action-automatic-releases@latest
           with:
+              automatic_release_tag: ${{ github.ref }}
               files: build/*.deb
               repo_token: ${{ secrets.GITHUB_TOKEN }}
