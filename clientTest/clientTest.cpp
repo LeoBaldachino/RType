@@ -93,9 +93,11 @@ static void threadFn(std::shared_ptr<RType::Utils::SocketHandler> socket, bool &
 
 int main(int av, char **ar)
 {
-    if (av != 2)
-        return 1;
     std::srand(std::time(nullptr));
+    // unsigned short random = static_cast<unsigned short>(std::rand() % 65000);
+    // RType::Utils::MessageParsed_s toSend;
+    // toSend.setFirstShort(random);
+    // std::cout << "Short decoded is " << toSend.getFirstShort() << " Short sended is " << random << std::endl;
     int port = 4242 + std::rand() % 1000;
     bool toStop = false;
     RType::Utils::SocketHandler handler("127.0.0.1", port);

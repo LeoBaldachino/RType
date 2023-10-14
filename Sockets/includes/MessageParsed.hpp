@@ -12,22 +12,104 @@ namespace RType {
     namespace Utils {
         class MessageParsed_s {
             public :
-                MessageParsed_s() {
-                    for (int i = 0; i < 7; ++i)
-                        this->bytes[i] = 0;
-                    senderIp = "";
-                    senderPort = 0;
-                    msgType = 0;
-                };
-                ~MessageParsed_s() {};
-                MessageParsed_s &operator=(const MessageParsed_s &newMsg) {
-                    msgType = newMsg.msgType;
-                    for (int i = 0; i < 7; ++i)
-                        this->bytes[i] = newMsg.bytes[i];
-                    senderIp = newMsg.senderIp;
-                    senderPort = newMsg.senderPort;
-                    return *this;
-                }
+                /**
+                 * @brief Construct a new MessageParsed_s object empty
+                 * 
+                 */
+                MessageParsed_s();
+                /**
+                 * @brief Construct a new MessageParsed_s object with all the details
+                 * 
+                 * @param type msgType
+                 * @param ip senderIp
+                 * @param port sendPort
+                 * @param allBytes bytes
+                 */
+                MessageParsed_s(unsigned char type, const std::string &ip, unsigned short port, unsigned char allBytes[7]);
+                /**
+                 * @brief Construct a new MessageParsed_s object with an usigned long long to decode
+                 * 
+                 * @param toDecode number to decode for put him in the msgType and bytes array
+                 * @param ip senderIp
+                 * @param port sendPort
+                 */
+                MessageParsed_s(unsigned long long toDecode, const std::string &ip, unsigned short port);
+                /**
+                 * @brief Construct a new MessageParsed_s object by copy
+                 * 
+                 * @param newMsg the message to copy
+                 */
+                MessageParsed_s(const MessageParsed_s &newMsg);
+                /**
+                 * @brief Destroy the MessageParsed_s object
+                 * 
+                 */
+                ~MessageParsed_s();
+                /**
+                 * @brief equal operator
+                 * 
+                 * @param newMsg message to make equal to this class
+                 * @return MessageParsed_s& reference to this object
+                 */
+                MessageParsed_s &operator=(const MessageParsed_s &newMsg);
+                /**
+                 * @brief different operator
+                 * 
+                 * @param newMsg message to compare
+                 * @return true if they are different
+                 * @return false otherwise
+                 */
+                bool operator!=(const MessageParsed_s &newMsg);
+                /**
+                 * @brief equal operator
+                 * 
+                 * @param newMsg message to compare
+                 * @return true if they are the same
+                 * @return false otherwise
+                 */
+                bool operator==(const MessageParsed_s &newMsg);
+                /**
+                 * @brief encode the message for send him
+                 * 
+                 * @return unsigned long long encoded value
+                 */
+                unsigned long long encode() const;
+                /**
+                 * @brief Get the First Short value
+                 * 
+                 * @return unsigned short the first short value
+                 */
+                unsigned short getFirstShort() const;
+                /**
+                 * @brief Get the Second Short value
+                 * 
+                 * @return unsigned short the second short value
+                 */
+                unsigned short getSecondShort() const;
+                /**
+                 * @brief Get the Third Short value
+                 * 
+                 * @return unsigned short the third short value
+                 */
+                unsigned short getThirdShort() const;
+                /**
+                 * @brief Set the First Short value, if the first two bytes are set it will override their values
+                 * 
+                 * @param toSet value to set
+                 */
+                void setFirstShort(unsigned short toSet);
+                /**
+                 * @brief Set the Second Short value, if the third and fourth bytes are set it will override their values
+                 * 
+                 * @param toSet value to set
+                 */
+                void setSecondShort(unsigned short toSet);
+                /**
+                 * @brief Set the Thirdshort object, if the fifth and sixth bytes are set it will override their values
+                 * 
+                 * @param toSet 
+                 */
+                void setThirdShort(unsigned short toSet);
                 unsigned char msgType;
                 unsigned char bytes[7];
                 std::string senderIp;
