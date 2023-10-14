@@ -27,9 +27,13 @@ class SystemVisitor : public IVisitor {
         void visitBydos(Bydos &b, Core &core) {
             this->_bydosSystem.updatePos(b);
             this->_bydosSystem.createShots(b, this->_lastPlayer, core);
-            for (auto it : core._entities)
-                if (it.second->getEntityType() == RType::playerShoot || it.second->getEntityType() == RType::percingShoot)
-                    this->_bydosSystem.checkCollision(b, *it.second, core);
+            for (auto it : core._entities) {
+                auto entityType = it.second->getEntityType();
+                if (entityType == RType::playerShoot)
+                    this->_bydosSystem.checkCollision(b, *it.second, core, false);
+                if (entityType == RType::percingShoot)
+                    this->_bydosSystem.checkCollision(b, *it.second, core, true);
+            }
         };
         void visitTourre(Tourre &t, Core &core) {
             this->_tourreSystem.updatePos(t);

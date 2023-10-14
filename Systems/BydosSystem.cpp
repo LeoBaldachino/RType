@@ -27,12 +27,15 @@ void BydosSystem::createShots(Bydos &b, const Player &player, Core &core)
     core.addEntity(std::make_shared<ShotEntity>(tmpShoot, "Assets/enemyShot.png", false), core.getAvailabeIndex());
 }
 
-void BydosSystem::checkCollision(Bydos &b, IEntity &entity, Core &core)
+void BydosSystem::checkCollision(Bydos &b, IEntity &entity, Core &core, bool isPercing)
 {
+    if (b.getLifes() == 0)
+        core.removeEntityLater(b);
     if (this->_hitBoxSystem.entityIntersect(b, entity)) {
         if (b.getLifes() >= 1)
             if (b.removeOneLife())
                 std::cout << "One life removed from bydos" << std::endl;
-        core.removeEntityLater(entity);
+        if (!isPercing)
+            core.removeEntityLater(entity);
     }
 }

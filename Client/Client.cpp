@@ -115,7 +115,6 @@ void RType::Client::run()
         _window->display();
         this->updateInputs();
         while (!this->_inputs.empty()) {
-            std::cout << "Inputs?" << std::endl;
             msgKeyPressed.setFirstShort(static_cast<unsigned short>(this->_inputs.back()));
             this->_socket->send(msgKeyPressed);
             this->_inputs.pop_back();
