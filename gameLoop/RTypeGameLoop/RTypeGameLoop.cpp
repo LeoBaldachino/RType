@@ -9,7 +9,8 @@
 
 RType::RTypeGameLoop::RTypeGameLoop(Core &core) : GameLoop(core)
 {
-    
+    this->_refreshAllEntities = std::chrono::steady_clock::now();
+    this->_refreshPlayers = std::chrono::steady_clock::now();
 }
 
 RType::RTypeGameLoop::~RTypeGameLoop()
@@ -44,10 +45,10 @@ std::queue<RType::Utils::MessageParsed_s> RType::RTypeGameLoop::runAfterUpdate(s
     auto clock = std::chrono::steady_clock::now();
     if (std::chrono::duration_cast<std::chrono::milliseconds>(clock - this->_refreshAllEntities).count() < REFRESH_ALL_ENTITIES) {
         this->sendRefreshPlayers(toReturn);
-        // this->checkPlayerStatus(toReturn);
     }
     else {
         this->sendRefreshAllEntities(toReturn);
+        this->checkPlayerStatus(toReturn);
         this->_refreshAllEntities = clock;
     }
     std::queue<unsigned short> toErase = this->_core.getToErase();
@@ -158,6 +159,10 @@ void RType::RTypeGameLoop::sendRefreshAllEntities(std::queue<Utils::MessageParse
 
 void RType::RTypeGameLoop::sendRefreshPlayers(std::queue<Utils::MessageParsed_s> &toReturn)
 {
+    auto clock = std::chrono::steady_clock::now();
+    if (std::chrono::duration_cast<std::chrono::microseconds>(clock - this->_refreshPlayers).count() < REFRESH_PLAYERS)
+        return;
+    this->_refreshPlayers = clock;
     for (auto it : this->_playerArray) {
         auto find = this->_core._entities.find(it);
         if (find == this->_core._entities.end())
