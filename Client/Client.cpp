@@ -341,6 +341,12 @@ void RType::Client::setValues(const Utils::MessageParsed_s &msg)
         playerCasted->setLife(msg.bytes[3]);
         this->_lifeBar->setLifeBarToPlayer(playerCasted);
     }
+    if (find->second->getEntityType() == bydos) {
+        std::unique_lock<std::mutex> lock(*this->_mutex);
+        std::shared_ptr<Bydos> bydosCasted = std::dynamic_pointer_cast<Bydos>(find->second);
+        bydosCasted->setLife(msg.bytes[3]);
+        this->_lifeBar->setLifeBarToBydos(bydosCasted); 
+    }
 }
 
 void RType::Client::newMyShoot(const Utils::MessageParsed_s &msg)

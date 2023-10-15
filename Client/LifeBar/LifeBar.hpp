@@ -10,6 +10,7 @@
 #include "../../Entity/Player.hpp"
 #include "../../Core/Core.hpp"
 #include "../../EntityTypes/EntityTypes.hpp"
+#include "../../Visitor/SystemVisitor.hpp"
 #include <array>
 #include <chrono>
 #define SCREEN_X 1920
@@ -22,6 +23,7 @@ namespace RType {
                 LifeBar();
                 ~LifeBar();
                 void setLifeBarToPlayer(const std::shared_ptr<Player> &player);
+                void setLifeBarToBydos(const std::shared_ptr<Bydos> &by);
                 void display(std::unique_ptr<sf::RenderWindow> &window);
             private:
                 void clearFrameBuffer();

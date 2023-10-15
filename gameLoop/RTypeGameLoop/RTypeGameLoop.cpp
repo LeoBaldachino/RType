@@ -49,6 +49,7 @@ std::queue<RType::Utils::MessageParsed_s> RType::RTypeGameLoop::runAfterUpdate(s
     else {
         this->sendRefreshAllEntities(toReturn);
         this->checkPlayerStatus(toReturn);
+        this->checkBydosStatus(toReturn);
         this->_refreshAllEntities = clock;
     }
     std::queue<unsigned short> toErase = this->_core.getToErase();
@@ -176,5 +177,33 @@ void RType::RTypeGameLoop::sendRefreshPlayers(std::queue<Utils::MessageParsed_s>
         msgReturned.setThirdShort(find->first);
         msgReturned.msgType = moveAnEntity;
         toReturn.push(msgReturned);
+    }
+}
+
+void RType::RTypeGameLoop::checkBydosStatus(std::queue<Utils::MessageParsed_s> &toReturn)
+{
+    Utils::MessageParsed_s msgToSend;
+    msgToSend.msgType = valueSet;
+    std::cout << "187" << std::endl;
+    for (auto it : this->_bydos) {
+    std::cout << "188" << std::endl;
+        auto find = this->_core._entities.find(it);
+    std::cout << "189" << std::endl;
+        if (find == this->_core._entities.end())
+            continue;
+    std::cout << "190" << std::endl; 
+    if (find->second->getEntityType() != bydos) {
+        std::cout << "Not a bydos..." << std::endl;
+        continue;
+    }
+        std::shared_ptr<Bydos> bydos = std::dynamic_pointer_cast<Bydos>(find->second);
+    std::cout << "191" << std::endl;
+        msgToSend.setFirstShort(it);
+    std::cout << "192" << std::endl;
+        msgToSend.bytes[3] = bydos->getLifes();
+    std::cout << "193" << std::endl;
+        msgToSend.bytes[4] = bydos->actuallyInvincible() ? 1 : 0;
+    std::cout << "194" << std::endl;
+        toReturn.push(msgToSend);
     }
 }

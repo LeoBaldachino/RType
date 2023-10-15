@@ -24,6 +24,7 @@ namespace RType {
             void handleBydos(std::queue<Utils::MessageParsed_s> &toReturn);
             void addRemoveEntity(std::queue<Utils::MessageParsed_s> &toReturn, unsigned short id);
             void checkPlayerStatus(std::queue<Utils::MessageParsed_s> &toReturn);
+            void checkBydosStatus(std::queue<Utils::MessageParsed_s> &toReturn);
             void sendRefreshAllEntities(std::queue<Utils::MessageParsed_s> &toReturn);
             void sendRefreshPlayers(std::queue<Utils::MessageParsed_s> &toReturn);
             SystemVisitor v;

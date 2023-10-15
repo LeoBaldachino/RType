@@ -29,6 +29,7 @@ void RType::LifeBar::setLifeBarToPlayer(const std::shared_ptr<Player> &pl)
     std::unique_lock<std::mutex> lock(this->_mutex);
     Position pos = pl->getPosition();
     unsigned char hp = pl->getLifes();
+    unsigned char diffHp = pl->getMaxLife() - hp;
     if (pos.getY() < 30)
         return;
     pos.setY(pos.getY() - 30);
@@ -37,6 +38,42 @@ void RType::LifeBar::setLifeBarToPlayer(const std::shared_ptr<Player> &pl)
             sf::Color pixels;
             pixels.a = 255;
             pixels.g = 255;
+            *(sf::Color * )(4 * (j * SCREEN_X + i) + arr) = pixels;
+            this->_toErase.push({i, j});
+        }
+    for (int i = pos.getX() + (hp * 30); i < pos.getX() + (hp * 30) + (diffHp * 30); ++i)
+        for (int j = pos.getY(); j < pos.getY() + 5; ++j) {
+            sf::Color pixels;
+            pixels.a = 255;
+            pixels.r = 255;
+            *(sf::Color * )(4 * (j * SCREEN_X + i) + arr) = pixels;
+            this->_toErase.push({i, j});
+        }
+}
+
+
+void RType::LifeBar::setLifeBarToBydos(const std::shared_ptr<Bydos> &by)
+{
+    std::unique_lock<std::mutex> lock(this->_mutex);
+    Position pos = by->getPosition();
+    unsigned char hp = by->getLifes();
+    unsigned char diffHp = by->getMaxLife() - hp;
+    if (pos.getY() < 30)
+        return;
+    pos.setY(pos.getY() - 30);
+    for (int i = pos.getX(); i < pos.getX() + (hp * 30); ++i)
+        for (int j = pos.getY(); j < pos.getY() + 5; ++j) {
+            sf::Color pixels;
+            pixels.a = 255;
+            pixels.g = 255;
+            *(sf::Color * )(4 * (j * SCREEN_X + i) + arr) = pixels;
+            this->_toErase.push({i, j});
+        }
+    for (int i = pos.getX() + (hp * 30); i < pos.getX() + (hp * 30) + (diffHp * 30); ++i)
+        for (int j = pos.getY(); j < pos.getY() + 5; ++j) {
+            sf::Color pixels;
+            pixels.a = 255;
+            pixels.r = 255;
             *(sf::Color * )(4 * (j * SCREEN_X + i) + arr) = pixels;
             this->_toErase.push({i, j});
         }
