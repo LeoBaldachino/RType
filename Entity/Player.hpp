@@ -13,10 +13,12 @@
 #include "../EntityTypes/EntityTypes.hpp"
 #include "../Components/Inputs.hpp"
 #include "../Components/Health.hpp"
+#include "../Components/ClockTimer.hpp"
 
 #define PLAYER_X 32 * SIZE_SCALE
 #define PLAYER_Y 14 * SIZE_SCALE
 #define BASE_HEALTH 3
+#define READY_MOVE 3
 
 class Player : public IEntity, public Health {
     public:
@@ -63,13 +65,15 @@ class Player : public IEntity, public Health {
         void setHasMoved(bool state);
 
         Vector2d getSize(void);
-        inline unsigned char getEntityType() {return RType::player;}
+        inline unsigned char getEntityType() {return RType::player;};
+        inline bool isReady() {return this->_timer.clockOk();};
         Inputs _inputs;
     private:
         State _state;
         Position _position;
         Moveable _movement;
         Drawable _drawable;
+        ClockTimer _timer;
         int _velocity;
         int _shootDmg = 10;
         int _shootVelocity = 5;

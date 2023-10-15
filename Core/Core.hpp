@@ -11,6 +11,7 @@
 #include <memory>
 #include <climits>
 #include <list>
+#include <mutex>
 
 class Core {
     public:
@@ -28,4 +29,5 @@ class Core {
     private:
         std::queue<unsigned short> _presentIndex;
         std::queue<unsigned short> _erase;
+        std::mutex _mutex;
 };

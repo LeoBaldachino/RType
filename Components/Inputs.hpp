@@ -25,8 +25,8 @@ class Inputs {
         Inputs() {};
         ~Inputs() {};
         std::queue<Events> getEvents(void) const { return(this->_events); }
-        void addEvents(const Events event) { this->_events.push(event); }
-        void popEvent(void) { this->_events.pop(); }
+        inline void addEvents(const Events &event) { this->_events.push(event); }
+        inline void popEvent(void) { this->_events.pop(); }
     private:
         std::queue<Events> _events;
 };

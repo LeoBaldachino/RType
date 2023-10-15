@@ -7,12 +7,12 @@
 
 #include "Player.hpp"
 
-Player::Player() : Health(BASE_HEALTH)
+Player::Player() : Health(BASE_HEALTH), _timer(READY_MOVE)
 {
 
 }
 
-Player::Player(Position position) : _drawable("Assets/player.png", 2), _size(PLAYER_X, PLAYER_Y),  Health(BASE_HEALTH)
+Player::Player(Position position) : _drawable("Assets/player.png", 2), _size(PLAYER_X, PLAYER_Y),  Health(BASE_HEALTH) , _timer(READY_MOVE)
 {
     this->_position = position;
     this->_state = State(100);

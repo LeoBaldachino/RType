@@ -109,15 +109,24 @@ void RType::Client::run()
     this->createRoom(1);
     auto msgKeyPressed = this->buildEmptyMsg(keyPressed);
     while (_window->isOpen()) {
+        unsigned char actualIndex = 0;
         _window->clear();        
         for (auto &it : this->_entities._entities)
             it.second->drawEntity(this->_window);
         _window->display();
         this->updateInputs();
         while (!this->_inputs.empty()) {
-            msgKeyPressed.setFirstShort(static_cast<unsigned short>(this->_inputs.back()));
-            this->_socket->send(msgKeyPressed);
+            if (actualIndex > 7) {
+                this->_socket->send(msgKeyPressed);
+                actualIndex = 0;
+            }
+            msgKeyPressed.bytes[actualIndex] = static_cast<unsigned short>(this->_inputs.back());
             this->_inputs.pop_back();
+            actualIndex++;
+        }
+        if (actualIndex > 0) {
+            msgKeyPressed.bytes[actualIndex] = 255;
+            this->_socket->send(msgKeyPressed);
         }
     }
 }

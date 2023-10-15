@@ -41,6 +41,8 @@ void PlayerSystem::createPiercingShots(Player &p, Core &core)
 
 void PlayerSystem::updatePos(Player &p)
 {
+    if (!p.isReady())
+        return;
     Position tmpHasMoved(p.getPosition());
     this->_inputSystem.updatePlayer(p);
     Position tmpPosition(p.getPosition());

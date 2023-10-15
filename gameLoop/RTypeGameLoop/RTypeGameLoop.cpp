@@ -22,8 +22,13 @@ void RType::RTypeGameLoop::updatePlayerPos(std::pair<unsigned short, Utils::Mess
     if (it == this->_core._entities.end())
         return;
     std::shared_ptr<Player> player = std::dynamic_pointer_cast<Player>(it->second);
-    Position posTmp = player->getPosition();
-    player->_inputs.addEvents((Inputs::Events) msg.second.getFirstShort());
+    for (unsigned char i = 0; i < 7; ++i) {
+        if (msg.second.bytes[i] > 6) {
+            std::cout << "Ending byte " << static_cast<int>(msg.second.bytes[i]) << std::endl;
+            break;
+        }
+        player->_inputs.addEvents((Inputs::Events)msg.second.bytes[i]);
+    }
 }
 
 
