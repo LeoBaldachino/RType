@@ -324,7 +324,7 @@ void RType::Client::newEnemyShoot(const Utils::MessageParsed_s &msg)
         return;
     }
     std::unique_lock<std::mutex> lock(*this->_mutex);
-    Position pos;
+    Position pos(-20, -20);
     AIShoot aiShoot(pos, pos);
     auto tmpShoot = aiShoot.shootLogic();
     this->_entities.addEntity(std::make_shared<ShotEntity>(tmpShoot, "Assets/enemyShot.png", false), msg.getFirstShort());
@@ -351,7 +351,7 @@ void RType::Client::newMyShoot(const Utils::MessageParsed_s &msg)
         return;
     }
     std::unique_lock<std::mutex> lock(*this->_mutex);
-    Position pos;
+    Position pos(-20, -20);
     AIShoot aiShoot(pos, pos);
     auto tmpShoot = aiShoot.shootLogic();
     this->_entities.addEntity(std::make_shared<ShotEntity>(tmpShoot, "Assets/shot.png", false), msg.getFirstShort());  
@@ -365,7 +365,7 @@ void RType::Client::newPercingShoot(const Utils::MessageParsed_s &msg)
         return;
     }
     std::unique_lock<std::mutex> lock(*this->_mutex);
-    Position pos;
+    Position pos(-20, -20);
     AIShoot aiShoot(pos, pos);
     auto tmpShoot = aiShoot.shootLogic();
     this->_entities.addEntity(std::make_shared<PiercingShotEntity>(tmpShoot), msg.getFirstShort());

@@ -11,9 +11,10 @@
 #include "../../Core/Core.hpp"
 #include "../../EntityTypes/EntityTypes.hpp"
 #include <array>
-
+#include <chrono>
 #define SCREEN_X 1920
 #define SCREEN_Y 1080
+#define UPDATE_PIXEL_TIME 10
 
 namespace RType {
         class LifeBar {
@@ -28,5 +29,7 @@ namespace RType {
                 sf::Sprite _sprite;
                 sf::Uint8 *arr;
                 std::mutex _mutex;
+                std::chrono::steady_clock::time_point _updatePixels;
+                std::queue<std::pair<unsigned int, unsigned int>> _toErase;
         };
 }
