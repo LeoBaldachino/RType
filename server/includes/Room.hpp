@@ -178,7 +178,7 @@ namespace RType {
                 unsigned char _maxSize;
                 bool _willBeDestroyed;
                 unsigned char _actualPing;
-                std::chrono::time_point<std::chrono::_V2::steady_clock, std::chrono::_V2::steady_clock::duration> _pingTime;
+                std::chrono::steady_clock::time_point _pingTime;
                 std::unique_ptr<IGameLoop> _gameLoop;
                 std::unique_ptr<std::mutex> _mutexQueue;
                 std::unique_ptr<std::queue<std::pair<unsigned short, Utils::MessageParsed_s>>> _toSendToGameLoop;

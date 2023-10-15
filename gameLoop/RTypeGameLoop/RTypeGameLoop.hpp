@@ -8,6 +8,8 @@
 #pragma once
 #include "../GameLoop.hpp"
 #include "../../Visitor/SystemVisitor.hpp"
+#define REFRESH_ALL_ENTITIES 5
+
 namespace RType {
     class RTypeGameLoop : public GameLoop {
         public:
@@ -21,7 +23,10 @@ namespace RType {
             void handleBydos(std::queue<Utils::MessageParsed_s> &toReturn);
             void addRemoveEntity(std::queue<Utils::MessageParsed_s> &toReturn, unsigned short id);
             void checkPlayerStatus(std::queue<Utils::MessageParsed_s> &toReturn);
+            void sendRefreshAllEntities(std::queue<Utils::MessageParsed_s> &toReturn);
+            void sendRefreshPlayers(std::queue<Utils::MessageParsed_s> &toReturn);
             SystemVisitor v;
             std::vector<unsigned short> _bydos;
+            std::chrono::steady_clock::time_point _refreshAllEntities;
     };
 }

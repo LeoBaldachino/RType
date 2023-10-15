@@ -133,6 +133,7 @@ void RType::Server::Room::runRoom()
 {
     int nbMsg = DESTROYED_NB_MSG_SEND;
     while (this->_isOpen) {
+        auto timeout = std::chrono::steady_clock::now();
         if (_willBeDestroyed) {
             std::unique_lock<std::mutex> lock(this->_mutex);
             Utils::MessageParsed_s msg;
@@ -156,6 +157,7 @@ void RType::Server::Room::runRoom()
             this->notifyAllPlayer(ret.front());
             ret.pop();
         }
+        std::cout << "Time for one cycle " << std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - timeout).count() << "ms" <<std::endl;
     }
 }
 

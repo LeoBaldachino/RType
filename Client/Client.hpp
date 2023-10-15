@@ -7,13 +7,15 @@
 
 #pragma once
 #include "../Entity/Player.hpp"
+#include "../Core/Core.hpp"
+#include "../EntityTypes/EntityTypes.hpp"
 #include "../Visitor/SystemVisitor.hpp"
 #include "../Sockets/includes/SocketHandler.hpp"
 #include "../Sockets/includes/MessageParsed.hpp"
 #include "../server/includes/ComCodes.hpp"
+#include "LifeBar/LifeBar.hpp"
 #include <unordered_map>
-#include "../Core/Core.hpp"
-#include "../EntityTypes/EntityTypes.hpp"
+
 #define GET_ID_LIMIT_TIME 500
 
 namespace RType {
@@ -73,5 +75,6 @@ namespace RType {
             std::vector<Events> _inputs;
             std::chrono::steady_clock::time_point _sendInputTime;
             std::unordered_map<unsigned short, std::chrono::steady_clock::time_point> _getIdLimiters;
+            std::unique_ptr<LifeBar> _lifeBar;
     };
 }

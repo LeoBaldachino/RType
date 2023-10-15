@@ -67,7 +67,7 @@ class Player : public IEntity, public Health {
         Vector2d getSize(void);
         inline unsigned char getEntityType() {return RType::player;};
         inline bool isReady() {return this->_timer.clockOk();};
-        Inputs _inputs;
+        std::unique_ptr<Inputs> _inputs;
     private:
         State _state;
         Position _position;

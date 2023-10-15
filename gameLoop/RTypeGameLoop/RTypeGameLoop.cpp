@@ -22,13 +22,13 @@ void RType::RTypeGameLoop::updatePlayerPos(std::pair<unsigned short, Utils::Mess
     if (it == this->_core._entities.end())
         return;
     std::shared_ptr<Player> player = std::dynamic_pointer_cast<Player>(it->second);
-    for (unsigned char i = 0; i < 7; ++i) {
-        if (msg.second.bytes[i] > 6) {
-            std::cout << "Ending byte " << static_cast<int>(msg.second.bytes[i]) << std::endl;
+    player->_inputs->lockInputs();
+    for (unsigned char i = 0; i < 8; ++i) {
+        if (msg.second.bytes[i] > 6)
             break;
-        }
-        player->_inputs.addEvents((Inputs::Events)msg.second.bytes[i]);
+        player->_inputs->addEvents((Inputs::Events)msg.second.bytes[i]);
     }
+    player->_inputs->unlockInputs();
 }
 
 
@@ -41,17 +41,12 @@ std::queue<RType::Utils::MessageParsed_s> RType::RTypeGameLoop::runAfterUpdate(s
         newMessages.pop();
     }
     this->handleBydos(toReturn);
-    for (auto it : this->_core._entities) {
-        it.second->accept(this->v, this->_core);
-        if (it.second->getHasMoved()) {
-            Position tmpPos = it.second->getPosition();
-            Utils::MessageParsed_s msgReturned;
-            msgReturned.setFirstShort(tmpPos.getX());
-            msgReturned.setSecondShort(tmpPos.getY());
-            msgReturned.setThirdShort(it.first);
-            msgReturned.msgType = moveAnEntity;
-            toReturn.push(msgReturned);
-        }
+    auto clock = std::chrono::steady_clock::now();
+    if (std::chrono::duration_cast<std::chrono::milliseconds>(clock - this->_refreshAllEntities).count() < REFRESH_ALL_ENTITIES)
+        this->sendRefreshPlayers(toReturn);
+    else {
+        this->sendRefreshAllEntities(toReturn);
+        this->_refreshAllEntities = clock;
     }
     std::queue<unsigned short> toErase = this->_core.getToErase();
     this->_core.eraseEntity();
@@ -59,6 +54,7 @@ std::queue<RType::Utils::MessageParsed_s> RType::RTypeGameLoop::runAfterUpdate(s
         this->addRemoveEntity(toReturn, toErase.front());
         toErase.pop();
     }
+    // this->checkPlayerStatus(toReturn);
     return toReturn;
 }
 
@@ -106,14 +102,14 @@ void RType::RTypeGameLoop::handleBydos(std::queue<RType::Utils::MessageParsed_s>
         toDelete.pop();
     }
     msg.msgType = entityType;
-    if (this->_bydos.size() < 3) {
+    if (this->_bydos.size() < 6) {
         std::cout << "Add new bydos" << std::endl;
         unsigned short id = this->_core.getAvailabeIndex();
         this->_bydos.push_back(id);
         msg.setFirstShort(id);
         msg.setSecondShort(bydos);
         toReturn.push(msg);
-        this->_core.addEntity(std::make_shared<Bydos>(Position(50, std::rand() % 1000, 1080, 1920), 1, Vector2d(-1, 0)), id);
+        this->_core.addEntity(std::make_shared<Bydos>(Position(1700 + std::rand() % 200, std::rand() % 1000, 1080, 1920), 1, Vector2d(-1, 0)), id);
     }
 }
 
@@ -138,5 +134,41 @@ void RType::RTypeGameLoop::checkPlayerStatus(std::queue<Utils::MessageParsed_s> 
         msgToSend.bytes[3] = player->getLifes();
         msgToSend.bytes[4] = player->actuallyInvincible() ? 1 : 0;
         toReturn.push(msgToSend);
+    }
+}
+
+
+void RType::RTypeGameLoop::sendRefreshAllEntities(std::queue<Utils::MessageParsed_s> &toReturn)
+{
+    std::cout << "Update all !" << std::endl;
+    for (auto it : this->_core._entities) {
+        it.second->accept(this->v, this->_core);
+        if (it.second->getHasMoved()) {
+            Position tmpPos = it.second->getPosition();
+            Utils::MessageParsed_s msgReturned;
+            msgReturned.setFirstShort(tmpPos.getX());
+            msgReturned.setSecondShort(tmpPos.getY());
+            msgReturned.setThirdShort(it.first);
+            msgReturned.msgType = moveAnEntity;
+            toReturn.push(msgReturned);
+        }
+    }
+}
+
+void RType::RTypeGameLoop::sendRefreshPlayers(std::queue<Utils::MessageParsed_s> &toReturn)
+{
+    for (auto it : this->_playerArray) {
+        auto find = this->_core._entities.find(it);
+        if (find == this->_core._entities.end())
+            continue;
+        std::cout << "Update player !" << std::endl;
+        find->second->accept(this->v, this->_core);
+        Position tmpPos = find->second->getPosition();
+        Utils::MessageParsed_s msgReturned;
+        msgReturned.setFirstShort(tmpPos.getX());
+        msgReturned.setSecondShort(tmpPos.getY());
+        msgReturned.setThirdShort(find->first);
+        msgReturned.msgType = moveAnEntity;
+        toReturn.push(msgReturned);
     }
 }

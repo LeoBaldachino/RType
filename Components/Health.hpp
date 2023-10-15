@@ -15,6 +15,7 @@ class Health {
     public:
         Health(unsigned char numberOfLifes) {
             this->_lifes = numberOfLifes;
+            this->_maxLife = numberOfLifes;
             this->_asBeenHit = false;
             this->_chronoHit = std::chrono::steady_clock::now();
         };
@@ -30,8 +31,9 @@ class Health {
         };
         inline bool actuallyInvincible() const {return this->_asBeenHit;};
         inline unsigned char getLifes() const {return this->_lifes;};
-        inline void addLife() {this->_lifes++;};
+        inline void addLife() {this->_lifes < this->_maxLife ? this->_lifes++ : 0;};
         inline void setLife(unsigned char life) {this->_lifes = life;};
+        inline unsigned char getMaxLife() const {return this->_maxLife;};
     private:
         bool isInvincible() const {
             if (!this->_asBeenHit)
@@ -44,4 +46,5 @@ class Health {
         unsigned char _lifes;
         std::chrono::steady_clock::time_point _chronoHit;
         bool _asBeenHit;
+        unsigned char _maxLife;
 };
