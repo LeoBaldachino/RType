@@ -79,28 +79,30 @@ RType::EntityTypes RType::RTypeGameLoop::getEntityType(unsigned short id)
 void RType::RTypeGameLoop::handleBydos(std::queue<RType::Utils::MessageParsed_s> &toReturn)
 {
     auto it = this->_bydos.begin();
-    std::queue<std::vector<unsigned short>::iterator> toDelete;
+    std::queue<unsigned short> toDelete;
     Utils::MessageParsed_s msg;
     msg.msgType = removeEntity;
     for (; it != this->_bydos.end(); it++) {
         auto finded = this->_core._entities.find(*it);
         if (finded == this->_core._entities.end()) {
-            toDelete.push(it);
+            toDelete.push(*it);
             continue;
         }
         Position actPos = finded->second->getPosition();
         if (actPos.getX() < 0 || actPos.getY() < 0) {
             std::cout << "Entity not not well positionned" << std::endl;
-            this->_core.removeEntity(finded->first);
-            toDelete.push(it);
+            this->_core.removeEntityLater(finded->first);
+            toDelete.push(*it);
             continue;
         }
     }
     while (!toDelete.empty()) {
         std::cout << "Delete a bydos" << std::endl;
-        msg.setFirstShort(*toDelete.front());
+        msg.setFirstShort(toDelete.front());
         toReturn.push(msg);
-        this->_bydos.erase(toDelete.front());
+        for (auto it = this->_bydos.begin(); it < this->_bydos.end(); it++)
+            if (*it == toDelete.front())
+                this->_bydos.erase(it);
         toDelete.pop();
     }
     msg.msgType = entityType;
@@ -111,7 +113,7 @@ void RType::RTypeGameLoop::handleBydos(std::queue<RType::Utils::MessageParsed_s>
         msg.setFirstShort(id);
         msg.setSecondShort(bydos);
         toReturn.push(msg);
-        this->_core.addEntity(std::make_shared<Bydos>(Position(1900, std::rand() % 1000, 1080, 1920), 1, Vector2d(-1, 0)), id);
+        this->_core.addEntity(std::make_shared<Bydos>(Position(50, std::rand() % 1000, 1080, 1920), 1, Vector2d(-1, 0)), id);
     }
 }
 
