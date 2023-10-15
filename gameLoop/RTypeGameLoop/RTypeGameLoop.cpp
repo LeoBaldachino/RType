@@ -42,8 +42,10 @@ std::queue<RType::Utils::MessageParsed_s> RType::RTypeGameLoop::runAfterUpdate(s
     }
     this->handleBydos(toReturn);
     auto clock = std::chrono::steady_clock::now();
-    if (std::chrono::duration_cast<std::chrono::milliseconds>(clock - this->_refreshAllEntities).count() < REFRESH_ALL_ENTITIES)
+    if (std::chrono::duration_cast<std::chrono::milliseconds>(clock - this->_refreshAllEntities).count() < REFRESH_ALL_ENTITIES) {
         this->sendRefreshPlayers(toReturn);
+        // this->checkPlayerStatus(toReturn);
+    }
     else {
         this->sendRefreshAllEntities(toReturn);
         this->_refreshAllEntities = clock;
@@ -54,7 +56,6 @@ std::queue<RType::Utils::MessageParsed_s> RType::RTypeGameLoop::runAfterUpdate(s
         this->addRemoveEntity(toReturn, toErase.front());
         toErase.pop();
     }
-    // this->checkPlayerStatus(toReturn);
     return toReturn;
 }
 

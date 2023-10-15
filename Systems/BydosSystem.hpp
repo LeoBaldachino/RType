@@ -19,7 +19,7 @@ class BydosSystem {
         BydosSystem();
         ~BydosSystem() {};
         void updatePos(Bydos &b);
-        void createShots(Bydos &b, const Player &player, Core &core);
+        void createShots(Bydos &b, const Position &playerPos, Core &core);
         void checkCollision(Bydos &b, IEntity &entity, Core &core, bool isPercing);
     private:
         MovementSystem _movementSystem;

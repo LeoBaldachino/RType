@@ -9,23 +9,24 @@
 
 void InputSystem::updatePlayer(Player &player)
 {
-    float y = 0;
-    float x = 0;
+    int y = 0;
+    int x = 0;
+    int veloc = player.getVelocity();
     std::queue<Inputs::Events> newInputs;
     while (!player._inputs->isEmpty()) {
         switch (player._inputs->getLastEvent())
         {
             case Inputs::Events::Up:
-                y += -1.0 * 0.5;
+                y += -1 * veloc;
                 break;
             case Inputs::Events::Down:
-                y += 1.0 * 0.5;
+                y += 1 * veloc;
                 break;
             case Inputs::Events::Left:
-                x += -1.0 * 0.5;
+                x += -1 * veloc;
                 break;
             case Inputs::Events::Right:
-                x += 1.0 * 0.5;
+                x += 1 * veloc;
                 break;
             case Inputs::Events::PiercingShoot :
                 newInputs.push(Inputs::Events::PiercingShoot);
