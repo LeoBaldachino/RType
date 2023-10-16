@@ -40,7 +40,7 @@ _commands({
     this->_window = std::make_unique<sf::RenderWindow>(sf::VideoMode::getDesktopMode(), "R-Type");
     if (this->_music.openFromFile("../Assets/music.ogg") != -1)
         this->_music.play();
-    this->_socket = std::make_unique<Utils::SocketHandler>("127.0.0.1", 4001 + std::rand() % 3000, false);
+    this->_socket = std::make_unique<Utils::SocketHandler>("127.0.0.1", 4001 + std::rand() % 3000, std::list<int>({entityType}));
     this->_threadIsOpen = true;
     this->_actualId = -1;
     this->_infosThread = std::make_unique<std::thread>(&RType::Client::infosThread, this);

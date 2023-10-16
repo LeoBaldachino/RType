@@ -11,12 +11,12 @@
 #include <list>
 #include "MessageParsed.hpp"
 #define MAX_SIZE_MSG_QUEUE 50
-#define MESSAGE_DELAY 5
+#define MESSAGE_DELAY 1
 
 namespace RType {
     class MessageSendedQueue {
         public:
-            MessageSendedQueue(std::list<int> importantMessages);
+            MessageSendedQueue(const std::list<int> &importantMessages);
             ~MessageSendedQueue();
             void addMessage(const Utils::MessageParsed_s &msg);
             Utils::MessageParsed_s getMessage();

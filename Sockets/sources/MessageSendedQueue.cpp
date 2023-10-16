@@ -7,7 +7,7 @@
 
 #include "../includes/MessageSendedQueue.hpp"
 
-RType::MessageSendedQueue::MessageSendedQueue(std::list<int> importantMessages) : _importantMessages(importantMessages)
+RType::MessageSendedQueue::MessageSendedQueue(const std::list<int> &importantMessages) : _importantMessages(importantMessages)
 {
     this->_delay = std::chrono::steady_clock::now();
 }

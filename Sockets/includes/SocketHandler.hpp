@@ -32,7 +32,7 @@ namespace RType {
              * @param ipAdress The IP address to connect to
              * @param port The port to connect to
              */
-                SocketHandler(const std::string &ipAdress, int port, bool check);
+                SocketHandler(const std::string &ipAdress, int port, const std::list<int> &importantMessagesCode);
                 /**
                  * @brief copy constructor of the socketHandler
                  * 
