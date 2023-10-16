@@ -10,9 +10,9 @@
 
 RType::Utils::SocketHandler::SocketHandler(const std::string &ipAdress, int port, bool check)
 {
-    _socket = std::make_shared<boost::asio::ip::udp::socket>(_ioService);
-    _socket->open(boost::asio::ip::udp::v4());
-    _socket->bind(boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), port));
+    _socket = std::make_shared<boost::asio::ip::udp::socket>(_ioService, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), port));
+    // _socket->open(boost::asio::ip::udp::v4());
+    // _socket->bind(boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), port));
     _mutex = std::make_shared<std::mutex>();
     this->_receiverMutex = std::make_shared<std::mutex>();
     this->_ipPort = {ipAdress, port};
