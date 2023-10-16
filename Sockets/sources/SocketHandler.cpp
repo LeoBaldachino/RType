@@ -8,11 +8,12 @@
 #include "../includes/SocketHandler.hpp"
 
 
-RType::Utils::SocketHandler::SocketHandler(const std::string &ipAdress, int port)
+RType::Utils::SocketHandler::SocketHandler(const std::string &ipAdress, int port, bool check)
 {
     _socket = std::make_shared<boost::asio::ip::udp::socket>(_ioService);
     _socket->open(boost::asio::ip::udp::v4());
-    _socket->bind(boost::asio::ip::udp::endpoint(boost::asio::ip::address::from_string(ipAdress), port));
+    if (!check)
+        _socket->bind(boost::asio::ip::udp::endpoint(boost::asio::ip::address::from_string(ipAdress), port));
     _mutex = std::make_shared<std::mutex>();
     this->_receiverMutex = std::make_shared<std::mutex>();
     this->_ipPort = {ipAdress, port};

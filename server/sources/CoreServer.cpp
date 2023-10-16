@@ -12,7 +12,7 @@ std::pair<std::string, int> ipPortServer = {};
 
 void SigIntHandler(int signal_num)
 {
-    RType::Utils::SocketHandler socket(ipPortServer.first, ipPortServer.second + 1);
+    RType::Utils::SocketHandler socket(ipPortServer.first, ipPortServer.second + 1, true);
     RType::Utils::MessageParsed_s msg;
     msg.msgType = RType::serverStop;
     msg.senderIp = ipPortServer.first;
