@@ -65,7 +65,8 @@ void RType::LifeBar::setLifeBarToBydos(const std::shared_ptr<Bydos> &by)
         for (int j = pos.getY(); j < pos.getY() + 5; ++j) {
             sf::Color pixels;
             pixels.a = 255;
-            pixels.g = 255;
+            pixels.b = 255;
+            pixels.r = 255;
             *(sf::Color * )(4 * (j * SCREEN_X + i) + arr) = pixels;
             this->_toErase.push({i, j});
         }
@@ -74,6 +75,7 @@ void RType::LifeBar::setLifeBarToBydos(const std::shared_ptr<Bydos> &by)
             sf::Color pixels;
             pixels.a = 255;
             pixels.r = 255;
+            pixels.g = 255;
             *(sf::Color * )(4 * (j * SCREEN_X + i) + arr) = pixels;
             this->_toErase.push({i, j});
         }
