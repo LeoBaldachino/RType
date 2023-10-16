@@ -31,6 +31,8 @@ _commands({
             {Events::Right, false},};
     this->_sendInputTime = std::chrono::steady_clock::now();
     this->_lifeBar = std::make_unique<LifeBar>();
+    this->_actualScreen = Screens::game;
+    this->_gameAsStarted = false;
     this->_inputs = {};
     this->_serverIp = av[1];
     this->_serverPort = std::stoi(av[2]);
@@ -126,28 +128,12 @@ void RType::Client::handleInputs(void)
 
 void RType::Client::run()
 {
-    this->createRoom(1);
-    auto msgKeyPressed = this->buildEmptyMsg(keyPressed);
     while (_window->isOpen()) {
-        unsigned char actualIndex = 0;
-        _window->clear();   
-        this->_lifeBar->display(this->_window);     
-        for (auto &it : this->_entities._entities)
-            it.second->drawEntity(this->_window);
-        _window->display();
-        this->updateInputs();
-        while (!this->_inputs.empty()) {
-            if (actualIndex > 7) {
-                this->_socket->send(msgKeyPressed);
-                actualIndex = 0;
-            }
-            msgKeyPressed.bytes[actualIndex] = static_cast<unsigned short>(this->_inputs.back());
-            this->_inputs.pop_back();
-            actualIndex++;
-        }
-        if (actualIndex > 0) {
-            msgKeyPressed.bytes[actualIndex] = 255;
-            this->_socket->send(msgKeyPressed);
+        switch (this->_actualScreen)
+        {
+        case game:
+            this->gameLoop();
+            break;
         }
     }
 }
@@ -377,4 +363,33 @@ void RType::Client::newPercingShoot(const Utils::MessageParsed_s &msg)
     AIShoot aiShoot(pos, pos);
     auto tmpShoot = aiShoot.shootLogic();
     this->_entities.addEntity(std::make_shared<PiercingShotEntity>(tmpShoot), msg.getFirstShort());
+}
+
+void RType::Client::gameLoop()
+{
+    if (!this->_gameAsStarted) {
+        this->createRoom(1);
+        this->_gameAsStarted = true;
+    }
+    auto msgKeyPressed = this->buildEmptyMsg(keyPressed);
+    unsigned char actualIndex = 0;
+    _window->clear();   
+    this->_lifeBar->display(this->_window);     
+    for (auto &it : this->_entities._entities)
+        it.second->drawEntity(this->_window);
+    _window->display();
+    this->updateInputs();
+    while (!this->_inputs.empty()) {
+        if (actualIndex > 7) {
+            this->_socket->send(msgKeyPressed);
+            actualIndex = 0;
+        }
+        msgKeyPressed.bytes[actualIndex] = static_cast<unsigned short>(this->_inputs.back());
+        this->_inputs.pop_back();
+        actualIndex++;
+    }
+    if (actualIndex > 0) {
+        msgKeyPressed.bytes[actualIndex] = 255;
+        this->_socket->send(msgKeyPressed);
+    }
 }
