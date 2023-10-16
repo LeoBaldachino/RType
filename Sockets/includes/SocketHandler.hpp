@@ -14,6 +14,7 @@
 #include <boost/array.hpp>
 #include <tuple>
 #include <mutex>
+#include "MessageSendedQueue.hpp"
 
 namespace RType {
     namespace Utils {
@@ -74,6 +75,7 @@ namespace RType {
                 std::shared_ptr<SocketHandler> _instance;
                 std::shared_ptr<std::mutex> _mutex;
                 std::shared_ptr<std::mutex> _receiverMutex;
+                std::shared_ptr<MessageSendedQueue> _queueMsg;
                 std::pair<std::string, int> _ipPort;
         };
     }
