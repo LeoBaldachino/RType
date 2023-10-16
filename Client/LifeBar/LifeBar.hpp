@@ -1,9 +1,8 @@
-/*
-** EPITECH PROJECT, 2023
-** B-CPP-500-MLH-5-1-rtype-robin.denni
-** File description:
-** LifeBar
-*/
+/**
+ * @file LifeBar.hpp
+ * @author EPITECH PROJECT, 2023
+ * @brief LifeBar class definition
+ */
 
 #pragma once
 
@@ -13,25 +12,57 @@
 #include "../../Visitor/SystemVisitor.hpp"
 #include <array>
 #include <chrono>
+
 #define SCREEN_X 1920
 #define SCREEN_Y 1080
 #define UPDATE_PIXEL_TIME 10
 
 namespace RType {
-        class LifeBar {
-            public:
-                LifeBar();
-                ~LifeBar();
-                void setLifeBarToPlayer(const std::shared_ptr<Player> &player);
-                void setLifeBarToBydos(const std::shared_ptr<Bydos> &by);
-                void display(std::unique_ptr<sf::RenderWindow> &window);
-            private:
-                void clearFrameBuffer();
-                sf::Texture _texture;
-                sf::Sprite _sprite;
-                std::unique_ptr<sf::Uint8 []> _pixels;
-                std::mutex _mutex;
-                std::chrono::steady_clock::time_point _updatePixels;
-                std::queue<std::pair<unsigned int, unsigned int>> _toErase;
-        };
+    /**
+     * @class LifeBar
+     * @brief Class representing a life bar in the RType game
+     */
+    class LifeBar {
+        public:
+            /**
+             * @brief Constructor for LifeBar
+             */
+            LifeBar();
+
+            /**
+             * @brief Destructor for LifeBar
+             */
+            ~LifeBar();
+
+            /**
+             * @brief Set the LifeBar to a Player
+             * @param player Shared pointer to a Player
+             */
+            void setLifeBarToPlayer(const std::shared_ptr<Player> &player);
+
+            /**
+             * @brief Set the LifeBar to a Bydos
+             * @param by Shared pointer to a Bydos
+             */
+            void setLifeBarToBydos(const std::shared_ptr<Bydos> &by);
+
+            /**
+             * @brief Display the LifeBar
+             * @param window Unique pointer to a RenderWindow
+             */
+            void display(std::unique_ptr<sf::RenderWindow> &window);
+
+        private:
+            /**
+             * @brief Clear the frame buffer
+             */
+            void clearFrameBuffer();
+
+            sf::Texture _texture; ///< Texture of the LifeBar
+            sf::Sprite _sprite; ///< Sprite of the LifeBar
+            std::unique_ptr<sf::Uint8 []> _pixels; ///< Pixels of the LifeBar
+            std::mutex _mutex; ///< Mutex for thread safety
+            std::chrono::steady_clock::time_point _updatePixels; ///< Time point for updating pixels
+            std::queue<std::pair<unsigned int, unsigned int>> _toErase; ///< Queue of pairs to erase
+    };
 }

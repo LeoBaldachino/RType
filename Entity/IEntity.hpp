@@ -1,9 +1,8 @@
-/*
-** EPITECH PROJECT, 2023
-** B-CPP-500-MLH-5-1-rtype-robin.denni
-** File description:
-** IEntity.hpp
-*/
+/**
+ * @file IEntity.hpp
+ * @author EPITECH PROJECT, 2023
+ * @brief File description
+ */
 
 #pragma once
 #include <fstream>
@@ -18,17 +17,70 @@
 
 #define SIZE_SCALE 2
 
+/**
+ * @class IEntity
+ * @brief Class representing an entity
+ */
 class IEntity {
     public:
+        /**
+         * @brief Accept a visitor and a core
+         * @param v Visitor
+         * @param core Core
+         */
         virtual void accept(IVisitor &v, Core &core) = 0;
+
+        /**
+         * @brief Set the Moveable of the entity
+         * @param moveable New moveable
+         */
         virtual void setMoveable(const Moveable &moveable) = 0;
+
+        /**
+         * @brief Get the Moveable of the entity
+         * @return Moveable object
+         */
         virtual Moveable getMoveable(void) const = 0;
+
+        /**
+         * @brief Set the Position of the entity
+         * @param position New position
+         */
         virtual void setPosition(const Position &position) = 0;
+
+        /**
+         * @brief Get the Position of the entity
+         * @return Position object
+         */
         virtual Position getPosition(void) const = 0;
-        // virtual bool isColidingWith(IEntity &entity) = 0; 
+
+        /**
+         * @brief Get the size of the entity
+         * @return Vector2d object
+         */
         virtual Vector2d getSize(void) = 0;
+
+        /**
+         * @brief Get the move state of the entity
+         * @return bool
+         */
         virtual bool getHasMoved(void) = 0;
+
+        /**
+         * @brief Set the move state of the entity
+         * @param state New state
+         */
         virtual void setHasMoved(bool state) = 0;
+
+        /**
+         * @brief Draw the entity
+         * @param window Window to draw on
+         */
         virtual void drawEntity(std::unique_ptr<sf::RenderWindow> &window) = 0;
+
+        /**
+         * @brief Get the type of the entity
+         * @return unsigned char
+         */
         virtual inline unsigned char getEntityType() = 0;
 };

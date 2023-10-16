@@ -1,9 +1,8 @@
-/*
-** EPITECH PROJECT, 2023
-** B-CPP-500-MLH-5-1-rtype-robin.denni
-** File description:
-** Client
-*/
+/**
+ * @file Client.hpp
+ * @author EPITECH PROJECT, 2023
+ * @brief Client class definition
+ */
 
 #pragma once
 #include "../Entity/Player.hpp"
@@ -17,12 +16,19 @@
 #include <unordered_map>
 #include <SFML/Audio.hpp>
 
-
 #define GET_ID_LIMIT_TIME 500
 
 namespace RType {
+    /**
+     * @class Client
+     * @brief Class representing a client in the RType game
+     */
     class Client {
         public:
+            /**
+             * @enum Events
+             * @brief Enum representing possible events in the game
+             */
             enum Events {
                 Up,
                 Down,
@@ -33,14 +39,28 @@ namespace RType {
                 CloseWindow,
                 Unknown
             };
+<<<<<<< HEAD
+
+            /**
+             * @brief Construct a new Client object
+             * @param ac Argument count
+             * @param av Argument vector
+             */
+=======
             enum Screens {
                 menu,
                 game,
                 serverDisconnected,
                 gameOver
             };
+>>>>>>> a3b5aa84aab05842953ec9e84343ec844249b7a0
             Client(int ac, char **av);
+
+            /**
+             * @brief Destroy the Client object
+             */
             ~Client();
+
         private:
             void run();
             void infosThread();
@@ -65,7 +85,11 @@ namespace RType {
             void setValues(const Utils::MessageParsed_s &msg);
             void newMyShoot(const Utils::MessageParsed_s &msg);
             void newPercingShoot(const Utils::MessageParsed_s &msg);
+<<<<<<< HEAD
+
+=======
             void gameLoop();
+>>>>>>> a3b5aa84aab05842953ec9e84343ec844249b7a0
             std::unique_ptr<std::thread> _infosThread;
             std::shared_ptr<Utils::SocketHandler> _socket;
             std::unique_ptr<sf::RenderWindow> _window;
