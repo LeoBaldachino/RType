@@ -81,7 +81,7 @@ file(GLOB LIFE_BAR "Client/LifeBar/*.cpp")
 
 add_executable(r-type_client ${CORE} ${CLIENT_FILES} ${ENTITY} ${SUBSYSTEMS} ${SYSTEMS} ${SOCKET_FILES} ${ENTITY_TYPES} ${LIFE_BAR})
 target_include_directories(r-type_client PRIVATE ${SFML_INCLUDE_DIR})
-target_link_libraries(r-type_client sfml-system sfml-graphics sfml-window)
+target_link_libraries(r-type_client sfml-system sfml-graphics sfml-window sfml-audio)
 target_link_libraries(r-type_client pthread)
 
 # set_property(TARGET r-type_client PROPERTY CXX_STANDARD 17)

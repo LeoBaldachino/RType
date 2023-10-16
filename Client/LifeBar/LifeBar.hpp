@@ -29,7 +29,7 @@ namespace RType {
                 void clearFrameBuffer();
                 sf::Texture _texture;
                 sf::Sprite _sprite;
-                sf::Uint8 *arr;
+                std::unique_ptr<sf::Uint8 []> _pixels;
                 std::mutex _mutex;
                 std::chrono::steady_clock::time_point _updatePixels;
                 std::queue<std::pair<unsigned int, unsigned int>> _toErase;
