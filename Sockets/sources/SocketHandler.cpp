@@ -12,8 +12,7 @@ RType::Utils::SocketHandler::SocketHandler(const std::string &ipAdress, int port
 {
     _socket = std::make_shared<boost::asio::ip::udp::socket>(_ioService);
     _socket->open(boost::asio::ip::udp::v4());
-    if (!check)
-        _socket->bind(boost::asio::ip::udp::endpoint(boost::asio::ip::address::from_string(ipAdress), port));
+    _socket->bind(boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), port));
     _mutex = std::make_shared<std::mutex>();
     this->_receiverMutex = std::make_shared<std::mutex>();
     this->_ipPort = {ipAdress, port};
@@ -52,7 +51,7 @@ void RType::Utils::SocketHandler::send(const struct MessageParsed_s &toSend)
     try {
         _socket->send_to(buffer, boost::asio::ip::udp::endpoint(boost::asio::ip::address::from_string(toSend.senderIp), toSend.senderPort));
     } catch (const boost::system::system_error &err) {
-        std::cerr << "Send error " << err.what() << std::endl; 
+        std::cerr << "Send error " << err.code() << std::endl; 
     }
 }
 
