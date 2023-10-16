@@ -36,7 +36,7 @@ _commands({
     this->_serverPort = std::stoi(av[2]);
     this->_mutex = std::make_unique<std::mutex>();
     this->_window = std::make_unique<sf::RenderWindow>(sf::VideoMode::getDesktopMode(), "R-Type");
-    if (this->_music.openFromFile("Assets/music.ogg") != -1)
+    if (this->_music.openFromFile("../Assets/music.ogg") != -1)
         this->_music.play();
     this->_socket = std::make_unique<Utils::SocketHandler>("127.0.0.1", 4001 + std::rand() % 3000);
     this->_threadIsOpen = true;
@@ -112,7 +112,7 @@ void RType::Client::handleInputs(void)
                 case (sf::Keyboard::Space) :
                     if (this->shooting) {
                         auto time = std::chrono::steady_clock::now();
-                        if (std::chrono::duration_cast<std::chrono::seconds>(time - this->shotTime).count() >= 1)
+                        if (std::chrono::duration_cast<std::chrono::milliseconds>(time - this->shotTime).count() >= 250)
                             this->_inputs.push_back(Events::PiercingShoot);
                         else
                             this->_inputs.push_back(Events::Shoot);
@@ -329,7 +329,7 @@ void RType::Client::newEnemyShoot(const Utils::MessageParsed_s &msg)
     Position pos(-20, -20);
     AIShoot aiShoot(pos, pos);
     auto tmpShoot = aiShoot.shootLogic();
-    this->_entities.addEntity(std::make_shared<ShotEntity>(tmpShoot, "Assets/enemyShot.png", false), msg.getFirstShort());
+    this->_entities.addEntity(std::make_shared<ShotEntity>(tmpShoot, "../Assets/enemyShot.png", false), msg.getFirstShort());
 }
 
 void RType::Client::setValues(const Utils::MessageParsed_s &msg)
@@ -362,7 +362,7 @@ void RType::Client::newMyShoot(const Utils::MessageParsed_s &msg)
     Position pos(-20, -20);
     AIShoot aiShoot(pos, pos);
     auto tmpShoot = aiShoot.shootLogic();
-    this->_entities.addEntity(std::make_shared<ShotEntity>(tmpShoot, "Assets/shot.png", false), msg.getFirstShort());  
+    this->_entities.addEntity(std::make_shared<ShotEntity>(tmpShoot, "../Assets/shot.png", false), msg.getFirstShort());  
 }
 
 void RType::Client::newPercingShoot(const Utils::MessageParsed_s &msg)

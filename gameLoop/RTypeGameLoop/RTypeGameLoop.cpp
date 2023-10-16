@@ -132,6 +132,10 @@ void RType::RTypeGameLoop::checkPlayerStatus(std::queue<Utils::MessageParsed_s> 
         auto find = this->_core._entities.find(it);
         if (find == this->_core._entities.end())
             continue;
+        if (find->second->getEntityType() != player) {
+            std::cout << "Not a bydos..." << std::endl;
+            continue;
+        }
         std::shared_ptr<Player> player = std::dynamic_pointer_cast<Player>(find->second);
         msgToSend.setFirstShort(it);
         msgToSend.bytes[3] = player->getLifes();
@@ -143,7 +147,6 @@ void RType::RTypeGameLoop::checkPlayerStatus(std::queue<Utils::MessageParsed_s> 
 
 void RType::RTypeGameLoop::sendRefreshAllEntities(std::queue<Utils::MessageParsed_s> &toReturn)
 {
-    std::cout << "Update all !" << std::endl;
     for (auto it : this->_core._entities) {
         it.second->accept(this->v, this->_core);
         if (it.second->getHasMoved()) {
@@ -168,7 +171,6 @@ void RType::RTypeGameLoop::sendRefreshPlayers(std::queue<Utils::MessageParsed_s>
         auto find = this->_core._entities.find(it);
         if (find == this->_core._entities.end())
             continue;
-        std::cout << "Update player !" << std::endl;
         find->second->accept(this->v, this->_core);
         Position tmpPos = find->second->getPosition();
         Utils::MessageParsed_s msgReturned;
@@ -184,26 +186,16 @@ void RType::RTypeGameLoop::checkBydosStatus(std::queue<Utils::MessageParsed_s> &
 {
     Utils::MessageParsed_s msgToSend;
     msgToSend.msgType = valueSet;
-    std::cout << "187" << std::endl;
     for (auto it : this->_bydos) {
-    std::cout << "188" << std::endl;
         auto find = this->_core._entities.find(it);
-    std::cout << "189" << std::endl;
         if (find == this->_core._entities.end())
             continue;
-    std::cout << "190" << std::endl; 
-    if (find->second->getEntityType() != bydos) {
-        std::cout << "Not a bydos..." << std::endl;
+    if (find->second->getEntityType() != bydos)
         continue;
-    }
-        std::shared_ptr<Bydos> bydos = std::dynamic_pointer_cast<Bydos>(find->second);
-    std::cout << "191" << std::endl;
-        msgToSend.setFirstShort(it);
-    std::cout << "192" << std::endl;
-        msgToSend.bytes[3] = bydos->getLifes();
-    std::cout << "193" << std::endl;
-        msgToSend.bytes[4] = bydos->actuallyInvincible() ? 1 : 0;
-    std::cout << "194" << std::endl;
-        toReturn.push(msgToSend);
+    std::shared_ptr<Bydos> bydos = std::dynamic_pointer_cast<Bydos>(find->second);
+    msgToSend.setFirstShort(it);
+    msgToSend.bytes[3] = bydos->getLifes();
+    msgToSend.bytes[4] = bydos->actuallyInvincible() ? 1 : 0;
+    toReturn.push(msgToSend);
     }
 }
