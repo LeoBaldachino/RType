@@ -8,7 +8,7 @@
 #include "Bydos.hpp"
 
 Bydos::Bydos(Position position, int velocity, Vector2d moveDirection) : 
-_drawable("../Assets/bydos.png", 2),
+_drawable("../Assets/EntitiesSprites/tBydos.png", 1),
 _size(BYDOS_X, BYDOS_Y),
 _readyShoot(SHOOT_SPEED),
 _readyMove(MOVE_SPEED),

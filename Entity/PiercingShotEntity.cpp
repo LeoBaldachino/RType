@@ -7,7 +7,7 @@
 
 #include "PiercingShotEntity.hpp"
 
-PiercingShotEntity::PiercingShotEntity(Shoot &shoot) : _drawable("../Assets/piercingShot.png", 1), _shoot(shoot), _size(PIERCING_SHOT_X, PIERCING_SHOT_Y)
+PiercingShotEntity::PiercingShotEntity(Shoot &shoot) : _drawable("../Assets/EntitiesSprites/tShot.png", 1), _shoot(shoot), _size(PIERCING_SHOT_X, PIERCING_SHOT_Y)
 {
 }
 
