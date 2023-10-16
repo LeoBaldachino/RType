@@ -8,22 +8,41 @@ This project is a re-boot of the R-Type game, spiced-up and remade to be online-
 
 To run this project, you will need the following installed on your system:
 
-- Conan package manager :package:
-- C++ Compiler (GCC or Clang) :hammer_and_wrench:
+- C++ Compiler (GCC) :hammer_and_wrench:
 - Make :gear:
+- Cmake :package:
 
-## Server Usage :computer:
+## Server and Client Usage :computer:
 
-To start the server, navigate to the project directory and run the following command:
+To start the server and the client, navigate to the project directory and run the following commands:
 
-    // TODO : Compile command
+- Create the build folder
 
-    // docker-compose up :whale:
+```sh
+mkdir build ; cd build
+```
+
+- Compile the project
+
+```sh
+cmake .. && make
+```
+
+- Run the executables !
+
+For the server
+```sh
+./r-type_server [IP] [PORT]
+```
+
+For the client
+```sh
+./r-type_client [SERVER_IP] [SERVER_PORT]
+```
 
 ## Documentation Links :link:
 
 For more detailed information about the project, refer to the following documentation:
 
 - [User Guide](link_to_user_guide) :book:
-- [Developer Guide](link_to_developer_guide) :book:
-- [Communication Protocol](link_to_api_documentation) :book:
+- [Developer Guide](https://r-type-2.gitbook.io/r-type-re-or-server-documentation/) :book:
