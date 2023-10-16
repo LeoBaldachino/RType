@@ -39,12 +39,21 @@ namespace RType {
                 CloseWindow,
                 Unknown
             };
+<<<<<<< HEAD
 
             /**
              * @brief Construct a new Client object
              * @param ac Argument count
              * @param av Argument vector
              */
+=======
+            enum Screens {
+                menu,
+                game,
+                serverDisconnected,
+                gameOver
+            };
+>>>>>>> a3b5aa84aab05842953ec9e84343ec844249b7a0
             Client(int ac, char **av);
 
             /**
@@ -76,7 +85,11 @@ namespace RType {
             void setValues(const Utils::MessageParsed_s &msg);
             void newMyShoot(const Utils::MessageParsed_s &msg);
             void newPercingShoot(const Utils::MessageParsed_s &msg);
+<<<<<<< HEAD
 
+=======
+            void gameLoop();
+>>>>>>> a3b5aa84aab05842953ec9e84343ec844249b7a0
             std::unique_ptr<std::thread> _infosThread;
             std::shared_ptr<Utils::SocketHandler> _socket;
             std::unique_ptr<sf::RenderWindow> _window;
@@ -97,5 +110,7 @@ namespace RType {
             std::unordered_map<unsigned short, std::chrono::steady_clock::time_point> _getIdLimiters;
             std::unique_ptr<LifeBar> _lifeBar;
             sf::Music _music;
+            Screens _actualScreen;
+            bool _gameAsStarted;
     };
 }

@@ -7,7 +7,7 @@
 
 #include "Tourre.hpp"
 
-Tourre::Tourre(Position position, int velocity, Vector2d moveDirection) : _drawable("Assets/tourre.png", 2)
+Tourre::Tourre(Position position, int velocity, Vector2d moveDirection) : _drawable("../Assets/tourre.png", 2)
 {
     this->_position = position;
     this->_state = State(100);

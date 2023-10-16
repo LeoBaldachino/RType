@@ -31,12 +31,14 @@ _commands({
             {Events::Right, false},};
     this->_sendInputTime = std::chrono::steady_clock::now();
     this->_lifeBar = std::make_unique<LifeBar>();
+    this->_actualScreen = Screens::game;
+    this->_gameAsStarted = false;
     this->_inputs = {};
     this->_serverIp = av[1];
     this->_serverPort = std::stoi(av[2]);
     this->_mutex = std::make_unique<std::mutex>();
     this->_window = std::make_unique<sf::RenderWindow>(sf::VideoMode::getDesktopMode(), "R-Type");
-    if (this->_music.openFromFile("Assets/music.ogg") != -1)
+    if (this->_music.openFromFile("../Assets/music.ogg") != -1)
         this->_music.play();
     this->_socket = std::make_unique<Utils::SocketHandler>("127.0.0.1", 4001 + std::rand() % 3000);
     this->_threadIsOpen = true;
@@ -112,7 +114,7 @@ void RType::Client::handleInputs(void)
                 case (sf::Keyboard::Space) :
                     if (this->shooting) {
                         auto time = std::chrono::steady_clock::now();
-                        if (std::chrono::duration_cast<std::chrono::seconds>(time - this->shotTime).count() >= 1)
+                        if (std::chrono::duration_cast<std::chrono::milliseconds>(time - this->shotTime).count() >= 250)
                             this->_inputs.push_back(Events::PiercingShoot);
                         else
                             this->_inputs.push_back(Events::Shoot);
@@ -126,28 +128,12 @@ void RType::Client::handleInputs(void)
 
 void RType::Client::run()
 {
-    this->createRoom(1);
-    auto msgKeyPressed = this->buildEmptyMsg(keyPressed);
     while (_window->isOpen()) {
-        unsigned char actualIndex = 0;
-        _window->clear();   
-        this->_lifeBar->display(this->_window);     
-        for (auto &it : this->_entities._entities)
-            it.second->drawEntity(this->_window);
-        _window->display();
-        this->updateInputs();
-        while (!this->_inputs.empty()) {
-            if (actualIndex > 7) {
-                this->_socket->send(msgKeyPressed);
-                actualIndex = 0;
-            }
-            msgKeyPressed.bytes[actualIndex] = static_cast<unsigned short>(this->_inputs.back());
-            this->_inputs.pop_back();
-            actualIndex++;
-        }
-        if (actualIndex > 0) {
-            msgKeyPressed.bytes[actualIndex] = 255;
-            this->_socket->send(msgKeyPressed);
+        switch (this->_actualScreen)
+        {
+        case game:
+            this->gameLoop();
+            break;
         }
     }
 }
@@ -329,7 +315,7 @@ void RType::Client::newEnemyShoot(const Utils::MessageParsed_s &msg)
     Position pos(-20, -20);
     AIShoot aiShoot(pos, pos);
     auto tmpShoot = aiShoot.shootLogic();
-    this->_entities.addEntity(std::make_shared<ShotEntity>(tmpShoot, "Assets/enemyShot.png", false), msg.getFirstShort());
+    this->_entities.addEntity(std::make_shared<ShotEntity>(tmpShoot, "../Assets/enemyShot.png", false), msg.getFirstShort());
 }
 
 void RType::Client::setValues(const Utils::MessageParsed_s &msg)
@@ -362,7 +348,7 @@ void RType::Client::newMyShoot(const Utils::MessageParsed_s &msg)
     Position pos(-20, -20);
     AIShoot aiShoot(pos, pos);
     auto tmpShoot = aiShoot.shootLogic();
-    this->_entities.addEntity(std::make_shared<ShotEntity>(tmpShoot, "Assets/shot.png", false), msg.getFirstShort());  
+    this->_entities.addEntity(std::make_shared<ShotEntity>(tmpShoot, "../Assets/shot.png", false), msg.getFirstShort());  
 }
 
 void RType::Client::newPercingShoot(const Utils::MessageParsed_s &msg)
@@ -377,4 +363,33 @@ void RType::Client::newPercingShoot(const Utils::MessageParsed_s &msg)
     AIShoot aiShoot(pos, pos);
     auto tmpShoot = aiShoot.shootLogic();
     this->_entities.addEntity(std::make_shared<PiercingShotEntity>(tmpShoot), msg.getFirstShort());
+}
+
+void RType::Client::gameLoop()
+{
+    if (!this->_gameAsStarted) {
+        this->createRoom(1);
+        this->_gameAsStarted = true;
+    }
+    auto msgKeyPressed = this->buildEmptyMsg(keyPressed);
+    unsigned char actualIndex = 0;
+    _window->clear();   
+    this->_lifeBar->display(this->_window);     
+    for (auto &it : this->_entities._entities)
+        it.second->drawEntity(this->_window);
+    _window->display();
+    this->updateInputs();
+    while (!this->_inputs.empty()) {
+        if (actualIndex > 7) {
+            this->_socket->send(msgKeyPressed);
+            actualIndex = 0;
+        }
+        msgKeyPressed.bytes[actualIndex] = static_cast<unsigned short>(this->_inputs.back());
+        this->_inputs.pop_back();
+        actualIndex++;
+    }
+    if (actualIndex > 0) {
+        msgKeyPressed.bytes[actualIndex] = 255;
+        this->_socket->send(msgKeyPressed);
+    }
 }
