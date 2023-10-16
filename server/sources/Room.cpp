@@ -63,7 +63,9 @@ bool RType::Server::Room::addToRoom(const std::pair<std::string, int> &newPlayer
             this->_socket->send(msg);
         }
         msg.setFirstShort(newId);
+        lock.unlock();
         this->notifyAllPlayer(msg);
+        lock.lock();
         this->_allPlayers.insert({newPlayer, newId});
         this->_playerOnline.insert({newPlayer, true});
         msg.msgType = givePlayerId;
@@ -209,6 +211,7 @@ int RType::Server::Room::getNumberOfPlayer() const
 void RType::Server::Room::notifyAllPlayer(const Utils::MessageParsed_s &msg)
 {
     auto newMsg = msg;
+    std::unique_lock<std::mutex> lock(this->_mutex);
     for (auto &it : this->_allPlayers) {
         newMsg.senderIp = it.first.first;
         newMsg.senderPort = it.first.second;
@@ -264,13 +267,11 @@ void RType::Server::Room::sendPlayerId(const Utils::MessageParsed_s &msg)
 
 void RType::Server::Room::sendEntityType(const Utils::MessageParsed_s &msg)
 {
+    std::unique_lock<std::mutex> lock(this->_mutex);
     Utils::MessageParsed_s newMsg(msg);
     auto it = this->_core._entities.find(msg.getFirstShort());
     if (it == this->_core._entities.end())
         return;
-    {
-        std::unique_lock<std::mutex> lock(this->_mutex);
-        newMsg.setSecondShort(this->_gameLoop->getEntityType(msg.getFirstShort()));
-    }
+    newMsg.setSecondShort(this->_gameLoop->getEntityType(msg.getFirstShort()));
     this->_socket->send(newMsg);
 }

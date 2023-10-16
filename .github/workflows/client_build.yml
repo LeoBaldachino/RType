@@ -13,22 +13,38 @@ jobs:
         runs-on: ubuntu-latest
         steps:
         - uses: actions/checkout@v3
+        - name: Cache dependencies
+          uses: actions/cache@v2
           with:
-            submodules: false
-        - name: Update submodules
-          run: |
-            git submodule deinit -f .
-            git submodule update --init --recursive
+            path: ~/.apt/cache
+            key: ${{ runner.os }}-apt-${{ hashFiles('**/client_build.yml') }}
+            restore-keys: |
+              ${{ runner.os }}-apt-
         - name: Install dependencies
           run: |
             sudo apt update
             sudo apt install -y \
-                libsfml-dev
-                cmake
-            - name: Build
-              run: |
-                mkdir build
-                cd build
-                cmake ..
-                make
+                build-essential \
+                libsfml-dev \
+                libboost-all-dev \
+                cmake \
+                g++
+        - name: Set up compilers
+          run: |
+            echo "CC=/usr/bin/gcc" >> $GITHUB_ENV
+            echo "CXX=/usr/bin/g++" >> $GITHUB_ENV
+        - name: Verify compilers
+          run: |
+            which gcc
+            which g++
+        - name: Clean up disk space
+          run: |
+            sudo apt clean
+            sudo rm -rf /var/lib/apt/lists/*
+        - name: Build
+          run: |
+            mkdir build
+            cd build
+            cmake ..
+            make
                 

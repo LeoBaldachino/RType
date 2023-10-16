@@ -19,12 +19,12 @@ void BydosSystem::updatePos(Bydos &b)
     b.setHasMoved(true);
 }
 
-void BydosSystem::createShots(Bydos &b, const Player &player, Core &core)
+void BydosSystem::createShots(Bydos &b, const Position &playerPos, Core &core)
 {
     if (!b.readyToShoot())
         return;
-    Shoot tmpShoot(b.shoot(player.getPosition()));
-    core.addEntity(std::make_shared<ShotEntity>(tmpShoot, "Assets/enemyShot.png", false), core.getAvailabeIndex());
+    Shoot tmpShoot(b.shoot(playerPos));
+    core.addEntity(std::make_shared<ShotEntity>(tmpShoot, "../Assets/enemyShot.png", false), core.getAvailabeIndex());
 }
 
 void BydosSystem::checkCollision(Bydos &b, IEntity &entity, Core &core, bool isPercing)

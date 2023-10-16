@@ -9,6 +9,7 @@
 #include <fstream>
 #include <iostream>
 #include <queue>
+#include <mutex>
 
 class Inputs {
     public:
@@ -24,9 +25,14 @@ class Inputs {
         };
         Inputs() {};
         ~Inputs() {};
-        std::queue<Events> getEvents(void) const { return(this->_events); }
-        void addEvents(const Events event) { this->_events.push(event); }
-        void popEvent(void) { this->_events.pop(); }
+        inline bool isEmpty() const {return this->_events.empty();};
+        inline void addEvents(const Events &event) { this->_events.push(event); }
+        inline void popEvent(void) { this->_events.pop(); }
+        inline Events getLastEvent() {return this->_events.front();};
+        inline void setInput(const std::queue<Events> &newEvents) {this->_events = newEvents;};
+        inline void lockInputs() {this->_mutex.lock();};
+        inline void unlockInputs() {this->_mutex.unlock();};
     private:
         std::queue<Events> _events;
+        std::mutex _mutex;
 };

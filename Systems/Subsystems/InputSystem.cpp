@@ -9,66 +9,34 @@
 
 void InputSystem::updatePlayer(Player &player)
 {
-    if (player._inputs.getEvents().size() == 0)
-        return;
-    if (player._inputs.getEvents().front() == Inputs::Events::Up) {
-        player._inputs.popEvent();
-        int add = 0;
-        if (player._inputs.getEvents().size() != 0) {
-            if (player._inputs.getEvents().front() == Inputs::Left) {
-                player._inputs.popEvent();
-                add = -1 * player.getVelocity();
-            } else if (player._inputs.getEvents().front() == Inputs::Right) {
-                player._inputs.popEvent();
-                add = 1 * player.getVelocity();
-            }
+    int y = 0;
+    int x = 0;
+    int veloc = player.getVelocity();
+    std::queue<Inputs::Events> newInputs;
+    while (!player._inputs->isEmpty()) {
+        switch (player._inputs->getLastEvent())
+        {
+            case Inputs::Events::Up:
+                y += -1 * veloc;
+                break;
+            case Inputs::Events::Down:
+                y += 1 * veloc;
+                break;
+            case Inputs::Events::Left:
+                x += -1 * veloc;
+                break;
+            case Inputs::Events::Right:
+                x += 1 * veloc;
+                break;
+            case Inputs::Events::PiercingShoot :
+                newInputs.push(Inputs::Events::PiercingShoot);
+                break;
+            case Inputs::Events::Shoot :
+                newInputs.push(Inputs::Events::Shoot);
+                break;
         }
-        player.setPosition(Position(player.getPosition().getX() + add, player.getPosition().getY() - (1 * player.getVelocity())));
-        return;
+        player._inputs->popEvent();
     }
-    if (player._inputs.getEvents().front() == Inputs::Events::Down) {
-        player._inputs.popEvent();
-        int add = 0;
-        if (player._inputs.getEvents().size() != 0) {
-            if (player._inputs.getEvents().front() == Inputs::Left) {
-                player._inputs.popEvent();
-                add = -1 * player.getVelocity();
-            } else if (player._inputs.getEvents().front() == Inputs::Right) {
-                player._inputs.popEvent();
-                add = 1 * player.getVelocity();
-            }
-        }
-        player.setPosition(Position(player.getPosition().getX() + add, player.getPosition().getY() + (1 * player.getVelocity())));
-        return;
-    }
-    if (player._inputs.getEvents().front() == Inputs::Events::Left) {
-        player._inputs.popEvent();
-        int add = 0;
-        if (player._inputs.getEvents().size() != 0) {
-            if (player._inputs.getEvents().front() == Inputs::Up) {
-                player._inputs.popEvent();
-                add = -1 * player.getVelocity();
-            } else if (player._inputs.getEvents().front() == Inputs::Down) {
-                player._inputs.popEvent();
-                add = 1 * player.getVelocity();
-            }
-        }
-        player.setPosition(Position(player.getPosition().getX() - (1 * player.getVelocity()), player.getPosition().getY() + add));
-        return;
-    }
-    if (player._inputs.getEvents().front() == Inputs::Events::Right) {
-        player._inputs.popEvent();
-        int add = 0;
-        if (player._inputs.getEvents().size() != 0) {
-            if (player._inputs.getEvents().front() == Inputs::Up) {
-                player._inputs.popEvent();
-                add = -1 * player.getVelocity();
-            } else if (player._inputs.getEvents().front() == Inputs::Down) {
-                player._inputs.popEvent();
-                add = 1 * player.getVelocity();
-            }
-        }
-        player.setPosition(Position(player.getPosition().getX() + (1 * player.getVelocity()), player.getPosition().getY() + add));
-        return;
-    }
+    player.setPosition(Position(player.getPosition().getX() + x, player.getPosition().getY() + y));
+    player._inputs->setInput(newInputs);
 }

@@ -9,6 +9,7 @@
 
 bool Core::addEntity(const std::shared_ptr<IEntity> &entity, unsigned short index)
 {
+    std::unique_lock<std::mutex> lock(this->_mutex);
     if (this->_entities.find(index) != this->_entities.end())
         return false;
     this->_entities.insert({index, entity});
@@ -17,9 +18,9 @@ bool Core::addEntity(const std::shared_ptr<IEntity> &entity, unsigned short inde
 
 unsigned short Core::getAvailabeIndex()
 {
-    if (this->_presentIndex.empty()) {
+    std::unique_lock<std::mutex> lock(this->_mutex);
+    if (this->_presentIndex.empty())
         return static_cast<unsigned short>(this->_entities.size());
-    }
     unsigned short newId = this->_presentIndex.front();
     this->_presentIndex.pop();
     return newId;
@@ -27,6 +28,7 @@ unsigned short Core::getAvailabeIndex()
 
 bool Core::removeEntity(IEntity &entity)
 {
+    std::unique_lock<std::mutex> lock(this->_mutex);
     for (auto it : this->_entities)
         if (it.second.get() == &entity) {
             unsigned short tmpId = it.first;
@@ -40,6 +42,7 @@ bool Core::removeEntity(IEntity &entity)
 
 bool Core::removeEntity(unsigned short id)
 {
+    std::unique_lock<std::mutex> lock(this->_mutex);
     auto it = this->_entities.find(id);
     if (it == this->_entities.end())
         return false;
@@ -50,6 +53,7 @@ bool Core::removeEntity(unsigned short id)
 
 bool Core::removeEntityLater(IEntity &entity)
 {
+    std::unique_lock<std::mutex> lock(this->_mutex);
     for (auto it : this->_entities)
         if (it.second.get() == &entity) {
             unsigned short tmpId = it.first;
@@ -62,6 +66,7 @@ bool Core::removeEntityLater(IEntity &entity)
 
 bool Core::removeEntityLater(unsigned short id)
 {
+    std::unique_lock<std::mutex> lock(this->_mutex);
     auto it = this->_entities.find(id);
     if (it == this->_entities.end())
         return false;
@@ -71,6 +76,7 @@ bool Core::removeEntityLater(unsigned short id)
 
 void Core::eraseEntity(void)
 {
+    std::unique_lock<std::mutex> lock(this->_mutex);
     while (!this->_erase.empty()) {
         this->_entities.erase(this->_erase.front());
         this->_presentIndex.push(this->_erase.front());

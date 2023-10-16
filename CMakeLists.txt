@@ -1,58 +1,136 @@
 cmake_minimum_required(VERSION 3.10)
-project(r-type_server)
 
-set(CMAKE_CXX_STANDARD 17)
+find_package(Git QUIET)
+if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
+    option(GIT_SUBMODULE "Check submodules during build" ON)
+    if(GIT_SUBMODULE)
+        message(STATUS "Submodule update")
+        execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
+                        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                        RESULT_VARIABLE GIT_SUBMOD_RESULT)
+        if(NOT GIT_SUBMOD_RESULT EQUAL "0")
+            message(FATAL_ERROR "git submodule update --init --recursive failed with ${GIT_SUBMOD_RESULT}, please checkout submodules")
+        endif()
+    endif()
+endif()
+
+# Include downloaded libraries via submodule
+#project(r-type_server)
+
+# Run boost setup
+#set(BOOST_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/boost)
+#execute_process(COMMAND ${BOOST_ROOT}/bootstrap.sh WORKING_DIRECTORY ${BOOST_ROOT})
+#execute_process(COMMAND ${BOOST_ROOT}/b2 WORKING_DIRECTORY ${BOOST_ROOT})
+
+# Make sure boost is accessible after running the setup
+#SET(CMAKE_INCLUDE_PATH ${CMAKE_INCLUDE_PATH} "${BOOST_ROOT}/include")
+#SET(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} "${BOOST_ROOT}/lib")
+#find_package(Boost)
+#if (Boost_FOUND)
+#    INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
+#    ADD_DEFINITIONS( "-DHAS_BOOST" )
+#endif()
+
+# Specify the C++ standard
+set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-add_subdirectory(SFML)
+# Set the compile flag to "-g"
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 
-link_directories(${CMAKE_SOURCE_DIR}/build/SFML/lib)
+# Add your source files
+#file(GLOB SERVER_SOURCES "server/sources/*.cpp")
+#file(GLOB SOCKET_SOURCES "Sockets/sources/*.cpp")
 
-file(GLOB SFML_LIBS "${CMAKE_SOURCE_DIR}/build/SFML/lib/*.a")
-foreach(LIB ${SFML_LIBS})
-   link_libraries(${LIB})
-endforeach()
+# Add your include files
+#file(GLOB SERVER_INCLUDES "server/includes/*.hpp")
+#file(GLOB SOCKET_INCLUDES "Sockets/includes/*.hpp")
 
-set(SOURCE_FILES
-main.cpp
-Core/Core.cpp
-Entity/Player.cpp
-Entity/Bydos.cpp
-Entity/ShotEntity.cpp
-Entity/PiercingShotEntity.cpp
-Entity/Tourre.cpp
-Systems/PlayerSystem.cpp
-Systems/BydosSystem.cpp
-Systems/TourreSystem.cpp
-Systems/Subsystems/DrawSystem.cpp
-Systems/Subsystems/InputSystem.cpp
-Systems/Subsystems/PiercingShotSystem.cpp
-Systems/Subsystems/ShotSystem.cpp
-Systems/Subsystems/MovementSystem.cpp
-Systems/Subsystems/AIShoot.cpp
-Systems/Subsystems/HitBox.cpp
-)
+# Add your executable target
+#add_executable(r-type_server ${SERVER_SOURCES} ${SOCKET_SOURCES})
 
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Assets DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+# Include cstdint for uintptr_t
+#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/boost/libs/stacktrace/include)
+#add_definitions(-D_HAS_AUTO_PTR_ETC=1)
 
-add_executable(r-type_server ${SOURCE_FILES})
+project(r-type_client)
 
-target_link_libraries(r-type_server sfml-graphics sfml-window sfml-system sfml-audio)
+set(SFML_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/SFML)
+if(NOT EXISTS "${SFML_ROOT}")
+    # SFML not found. Download and install it.
+    message(STATUS "SFML not found. Downloading...")
+    execute_process(COMMAND git submodule update --init --recursive
+                    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                    RESULT_VARIABLE GIT_SUBMOD_RESULT)
+    if(NOT GIT_SUBMOD_RESULT EQUAL "0")
+        message(FATAL_ERROR "git submodule update --init --recursive failed with ${GIT_SUBMOD_RESULT}, please checkout submodules")
+    endif()
+endif()
 
-target_include_directories(r-type_server PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/Core
-    ${CMAKE_CURRENT_SOURCE_DIR}/Entity
-    ${CMAKE_CURRENT_SOURCE_DIR}/Systems
-    ${CMAKE_CURRENT_SOURCE_DIR}/Systems/Subsystems
-)
+set(SFML_INCLUDE_DIR "${SFML_ROOT}/include")
+link_directories(${SFML_LIBRARY_DIR})
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -w") # Ignore all compilation warnings
+file(GLOB SUBSYSTEMS "Systems/Subsystems/*.cpp")
+file(GLOB SYSTEMS "Systems/*.cpp")
+file(GLOB ENTITY "Entity/*.cpp")
+file(GLOB CORE "Core/*.cpp")
+file(GLOB CLIENT_FILES  "Client/*.cpp")
+file(GLOB SOCKET_FILES "Sockets/sources/*.cpp")
+file(GLOB ENTITY_TYPES "EntityTypes/*.cpp")
+file(GLOB LIFE_BAR "Client/LifeBar/*.cpp")
 
-if (UNIX)
-    target_link_libraries(r-type_server pthread)
-endif (UNIX)
+add_executable(r-type_client ${CORE} ${CLIENT_FILES} ${ENTITY} ${SUBSYSTEMS} ${SYSTEMS} ${SOCKET_FILES} ${ENTITY_TYPES} ${LIFE_BAR})
+target_include_directories(r-type_client PRIVATE ${SFML_INCLUDE_DIR})
+target_link_libraries(r-type_client sfml-system sfml-graphics sfml-window sfml-audio)
+target_link_libraries(r-type_client pthread)
 
-if (WIN32)
-    target_link_libraries(r-type_server ws2_32)
-endif (WIN32)
+# set_property(TARGET r-type_client PROPERTY CXX_STANDARD 17)
+# set_property(TARGET r-type_client PROPERTY CXX_STANDARD_REQUIRED ON)
 
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -l")
+
+cmake_minimum_required(VERSION 3.10)
+
+project(r-type_server)
+
+set(CMAKE_C_COMPILER "/usr/bin/gcc")
+set(CMAKE_CXX_COMPILER "/usr/bin/g++")
+
+set(CMAKE_CXX_STANDARD 14)
+
+include_directories(includes)
+
+file(GLOB SOURCES "server/sources/*.cpp")
+file(GLOB CORE "Core/*.cpp")
+file(GLOB SOCKET "Sockets/sources/*.cpp")
+file(GLOB SYSTEMS "Systems/*.cpp")
+file(GLOB SUBSYSTEMS "Systems/Subsystems/*.cpp")
+file(GLOB ENTITY "Entity/*.cpp")
+file(GLOB GAMELOOP "gameLoop/*.cpp")
+file(GLOB RTYPEGAMELOOP "gameLoop/RTypeGameLoop/*.cpp")
+file(GLOB ENTITYTYPES "EntityTypes/*.cpp")
+
+set(SFML_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/SFML)
+if(NOT EXISTS "${SFML_ROOT}")
+    # SFML not found. Download and install it.
+    message(STATUS "SFML not found. Downloading...")
+    execute_process(COMMAND git submodule update --init --recursive
+                    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                    RESULT_VARIABLE GIT_SUBMOD_RESULT)
+    if(NOT GIT_SUBMOD_RESULT EQUAL "0")
+        message(FATAL_ERROR "git submodule update --init --recursive failed with ${GIT_SUBMOD_RESULT}, please checkout submodules")
+    endif()
+endif()
+
+set(SFML_INCLUDE_DIR "${SFML_ROOT}/include")
+link_directories(${SFML_LIBRARY_DIR})
+
+add_executable(r-type_server ${SOURCES} ${CORE} ${SOCKET} ${SYSTEMS} ${SUBSYSTEMS} ${ENTITY} ${GAMELOOP} ${RTYPEGAMELOOP} ${ENTITYTYPES})
+target_include_directories(r-type_server PRIVATE ${SFML_INCLUDE_DIR})
+target_link_libraries(r-type_server sfml-system sfml-graphics sfml-window)
+target_link_libraries(r-type_server pthread)
+set_property(TARGET r-type_server PROPERTY CXX_STANDARD 17)
+set_property(TARGET r-type_server PROPERTY CXX_STANDARD_REQUIRED ON)
+
+set(CMAKE_C_COMPILER "/usr/bin/gcc")
+set(CMAKE_CXX_COMPILER "/usr/bin/g++")

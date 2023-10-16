@@ -23,20 +23,23 @@ void PlayerSystem::getInputs(Player &p)
 
 void PlayerSystem::createShots(Player &p, Core &core)
 {
-    while (!p._inputs.getEvents().empty() && p._inputs.getEvents().front() == Inputs::Events::Shoot) {
-        p._inputs.popEvent();
-        Shoot tmpShoot(p.shoot());
-        core.addEntity(std::make_shared<ShotEntity>(tmpShoot, "Assets/shot.png", true), core.getAvailabeIndex());
+    Shoot tmpShoot(p.shoot());
+    while (!p._inputs->isEmpty()) {
+        if (p._inputs->getLastEvent() == Inputs::Events::PiercingShoot)
+            core.addEntity(std::make_shared<PiercingShotEntity>(tmpShoot), core.getAvailabeIndex());
+        else if (p._inputs->getLastEvent() == Inputs::Events::Shoot)
+            core.addEntity(std::make_shared<ShotEntity>(tmpShoot, "../Assets/shot.png", true), core.getAvailabeIndex());
+        // else
+        //     std::cout << "Not a shoot " << p._inputs.getLastEvent() << std::endl;
+        p._inputs->popEvent();
     }
 }
 
 void PlayerSystem::createPiercingShots(Player &p, Core &core)
 {
-    while (!p._inputs.getEvents().empty() && p._inputs.getEvents().front() == Inputs::Events::PiercingShoot) {
-        p._inputs.popEvent();
-        Shoot tmpShoot(p.shoot());
-        core.addEntity(std::make_shared<PiercingShotEntity>(tmpShoot), core.getAvailabeIndex());
-    }
+    // while (!p._inputs.getEvents().empty() && p._inputs.getEvents().front() == Inputs::Events::PiercingShoot) {
+    //     p._inputs.popEvent();
+    // }
 }
 
 void PlayerSystem::updatePos(Player &p)

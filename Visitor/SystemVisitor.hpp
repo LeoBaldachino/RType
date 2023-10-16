@@ -17,18 +17,21 @@ class SystemVisitor : public IVisitor {
     public:
         SystemVisitor() {};
         void visitPlayer(Player &p, Core &core) {
+            p._inputs->lockInputs();
             this->_playerSystem.updatePos(p);
             this->_playerSystem.createPiercingShots(p, core);
             this->_playerSystem.createShots(p, core);
+            p._inputs->unlockInputs();
             for (auto it : core._entities)
                 if (it.second->getEntityType() == RType::bydos || it.second->getEntityType() == RType::bydosShoot)
                     this->_playerSystem.checkCollision(p, *it.second, core);
+            this->_lastPlayerPos = p.getPosition();
         }
         void visitBydos(Bydos &b, Core &core) {
             if (b.getLifes() == 0)
                 return (void)core.removeEntityLater(b);
             this->_bydosSystem.updatePos(b);
-            this->_bydosSystem.createShots(b, this->_lastPlayer, core);
+            this->_bydosSystem.createShots(b, this->_lastPlayerPos, core);
             for (auto it : core._entities) {
                 auto entityType = it.second->getEntityType();
                 if (entityType == RType::playerShoot)
@@ -51,6 +54,7 @@ class SystemVisitor : public IVisitor {
         };
     private:
         Player _lastPlayer;
+        Position _lastPlayerPos;
         PlayerSystem _playerSystem;
         BydosSystem _bydosSystem;
         TourreSystem _tourreSystem;
