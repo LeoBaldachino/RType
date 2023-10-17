@@ -391,6 +391,8 @@ sf::Sprite RType::Client::getSpriteFromEntity(std::shared_ptr<IEntity> entity)
     int spriteFrame = entity->getEntitySpriteFrame() + 1;
     if (entity->getEntityType() == 6) {
         ret.setTexture(this->_texture.tourreTexture);
+        ret.setTextureRect(sf::Rect<int>(0, 420 * (spriteFrame - 1), 420, 403));
+        ret.setScale(0.5, 0.5);
         ret.setPosition(entity->getPosition().getX(), entity->getPosition().getY());
     }
     if (entity->getEntityType() == 5) {
