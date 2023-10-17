@@ -29,7 +29,6 @@ class Tourre : public IEntity, public Health {
          * @brief Construct a new Tourre object
          */
         Tourre();
-
         /**
          * @brief Construct a new Tourre object
          * 
@@ -39,46 +38,97 @@ class Tourre : public IEntity, public Health {
          */
         Tourre(Position position, int velocity, Vector2d moveDirection);
         ~Tourre(){};
-
+        /**
+         * @brief Accept method for visitor
+         * 
+         * @param v Visitor
+         * @param core Core of the game
+         */
         void accept(IVisitor &v, Core &core);
-
-        // Shoot shoot(const Position &playerPos) const;
-
+        /**
+         * @brief Set the Position of the tourre
+         * 
+         * @param position New position
+         */
         void setPosition(const Position &position);
+        /**
+         * @brief Get the Position of the tourre
+         * 
+         * @return Position object
+         */
         Position getPosition() const;
-
+        /**
+         * @brief Set the State of the tourre
+         * 
+         * @param state New state
+         */
         void setState(State state);
+        /**
+         * @brief Get the State of the tourre
+         * 
+         * @return State object
+         */
         State getState() const;
-
+        /**
+         * @brief Set the Velocity of the tourre
+         * 
+         * @param velocity New velocity
+         */
         void setVelocity(int velocity);
+        /**
+         * @brief Get the Velocity of the tourre
+         * 
+         * @return Velocity value
+         */
         int getVelocity(void) const;
-
-        // void setShootDmg(int shootDmg);
-        // int getShootDmg(void) const;
-
-        // void setShootVelocity(int shootVelocity);
-        // int getShootVelocity(void) const;
-
-        // void setShootGravity(int shootGravity);
-        // int getShootGravity(void) const;
-
+        /**
+         * @brief Set the Moveable of the tourre
+         * 
+         * @param moveable New moveable
+         */
         void setMoveable(const Moveable &moveable);
+        /**
+         * @brief Get the Moveable of the tourre
+         * 
+         * @return Moveable object
+         */
         Moveable getMoveable(void) const;
-
+        /**
+         * @brief Check if the tourre is colliding with another entity
+         * @param entity Entity to check collision with
+         * @return True if colliding, False otherwise
+         */
         bool isColidingWith(IEntity &entity);
-
+        /**
+         * @brief Get the Size of the tourre
+         * 
+         * @return Vector2d object
+         */
         Vector2d getSize(void);
-        
+        /**
+         * @brief Get the Type of the entity
+         * 
+         * @return Type of the entity
+         */
         inline unsigned char getEntityType() {return RType::tourre;}
-
-        // inline bool readyToShoot() {return this->_readyShoot.clockOk();};
-
+        /**
+         * @brief Check if the tourre is ready to move
+         * 
+         * @return True if ready, False otherwise
+         */
         inline bool readyToMove() {return this->_readyMove.clockOk();};
-
+        /**
+         * @brief Check if the tourre has moved
+         * 
+         * @return True if moved, False otherwise
+         */
         bool getHasMoved(void);
-
+        /**
+         * @brief Set the Has Moved status of the tourre
+         * 
+         * @param state New has moved status
+         */
         void setHasMoved(bool state);
-
         /**
          * @brief Get the Entity Sprite Frame count
          * 
