@@ -7,12 +7,12 @@
 
 #include "Player.hpp"
 
-Player::Player() : Health(BASE_HEALTH), _timer(READY_MOVE)
+Player::Player() : Health(BASE_HEALTH), _timer(READY_MOVE), _frameClock(100)
 {
     this->_inputs = std::make_unique<Inputs>();
 }
 
-Player::Player(Position position) : _drawable("../Assets/player.png", 2), _size(PLAYER_X, PLAYER_Y),  Health(BASE_HEALTH) , _timer(READY_MOVE)
+Player::Player(Position position) : _size(PLAYER_X, PLAYER_Y),  Health(BASE_HEALTH) , _timer(READY_MOVE), _frameClock(100)
 {
     this->_position = position;
     this->_state = State(100);
@@ -70,18 +70,6 @@ Moveable Player::getMoveable() const
     return this->_movement;
 }
 
-/* Player draw methods */
-
-void Player::setDrawable(Drawable drawable)
-{
-    this->_drawable = drawable;
-}
-
-Drawable Player::getDrawable() const
-{
-    return this->_drawable;
-}
-
 /* Player velocity methods */
 
 void Player::setVelocity(int velocity)
@@ -111,18 +99,6 @@ bool Player::isColidingWith(IEntity &entity)
     return (false);
 }
 
-void Player::drawEntity(std::unique_ptr<sf::RenderWindow> &window)
-{
-    sf::Sprite sprite = this->_drawable.getSprite();
-    sprite.setPosition(this->_position.getX(), this->_position.getY());
-    window->draw(sprite);
-}
-
-// const unsigned char Player::returnType(void)
-// {
-//     return (this->_type);
-// }
-
 bool Player::getHasMoved(void)
 {
     bool tmpHasMoved = this->_hasMoved;
@@ -133,4 +109,13 @@ bool Player::getHasMoved(void)
 void Player::setHasMoved(bool state)
 {
     this->_hasMoved = state;
+}
+
+unsigned int Player::getEntitySpriteFrame()
+{
+    if (this->_frameClock.clockOk()) {
+        ++this->_spriteFrame;
+        this->_spriteFrame = this->_spriteFrame >= 4 ? 0 : this->_spriteFrame;
+    }
+    return (this->_spriteFrame);
 }

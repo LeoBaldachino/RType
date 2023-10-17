@@ -8,7 +8,6 @@
 #include "IEntity.hpp"
 #include "../Components/State.hpp"
 #include "../Systems/Subsystems/AIShoot.hpp"
-#include "../Components/Drawable.hpp"
 #include "../Entity/Player.hpp"
 #include "../EntityTypes/EntityTypes.hpp"
 #include "../Components/ClockTimer.hpp"
@@ -67,18 +66,6 @@ class Bydos : public IEntity, public Health {
          * @return State
          */
         State getState() const;
-
-        /**
-         * @brief Sets the drawable
-         * @param drawable Drawable
-         */
-        void setDrawable(Drawable drawable);
-
-        /**
-         * @brief Gets the drawable
-         * @return Drawable
-         */
-        Drawable getDrawable() const;
 
         /**
          * @brief Sets the velocity
@@ -154,12 +141,6 @@ class Bydos : public IEntity, public Health {
         Vector2d getSize(void);
 
         /**
-         * @brief Draws the entity
-         * @param window Window
-         */
-        void drawEntity(std::unique_ptr<sf::RenderWindow> &window);
-
-        /**
          * @brief Gets the entity type
          * @return unsigned char
          */
@@ -188,12 +169,18 @@ class Bydos : public IEntity, public Health {
          * @param state State
          */
         void setHasMoved(bool state);
+        
+        /**
+         * @brief Get the Entity Sprite Frame count
+         * 
+         * @return unsigned int 
+         */
+        unsigned int getEntitySpriteFrame();
 
     private:
         State _state;
         Position _position;
         Moveable _movement;
-        Drawable _drawable;
         int _velocity;
         int _shootDmg = 10;
         int _shootVelocity = 5;
@@ -202,4 +189,6 @@ class Bydos : public IEntity, public Health {
         bool _hasMoved = false;
         ClockTimer _readyShoot;
         ClockTimer _readyMove;
+        unsigned int _spriteFrame = 0;
+        ClockTimer _frameClock;
 };

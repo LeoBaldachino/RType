@@ -8,7 +8,6 @@
 #include "IEntity.hpp"
 #include "../Components/State.hpp"
 #include "../Systems/Subsystems/AIShoot.hpp"
-#include "../Components/Drawable.hpp"
 #include "../Entity/Player.hpp"
 #include "../EntityTypes/EntityTypes.hpp"
 #include "../Components/ClockTimer.hpp"
@@ -26,7 +25,18 @@
  */
 class Tourre : public IEntity, public Health {
     public:
-        Tourre();
+        /**
+         * @brief Construct a new Tourre object
+         */
+        Tourre() : _frameClock(100) {};
+
+        /**
+         * @brief Construct a new Tourre object
+         * 
+         * @param position Position of the Tourre
+         * @param velocity Velocity of the Tourre
+         * @param moveDirection Direction of the Tourre movement
+         */
         Tourre(Position position, int velocity, Vector2d moveDirection);
         ~Tourre(){};
 
@@ -39,9 +49,6 @@ class Tourre : public IEntity, public Health {
 
         void setState(State state);
         State getState() const;
-
-        void setDrawable(Drawable drawable);
-        Drawable getDrawable() const;
 
         void setVelocity(int velocity);
         int getVelocity(void) const;
@@ -62,7 +69,10 @@ class Tourre : public IEntity, public Health {
 
         Vector2d getSize(void);
 
-        void drawEntity(std::unique_ptr<sf::RenderWindow> &window);
+        bool isColidingWith(IEntity &entity);
+
+        Vector2d getSize(void);
+
         
         inline unsigned char getEntityType() {return RType::tourre;}
 
@@ -74,11 +84,17 @@ class Tourre : public IEntity, public Health {
 
         void setHasMoved(bool state);
 
+        /**
+         * @brief Get the Entity Sprite Frame count
+         * 
+         * @return unsigned int 
+         */
+        unsigned int getEntitySpriteFrame();
+
     private:
         State _state;
         Position _position;
         Moveable _movement;
-        Drawable _drawable;
         int _velocity;
         // int _shootDmg = 10;
         // int _shootVelocity = 5;
@@ -87,4 +103,6 @@ class Tourre : public IEntity, public Health {
         bool _hasMoved = false;
         ClockTimer _readyShoot;
         ClockTimer _readyMove;
+        unsigned int _spriteFrame = 0;
+        ClockTimer _frameClock;
 };

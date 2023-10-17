@@ -51,16 +51,6 @@ State Tourre::getState() const
     return this->_state;
 }
 
-void Tourre::setDrawable(Drawable drawable)
-{
-    this->_drawable = drawable;
-}
-
-Drawable Tourre::getDrawable() const
-{
-    return this->_drawable;
-}
-
 void Tourre::setVelocity(int velocity)
 {
     this->_velocity = velocity;
@@ -144,4 +134,13 @@ bool Tourre::getHasMoved(void)
 void Tourre::setHasMoved(bool state)
 {
     this->_hasMoved = state;
+}
+
+unsigned int Tourre::getEntitySpriteFrame()
+{
+    // if (this->_frameClock.clockOk()) {
+        // ++this->_spriteFrame;
+        // this->_spriteFrame = this->_spriteFrame >= 5 ? 0 : this->_spriteFrame;
+    // }
+    return (this->_spriteFrame);
 }

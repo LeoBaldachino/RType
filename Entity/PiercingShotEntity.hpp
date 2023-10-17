@@ -8,7 +8,7 @@
 #include <fstream>
 #include <iostream>
 #include "../Components/Shoot.hpp"
-#include "../Components/Drawable.hpp"
+#include "../Components/ClockTimer.hpp"
 #include "IEntity.hpp"
 #include "../EntityTypes/EntityTypes.hpp"
 
@@ -40,12 +40,6 @@ class PiercingShotEntity : public IEntity {
         void accept(IVisitor &v, Core &core);
 
         /**
-         * @brief Draw entity on window
-         * @param window SFML RenderWindow
-         */
-        void drawEntity(std::unique_ptr<sf::RenderWindow> &window);
-
-        /**
          * @brief Get shoot component
          * @return Shoot component
          */
@@ -56,18 +50,6 @@ class PiercingShotEntity : public IEntity {
          * @param shoot New shoot component
          */
         void setShoot(const Shoot &shoot);
-
-        /**
-         * @brief Get drawable component
-         * @return Drawable component
-         */
-        Drawable getDrawable(void) const;
-
-        /**
-         * @brief Set drawable component
-         * @param drawable New drawable component
-         */
-        void setDrawable(const Drawable &drawable);
 
         /**
          * @brief Get size of entity
@@ -124,9 +106,17 @@ class PiercingShotEntity : public IEntity {
          */
         void setHasMoved(bool state);
 
+        /**
+         * @brief Get the Entity Sprite Frame count
+         * 
+         * @return unsigned int 
+         */
+        unsigned int getEntitySpriteFrame();
+
     private:
         Shoot _shoot;
-        Drawable _drawable;
         Vector2d _size;
         bool _hasMoved = false;
+        unsigned int _spriteFrame = 0;
+        ClockTimer _frameClock;
 };

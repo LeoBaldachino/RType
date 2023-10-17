@@ -8,7 +8,6 @@
 #include "IEntity.hpp"
 #include "../Components/Shoot.hpp"
 #include "../Components/State.hpp"
-#include "../Components/Drawable.hpp"
 #include "../EntityTypes/EntityTypes.hpp"
 #include "../Components/Inputs.hpp"
 #include "../Components/Health.hpp"
@@ -89,18 +88,6 @@ class Player : public IEntity, public Health {
         Moveable getMoveable() const;
 
         /**
-         * @brief Set the Drawable of the player
-         * @param drawable New drawable
-         */
-        void setDrawable(Drawable drawable);
-
-        /**
-         * @brief Get the Drawable of the player
-         * @return Drawable object
-         */
-        Drawable getDrawable() const;
-
-        /**
          * @brief Set the Velocity of the player
          * @param velocity New velocity
          */
@@ -149,12 +136,6 @@ class Player : public IEntity, public Health {
         int getShootGravity(void) const;
 
         /**
-         * @brief Draw the player entity
-         * @param window Window to draw on
-         */
-        void drawEntity(std::unique_ptr<sf::RenderWindow> &window);
-
-        /**
          * @brief Get the type of the entity
          * @return Type of the entity
          */
@@ -197,12 +178,18 @@ class Player : public IEntity, public Health {
          */
         inline bool isReady() {return this->_timer.clockOk();};
 
+        /**
+         * @brief Get the Entity Sprite Frame count
+         * 
+         * @return unsigned int 
+         */
+        unsigned int getEntitySpriteFrame();
+
         std::unique_ptr<Inputs> _inputs;
     private:
         State _state;
         Position _position;
         Moveable _movement;
-        Drawable _drawable;
         ClockTimer _timer;
         int _velocity;
         int _shootDmg = 10;
@@ -210,4 +197,6 @@ class Player : public IEntity, public Health {
         int _shootGravity = 0;
         Vector2d _size;
         bool _hasMoved = false;
+        unsigned int _spriteFrame = 0;
+        ClockTimer _frameClock;
 };

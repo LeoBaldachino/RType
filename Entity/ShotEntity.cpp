@@ -7,7 +7,7 @@
 
 #include "ShotEntity.hpp"
 
-ShotEntity::ShotEntity(Shoot &shoot, std::string spriteFile, bool playerShoot) : _drawable(spriteFile, 1), _shoot(shoot), _size(SHOT_X, SHOT_Y), _clockMove(MOVE_SHOT)
+ShotEntity::ShotEntity(Shoot &shoot, std::string spriteFile, bool playerShoot) : _shoot(shoot), _size(SHOT_X, SHOT_Y), _clockMove(MOVE_SHOT), _frameClock(100)
 {
     this->_playerShoot = playerShoot;
 }
@@ -20,16 +20,6 @@ Shoot ShotEntity::getShoot(void) const
 void ShotEntity::setShoot(const Shoot &shoot)
 {
     this->_shoot = shoot;
-}
-
-Drawable ShotEntity::getDrawable(void) const
-{
-    return (this->_drawable);
-}
-
-void ShotEntity::setDrawable(const Drawable &drawable)
-{
-    this->_drawable = drawable;
 }
 
 Vector2d ShotEntity::getSize(void)
@@ -71,13 +61,6 @@ void ShotEntity::setPosition(const Position &position)
     this->_shoot.setOrigin(Vector2d(position.getX(), position.getY()));
 }
 
-void ShotEntity::drawEntity(std::unique_ptr<sf::RenderWindow> &window)
-{
-    sf::Sprite sprite = this->_drawable.getSprite();
-    sprite.setPosition(this->_shoot.getOrigin().x, this->_shoot.getOrigin().y);
-    window->draw(sprite);
-}
-
 void ShotEntity::accept(IVisitor &v, Core &core)
 {
     v.visitShot(*this, core);
@@ -92,4 +75,14 @@ bool ShotEntity::getHasMoved(void)
 void ShotEntity::setHasMoved(bool state)
 {
     this->_hasMoved = state;
+}
+
+unsigned int ShotEntity::getEntitySpriteFrame()
+{
+    if (this->_frameClock.clockOk()) {
+        ++this->_spriteFrame;
+        if (!this->_playerShoot)
+            this->_spriteFrame = this->_spriteFrame >= 8 ? 0 : this->_spriteFrame;
+    }
+    return (this->_spriteFrame);
 }
