@@ -55,6 +55,8 @@ namespace RType {
              */
             void handleBydos(std::queue<Utils::MessageParsed_s> &toReturn);
 
+            void handleTourre(std::queue<Utils::MessageParsed_s> &toReturn);
+
             /**
              * @brief Add or remove entity
              * @param toReturn Queue of messages to return
@@ -74,6 +76,8 @@ namespace RType {
              */
             void checkBydosStatus(std::queue<Utils::MessageParsed_s> &toReturn);
 
+            void checkTourreStatus(std::queue<Utils::MessageParsed_s> &toReturn);
+
             /**
              * @brief Send refresh all entities
              * @param toReturn Queue of messages to return
@@ -88,6 +92,7 @@ namespace RType {
 
             SystemVisitor v;
             std::vector<unsigned short> _bydos;
+            std::vector<unsigned short> _tourre;
             std::chrono::steady_clock::time_point _refreshAllEntities;
             std::chrono::steady_clock::time_point _refreshPlayers;
     };
