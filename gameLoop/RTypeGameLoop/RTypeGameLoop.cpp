@@ -42,6 +42,7 @@ std::queue<RType::Utils::MessageParsed_s> RType::RTypeGameLoop::runAfterUpdate(s
         newMessages.pop();
     }
     this->handleBydos(toReturn);
+    this->handleTourre(toReturn);
     auto clock = std::chrono::steady_clock::now();
     if (std::chrono::duration_cast<std::chrono::milliseconds>(clock - this->_refreshAllEntities).count() < REFRESH_ALL_ENTITIES) {
         this->sendRefreshPlayers(toReturn);
@@ -50,6 +51,7 @@ std::queue<RType::Utils::MessageParsed_s> RType::RTypeGameLoop::runAfterUpdate(s
         this->sendRefreshAllEntities(toReturn);
         this->checkPlayerStatus(toReturn);
         this->checkBydosStatus(toReturn);
+        this->checkTourreStatus(toReturn);
         this->_refreshAllEntities = clock;
     }
     std::queue<unsigned short> toErase = this->_core.getToErase();
@@ -113,6 +115,47 @@ void RType::RTypeGameLoop::handleBydos(std::queue<RType::Utils::MessageParsed_s>
         msg.setSecondShort(bydos);
         toReturn.push(msg);
         this->_core.addEntity(std::make_shared<Bydos>(Position(1700 + std::rand() % 200, std::rand() % 1000, 1080, 1920), 1, Vector2d(-1, 0)), id);
+    }
+}
+
+void RType::RTypeGameLoop::handleTourre(std::queue<RType::Utils::MessageParsed_s> &toReturn)
+{
+    auto it = this->_tourre.begin();
+    std::queue<unsigned short> toDelete;
+    Utils::MessageParsed_s msg;
+    msg.msgType = removeEntity;
+    for (; it != this->_tourre.end(); it++) {
+        auto finded = this->_core._entities.find(*it);
+        if (finded == this->_core._entities.end()) {
+            toDelete.push(*it);
+            continue;
+        }
+        Position actPos = finded->second->getPosition();
+        if (actPos.getX() < 0 || actPos.getY() < 0) {
+            std::cout << "Entity not not well positionned" << std::endl;
+            this->_core.removeEntityLater(finded->first);
+            toDelete.push(*it);
+            continue;
+        }
+    }
+    while (!toDelete.empty()) {
+        std::cout << "Delete a tourre" << std::endl;
+        msg.setFirstShort(toDelete.front());
+        toReturn.push(msg);
+        for (auto it = this->_tourre.begin(); it < this->_tourre.end(); it++)
+            if (*it == toDelete.front())
+                this->_tourre.erase(it);
+        toDelete.pop();
+    }
+    msg.msgType = entityType;
+    if (this->_tourre.size() < 6) {
+        std::cout << "Add new tourre" << std::endl;
+        unsigned short id = this->_core.getAvailabeIndex();
+        this->_tourre.push_back(id);
+        msg.setFirstShort(id);
+        msg.setSecondShort(tourre);
+        toReturn.push(msg);
+        this->_core.addEntity(std::make_shared<Tourre>(Position(1700 + std::rand() % 200, std::rand() % 1000, 1080, 1920), 1, Vector2d(-1, 0)), id);
     }
 }
 
@@ -196,6 +239,24 @@ void RType::RTypeGameLoop::checkBydosStatus(std::queue<Utils::MessageParsed_s> &
     msgToSend.setFirstShort(it);
     msgToSend.bytes[3] = bydos->getLifes();
     msgToSend.bytes[4] = bydos->actuallyInvincible() ? 1 : 0;
+    toReturn.push(msgToSend);
+    }
+}
+
+void RType::RTypeGameLoop::checkTourreStatus(std::queue<Utils::MessageParsed_s> &toReturn)
+{
+    Utils::MessageParsed_s msgToSend;
+    msgToSend.msgType = valueSet;
+    for (auto it : this->_tourre) {
+        auto find = this->_core._entities.find(it);
+        if (find == this->_core._entities.end())
+            continue;
+    if (find->second->getEntityType() != tourre)
+        continue;
+    std::shared_ptr<Tourre> tourre = std::dynamic_pointer_cast<Tourre>(find->second);
+    msgToSend.setFirstShort(it);
+    msgToSend.bytes[3] = tourre->getLifes();
+    msgToSend.bytes[4] = tourre->actuallyInvincible() ? 1 : 0;
     toReturn.push(msgToSend);
     }
 }

@@ -210,10 +210,6 @@ void RType::Client::getNewId(const Utils::MessageParsed_s &msg)
 {
     std::unique_lock<std::mutex> lock(*this->_mutex);
     this->_actualId = msg.getFirstShort();
-    auto find = this->_entities._entities.find(0);
-    auto ptrFind = find->second;
-    this->_entities._entities.erase(find);
-    this->_entities.addEntity(ptrFind, this->_actualId);
 }
 
 bool RType::Client::checkAsId()
@@ -280,6 +276,8 @@ void RType::Client::setEntityType(const Utils::MessageParsed_s &msg)
             return this->newBydosToRoom(msg);
         case RType::bydosShoot:
             return this->newEnemyShoot(msg);
+        case RType::tourre:
+            return this->newTourreToRoom(msg);
         case RType::playerShoot :
             return this->newMyShoot(msg);
         case RType::percingShoot :
@@ -299,6 +297,17 @@ void RType::Client::newBydosToRoom(const Utils::MessageParsed_s &msg)
     this->_entities.addEntity(std::make_shared<Bydos>(Position(1900, 100, 1080, 1920), 1, Vector2d(-1, 0)), msg.getFirstShort());
 }
 
+void RType::Client::newTourreToRoom(const Utils::MessageParsed_s &msg)
+{
+    auto it = this->_entities._entities.find(msg.getFirstShort());
+    if (it != this->_entities._entities.end()) {
+        // std::cout << "Already in core with id " << msg.getFirstShort() << std::endl;
+        return;
+    }
+    std::unique_lock<std::mutex> lock(*this->_mutex);
+    this->_entities.addEntity(std::make_shared<Tourre>(Position(1900, 100, 1080, 1920), 1, Vector2d(-1, 0)), msg.getFirstShort());
+}
+
 void RType::Client::removeAnEntity(const Utils::MessageParsed_s &msg)
 {
     this->_entities.removeEntity(msg.getFirstShort());
@@ -315,7 +324,7 @@ void RType::Client::newEnemyShoot(const Utils::MessageParsed_s &msg)
     Position pos(-20, -20);
     AIShoot aiShoot(pos, pos);
     auto tmpShoot = aiShoot.shootLogic();
-    this->_entities.addEntity(std::make_shared<ShotEntity>(tmpShoot, "../Assets/enemyShot.png", false), msg.getFirstShort());
+    this->_entities.addEntity(std::make_shared<ShotEntity>(tmpShoot, "../Assets/EntitiesSprites/tEnemyShot.png", false), msg.getFirstShort());
 }
 
 void RType::Client::setValues(const Utils::MessageParsed_s &msg)
@@ -335,6 +344,13 @@ void RType::Client::setValues(const Utils::MessageParsed_s &msg)
         bydosCasted->setLife(msg.bytes[3]);
         this->_lifeBar->setLifeBarToBydos(bydosCasted); 
     }
+
+    if (find->second->getEntityType() == tourre) {
+        std::unique_lock<std::mutex> lock(*this->_mutex);
+        std::shared_ptr<Tourre> tourreCasted = std::dynamic_pointer_cast<Tourre>(find->second);
+        tourreCasted->setLife(msg.bytes[3]);
+        this->_lifeBar->setLifeBarToTourre(tourreCasted);
+    }
 }
 
 void RType::Client::newMyShoot(const Utils::MessageParsed_s &msg)
@@ -348,7 +364,7 @@ void RType::Client::newMyShoot(const Utils::MessageParsed_s &msg)
     Position pos(-20, -20);
     AIShoot aiShoot(pos, pos);
     auto tmpShoot = aiShoot.shootLogic();
-    this->_entities.addEntity(std::make_shared<ShotEntity>(tmpShoot, "../Assets/shot.png", false), msg.getFirstShort());  
+    this->_entities.addEntity(std::make_shared<ShotEntity>(tmpShoot, "../Assets/shot.png", true), msg.getFirstShort());  
 }
 
 void RType::Client::newPercingShoot(const Utils::MessageParsed_s &msg)
@@ -365,6 +381,45 @@ void RType::Client::newPercingShoot(const Utils::MessageParsed_s &msg)
     this->_entities.addEntity(std::make_shared<PiercingShotEntity>(tmpShoot), msg.getFirstShort());
 }
 
+sf::Sprite RType::Client::getSpriteFromEntity(std::shared_ptr<IEntity> entity, unsigned int id)
+{
+    sf::Sprite ret;
+    int spriteFrame = entity->getEntitySpriteFrame() + 1;
+    if (entity->getEntityType() == 6) {
+        ret.setTexture(this->_texture.tourreTexture);
+        ret.setTextureRect(sf::Rect<int>(0, 420 * (spriteFrame - 1), 420, 403));
+        ret.setScale(0.5, 0.5);
+        ret.setPosition(entity->getPosition().getX(), entity->getPosition().getY());
+    }
+    if (entity->getEntityType() == 5) {
+        ret.setTexture(this->_texture.enemyShotTexture);
+        ret.setTextureRect(sf::Rect<int>(98 * (spriteFrame - 1), 0, 98, 92));
+        ret.setScale(0.5, 0.5);
+    }
+    if (entity->getEntityType() == 4) {
+        ret.setTexture(this->_texture.bydosTexture);
+        ret.setTextureRect(sf::Rect<int>(140 * (spriteFrame - 1), 0, 140, 132));
+        ret.setScale(0.8, 0.8);
+    }
+    if (entity->getEntityType() == 3) {
+        ret.setTexture(this->_texture.piercingShotTexture);
+        ret.setTextureRect(sf::Rect<int>(55 * (spriteFrame - 1), 0, 55, 50));
+    }
+    if (entity->getEntityType() == 2) {
+        ret.setTexture(this->_texture.playerShotTexture);
+    }
+    if (entity->getEntityType() == 1 && id == this->_actualId) {
+        ret.setTexture(this->_texture.playerTexture);
+        ret.setTextureRect(sf::Rect<int>(106 * (spriteFrame - 1), 0, 106, 98));
+    }
+    if (entity->getEntityType() == 1 && id != this->_actualId) {
+        ret.setTexture(this->_texture.otherPlayerTexture);
+        ret.setTextureRect(sf::Rect<int>(109 * (spriteFrame - 1), 0, 109, 98));
+    }
+    ret.setPosition(entity->getPosition().getX(), entity->getPosition().getY());
+    return (ret);
+}
+
 void RType::Client::gameLoop()
 {
     if (!this->_gameAsStarted) {
@@ -375,8 +430,9 @@ void RType::Client::gameLoop()
     unsigned char actualIndex = 0;
     _window->clear();   
     this->_lifeBar->display(this->_window);     
-    for (auto &it : this->_entities._entities)
-        it.second->drawEntity(this->_window);
+    for (auto &it : this->_entities._entities) {
+        this->_window->draw(this->getSpriteFromEntity(it.second, it.first));
+    }
     _window->display();
     this->updateInputs();
     while (!this->_inputs.empty()) {

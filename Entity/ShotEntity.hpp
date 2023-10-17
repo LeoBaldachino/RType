@@ -8,7 +8,6 @@
 #include <fstream>
 #include <iostream>
 #include "../Components/Shoot.hpp"
-#include "../Components/Drawable.hpp"
 #include "IEntity.hpp"
 #include "../EntityTypes/EntityTypes.hpp"
 #include "../Components/ClockTimer.hpp"
@@ -40,12 +39,6 @@ class ShotEntity : public IEntity {
         void accept(IVisitor &v, Core &core);
 
         /**
-         * @brief Draw the entity on the window
-         * @param window Window to draw the entity on
-         */
-        void drawEntity(std::unique_ptr<sf::RenderWindow> &window);
-
-        /**
          * @brief Get the Shoot object
          * @return Shoot object
          */
@@ -56,18 +49,6 @@ class ShotEntity : public IEntity {
          * @param shoot Shoot object to set
          */
         void setShoot(const Shoot &shoot);
-
-        /**
-         * @brief Get the Drawable object
-         * @return Drawable object
-         */
-        Drawable getDrawable(void) const;
-
-        /**
-         * @brief Set the Drawable object
-         * @param drawable Drawable object to set
-         */
-        void setDrawable(const Drawable &drawable);
 
         /**
          * @brief Get the Size of the entity
@@ -130,11 +111,19 @@ class ShotEntity : public IEntity {
          */
         inline bool readyToMove() {return this->_clockMove.clockOk();};
 
+        /**
+         * @brief Get the Entity Sprite Frame count
+         * 
+         * @return unsigned int 
+         */
+        unsigned int getEntitySpriteFrame();
+
     private:
         Shoot _shoot;
-        Drawable _drawable;
         Vector2d _size;
         bool _hasMoved = false;
         bool _playerShoot;
         ClockTimer _clockMove;
+        unsigned int _spriteFrame = 0;
+        ClockTimer _frameClock;
 };

@@ -41,7 +41,12 @@ class SystemVisitor : public IVisitor {
             }
         };
         void visitTourre(Tourre &t, Core &core) {
+            if (t.getLifes() == 0)
+                return (void)core.removeEntityLater(t);
             this->_tourreSystem.updatePos(t);
+            for (auto it : core._entities) {
+                auto entityType = it.second->getEntityType();
+            }
             // this->_tourreSystem.createShots(t, this->_lastPlayer, core);
         };
         void visitShot(ShotEntity &s, Core &core) {

@@ -45,6 +45,12 @@ namespace RType {
              * @param by Shared pointer to a Bydos
              */
             void setLifeBarToBydos(const std::shared_ptr<Bydos> &by);
+            /**
+             * @brief Set the Life Bar to a Tourre
+             * 
+             * @param by Shared pointer to a Tourre
+             */
+            void setLifeBarToTourre(const std::shared_ptr<Tourre> &by);
 
             /**
              * @brief Display the LifeBar

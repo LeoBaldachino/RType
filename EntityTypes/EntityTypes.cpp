@@ -9,21 +9,5 @@
 
 RType::EntityTypes RType::castEntity(unsigned char c) 
 {
-    switch (c)
-    {
-    case RType::player :
-        return  RType::player;
-    case  RType::playerShoot :
-        return  RType::playerShoot;
-    case  RType::bydos :
-        return  RType::bydos;
-    case  RType::bydosShoot :
-        return  RType::bydosShoot;
-    case RType::percingShoot :
-        return RType::percingShoot;
-    case RType::tourre :
-        return RType::tourre;
-    default:
-        return  RType::none;
-    }
+    return (RType::EntityTypes)(c);
 }

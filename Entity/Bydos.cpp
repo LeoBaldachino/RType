@@ -8,10 +8,10 @@
 #include "Bydos.hpp"
 
 Bydos::Bydos(Position position, int velocity, Vector2d moveDirection) : 
-_drawable("../Assets/bydos.png", 2),
 _size(BYDOS_X, BYDOS_Y),
 _readyShoot(SHOOT_SPEED),
 _readyMove(MOVE_SPEED),
+_frameClock(100),
 Health(BYDOS_HEALTH)
 {
     this->_position = position;
@@ -49,16 +49,6 @@ void Bydos::setState(State state)
 State Bydos::getState() const
 {
     return this->_state;
-}
-
-void Bydos::setDrawable(Drawable drawable)
-{
-    this->_drawable = drawable;
-}
-
-Drawable Bydos::getDrawable() const
-{
-    return this->_drawable;
 }
 
 void Bydos::setVelocity(int velocity)
@@ -128,13 +118,6 @@ bool Bydos::isColidingWith(IEntity &entity)
     return (false);
 }
 
-void Bydos::drawEntity(std::unique_ptr<sf::RenderWindow> &window)
-{
-    sf::Sprite sprite = this->_drawable.getSprite();
-    sprite.setPosition(this->_position.getX(), this->_position.getY());
-    window->draw(sprite);
-}
-
 bool Bydos::getHasMoved(void)
 {
     bool tmpHasMoved = this->_hasMoved;
@@ -146,3 +129,11 @@ void Bydos::setHasMoved(bool state)
     this->_hasMoved = state;
 }
 
+unsigned int Bydos::getEntitySpriteFrame()
+{
+    if (this->_frameClock.clockOk()) {
+        ++this->_spriteFrame;
+        this->_spriteFrame = this->_spriteFrame >= 5 ? 0 : this->_spriteFrame;
+    }
+    return (this->_spriteFrame);
+}

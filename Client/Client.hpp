@@ -5,6 +5,7 @@
  */
 
 #pragma once
+#include "Texture/Texture.hpp"
 #include "../Entity/Player.hpp"
 #include "../Core/Core.hpp"
 #include "../EntityTypes/EntityTypes.hpp"
@@ -77,12 +78,14 @@ namespace RType {
             void handleInputs(void);
             void updateInputs(void);
             void newBydosToRoom(const Utils::MessageParsed_s &msg);
+            void newTourreToRoom(const Utils::MessageParsed_s &msg);
             void removeAnEntity(const Utils::MessageParsed_s &msg);
             void newEnemyShoot(const Utils::MessageParsed_s &msg);
             void setValues(const Utils::MessageParsed_s &msg);
             void newMyShoot(const Utils::MessageParsed_s &msg);
             void newPercingShoot(const Utils::MessageParsed_s &msg);
             void gameLoop();
+            sf::Sprite getSpriteFromEntity(std::shared_ptr<IEntity> entity, unsigned int id);
             std::unique_ptr<std::thread> _infosThread;
             std::shared_ptr<Utils::SocketHandler> _socket;
             std::unique_ptr<sf::RenderWindow> _window;
@@ -105,5 +108,6 @@ namespace RType {
             sf::Music _music;
             Screens _actualScreen;
             bool _gameAsStarted;
+            Texture _texture;
     };
 }
