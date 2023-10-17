@@ -72,6 +72,7 @@ void RType::PacketTracker::messagesToResend(std::map<std::pair<std::string, int>
 {
     if (!this->_intervalSet)
         return;
+        
     Utils::MessageParsed_s msg;
     msg.msgType = 34;
     for (unsigned char i = this->_interval.first; i < this->_interval.second; ++i) {
