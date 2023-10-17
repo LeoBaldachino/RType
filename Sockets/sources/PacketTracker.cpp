@@ -18,6 +18,7 @@ RType::PacketTracker::~PacketTracker()
 
 void RType::PacketTracker::prepareMessageToSend(Utils::MessageParsed_s &msg)
 {
+    auto t = this->_messagesNeededToGet.begin();
     std::pair<std::string, int> clientToSend = std::make_pair(msg.senderIp, msg.senderPort);
     if (this->_sendedMessages.empty())
         std::cout << "Empty !" << std::endl;
@@ -72,7 +73,7 @@ void RType::PacketTracker::messagesToResend(std::map<std::pair<std::string, int>
 {
     if (!this->_intervalSet)
         return;
-        
+
     Utils::MessageParsed_s msg;
     msg.msgType = 34;
     for (unsigned char i = this->_interval.first; i < this->_interval.second; ++i) {

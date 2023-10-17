@@ -29,13 +29,15 @@ void RType::MessageSendedQueue::addMessage(const Utils::MessageParsed_s &msg)
     this->_queueMessage.push_back(msg);
 }
 
-RType::Utils::MessageParsed_s RType::MessageSendedQueue::getMessage()
+RType::Utils::MessageParsed_s RType::MessageSendedQueue::getMessage(bool &isImportant)
 {
     if (!this->_queueImportantMessages.empty()) {
         auto ret = this->_queueImportantMessages.front();
         this->_queueImportantMessages.pop_front();
+        isImportant = true;
         return ret;
     }
+    isImportant = false;
     if (!this->_queueMessage.empty()) {
         auto ret = this->_queueMessage.front();
         this->_queueMessage.pop_front();
@@ -53,4 +55,12 @@ bool RType::MessageSendedQueue::readyToGetMessage()
         return false;
     this->_delay = clock;
     return true;
+}
+
+bool RType::MessageSendedQueue::isImportant(const Utils::MessageParsed_s &msg)
+{
+    for (auto it : this->_importantMessages)
+        if (msg.msgType == it)
+            return true;
+    return false;
 }

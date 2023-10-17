@@ -43,17 +43,19 @@ RType::Utils::MessageParsed_s RType::Utils::SocketHandler::receive()
     std::list<Utils::MessageParsed_s> msgNotReceived;
     _socket->receive_from(buffer, _Endpoint);
     Utils::MessageParsed_s msg(data, _Endpoint.address().to_v4().to_string(), _Endpoint.port());
-    this->_packetTracker->receiveMessage(msg, msgNotReceived);
-    while (!msgNotReceived.empty()) {
-        auto it = msgNotReceived.front();
-        this->_queueMsg->addMessage(it);
-        msgNotReceived.pop_front();
+    if (this->_queueMsg->isImportant(msg)) {
+        this->_packetTracker->receiveMessage(msg, msgNotReceived);
+        while (!msgNotReceived.empty()) {
+            auto it = msgNotReceived.front();
+            this->_queueMsg->addMessage(it);
+            msgNotReceived.pop_front();
+        }
+        Utils::MessageParsed_s toFill;
+        if (this->_packetTracker->reSendMessage(toFill, msg))
+            return toFill;
+        if (msg.msgType == 34)
+            return this->receive();
     }
-    Utils::MessageParsed_s toFill;
-    if (this->_packetTracker->reSendMessage(toFill, msg))
-        return toFill;
-    if (msg.msgType == 34)
-        return this->receive();
     return msg;
 }
 
@@ -63,8 +65,10 @@ void RType::Utils::SocketHandler::send(const struct MessageParsed_s &msg)
     this->_queueMsg->addMessage(msg);
     if (!this->_queueMsg->readyToGetMessage())
         return;
-    auto toSend = this->_queueMsg->getMessage();
-    this->_packetTracker->prepareMessageToSend(toSend);
+    bool isImportant = false;
+    auto toSend = this->_queueMsg->getMessage(isImportant);
+    if (isImportant)
+        this->_packetTracker->prepareMessageToSend(toSend);
     unsigned long long compressed = toSend.encode();
     boost::asio::const_buffer buffer(&compressed, sizeof(compressed));
     try {
