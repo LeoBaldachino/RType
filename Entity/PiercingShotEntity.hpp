@@ -12,8 +12,8 @@
 #include "IEntity.hpp"
 #include "../EntityTypes/EntityTypes.hpp"
 
-#define PIERCING_SHOT_X 80
-#define PIERCING_SHOT_Y 16
+#define PIERCING_SHOT_X 55
+#define PIERCING_SHOT_Y 50
 
 /**
  * @class PiercingShotEntity

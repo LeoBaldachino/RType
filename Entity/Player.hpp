@@ -13,8 +13,8 @@
 #include "../Components/Health.hpp"
 #include "../Components/ClockTimer.hpp"
 
-#define PLAYER_X 32 * SIZE_SCALE
-#define PLAYER_Y 14 * SIZE_SCALE
+#define PLAYER_X 106
+#define PLAYER_Y 98
 #define BASE_HEALTH 3
 #define READY_MOVE 3
 
