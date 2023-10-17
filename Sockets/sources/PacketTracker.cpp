@@ -68,7 +68,7 @@ bool RType::PacketTracker::receiveMessage(const Utils::MessageParsed_s &msg, std
     return false;
 }
 
-void RType::PacketTracker::messagesToResend(std::map<std::pair<std::string, int>, std::shared_ptr<std::__cxx11::list<unsigned char>>>::iterator &listMessages, std::list<Utils::MessageParsed_s> &toFill)
+void RType::PacketTracker::messagesToResend(std::map<std::pair<std::string, int>, std::shared_ptr<std::list<unsigned char>>>::iterator &listMessages, std::list<Utils::MessageParsed_s> &toFill)
 {
     if (!this->_intervalSet)
         return;

@@ -155,7 +155,7 @@ void RType::RTypeGameLoop::handleTourre(std::queue<RType::Utils::MessageParsed_s
         msg.setFirstShort(id);
         msg.setSecondShort(tourre);
         toReturn.push(msg);
-        this->_core.addEntity(std::make_shared<Tourre>(Position(1700 + std::rand() % 200, 1080 - 53, 1080, 1920), 1, Vector2d(-1, -1)), id);
+        this->_core.addEntity(std::make_shared<Tourre>(Position(1500 + std::rand() % 200, 1080 - 53, 1080, 1920), 1, Vector2d(-1, -1)), id);
     }
 }
 

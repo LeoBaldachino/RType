@@ -9,6 +9,7 @@
 #include "../Components/Moveable.hpp"
 #include "../Components/Position.hpp"
 #include "../Components/Hitbox.hpp"
+#include <vector>
 
 /**
  * @class Walls

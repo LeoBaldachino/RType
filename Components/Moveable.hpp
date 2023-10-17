@@ -74,6 +74,8 @@ class Moveable {
          */
         int getVelocity() const { return this->_velocity; }
 
+        
+
     private:
         Vector2d _origin; /**< The origin of the moveable object */
         Vector2d _direction; /**< The direction of the moveable object */
