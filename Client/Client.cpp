@@ -280,6 +280,8 @@ void RType::Client::setEntityType(const Utils::MessageParsed_s &msg)
             return this->newBydosToRoom(msg);
         case RType::bydosShoot:
             return this->newEnemyShoot(msg);
+        case RType::tourre:
+            return this->newTourreToRoom(msg);
         case RType::playerShoot :
             return this->newMyShoot(msg);
         case RType::percingShoot :
@@ -297,6 +299,17 @@ void RType::Client::newBydosToRoom(const Utils::MessageParsed_s &msg)
     }
     std::unique_lock<std::mutex> lock(*this->_mutex);
     this->_entities.addEntity(std::make_shared<Bydos>(Position(1900, 100, 1080, 1920), 1, Vector2d(-1, 0)), msg.getFirstShort());
+}
+
+void RType::Client::newTourreToRoom(const Utils::MessageParsed_s &msg)
+{
+    auto it = this->_entities._entities.find(msg.getFirstShort());
+    if (it != this->_entities._entities.end()) {
+        // std::cout << "Already in core with id " << msg.getFirstShort() << std::endl;
+        return;
+    }
+    std::unique_lock<std::mutex> lock(*this->_mutex);
+    this->_entities.addEntity(std::make_shared<Tourre>(Position(1900, 100, 1080, 1920), 1, Vector2d(-1, 0)), msg.getFirstShort());
 }
 
 void RType::Client::removeAnEntity(const Utils::MessageParsed_s &msg)
@@ -334,6 +347,13 @@ void RType::Client::setValues(const Utils::MessageParsed_s &msg)
         std::shared_ptr<Bydos> bydosCasted = std::dynamic_pointer_cast<Bydos>(find->second);
         bydosCasted->setLife(msg.bytes[3]);
         this->_lifeBar->setLifeBarToBydos(bydosCasted); 
+    }
+
+    if (find->second->getEntityType() == tourre) {
+        std::unique_lock<std::mutex> lock(*this->_mutex);
+        std::shared_ptr<Tourre> tourreCasted = std::dynamic_pointer_cast<Tourre>(find->second);
+        tourreCasted->setLife(msg.bytes[3]);
+        this->_lifeBar->setLifeBarToTourre(tourreCasted);
     }
 }
 
