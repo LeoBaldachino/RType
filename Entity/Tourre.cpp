@@ -8,7 +8,7 @@
 #include "Tourre.hpp"
 
 Tourre::Tourre(Position position, int velocity, Vector2d moveDirection) :
-_drawable("../Assets/EntitiesSprites/Cupcake.png", 0.5),
+_frameClock(125),
 _size(TOURRE_X, TOURRE_Y),
 _readyShoot(SHOOT_SPEED),
 _readyMove(MOVE_SPEED),
@@ -118,13 +118,6 @@ bool Tourre::isColidingWith(IEntity &entity)
     return (false);
 }
 
-void Tourre::drawEntity(std::unique_ptr<sf::RenderWindow> &window)
-{
-    sf::Sprite sprite = this->_drawable.getSprite();
-    sprite.setPosition(this->_position.getX(), this->_position.getY());
-    window->draw(sprite);
-}
-
 bool Tourre::getHasMoved(void)
 {
     bool tmpHasMoved = this->_hasMoved;
@@ -138,9 +131,9 @@ void Tourre::setHasMoved(bool state)
 
 unsigned int Tourre::getEntitySpriteFrame()
 {
-    // if (this->_frameClock.clockOk()) {
-        // ++this->_spriteFrame;
-        // this->_spriteFrame = this->_spriteFrame >= 5 ? 0 : this->_spriteFrame;
-    // }
+    if (this->_frameClock.clockOk()) {
+        ++this->_spriteFrame;
+        this->_spriteFrame = this->_spriteFrame >= 23 ? 0 : this->_spriteFrame;
+    }
     return (this->_spriteFrame);
 }

@@ -16,8 +16,8 @@
 #define SHOOT_SPEED 3000
 #define JUMP_SPEED 3000
 #define MOVE_SPEED 3
-#define TOURRE_X 50 * SIZE_SCALE
-#define TOURRE_Y 60 * SIZE_SCALE
+#define TOURRE_X 203 * SIZE_SCALE
+#define TOURRE_Y 220 * SIZE_SCALE
 #define TOURRE_HEALTH 2
 
 /**
@@ -28,7 +28,7 @@ class Tourre : public IEntity, public Health {
         /**
          * @brief Construct a new Tourre object
          */
-        Tourre() : _frameClock(100) {};
+        Tourre();
 
         /**
          * @brief Construct a new Tourre object
@@ -68,11 +68,6 @@ class Tourre : public IEntity, public Health {
         bool isColidingWith(IEntity &entity);
 
         Vector2d getSize(void);
-
-        bool isColidingWith(IEntity &entity);
-
-        Vector2d getSize(void);
-
         
         inline unsigned char getEntityType() {return RType::tourre;}
 
