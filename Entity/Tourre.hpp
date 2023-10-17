@@ -8,7 +8,6 @@
 #include "IEntity.hpp"
 #include "../Components/State.hpp"
 #include "../Systems/Subsystems/AIShoot.hpp"
-#include "../Components/Drawable.hpp"
 #include "../Entity/Player.hpp"
 
 /**
@@ -45,9 +44,6 @@ class Tourre : public IEntity {
         void setState(State state);
         State getState() const;
 
-        void setDrawable(Drawable drawable);
-        Drawable getDrawable() const;
-
         void setVelocity(int velocity);
         int getVelocity(void) const;
 
@@ -63,7 +59,6 @@ class Tourre : public IEntity {
         void setMoveable(const Moveable &moveable);
         Moveable getMoveable(void) const;
 
-        void drawEntity(std::unique_ptr<sf::RenderWindow> &window);
         
         Vector2d getSize(void) { return (Vector2d(0, 0)); };
         inline unsigned char getEntityType() {return RType::tourre;}
@@ -74,7 +69,6 @@ class Tourre : public IEntity {
         State _state;
         Position _position;
         Moveable _movement;
-        Drawable _drawable;
         int _velocity;
         int _shootDmg = 10;
         int _shootVelocity = 5;

@@ -8,7 +8,6 @@
 #include "IEntity.hpp"
 #include "../Components/Shoot.hpp"
 #include "../Components/State.hpp"
-#include "../Components/Drawable.hpp"
 #include "../EntityTypes/EntityTypes.hpp"
 #include "../Components/Inputs.hpp"
 #include "../Components/Health.hpp"
@@ -89,18 +88,6 @@ class Player : public IEntity, public Health {
         Moveable getMoveable() const;
 
         /**
-         * @brief Set the Drawable of the player
-         * @param drawable New drawable
-         */
-        void setDrawable(Drawable drawable);
-
-        /**
-         * @brief Get the Drawable of the player
-         * @return Drawable object
-         */
-        Drawable getDrawable() const;
-
-        /**
          * @brief Set the Velocity of the player
          * @param velocity New velocity
          */
@@ -147,12 +134,6 @@ class Player : public IEntity, public Health {
          * @return Shoot gravity value
          */
         int getShootGravity(void) const;
-
-        /**
-         * @brief Draw the player entity
-         * @param window Window to draw on
-         */
-        void drawEntity(std::unique_ptr<sf::RenderWindow> &window);
 
         /**
          * @brief Get the type of the entity
@@ -202,7 +183,6 @@ class Player : public IEntity, public Health {
         State _state;
         Position _position;
         Moveable _movement;
-        Drawable _drawable;
         ClockTimer _timer;
         int _velocity;
         int _shootDmg = 10;

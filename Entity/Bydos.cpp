@@ -8,7 +8,6 @@
 #include "Bydos.hpp"
 
 Bydos::Bydos(Position position, int velocity, Vector2d moveDirection) : 
-_drawable("../Assets/EntitiesSprites/tBydos.png", 1),
 _size(BYDOS_X, BYDOS_Y),
 _readyShoot(SHOOT_SPEED),
 _readyMove(MOVE_SPEED),
@@ -49,16 +48,6 @@ void Bydos::setState(State state)
 State Bydos::getState() const
 {
     return this->_state;
-}
-
-void Bydos::setDrawable(Drawable drawable)
-{
-    this->_drawable = drawable;
-}
-
-Drawable Bydos::getDrawable() const
-{
-    return this->_drawable;
 }
 
 void Bydos::setVelocity(int velocity)
@@ -126,13 +115,6 @@ bool Bydos::isColidingWith(IEntity &entity)
                 this->_position.getX() + this->_size.x >= i)
                 return (true);
     return (false);
-}
-
-void Bydos::drawEntity(std::unique_ptr<sf::RenderWindow> &window)
-{
-    sf::Sprite sprite = this->_drawable.getSprite();
-    sprite.setPosition(this->_position.getX(), this->_position.getY());
-    window->draw(sprite);
 }
 
 bool Bydos::getHasMoved(void)

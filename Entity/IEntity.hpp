@@ -8,9 +8,6 @@
 #include <fstream>
 #include <iostream>
 #include <queue>
-#include <SFML/Graphics.hpp>
-#include <SFML/Window.hpp>
-#include <SFML/System.hpp>
 #include "../Components/Moveable.hpp"
 #include "../Components/Position.hpp"
 #include "../Visitor/IVisitor.hpp"
@@ -71,12 +68,6 @@ class IEntity {
          * @param state New state
          */
         virtual void setHasMoved(bool state) = 0;
-
-        /**
-         * @brief Draw the entity
-         * @param window Window to draw on
-         */
-        virtual void drawEntity(std::unique_ptr<sf::RenderWindow> &window) = 0;
 
         /**
          * @brief Get the type of the entity

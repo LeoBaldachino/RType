@@ -7,7 +7,7 @@
 
 #include "Tourre.hpp"
 
-Tourre::Tourre(Position position, int velocity, Vector2d moveDirection) : _drawable("../Assets/tourre.png", 2)
+Tourre::Tourre(Position position, int velocity, Vector2d moveDirection)
 {
     this->_position = position;
     this->_state = State(100);
@@ -44,16 +44,6 @@ void Tourre::setState(State state)
 State Tourre::getState() const
 {
     return this->_state;
-}
-
-void Tourre::setDrawable(Drawable drawable)
-{
-    this->_drawable = drawable;
-}
-
-Drawable Tourre::getDrawable() const
-{
-    return this->_drawable;
 }
 
 void Tourre::setVelocity(int velocity)
@@ -104,13 +94,6 @@ void Tourre::setMoveable(const Moveable &moveable)
 Moveable Tourre::getMoveable(void) const
 {
     return (this->_movement);
-}
-
-void Tourre::drawEntity(std::unique_ptr<sf::RenderWindow> &window)
-{
-    sf::Sprite sprite = this->_drawable.getSprite();
-    sprite.setPosition(this->_position.getX(), this->_position.getY());
-    window->draw(sprite);
 }
 
 bool Tourre::getHasMoved(void)

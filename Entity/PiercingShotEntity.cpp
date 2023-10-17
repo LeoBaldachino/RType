@@ -7,7 +7,7 @@
 
 #include "PiercingShotEntity.hpp"
 
-PiercingShotEntity::PiercingShotEntity(Shoot &shoot) : _drawable("../Assets/EntitiesSprites/tShot.png", 1), _shoot(shoot), _size(PIERCING_SHOT_X, PIERCING_SHOT_Y)
+PiercingShotEntity::PiercingShotEntity(Shoot &shoot) : _shoot(shoot), _size(PIERCING_SHOT_X, PIERCING_SHOT_Y)
 {
 }
 
@@ -19,16 +19,6 @@ Shoot PiercingShotEntity::getShoot(void) const
 void PiercingShotEntity::setShoot(const Shoot &shoot)
 {
     this->_shoot = shoot;
-}
-
-Drawable PiercingShotEntity::getDrawable(void) const
-{
-    return (this->_drawable);
-}
-
-void PiercingShotEntity::setDrawable(const Drawable &drawable)
-{
-    this->_drawable = drawable;
 }
 
 Vector2d PiercingShotEntity::getSize(void)
@@ -68,13 +58,6 @@ Position PiercingShotEntity::getPosition(void) const
 void PiercingShotEntity::setPosition(const Position &position)
 {
     this->_shoot.setOrigin(Vector2d(position.getX(), position.getY()));
-}
-
-void PiercingShotEntity::drawEntity(std::unique_ptr<sf::RenderWindow> &window)
-{
-    sf::Sprite sprite = this->_drawable.getSprite();
-    sprite.setPosition(this->_shoot.getOrigin().x, this->_shoot.getOrigin().y);
-    window->draw(sprite);
 }
 
 void PiercingShotEntity::accept(IVisitor &v, Core &core)
