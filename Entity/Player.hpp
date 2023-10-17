@@ -185,6 +185,13 @@ class Player : public IEntity, public Health {
          */
         unsigned int getEntitySpriteFrame();
 
+        /**
+         * @brief Return if the position range of the entity and the temporisation, returns four 0 if no range
+         * 
+         * @param frame 
+         */
+        std::vector<int> getEntityPositionRange() {return std::vector<int>(4, 0);};
+
         std::unique_ptr<Inputs> _inputs;
     private:
         State _state;

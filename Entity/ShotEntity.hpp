@@ -118,6 +118,13 @@ class ShotEntity : public IEntity {
          */
         unsigned int getEntitySpriteFrame();
 
+        /**
+         * @brief Return if the position range of the entity and the temporisation, returns four 0 if no range
+         * 
+         * @param frame 
+         */
+        std::vector<int> getEntityPositionRange() {return std::vector<int>(4, 0);};
+
     private:
         Shoot _shoot;
         Vector2d _size;

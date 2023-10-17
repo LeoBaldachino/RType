@@ -137,3 +137,8 @@ unsigned int Tourre::getEntitySpriteFrame()
     }
     return (this->_spriteFrame);
 }
+
+std::vector<int> Tourre::getEntityPositionRange()
+{
+    std::vector<int> range = {1080 - 53, 1750, 0, 0};
+}

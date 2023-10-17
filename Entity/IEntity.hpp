@@ -81,4 +81,11 @@ class IEntity {
          * @return unsigned int 
          */
         virtual unsigned int getEntitySpriteFrame() = 0;
+
+        /**
+         * @brief Return if the position range of the entity and the temporisation, returns four 0 if no range
+         * 
+         * @param frame 
+         */
+        virtual std::vector<int> getEntityPositionRange() = 0;
 };

@@ -86,6 +86,13 @@ class Tourre : public IEntity, public Health {
          */
         unsigned int getEntitySpriteFrame();
 
+        /**
+         * @brief Return if the position range of the entity and the temporisation, returns four 0 if no range
+         * 
+         * @param frame 
+         */
+        std::vector<int> getEntityPositionRange();
+
     private:
         State _state;
         Position _position;
