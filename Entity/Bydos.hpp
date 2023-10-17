@@ -13,7 +13,7 @@
 #include "../Components/ClockTimer.hpp"
 #include "../Components/Health.hpp"
 
-#define SHOOT_SPEED 600
+#define SHOOT_SPEED 3000
 #define MOVE_SPEED 3
 #define BYDOS_X 21 * SIZE_SCALE
 #define BYDOS_Y 24 * SIZE_SCALE

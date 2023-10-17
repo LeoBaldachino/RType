@@ -8,14 +8,13 @@
 #include "../includes/SocketHandler.hpp"
 
 
-RType::Utils::SocketHandler::SocketHandler(const std::string &ipAdress, int port)
+RType::Utils::SocketHandler::SocketHandler(const std::string &ipAdress, int port, const std::list<int> &importantMessagesCode)
 {
-    _socket = std::make_shared<boost::asio::ip::udp::socket>(_ioService);
-    _socket->open(boost::asio::ip::udp::v4());
-    _socket->bind(boost::asio::ip::udp::endpoint(boost::asio::ip::address::from_string(ipAdress), port));
+    _socket = std::make_shared<boost::asio::ip::udp::socket>(_ioService, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), port));
     _mutex = std::make_shared<std::mutex>();
     this->_receiverMutex = std::make_shared<std::mutex>();
     this->_ipPort = {ipAdress, port};
+    this->_queueMsg = std::make_shared<RType::MessageSendedQueue>(importantMessagesCode);
     this->_instance = std::make_shared<SocketHandler>(*this);
 }
 
@@ -26,6 +25,7 @@ RType::Utils::SocketHandler::SocketHandler(const SocketHandler &socket) : _socke
     this->_mutex = socket._mutex;
     this->_socket = socket._socket;
     this->_receiverMutex = socket._receiverMutex;
+    this->_queueMsg = socket._queueMsg;
 }
 
 RType::Utils::SocketHandler::~SocketHandler()
@@ -43,15 +43,19 @@ RType::Utils::MessageParsed_s RType::Utils::SocketHandler::receive()
     return msg;
 }
 
-void RType::Utils::SocketHandler::send(const struct MessageParsed_s &toSend)
+void RType::Utils::SocketHandler::send(const struct MessageParsed_s &msg)
 {
+    std::unique_lock<std::mutex> lock(*this->_mutex);
+    this->_queueMsg->addMessage(msg);
+    if (!this->_queueMsg->readyToGetMessage())
+        return;
+    auto toSend = this->_queueMsg->getMessage();
     unsigned long long compressed = toSend.encode();
     boost::asio::const_buffer buffer(&compressed, sizeof(compressed));
-    std::unique_lock<std::mutex> lock(*this->_mutex);
     try {
         _socket->send_to(buffer, boost::asio::ip::udp::endpoint(boost::asio::ip::address::from_string(toSend.senderIp), toSend.senderPort));
     } catch (const boost::system::system_error &err) {
-        std::cerr << "Send error " << err.what() << std::endl; 
+        std::cerr << "Send error " << err.code() << std::endl; 
     }
 }
 
@@ -64,3 +68,4 @@ const std::pair<std::string, int> &RType::Utils::SocketHandler::getIpAndPort() c
 {
     return this->_ipPort;
 }
+
