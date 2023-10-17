@@ -148,14 +148,14 @@ void RType::RTypeGameLoop::handleTourre(std::queue<RType::Utils::MessageParsed_s
         toDelete.pop();
     }
     msg.msgType = entityType;
-    if (this->_tourre.size() < 6) {
+    if (this->_tourre.size() < 2) {
         std::cout << "Add new tourre" << std::endl;
         unsigned short id = this->_core.getAvailabeIndex();
         this->_tourre.push_back(id);
         msg.setFirstShort(id);
         msg.setSecondShort(tourre);
         toReturn.push(msg);
-        this->_core.addEntity(std::make_shared<Tourre>(Position(1700 + std::rand() % 200, std::rand() % 1000, 1080, 1920), 1, Vector2d(-1, 0)), id);
+        this->_core.addEntity(std::make_shared<Tourre>(Position(1700 + std::rand() % 200, 1080 - 53, 1080, 1920), 1, Vector2d(-1, -1)), id);
     }
 }
 
