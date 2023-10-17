@@ -348,7 +348,7 @@ void RType::Client::newMyShoot(const Utils::MessageParsed_s &msg)
     Position pos(-20, -20);
     AIShoot aiShoot(pos, pos);
     auto tmpShoot = aiShoot.shootLogic();
-    this->_entities.addEntity(std::make_shared<ShotEntity>(tmpShoot, "../Assets/shot.png", false), msg.getFirstShort());  
+    this->_entities.addEntity(std::make_shared<ShotEntity>(tmpShoot, "../Assets/shot.png", true), msg.getFirstShort());  
 }
 
 void RType::Client::newPercingShoot(const Utils::MessageParsed_s &msg)
@@ -365,6 +365,41 @@ void RType::Client::newPercingShoot(const Utils::MessageParsed_s &msg)
     this->_entities.addEntity(std::make_shared<PiercingShotEntity>(tmpShoot), msg.getFirstShort());
 }
 
+sf::Sprite RType::Client::getSpriteFromEntity(std::shared_ptr<IEntity> entity)
+{
+    sf::Sprite ret;
+    if (entity->getEntityType() == 6) {
+        ret.setTexture(this->_texture.tourreTexture);
+        ret.setPosition(entity->getPosition().getX(), entity->getPosition().getY());
+    }
+    if (entity->getEntityType() == 5) {
+        ret.setTexture(this->_texture.enemyShotTexture);
+        ret.setTextureRect(sf::Rect<int>(0, 0, 98, 92));
+        ret.setScale(0.5, 0.5);
+        ret.setPosition(entity->getPosition().getX(), entity->getPosition().getY());
+    }
+    if (entity->getEntityType() == 4) {
+        ret.setTexture(this->_texture.bydosTexture);
+        ret.setScale(2, 2);
+        ret.setPosition(entity->getPosition().getX(), entity->getPosition().getY());
+    }
+    if (entity->getEntityType() == 3) {
+        ret.setTexture(this->_texture.piercingShotTexture);
+        ret.setTextureRect(sf::Rect<int>(0, 0, 55, 50));
+        ret.setPosition(entity->getPosition().getX(), entity->getPosition().getY());
+    }
+    if (entity->getEntityType() == 2) {
+        ret.setTexture(this->_texture.playerShotTexture);
+        ret.setPosition(entity->getPosition().getX(), entity->getPosition().getY());
+    }
+    if (entity->getEntityType() == 1) {
+        ret.setTexture(this->_texture.playerTexture);
+        ret.setTextureRect(sf::Rect<int>(0, 0, 106, 98));
+        ret.setPosition(entity->getPosition().getX(), entity->getPosition().getY());
+    }
+    return (ret);
+}
+
 void RType::Client::gameLoop()
 {
     if (!this->_gameAsStarted) {
@@ -375,8 +410,9 @@ void RType::Client::gameLoop()
     unsigned char actualIndex = 0;
     _window->clear();   
     this->_lifeBar->display(this->_window);     
-    for (auto &it : this->_entities._entities)
-        it.second->drawEntity(this->_window);
+    for (auto &it : this->_entities._entities) {
+        this->_window->draw(this->getSpriteFromEntity(it.second));
+    }
     _window->display();
     this->updateInputs();
     while (!this->_inputs.empty()) {
