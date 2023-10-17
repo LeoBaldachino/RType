@@ -36,7 +36,7 @@ class Walls {
          * 
          * @param frame 
          */
-        std::vector<int> getEntityPositionRange() {return std::vector<int>(4, 0);};
+        //std::vector<int> getEntityPositionRange() {return std::vector<int>(4, 0);};
 
     private:
         Position _position; ///< Position of the Walls
