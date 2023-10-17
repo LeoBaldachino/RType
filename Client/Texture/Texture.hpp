@@ -16,7 +16,7 @@ class Texture {
     public:
         Texture() {
             this->bydosTexture.loadFromFile("./../Assets/EntitiesSprites/Bydos.png");
-            this->tourreTexture.loadFromFile("./../Assets/tourre.png");
+            this->tourreTexture.loadFromFile("./../Assets/EntitiesSprites/Cupcake.png");
             this->playerTexture.loadFromFile("./../Assets/EntitiesSprites/CupHead.png");
             this->playerShotTexture.loadFromFile("./../Assets/shot.png");
             this->piercingShotTexture.loadFromFile("./../Assets/EntitiesSprites/PiercingShot.png");

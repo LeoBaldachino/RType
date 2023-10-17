@@ -46,6 +46,8 @@ namespace RType {
              */
             void setLifeBarToBydos(const std::shared_ptr<Bydos> &by);
 
+            void setLifeBarToTourre(const std::shared_ptr<Tourre> &by);
+
             /**
              * @brief Display the LifeBar
              * @param window Unique pointer to a RenderWindow
