@@ -10,6 +10,7 @@
 RType::MessageSendedQueue::MessageSendedQueue(const std::list<int> &importantMessages) : _importantMessages(importantMessages)
 {
     this->_delay = std::chrono::steady_clock::now();
+    this->_importantMessages.push_back(34);
 }
 
 RType::MessageSendedQueue::~MessageSendedQueue()
