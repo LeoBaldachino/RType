@@ -23,5 +23,6 @@ namespace RType {
         illegalAction = 31,
         serverStop = 32,
         cannotRead = 33,
+        resendMessage = 34,
     };
 }

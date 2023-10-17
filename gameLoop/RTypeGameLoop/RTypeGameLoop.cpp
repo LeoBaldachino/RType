@@ -24,7 +24,7 @@ void RType::RTypeGameLoop::updatePlayerPos(std::pair<unsigned short, Utils::Mess
         return;
     std::shared_ptr<Player> player = std::dynamic_pointer_cast<Player>(it->second);
     player->_inputs->lockInputs();
-    for (unsigned char i = 0; i < 8; ++i) {
+    for (unsigned char i = 0; i < 6; ++i) {
         if (msg.second.bytes[i] > 6)
             break;
         player->_inputs->addEvents((Inputs::Events)msg.second.bytes[i]);

@@ -25,6 +25,6 @@ namespace RType {
             std::list<Utils::MessageParsed_s> _queueMessage;
             std::list<Utils::MessageParsed_s> _queueImportantMessages;
             std::chrono::steady_clock::time_point _delay;
-            const std::list<int> _importantMessages;
+            std::list<int> _importantMessages;
     };
 }

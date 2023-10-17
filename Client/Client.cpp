@@ -436,7 +436,7 @@ void RType::Client::gameLoop()
     _window->display();
     this->updateInputs();
     while (!this->_inputs.empty()) {
-        if (actualIndex > 7) {
+        if (actualIndex > 5) {
             this->_socket->send(msgKeyPressed);
             actualIndex = 0;
         }

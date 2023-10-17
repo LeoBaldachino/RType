@@ -15,6 +15,7 @@
 #include <tuple>
 #include <mutex>
 #include "MessageSendedQueue.hpp"
+#include "PacketTracker.hpp"
 
 namespace RType {
     namespace Utils {
@@ -77,6 +78,7 @@ namespace RType {
                 std::shared_ptr<std::mutex> _receiverMutex;
                 std::shared_ptr<MessageSendedQueue> _queueMsg;
                 std::pair<std::string, int> _ipPort;
+                std::shared_ptr<PacketTracker> _packetTracker;
         };
     }
 }
