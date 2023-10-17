@@ -276,6 +276,8 @@ void RType::Client::setEntityType(const Utils::MessageParsed_s &msg)
             return this->newBydosToRoom(msg);
         case RType::bydosShoot:
             return this->newEnemyShoot(msg);
+        case RType::tourre:
+            return this->newTourreToRoom(msg);
         case RType::playerShoot :
             return this->newMyShoot(msg);
         case RType::percingShoot :
@@ -293,6 +295,17 @@ void RType::Client::newBydosToRoom(const Utils::MessageParsed_s &msg)
     }
     std::unique_lock<std::mutex> lock(*this->_mutex);
     this->_entities.addEntity(std::make_shared<Bydos>(Position(1900, 100, 1080, 1920), 1, Vector2d(-1, 0)), msg.getFirstShort());
+}
+
+void RType::Client::newTourreToRoom(const Utils::MessageParsed_s &msg)
+{
+    auto it = this->_entities._entities.find(msg.getFirstShort());
+    if (it != this->_entities._entities.end()) {
+        // std::cout << "Already in core with id " << msg.getFirstShort() << std::endl;
+        return;
+    }
+    std::unique_lock<std::mutex> lock(*this->_mutex);
+    this->_entities.addEntity(std::make_shared<Tourre>(Position(1900, 100, 1080, 1920), 1, Vector2d(-1, 0)), msg.getFirstShort());
 }
 
 void RType::Client::removeAnEntity(const Utils::MessageParsed_s &msg)
@@ -331,6 +344,13 @@ void RType::Client::setValues(const Utils::MessageParsed_s &msg)
         bydosCasted->setLife(msg.bytes[3]);
         this->_lifeBar->setLifeBarToBydos(bydosCasted); 
     }
+
+    if (find->second->getEntityType() == tourre) {
+        std::unique_lock<std::mutex> lock(*this->_mutex);
+        std::shared_ptr<Tourre> tourreCasted = std::dynamic_pointer_cast<Tourre>(find->second);
+        tourreCasted->setLife(msg.bytes[3]);
+        this->_lifeBar->setLifeBarToTourre(tourreCasted);
+    }
 }
 
 void RType::Client::newMyShoot(const Utils::MessageParsed_s &msg)
@@ -367,6 +387,9 @@ sf::Sprite RType::Client::getSpriteFromEntity(std::shared_ptr<IEntity> entity, u
     int spriteFrame = entity->getEntitySpriteFrame() + 1;
     if (entity->getEntityType() == 6) {
         ret.setTexture(this->_texture.tourreTexture);
+        ret.setTextureRect(sf::Rect<int>(0, 420 * (spriteFrame - 1), 420, 403));
+        ret.setScale(0.5, 0.5);
+        ret.setPosition(entity->getPosition().getX(), entity->getPosition().getY());
     }
     if (entity->getEntityType() == 5) {
         ret.setTexture(this->_texture.enemyShotTexture);
