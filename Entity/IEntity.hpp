@@ -74,4 +74,11 @@ class IEntity {
          * @return unsigned char
          */
         virtual inline unsigned char getEntityType() = 0;
+
+        /**
+         * @brief Get the Entity Sprite Frame count
+         * 
+         * @return unsigned int 
+         */
+        virtual unsigned int getEntitySpriteFrame() = 0;
 };

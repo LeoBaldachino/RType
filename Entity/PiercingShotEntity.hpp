@@ -8,6 +8,7 @@
 #include <fstream>
 #include <iostream>
 #include "../Components/Shoot.hpp"
+#include "../Components/ClockTimer.hpp"
 #include "IEntity.hpp"
 #include "../EntityTypes/EntityTypes.hpp"
 
@@ -105,8 +106,17 @@ class PiercingShotEntity : public IEntity {
          */
         void setHasMoved(bool state);
 
+        /**
+         * @brief Get the Entity Sprite Frame count
+         * 
+         * @return unsigned int 
+         */
+        unsigned int getEntitySpriteFrame();
+
     private:
         Shoot _shoot;
         Vector2d _size;
         bool _hasMoved = false;
+        unsigned int _spriteFrame = 0;
+        ClockTimer _frameClock;
 };

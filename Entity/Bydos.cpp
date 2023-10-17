@@ -11,6 +11,7 @@ Bydos::Bydos(Position position, int velocity, Vector2d moveDirection) :
 _size(BYDOS_X, BYDOS_Y),
 _readyShoot(SHOOT_SPEED),
 _readyMove(MOVE_SPEED),
+_frameClock(100),
 Health(BYDOS_HEALTH)
 {
     this->_position = position;
@@ -128,3 +129,11 @@ void Bydos::setHasMoved(bool state)
     this->_hasMoved = state;
 }
 
+unsigned int Bydos::getEntitySpriteFrame()
+{
+    if (this->_frameClock.clockOk()) {
+        ++this->_spriteFrame;
+        this->_spriteFrame = this->_spriteFrame >= 5 ? 0 : this->_spriteFrame;
+    }
+    return (this->_spriteFrame);
+}

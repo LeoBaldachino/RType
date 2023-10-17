@@ -178,6 +178,13 @@ class Player : public IEntity, public Health {
          */
         inline bool isReady() {return this->_timer.clockOk();};
 
+        /**
+         * @brief Get the Entity Sprite Frame count
+         * 
+         * @return unsigned int 
+         */
+        unsigned int getEntitySpriteFrame();
+
         std::unique_ptr<Inputs> _inputs;
     private:
         State _state;
@@ -190,4 +197,6 @@ class Player : public IEntity, public Health {
         int _shootGravity = 0;
         Vector2d _size;
         bool _hasMoved = false;
+        unsigned int _spriteFrame = 0;
+        ClockTimer _frameClock;
 };

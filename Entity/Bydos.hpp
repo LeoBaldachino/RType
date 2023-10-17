@@ -169,6 +169,13 @@ class Bydos : public IEntity, public Health {
          * @param state State
          */
         void setHasMoved(bool state);
+        
+        /**
+         * @brief Get the Entity Sprite Frame count
+         * 
+         * @return unsigned int 
+         */
+        unsigned int getEntitySpriteFrame();
 
     private:
         State _state;
@@ -182,4 +189,6 @@ class Bydos : public IEntity, public Health {
         bool _hasMoved = false;
         ClockTimer _readyShoot;
         ClockTimer _readyMove;
+        unsigned int _spriteFrame = 0;
+        ClockTimer _frameClock;
 };

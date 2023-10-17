@@ -7,7 +7,7 @@
 
 #include "Tourre.hpp"
 
-Tourre::Tourre(Position position, int velocity, Vector2d moveDirection)
+Tourre::Tourre(Position position, int velocity, Vector2d moveDirection) : _frameClock(100)
 {
     this->_position = position;
     this->_state = State(100);
@@ -105,4 +105,13 @@ bool Tourre::getHasMoved(void)
 void Tourre::setHasMoved(bool state)
 {
     this->_hasMoved = state;
+}
+
+unsigned int Tourre::getEntitySpriteFrame()
+{
+    // if (this->_frameClock.clockOk()) {
+        // ++this->_spriteFrame;
+        // this->_spriteFrame = this->_spriteFrame >= 5 ? 0 : this->_spriteFrame;
+    // }
+    return (this->_spriteFrame);
 }

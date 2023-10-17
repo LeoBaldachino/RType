@@ -7,7 +7,7 @@
 
 #include "ShotEntity.hpp"
 
-ShotEntity::ShotEntity(Shoot &shoot, std::string spriteFile, bool playerShoot) : _shoot(shoot), _size(SHOT_X, SHOT_Y), _clockMove(MOVE_SHOT)
+ShotEntity::ShotEntity(Shoot &shoot, std::string spriteFile, bool playerShoot) : _shoot(shoot), _size(SHOT_X, SHOT_Y), _clockMove(MOVE_SHOT), _frameClock(100)
 {
     this->_playerShoot = playerShoot;
 }
@@ -75,4 +75,14 @@ bool ShotEntity::getHasMoved(void)
 void ShotEntity::setHasMoved(bool state)
 {
     this->_hasMoved = state;
+}
+
+unsigned int ShotEntity::getEntitySpriteFrame()
+{
+    if (this->_frameClock.clockOk()) {
+        ++this->_spriteFrame;
+        if (!this->_playerShoot)
+            this->_spriteFrame = this->_spriteFrame >= 8 ? 0 : this->_spriteFrame;
+    }
+    return (this->_spriteFrame);
 }

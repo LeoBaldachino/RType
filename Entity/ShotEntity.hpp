@@ -111,10 +111,19 @@ class ShotEntity : public IEntity {
          */
         inline bool readyToMove() {return this->_clockMove.clockOk();};
 
+        /**
+         * @brief Get the Entity Sprite Frame count
+         * 
+         * @return unsigned int 
+         */
+        unsigned int getEntitySpriteFrame();
+
     private:
         Shoot _shoot;
         Vector2d _size;
         bool _hasMoved = false;
         bool _playerShoot;
         ClockTimer _clockMove;
+        unsigned int _spriteFrame = 0;
+        ClockTimer _frameClock;
 };

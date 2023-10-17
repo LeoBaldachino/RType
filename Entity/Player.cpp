@@ -7,12 +7,12 @@
 
 #include "Player.hpp"
 
-Player::Player() : Health(BASE_HEALTH), _timer(READY_MOVE)
+Player::Player() : Health(BASE_HEALTH), _timer(READY_MOVE), _frameClock(100)
 {
     this->_inputs = std::make_unique<Inputs>();
 }
 
-Player::Player(Position position) : _size(PLAYER_X, PLAYER_Y),  Health(BASE_HEALTH) , _timer(READY_MOVE)
+Player::Player(Position position) : _size(PLAYER_X, PLAYER_Y),  Health(BASE_HEALTH) , _timer(READY_MOVE), _frameClock(100)
 {
     this->_position = position;
     this->_state = State(100);
@@ -109,4 +109,13 @@ bool Player::getHasMoved(void)
 void Player::setHasMoved(bool state)
 {
     this->_hasMoved = state;
+}
+
+unsigned int Player::getEntitySpriteFrame()
+{
+    if (this->_frameClock.clockOk()) {
+        ++this->_spriteFrame;
+        this->_spriteFrame = this->_spriteFrame >= 4 ? 0 : this->_spriteFrame;
+    }
+    return (this->_spriteFrame);
 }

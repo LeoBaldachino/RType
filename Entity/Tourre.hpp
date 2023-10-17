@@ -18,7 +18,7 @@ class Tourre : public IEntity {
         /**
          * @brief Construct a new Tourre object
          */
-        Tourre() {};
+        Tourre() : _frameClock(100) {};
 
         /**
          * @brief Construct a new Tourre object
@@ -65,6 +65,13 @@ class Tourre : public IEntity {
         bool getHasMoved(void);
         void setHasMoved(bool state);
 
+        /**
+         * @brief Get the Entity Sprite Frame count
+         * 
+         * @return unsigned int 
+         */
+        unsigned int getEntitySpriteFrame();
+
     private:
         State _state;
         Position _position;
@@ -74,4 +81,6 @@ class Tourre : public IEntity {
         int _shootVelocity = 5;
         int _shootGravity = 0;
         bool _hasMoved = false;
+        unsigned int _spriteFrame = 0;
+        ClockTimer _frameClock;
 };

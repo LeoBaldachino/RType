@@ -7,7 +7,7 @@
 
 #include "PiercingShotEntity.hpp"
 
-PiercingShotEntity::PiercingShotEntity(Shoot &shoot) : _shoot(shoot), _size(PIERCING_SHOT_X, PIERCING_SHOT_Y)
+PiercingShotEntity::PiercingShotEntity(Shoot &shoot) : _shoot(shoot), _size(PIERCING_SHOT_X, PIERCING_SHOT_Y), _frameClock(100)
 {
 }
 
@@ -74,4 +74,13 @@ bool PiercingShotEntity::getHasMoved(void)
 void PiercingShotEntity::setHasMoved(bool state)
 {
     this->_hasMoved = state;
+}
+
+unsigned int PiercingShotEntity::getEntitySpriteFrame()
+{
+    if (this->_frameClock.clockOk()) {
+        ++this->_spriteFrame;
+        this->_spriteFrame = this->_spriteFrame >= 4 ? 0 : this->_spriteFrame;
+    }
+    return (this->_spriteFrame);
 }
