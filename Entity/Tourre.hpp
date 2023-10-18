@@ -143,6 +143,13 @@ class Tourre : public IEntity, public Health {
          */
         std::vector<int> getEntityPositionRange();
 
+        /**
+         * @brief Set the Tempo State
+         * 
+         * @param state New tempo state
+         */
+        void setTempoState(int state);
+
     private:
         State _state;
         Position _position;
@@ -157,4 +164,5 @@ class Tourre : public IEntity, public Health {
         ClockTimer _readyMove;
         unsigned int _spriteFrame = 0;
         ClockTimer _frameClock;
+        int _currentTempoState = 0;
 };

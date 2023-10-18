@@ -86,3 +86,8 @@ unsigned int ShotEntity::getEntitySpriteFrame()
     }
     return (this->_spriteFrame);
 }
+
+void ShotEntity::setTempoState(int state)
+{
+    this->_currentTempoState = state;
+}

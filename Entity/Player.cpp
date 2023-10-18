@@ -119,3 +119,8 @@ unsigned int Player::getEntitySpriteFrame()
     }
     return (this->_spriteFrame);
 }
+
+void Player::setTempoState(int state)
+{
+    this->_currentTempoState = state;
+}

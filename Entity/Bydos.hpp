@@ -182,7 +182,14 @@ class Bydos : public IEntity, public Health {
          * 
          * @param frame 
          */
-        std::vector<int> getEntityPositionRange() {return std::vector<int>(4, 0);};
+        std::vector<int> getEntityPositionRange();
+
+        /**
+         * @brief Set the Tempo State
+         * 
+         * @param state New tempo state
+         */
+        void setTempoState(int state);
 
     private:
         State _state;
@@ -198,4 +205,5 @@ class Bydos : public IEntity, public Health {
         ClockTimer _readyMove;
         unsigned int _spriteFrame = 0;
         ClockTimer _frameClock;
+        int _currentTempoState = 0;
 };

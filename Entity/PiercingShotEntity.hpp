@@ -120,10 +120,18 @@ class PiercingShotEntity : public IEntity {
          */
         std::vector<int> getEntityPositionRange() {return std::vector<int>(4, 0);};
 
+        /**
+         * @brief Set the Tempo State
+         * 
+         * @param state New tempo state
+         */
+        void setTempoState(int state);
+
     private:
         Shoot _shoot;
         Vector2d _size;
         bool _hasMoved = false;
         unsigned int _spriteFrame = 0;
         ClockTimer _frameClock;
+        int _currentTempoState = 0;
 };

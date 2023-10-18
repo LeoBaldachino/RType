@@ -23,11 +23,18 @@ void MovementSystem::updatePosition(IEntity &entity)
     if (rangePos[0] || rangePos[1]) {
         Moveable tmpMv = entity.getMoveable();
         if (entity.getPosition().getY() >= rangePos[0]) {
-            tmpMv.setDirection(Vector2d(tmpMv.getDirection().x, -1.0));
-            entity.setMoveable(tmpMv);
+            if (rangePos[2] == rangePos[3]) {
+                tmpMv.setDirection(Vector2d(tmpMv.getDirection().x, -1.0));
+                entity.setMoveable(tmpMv);
+                entity.setTempoState(0);
+            } else {
+                tmpMv.setDirection(Vector2d(tmpMv.getDirection().x, 0));
+                entity.setMoveable(tmpMv);
+                entity.setTempoState(rangePos[2] + 1);
+            }
+
         }
         if (entity.getPosition().getY() <= rangePos[1]) {
-        printf("X : %d Y : %d dir : %f\n", entity.getPosition().getX(), entity.getPosition().getY(), tmpMv.getDirection().y);
             tmpMv.setDirection(Vector2d(tmpMv.getDirection().x, 1.0));
             entity.setMoveable(tmpMv);
         }
