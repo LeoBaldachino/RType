@@ -11,6 +11,7 @@
 #include "../Components/Moveable.hpp"
 #include "../Components/Position.hpp"
 #include "../Visitor/IVisitor.hpp"
+#include "../Components/ClockTimer.hpp"
 
 #define SIZE_SCALE 2
 
@@ -87,12 +88,19 @@ class IEntity {
          * 
          * @param frame 
          */
-        virtual std::vector<int> getEntityPositionRange() = 0;
+        virtual std::vector<float> getEntityPositionRange() = 0;
 
         /**
          * @brief Set the Tempo State of the entity
          * 
          * @param state New tempo state
          */
-        virtual void setTempoState(int state) = 0;
+        virtual void setTempoState(ClockTimer state) = 0;
+
+        /**
+         * @brief Get the Tempo State
+         * 
+         * @return ClockTimer 
+         */
+        virtual ClockTimer getTempoState() = 0;
 };

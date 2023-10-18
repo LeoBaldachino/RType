@@ -29,6 +29,10 @@ class ClockTimer {
             this->_baseClock = std::chrono::steady_clock::now();
             return true;
         };
+        unsigned long long getRemainingTime() {
+            auto clock = std::chrono::steady_clock::now();
+            return this->_baseTimeout - std::chrono::duration_cast<std::chrono::milliseconds>(clock - this->_baseClock).count();
+        };
     private:
         std::chrono::steady_clock::time_point _baseClock;
         size_t _baseTimeout;

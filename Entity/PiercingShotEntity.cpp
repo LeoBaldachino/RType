@@ -7,7 +7,11 @@
 
 #include "PiercingShotEntity.hpp"
 
-PiercingShotEntity::PiercingShotEntity(Shoot &shoot) : _shoot(shoot), _size(PIERCING_SHOT_X, PIERCING_SHOT_Y), _frameClock(100)
+PiercingShotEntity::PiercingShotEntity(Shoot &shoot) :
+_shoot(shoot),
+_size(PIERCING_SHOT_X, PIERCING_SHOT_Y),
+_frameClock(100),
+_currentTempoState(getEntityPositionRange()[3])
 {
 }
 
@@ -85,7 +89,12 @@ unsigned int PiercingShotEntity::getEntitySpriteFrame()
     return (this->_spriteFrame);
 }
 
-void PiercingShotEntity::setTempoState(int state)
+void PiercingShotEntity::setTempoState(ClockTimer state)
 {
     this->_currentTempoState = state;
+}
+
+ClockTimer PiercingShotEntity::getTempoState(void)
+{
+    return this->_currentTempoState;
 }
