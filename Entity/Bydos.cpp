@@ -12,6 +12,7 @@ _size(BYDOS_X, BYDOS_Y),
 _readyShoot(SHOOT_SPEED),
 _readyMove(MOVE_SPEED),
 _frameClock(100),
+_currentTempoState(getEntityPositionRange()[3]),
 Health(BYDOS_HEALTH)
 {
     this->_position = position;
@@ -138,14 +139,19 @@ unsigned int Bydos::getEntitySpriteFrame()
     return (this->_spriteFrame);
 }
 
-std::vector<int> Bydos::getEntityPositionRange()
+std::vector<float> Bydos::getEntityPositionRange()
 {
-    std::vector<int> rangePos = {0, 0, 0, 0};
+    std::vector<float> rangePos = {0, 0, 0, 0};
 
     return (rangePos);
 }
 
-void Bydos::setTempoState(int state)
+void Bydos::setTempoState(ClockTimer state)
 {
     this->_currentTempoState = state;
+}
+
+ClockTimer Bydos::getTempoState(void)
+{
+    return this->_currentTempoState;
 }

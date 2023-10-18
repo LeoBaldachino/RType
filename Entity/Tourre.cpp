@@ -12,6 +12,7 @@ _frameClock(125),
 _size(TOURRE_X, TOURRE_Y),
 _readyShoot(SHOOT_SPEED),
 _readyMove(MOVE_SPEED),
+_currentTempoState(getEntityPositionRange()[3]),
 Health(TOURRE_HEALTH)
 {
     this->_position = position;
@@ -138,14 +139,19 @@ unsigned int Tourre::getEntitySpriteFrame()
     return (this->_spriteFrame);
 }
 
-std::vector<int> Tourre::getEntityPositionRange()
+std::vector<float> Tourre::getEntityPositionRange()
 {
-    std::vector<int> range = {1080 - 53, 730, this->_currentTempoState, 150};
+    std::vector<float> range = {1080 - 53, 730, 100, 1000};
 
     return range;
 }
 
-void Tourre::setTempoState(int state)
+void Tourre::setTempoState(ClockTimer state)
 {
     this->_currentTempoState = state;
+}
+
+ClockTimer Tourre::getTempoState(void)
+{
+    return this->_currentTempoState;
 }

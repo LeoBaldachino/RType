@@ -9,6 +9,7 @@
 #include "../../Entity/IEntity.hpp"
 #include "../../Components/Moveable.hpp"
 #include "../../Components/Position.hpp"
+#include "../../Components/ClockTimer.hpp"
 #include <vector>
 
 class MovementSystem {

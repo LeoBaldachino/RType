@@ -7,7 +7,12 @@
 
 #include "ShotEntity.hpp"
 
-ShotEntity::ShotEntity(Shoot &shoot, std::string spriteFile, bool playerShoot) : _shoot(shoot), _size(SHOT_X, SHOT_Y), _clockMove(MOVE_SHOT), _frameClock(100)
+ShotEntity::ShotEntity(Shoot &shoot, std::string spriteFile, bool playerShoot) :
+_shoot(shoot),
+_size(SHOT_X, SHOT_Y),
+_clockMove(MOVE_SHOT),
+_frameClock(100),
+_currentTempoState(getEntityPositionRange()[3])
 {
     this->_playerShoot = playerShoot;
 }
@@ -87,7 +92,12 @@ unsigned int ShotEntity::getEntitySpriteFrame()
     return (this->_spriteFrame);
 }
 
-void ShotEntity::setTempoState(int state)
+void ShotEntity::setTempoState(ClockTimer state)
 {
     this->_currentTempoState = state;
+}
+
+ClockTimer ShotEntity::getTempoState(void)
+{
+    return this->_currentTempoState;
 }
