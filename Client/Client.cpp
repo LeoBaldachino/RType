@@ -19,7 +19,8 @@ _commands({
 {entityType, &RType::Client::setEntityType},
 {removeEntity, &RType::Client::removeAnEntity},
 {valueSet, &RType::Client::setValues},
-})
+}),
+_parallax(_texture)
 {
     std::srand(std::time(NULL));
     if (ac < 3)
@@ -428,7 +429,8 @@ void RType::Client::gameLoop()
     }
     auto msgKeyPressed = this->buildEmptyMsg(keyPressed);
     unsigned char actualIndex = 0;
-    _window->clear();   
+    _window->clear();
+    this->_parallax.drawParallax(this->_window);
     this->_lifeBar->display(this->_window);     
     for (auto &it : this->_entities._entities) {
         this->_window->draw(this->getSpriteFromEntity(it.second, it.first));
@@ -448,4 +450,5 @@ void RType::Client::gameLoop()
         msgKeyPressed.bytes[actualIndex] = 255;
         this->_socket->send(msgKeyPressed);
     }
+    this->_parallax.drawScreenFX(this->_window);
 }
