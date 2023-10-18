@@ -134,7 +134,7 @@ unsigned int Tourre::getEntitySpriteFrame()
 {
     if (this->_frameClock.clockOk()) {
         ++this->_spriteFrame;
-        this->_spriteFrame = this->_spriteFrame >= 23 ? 0 : this->_spriteFrame;
+        this->_spriteFrame = this->_spriteFrame >= 29 ? 0 : this->_spriteFrame;
     }
     return (this->_spriteFrame);
 }

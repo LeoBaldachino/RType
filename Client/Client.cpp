@@ -19,7 +19,8 @@ _commands({
 {entityType, &RType::Client::setEntityType},
 {removeEntity, &RType::Client::removeAnEntity},
 {valueSet, &RType::Client::setValues},
-})
+}),
+_parallax(_texture)
 {
     std::srand(std::time(NULL));
     if (ac < 3)
@@ -37,7 +38,7 @@ _commands({
     this->_serverIp = av[1];
     this->_serverPort = std::stoi(av[2]);
     this->_mutex = std::make_unique<std::mutex>();
-    this->_window = std::make_unique<sf::RenderWindow>(sf::VideoMode::getDesktopMode(), "R-Type");
+    this->_window = std::make_unique<sf::RenderWindow>(sf::VideoMode::getDesktopMode(), "R-Type", sf::Style::Fullscreen);
     if (this->_music.openFromFile("../Assets/music.ogg") != -1)
         this->_music.play();
     this->_socket = std::make_unique<Utils::SocketHandler>("127.0.0.1", 4001 + std::rand() % 3000, std::list<int>({entityType}));
@@ -387,7 +388,7 @@ sf::Sprite RType::Client::getSpriteFromEntity(std::shared_ptr<IEntity> entity, u
     int spriteFrame = entity->getEntitySpriteFrame() + 1;
     if (entity->getEntityType() == 6) {
         ret.setTexture(this->_texture.tourreTexture);
-        ret.setTextureRect(sf::Rect<int>(0, 420 * (spriteFrame - 1), 420, 403));
+        ret.setTextureRect(sf::Rect<int>(0, 420 * (spriteFrame - 1), 494, 420));
         ret.setScale(0.5, 0.5);
         ret.setPosition(entity->getPosition().getX(), entity->getPosition().getY());
     }
@@ -428,7 +429,8 @@ void RType::Client::gameLoop()
     }
     auto msgKeyPressed = this->buildEmptyMsg(keyPressed);
     unsigned char actualIndex = 0;
-    _window->clear();   
+    _window->clear();
+    this->_parallax.drawParallax(this->_window);
     this->_lifeBar->display(this->_window);     
     for (auto &it : this->_entities._entities) {
         this->_window->draw(this->getSpriteFromEntity(it.second, it.first));
@@ -448,4 +450,5 @@ void RType::Client::gameLoop()
         msgKeyPressed.bytes[actualIndex] = 255;
         this->_socket->send(msgKeyPressed);
     }
+    this->_parallax.drawScreenFX(this->_window);
 }

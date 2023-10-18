@@ -6,6 +6,7 @@
 
 #pragma once
 #include "Texture/Texture.hpp"
+#include "Parallax/Parallax.hpp"
 #include "../Entity/Player.hpp"
 #include "../Core/Core.hpp"
 #include "../EntityTypes/EntityTypes.hpp"
@@ -109,5 +110,6 @@ namespace RType {
             Screens _actualScreen;
             bool _gameAsStarted;
             Texture _texture;
+            Parallax _parallax;
     };
 }
