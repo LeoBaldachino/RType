@@ -120,43 +120,43 @@ void RType::RTypeGameLoop::handleBydos(std::queue<RType::Utils::MessageParsed_s>
 
 void RType::RTypeGameLoop::handleTourre(std::queue<RType::Utils::MessageParsed_s> &toReturn)
 {
-    // auto it = this->_tourre.begin();
-    // std::queue<unsigned short> toDelete;
-    // Utils::MessageParsed_s msg;
-    // msg.msgType = removeEntity;
-    // for (; it != this->_tourre.end(); it++) {
-    //     auto finded = this->_core._entities.find(*it);
-    //     if (finded == this->_core._entities.end()) {
-    //         toDelete.push(*it);
-    //         continue;
-    //     }
-    //     Position actPos = finded->second->getPosition();
-    //     if (actPos.getX() < 0 || actPos.getY() < 0) {
-    //         std::cout << "Entity not not well positionned" << std::endl;
-    //         this->_core.removeEntityLater(finded->first);
-    //         toDelete.push(*it);
-    //         continue;
-    //     }
-    // }
-    // while (!toDelete.empty()) {
-    //     std::cout << "Delete a tourre" << std::endl;
-    //     msg.setFirstShort(toDelete.front());
-    //     toReturn.push(msg);
-    //     for (auto it = this->_tourre.begin(); it < this->_tourre.end(); it++)
-    //         if (*it == toDelete.front())
-    //             this->_tourre.erase(it);
-    //     toDelete.pop();
-    // }
-    // msg.msgType = entityType;
-    // if (this->_tourre.size() < 6) {
-    //     std::cout << "Add new tourre" << std::endl;
-    //     unsigned short id = this->_core.getAvailabeIndex();
-    //     this->_tourre.push_back(id);
-    //     msg.setFirstShort(id);
-    //     msg.setSecondShort(tourre);
-    //     toReturn.push(msg);
-    //     this->_core.addEntity(std::make_shared<Tourre>(Position(1700 + std::rand() % 200, std::rand() % 1000, 1080, 1920), 1, Vector2d(-1, 0)), id);
-    // }
+    auto it = this->_tourre.begin();
+    std::queue<unsigned short> toDelete;
+    Utils::MessageParsed_s msg;
+    msg.msgType = removeEntity;
+    for (; it != this->_tourre.end(); it++) {
+        auto finded = this->_core._entities.find(*it);
+        if (finded == this->_core._entities.end()) {
+            toDelete.push(*it);
+            continue;
+        }
+        Position actPos = finded->second->getPosition();
+        if (actPos.getX() < 0 || actPos.getY() < 0) {
+            std::cout << "Entity not not well positionned" << std::endl;
+            this->_core.removeEntityLater(finded->first);
+            toDelete.push(*it);
+            continue;
+        }
+    }
+    while (!toDelete.empty()) {
+        std::cout << "Delete a tourre" << std::endl;
+        msg.setFirstShort(toDelete.front());
+        toReturn.push(msg);
+        for (auto it = this->_tourre.begin(); it < this->_tourre.end(); it++)
+            if (*it == toDelete.front())
+                this->_tourre.erase(it);
+        toDelete.pop();
+    }
+    msg.msgType = entityType;
+    if (this->_tourre.size() < 2) {
+        std::cout << "Add new tourre" << std::endl;
+        unsigned short id = this->_core.getAvailabeIndex();
+        this->_tourre.push_back(id);
+        msg.setFirstShort(id);
+        msg.setSecondShort(tourre);
+        toReturn.push(msg);
+        this->_core.addEntity(std::make_shared<Tourre>(Position(1500 + std::rand() % 200, 1080 - 53, 1080, 1920), 1, Vector2d(-1, -1)), id);
+    }
 }
 
 void RType::RTypeGameLoop::addRemoveEntity(std::queue<Utils::MessageParsed_s> &toReturn, unsigned short id)

@@ -118,6 +118,20 @@ class ShotEntity : public IEntity {
          */
         unsigned int getEntitySpriteFrame();
 
+        /**
+         * @brief Return if the position range of the entity and the temporisation, returns four 0 if no range
+         * 
+         * @param frame 
+         */
+        std::vector<int> getEntityPositionRange() {return std::vector<int>(4, 0);};
+
+            /**
+         * @brief Set the Tempo State
+         * 
+         * @param state New tempo state
+         */
+        void setTempoState(int state);
+
     private:
         Shoot _shoot;
         Vector2d _size;
@@ -126,4 +140,5 @@ class ShotEntity : public IEntity {
         ClockTimer _clockMove;
         unsigned int _spriteFrame = 0;
         ClockTimer _frameClock;
+        int _currentTempoState = 0;
 };

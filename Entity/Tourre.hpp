@@ -16,7 +16,7 @@
 #define SHOOT_SPEED 3000
 #define JUMP_SPEED 3000
 #define MOVE_SPEED 3
-#define TOURRE_X 203 * SIZE_SCALE
+#define TOURRE_X 247 * SIZE_SCALE
 #define TOURRE_Y 220 * SIZE_SCALE
 #define TOURRE_HEALTH 2
 
@@ -136,6 +136,20 @@ class Tourre : public IEntity, public Health {
          */
         unsigned int getEntitySpriteFrame();
 
+        /**
+         * @brief Return if the position range of the entity and the temporisation, returns four 0 if no range
+         * 
+         * @param frame 
+         */
+        std::vector<int> getEntityPositionRange();
+
+        /**
+         * @brief Set the Tempo State
+         * 
+         * @param state New tempo state
+         */
+        void setTempoState(int state);
+
     private:
         State _state;
         Position _position;
@@ -150,4 +164,5 @@ class Tourre : public IEntity, public Health {
         ClockTimer _readyMove;
         unsigned int _spriteFrame = 0;
         ClockTimer _frameClock;
+        int _currentTempoState = 0;
 };

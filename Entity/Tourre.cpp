@@ -133,7 +133,19 @@ unsigned int Tourre::getEntitySpriteFrame()
 {
     if (this->_frameClock.clockOk()) {
         ++this->_spriteFrame;
-        this->_spriteFrame = this->_spriteFrame >= 23 ? 0 : this->_spriteFrame;
+        this->_spriteFrame = this->_spriteFrame >= 29 ? 0 : this->_spriteFrame;
     }
     return (this->_spriteFrame);
+}
+
+std::vector<int> Tourre::getEntityPositionRange()
+{
+    std::vector<int> range = {1080 - 53, 730, this->_currentTempoState, 150};
+
+    return range;
+}
+
+void Tourre::setTempoState(int state)
+{
+    this->_currentTempoState = state;
 }

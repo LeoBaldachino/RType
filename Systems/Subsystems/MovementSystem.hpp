@@ -9,7 +9,7 @@
 #include "../../Entity/IEntity.hpp"
 #include "../../Components/Moveable.hpp"
 #include "../../Components/Position.hpp"
-
+#include <vector>
 
 class MovementSystem {
     public:

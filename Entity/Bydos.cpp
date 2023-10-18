@@ -137,3 +137,15 @@ unsigned int Bydos::getEntitySpriteFrame()
     }
     return (this->_spriteFrame);
 }
+
+std::vector<int> Bydos::getEntityPositionRange()
+{
+    std::vector<int> rangePos = {0, 0, 0, 0};
+
+    return (rangePos);
+}
+
+void Bydos::setTempoState(int state)
+{
+    this->_currentTempoState = state;
+}
