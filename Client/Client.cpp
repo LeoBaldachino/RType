@@ -231,6 +231,10 @@ void RType::Client::moveEntity(const Utils::MessageParsed_s &msg)
         this->getEntityType(msg.getThirdShort());
         return;
     }
+    if (it->second->getEntityType() != msg.bytes[6]) {
+        lock.unlock();
+        return this->changeTypeEntityAndMove(msg, it);
+    }
     it->second->setPosition(Position(msg.getFirstShort(), msg.getSecondShort(), 1080, 1920));
     // std::cout << "Entity " << msg.getThirdShort() << " moves x = " << msg.getFirstShort() << " y = " << msg.getSecondShort() << std::endl; 
 }
@@ -448,4 +452,18 @@ void RType::Client::gameLoop()
         msgKeyPressed.bytes[actualIndex] = 255;
         this->_socket->send(msgKeyPressed);
     }
+}
+
+void RType::Client::changeTypeEntityAndMove(const Utils::MessageParsed_s &msg, std::unordered_map<unsigned short, std::shared_ptr<IEntity>>::iterator &it)
+{
+    std::unique_lock<std::mutex> lock(*this->_mutex);
+    if (it == this->_entities._entities.end())
+        return;
+    Utils::MessageParsed_s NewMsg = this->buildEmptyMsg(entityType);
+    NewMsg.setFirstShort(msg.getFirstShort());
+    NewMsg.bytes[3] = msg.bytes[6];
+    this->_entities._entities.erase(it);
+    this->setEntityType(NewMsg);
+    lock.unlock();
+    return this->moveEntity(msg);
 }

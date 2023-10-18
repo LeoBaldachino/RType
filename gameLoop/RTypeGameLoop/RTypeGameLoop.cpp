@@ -198,6 +198,7 @@ void RType::RTypeGameLoop::sendRefreshAllEntities(std::queue<Utils::MessageParse
             msgReturned.setFirstShort(tmpPos.getX());
             msgReturned.setSecondShort(tmpPos.getY());
             msgReturned.setThirdShort(it.first);
+            msgReturned.bytes[6] = it.second->getEntityType();
             msgReturned.msgType = moveAnEntity;
             toReturn.push(msgReturned);
         }
@@ -220,6 +221,7 @@ void RType::RTypeGameLoop::sendRefreshPlayers(std::queue<Utils::MessageParsed_s>
         msgReturned.setFirstShort(tmpPos.getX());
         msgReturned.setSecondShort(tmpPos.getY());
         msgReturned.setThirdShort(find->first);
+        msgReturned.bytes[6] = find->second->getEntityType();
         msgReturned.msgType = moveAnEntity;
         toReturn.push(msgReturned);
     }
