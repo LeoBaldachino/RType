@@ -12,6 +12,7 @@
 #include "../Systems/TourreSystem.hpp"
 #include "../EntityTypes/EntityTypes.hpp"
 #include "../Components/ClockTimer.hpp"
+#include "../Systems/TourreSystem.hpp"
 
 class PredictVisitor : public IVisitor {
     public:
@@ -28,6 +29,7 @@ class PredictVisitor : public IVisitor {
         }
         void visitTourre(Tourre &t, Core &core) {
             (void)core;
+            this->_tourreSystem.updatePos(t);
         }
         void visitShot(ShotEntity &s, Core &core) {
 
@@ -38,4 +40,5 @@ class PredictVisitor : public IVisitor {
     private:
         PlayerSystem _playerSystem;
         BydosSystem _bydosSystem;
+        TourreSystem _tourreSystem;
 };
