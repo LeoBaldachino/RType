@@ -43,6 +43,7 @@ _commands({
     this->_socket = std::make_unique<Utils::SocketHandler>("127.0.0.1", 4001 + std::rand() % 3000, std::list<int>({entityType, playerPing, newPlayerConnected, givePlayerId, destroyedRoom, serverStop, entityType, removeEntity, playerDeconnected, newRoomIsCreated, playerGetId, givePlayerId}));
     this->_threadIsOpen = true;
     this->_actualId = -1;
+    this->_predicate = std::make_unique<Prediction>(this->_entities, this->_inputs);
     this->_infosThread = std::make_unique<std::thread>(&RType::Client::infosThread, this);
     this->run();
 }
@@ -439,6 +440,8 @@ void RType::Client::gameLoop()
     }
     _window->display();
     this->updateInputs();
+    this->_predicate->PredicatePlayer(this->_actualId, 10);
+    this->_predicate->PredicateOtherEntities();
     while (!this->_inputs.empty()) {
         if (actualIndex > 5) {
             this->_socket->send(msgKeyPressed);

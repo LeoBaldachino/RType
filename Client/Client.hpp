@@ -16,6 +16,7 @@
 #include "LifeBar/LifeBar.hpp"
 #include <unordered_map>
 #include <SFML/Audio.hpp>
+#include "Prediction/Prediction.hpp"
 
 #define GET_ID_LIMIT_TIME 500
 
@@ -30,16 +31,7 @@ namespace RType {
              * @enum Events
              * @brief Enum representing possible events in the game
              */
-            enum Events {
-                Up,
-                Down,
-                Left,
-                Right,
-                Shoot,
-                PiercingShoot,
-                CloseWindow,
-                Unknown
-            };
+
 
             enum Screens {
                 menu,
@@ -110,5 +102,6 @@ namespace RType {
             Screens _actualScreen;
             bool _gameAsStarted;
             Texture _texture;
+            std::unique_ptr<Prediction> _predicate;
     };
 }
