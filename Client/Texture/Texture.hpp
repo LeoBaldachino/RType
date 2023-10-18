@@ -16,27 +16,26 @@
 class Texture {
     public:
         Texture() {
-            this->bydosTexture.loadFromFile("./../Assets/EntitiesSprites/Bydos.png");
-            this->tourreTexture.loadFromFile("./../Assets/EntitiesSprites/Cupcake.png");
-            this->playerTexture.loadFromFile("./../Assets/EntitiesSprites/CupHead.png");
-            this->otherPlayerTexture.loadFromFile("./../Assets/EntitiesSprites/MugMan.png");
-            this->playerShotTexture.loadFromFile("./../Assets/shot.png");
-            this->piercingShotTexture.loadFromFile("./../Assets/EntitiesSprites/PiercingShot.png");
-            this->enemyShotTexture.loadFromFile("./../Assets/EntitiesSprites/EnemyShot.png");
+            this->bydosTexture.loadFromFile("./../../Assets/EntitiesSprites/Bydos.png");
+            this->tourreTexture.loadFromFile("./../../Assets/EntitiesSprites/Cupcake.png");
+            this->playerTexture.loadFromFile("./../../Assets/EntitiesSprites/CupHead.png");
+            this->otherPlayerTexture.loadFromFile("./../../Assets/EntitiesSprites/MugMan.png");
+            this->playerShotTexture.loadFromFile("./../../Assets/shot.png");
+            this->piercingShotTexture.loadFromFile("./../../Assets/EntitiesSprites/PiercingShot.png");
+            this->enemyShotTexture.loadFromFile("./../../Assets/EntitiesSprites/EnemyShot.png");
             for (int i = 0; i != 24; ++i) {
                 sf::Texture _text;
-                std::string fileName = "./../Assets/Desert/Desert/desert";
+                std::string fileName = "./../../Assets/Desert/Desert/desert";
                 fileName += std::to_string(i) + ".png";
                 _text.loadFromFile(fileName);
                 this->desert.push_back(_text);
             }
-            this->desertForest.loadFromFile("./../Assets/Desert/Background/genie_bg_forest_sunny.png");
-            this->desertMountain.loadFromFile("./../Assets/Desert/Background/genie_bg_mountains_sunny.png");
-            this->desertSky.loadFromFile("./../Assets/Desert/Background/genie_bg_sky_loop.png");
-
+            this->desertForest.loadFromFile("./../../Assets/Desert/Background/genie_bg_forest_sunny.png");
+            this->desertMountain.loadFromFile("./../../Assets/Desert/Background/genie_bg_mountains_sunny.png");
+            this->desertSky.loadFromFile("./../../Assets/Desert/Background/genie_bg_sky_loop.png");
             for (int i = 0; i != 8; ++i) {
                 sf::Texture _text;
-                std::string fileName = "./../Assets/ScreenFX/screenFX";
+                std::string fileName = "./../../Assets/ScreenFX/screenFX";
                 fileName += std::to_string(i) + ".png";
                 _text.loadFromFile(fileName);
                 this->screenFX.push_back(_text);
