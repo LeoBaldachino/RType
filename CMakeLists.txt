@@ -18,10 +18,11 @@ file(GLOB CLIENT_FILES  "Client/*.cpp")
 file(GLOB SOCKET_FILES "Sockets/sources/*.cpp")
 file(GLOB ENTITY_TYPES "EntityTypes/*.cpp")
 file(GLOB LIFE_BAR "Client/LifeBar/*.cpp")
+file(GLOB PARALLAX "Client/Parallax/*.cpp")
 
-add_executable(r-type_client ${CLIENT_FILES} ${SUBSYSTEMS} ${SYSTEMS} ${ENTITY} ${CORE} ${SOCKET_FILES} ${ENTITY_TYPES} ${LIFE_BAR})
+add_executable(r-type_client ${CLIENT_FILES} ${SUBSYSTEMS} ${SYSTEMS} ${ENTITY} ${CORE} ${SOCKET_FILES} ${ENTITY_TYPES} ${LIFE_BAR} ${PARALLAX})
 
-target_link_libraries(r-type_client PRIVATE sfml-graphics sfml-window sfml-system sfml-audio)
+target_link_libraries(r-type_client PRIVATE sfml-graphics sfml-window sfml-system sfml-audio pthread)
 
 if(CMAKE_COMPILER_IS_GNUCXX)
     target_compile_options(r-type_client PRIVATE "-Wno-unused-result")
