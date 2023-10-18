@@ -88,4 +88,11 @@ class IEntity {
          * @param frame 
          */
         virtual std::vector<int> getEntityPositionRange() = 0;
+
+        /**
+         * @brief Set the Tempo State of the entity
+         * 
+         * @param state New tempo state
+         */
+        virtual void setTempoState(int state) = 0;
 };

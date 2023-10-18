@@ -140,7 +140,12 @@ unsigned int Tourre::getEntitySpriteFrame()
 
 std::vector<int> Tourre::getEntityPositionRange()
 {
-    std::vector<int> range = {1080 - 53, 730, 0, 0};
+    std::vector<int> range = {1080 - 53, 730, this->_currentTempoState, 15};
 
     return range;
+}
+
+void Tourre::setTempoState(int state)
+{
+    this->_currentTempoState = state;
 }

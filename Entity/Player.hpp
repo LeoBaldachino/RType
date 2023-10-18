@@ -192,6 +192,13 @@ class Player : public IEntity, public Health {
          */
         std::vector<int> getEntityPositionRange() {return std::vector<int>(4, 0);};
 
+        /**
+         * @brief Set the Tempo State
+         * 
+         * @param state New tempo state
+         */
+        void setTempoState(int state);
+
         std::unique_ptr<Inputs> _inputs;
     private:
         State _state;
@@ -206,4 +213,5 @@ class Player : public IEntity, public Health {
         bool _hasMoved = false;
         unsigned int _spriteFrame = 0;
         ClockTimer _frameClock;
+        int _currentTempoState = 0;
 };

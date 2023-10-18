@@ -84,3 +84,8 @@ unsigned int PiercingShotEntity::getEntitySpriteFrame()
     }
     return (this->_spriteFrame);
 }
+
+void PiercingShotEntity::setTempoState(int state)
+{
+    this->_currentTempoState = state;
+}
