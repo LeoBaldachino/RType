@@ -10,6 +10,7 @@
 #include <fstream>
 #include <chrono>
 #include <iostream>
+#include <memory>
 
 class Parallax {
     public:
