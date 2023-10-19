@@ -27,3 +27,30 @@ target_link_libraries(r-type_client PRIVATE sfml-graphics sfml-window sfml-syste
 if(CMAKE_COMPILER_IS_GNUCXX)
     target_compile_options(r-type_client PRIVATE "-Wno-unused-result")
 endif()
+
+project(r-type_server)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+
+include(FetchContent)
+FetchContent_Declare(boost
+    GIT_REPOSITORY 
+    GIT_REPOSITORY https://github.com/boostorg/boost.git
+    GIT_TAG boost-1.76.0
+FetchContent_MakeAvailable(boost)    
+)
+
+file(GLOB SERVER_SOURCES "server/sources/*.cpp")
+file(GLOB SERVER_CORE "Core/*.cpp")
+file(GLOB SERVER_SOCKET "Sockets/sources/*.cpp")
+file(GLOB SERVER_SYSTEMS "Systems/*.cpp")
+file(GLOB SERVER_SUBSYSTEMS "Systems/Subsystems/*.cpp")
+file(GLOB SERVER_ENTITY "Entity/*.cpp")
+file(GLOB SERVER_GAMELOOP "gameLoop/*.cpp")
+file(GLOB SERVER_RTYPEGAMELOOP "gameLoop/RTypeGameLoop/*.cpp")
+file(GLOB SERVER_ENTITYTYPES "EntityTypes/*.cpp")
+
+add_executable(r-type_server ${SERVER_SOURCES} ${SERVER_CORE} ${SERVER_SOCKET} ${SERVER_SYSTEMS} ${SERVER_SUBSYSTEMS} ${SERVER_ENTITY} ${SERVER_GAMELOOP} ${SERVER_RTYPEGAMELOOP} ${SERVER_ENTITYTYPES})
+
+target_link_libraries(r-type_server PRIVATE boost_system boost_thread boost_serialization pthread)
