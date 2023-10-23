@@ -129,3 +129,23 @@ T Parser::getSetting(std::string settingsName, const libconfig::Setting &setting
     }
     return (T(NULL));
 }
+
+std::string Parser::getMusic(void) const
+{
+    return (this->_music);
+}
+
+std::string Parser::getNextLevel(void) const
+{
+    return (this->_next_level);
+}
+
+int Parser::getParallax(void) const
+{
+    return (this->_parallaxIndex);
+}
+
+std::vector<std::map<Parser::Enemies, int>> Parser::getWaves(void) const
+{
+    return (this->_waves);
+}
