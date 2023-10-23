@@ -30,9 +30,9 @@ class Texture {
                 _text.loadFromFile(fileName);
                 this->desert.push_back(_text);
             }
-            this->desertForest.loadFromFile("./../Assets/Desert/Background/genie_bg_forest_sunny.png");
-            this->desertMountain.loadFromFile("./../Assets/Desert/Background/genie_bg_mountains_sunny.png");
-            this->desertSky.loadFromFile("./../Assets/Desert/Background/genie_bg_sky_loop.png");
+            this->desertForest.loadFromFile("./../Assets/Desert/Background/ForestDesert.png");
+            this->desertMountain.loadFromFile("./../Assets/Desert/Background/MoutainsDesert.png");
+            this->desertSky.loadFromFile("./../Assets/Desert/Background/SkyDesert.png");
             for (int i = 0; i != 8; ++i) {
                 sf::Texture _text;
                 std::string fileName = "./../Assets/ScreenFX/screenFX";

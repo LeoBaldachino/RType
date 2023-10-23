@@ -38,7 +38,7 @@ _parallax(_texture)
     this->_serverIp = av[1];
     this->_serverPort = std::stoi(av[2]);
     this->_mutex = std::make_unique<std::mutex>();
-    this->_window = std::make_unique<sf::RenderWindow>(sf::VideoMode::getDesktopMode(), "R-Type", sf::Style::Fullscreen);
+    this->_window = std::make_unique<sf::RenderWindow>(sf::VideoMode::getDesktopMode(), "R-Type"/*, sf::Style::Fullscreen*/);
     if (this->_music.openFromFile("../Assets/music.ogg") != -1)
         this->_music.play();
     this->_socket = std::make_unique<Utils::SocketHandler>("127.0.0.1", 4001 + std::rand() % 3000, std::list<int>({entityType}));
@@ -430,6 +430,7 @@ void RType::Client::gameLoop()
     auto msgKeyPressed = this->buildEmptyMsg(keyPressed);
     unsigned char actualIndex = 0;
     _window->clear();
+    this->_parallax.drawBackgroundParallax(this->_window);
     this->_parallax.drawParallax(this->_window);
     this->_lifeBar->display(this->_window);     
     for (auto &it : this->_entities._entities) {
