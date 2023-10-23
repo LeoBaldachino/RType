@@ -25,7 +25,7 @@ void MovementSystem::updatePosition(IEntity& entity)
         if (!entity.getTempoState().clockOk()) {
             tmpMv.setDirection(Vector2d(tmpMv.getDirection().x, 0));
             entity.setMoveable(tmpMv);
-            std::cout << entity.getTempoState().getRemainingTime() << std::endl;
+            // std::cout << entity.getTempoState().getRemainingTime() << std::endl;
             waited = true;
         }
         if (entity.getPosition().getY() >= rangePos[0]) {
