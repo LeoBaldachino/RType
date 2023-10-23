@@ -8,6 +8,7 @@
 #pragma once
 #include "../../Sockets/includes/SocketHandler.hpp"
 #include "../../Sockets/includes/MessageParsed.hpp"
+#include "Parser.hpp"
 #include "ThreadPool.hpp"
 #include <memory>
 #include <exception>

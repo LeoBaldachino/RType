@@ -34,10 +34,11 @@ RType::CoreServer::CoreServer(int ar, char **av)
     }
     if (ar < 3)
         throw std::invalid_argument("Not enough arguments");
-    int port = std::atoi(av[2]);
+    int port = std::atoi(av[1]);
     if (port < 100)
         throw std::invalid_argument("Port is not valid");
-    this->_socket = std::make_unique<Utils::SocketHandler>((std::string(av[1]) == "localhost" ? "127.0.0.1" : av[1]), port, std::list<int>({removeEntity, entityType, destroyedRoom, playerDeconnected}));
+    this->_socket = std::make_unique<Utils::SocketHandler>((std::string("127.0.0.1")), port, std::list<int>({removeEntity, entityType, destroyedRoom, playerDeconnected}));
+    Parser parser(av[2]);
     this->_threadPool = std::make_unique<Server::ThreadPool>(std::thread::hardware_concurrency() - 1);
     ipPortServer = this->_socket->getIpAndPort();
     this->_threadPool->InitThreadPool();
