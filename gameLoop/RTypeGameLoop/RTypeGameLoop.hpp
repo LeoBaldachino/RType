@@ -7,7 +7,8 @@
 #pragma once
 #include "../GameLoop.hpp"
 #include "../../Visitor/SystemVisitor.hpp"
-#define REFRESH_ALL_ENTITIES 5
+#define REFRESH_ALL_ENTITIES 3
+#define STATUS_ALL_ENTITES 9
 #define REFRESH_PLAYERS 500
 
 namespace RType {
@@ -90,11 +91,14 @@ namespace RType {
              */
             void sendRefreshPlayers(std::queue<Utils::MessageParsed_s> &toReturn);
 
+
+            void refreshStatus(std::queue<Utils::MessageParsed_s> &toReturn);
             SystemVisitor v;
             std::vector<unsigned short> _bydos;
             std::vector<unsigned short> _tourre;
             std::chrono::steady_clock::time_point _refreshAllEntities;
             std::chrono::steady_clock::time_point _refreshPlayers;
+            std::chrono::steady_clock::time_point _refreshStatus;
     };
 
 }

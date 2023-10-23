@@ -51,11 +51,16 @@ RType::Utils::MessageParsed_s RType::Utils::SocketHandler::receive()
             msgNotReceived.pop_front();
         }
         Utils::MessageParsed_s toFill;
-        if (this->_packetTracker->reSendMessage(toFill, msg))
+        if (this->_packetTracker->reSendMessage(toFill, msg)) {
+            if (toFill.msgType == 13)
+                std::cout << "Receive delete message.." << std::endl;
             return toFill;
+        }
         if (msg.msgType == 34)
             return this->receive();
     }
+    if (msg.msgType == 13)
+        std::cout << "Receive delete message.." << std::endl;
     return msg;
 }
 
@@ -69,6 +74,8 @@ void RType::Utils::SocketHandler::send(const struct MessageParsed_s &msg)
     auto toSend = this->_queueMsg->getMessage(isImportant);
     if (isImportant)
         this->_packetTracker->prepareMessageToSend(toSend);
+    if (toSend.msgType == 13)
+        std::cout << "Message delete sended..." << std::endl;
     unsigned long long compressed = toSend.encode();
     boost::asio::const_buffer buffer(&compressed, sizeof(compressed));
     try {

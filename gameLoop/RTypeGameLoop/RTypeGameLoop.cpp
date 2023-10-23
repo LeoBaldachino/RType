@@ -9,8 +9,10 @@
 
 RType::RTypeGameLoop::RTypeGameLoop(Core &core) : GameLoop(core)
 {
-    this->_refreshAllEntities = std::chrono::steady_clock::now();
-    this->_refreshPlayers = std::chrono::steady_clock::now();
+    auto clock = std::chrono::steady_clock::now();
+    this->_refreshAllEntities = clock;
+    this->_refreshPlayers = clock;
+    this->_refreshStatus = clock;
 }
 
 RType::RTypeGameLoop::~RTypeGameLoop()
@@ -49,11 +51,9 @@ std::queue<RType::Utils::MessageParsed_s> RType::RTypeGameLoop::runAfterUpdate(s
     }
     else {
         this->sendRefreshAllEntities(toReturn);
-        this->checkPlayerStatus(toReturn);
-        this->checkBydosStatus(toReturn);
-        this->checkTourreStatus(toReturn);
         this->_refreshAllEntities = clock;
     }
+    this->refreshStatus(toReturn);
     std::queue<unsigned short> toErase = this->_core.getToErase();
     this->_core.eraseEntity();
     while (!toErase.empty()) {
@@ -164,6 +164,7 @@ void RType::RTypeGameLoop::addRemoveEntity(std::queue<Utils::MessageParsed_s> &t
     Utils::MessageParsed_s msg;
     msg.msgType = removeEntity;
     msg.setFirstShort(id);
+    std::cout << "Remove entity" << std::endl;
     toReturn.push(msg);
 }
 
@@ -235,13 +236,13 @@ void RType::RTypeGameLoop::checkBydosStatus(std::queue<Utils::MessageParsed_s> &
         auto find = this->_core._entities.find(it);
         if (find == this->_core._entities.end())
             continue;
-    if (find->second->getEntityType() != bydos)
-        continue;
-    std::shared_ptr<Bydos> bydos = std::dynamic_pointer_cast<Bydos>(find->second);
-    msgToSend.setFirstShort(it);
-    msgToSend.bytes[3] = bydos->getLifes();
-    msgToSend.bytes[4] = bydos->actuallyInvincible() ? 1 : 0;
-    toReturn.push(msgToSend);
+        if (find->second->getEntityType() != bydos)
+            continue;
+        std::shared_ptr<Bydos> bydos = std::dynamic_pointer_cast<Bydos>(find->second);
+        msgToSend.setFirstShort(it);
+        msgToSend.bytes[3] = bydos->getLifes();
+        msgToSend.bytes[4] = bydos->actuallyInvincible() ? 1 : 0;
+        toReturn.push(msgToSend);
     }
 }
 
@@ -261,4 +262,15 @@ void RType::RTypeGameLoop::checkTourreStatus(std::queue<Utils::MessageParsed_s> 
     msgToSend.bytes[4] = tourre->actuallyInvincible() ? 1 : 0;
     toReturn.push(msgToSend);
     }
+}
+
+void RType::RTypeGameLoop::refreshStatus(std::queue<Utils::MessageParsed_s> &toReturn)
+{
+    auto clock = std::chrono::steady_clock::now();
+    if (std::chrono::duration_cast<std::chrono::milliseconds>(clock - this->_refreshStatus).count() < STATUS_ALL_ENTITES)
+        return;
+    this->_refreshStatus = clock;
+    this->checkPlayerStatus(toReturn);
+    this->checkBydosStatus(toReturn);
+    this->checkTourreStatus(toReturn);
 }

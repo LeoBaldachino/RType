@@ -13,6 +13,7 @@
 #include "../EntityTypes/EntityTypes.hpp"
 #include "../Components/ClockTimer.hpp"
 #include "../Systems/TourreSystem.hpp"
+#include "../Systems/Subsystems/PredictShoot.hpp"
 
 class PredictVisitor : public IVisitor {
     public:
@@ -32,7 +33,11 @@ class PredictVisitor : public IVisitor {
             this->_tourreSystem.updatePos(t);
         }
         void visitShot(ShotEntity &s, Core &core) {
-
+            unsigned short id = core.getEntityId(s);
+            if (id == 0)
+                return;
+            if (this->_predictShoot.shootSetVector(id, s))
+                this->_shot.updatePos(s);
         }
         void visitPiercingShot(PiercingShotEntity &pS, Core &core) {
 
@@ -41,4 +46,6 @@ class PredictVisitor : public IVisitor {
         PlayerSystem _playerSystem;
         BydosSystem _bydosSystem;
         TourreSystem _tourreSystem;
+        ShotSystem _shot;
+        PredictShoot _predictShoot;
 };

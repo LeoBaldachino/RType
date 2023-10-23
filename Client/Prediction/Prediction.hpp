@@ -17,7 +17,7 @@
 #include "../ClientEvents.hpp"
 #include "../../Visitor/PredictVisitor.hpp"
 
-#define PREDICATE_ENTITIES_TIMER 800
+#define PREDICATE_ENTITIES_TIMER 300
 
 namespace RType {
     class Prediction {

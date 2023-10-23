@@ -83,3 +83,12 @@ void Core::eraseEntity(void)
         this->_erase.pop();
     }
 }
+
+unsigned short Core::getEntityId(IEntity &entity)
+{
+    std::unique_lock<std::mutex> lock(this->_mutex);
+    for (auto it : this->_entities)
+        if (it.second.get() == &entity)
+            return it.first;
+    return 0;   
+}

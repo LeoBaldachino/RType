@@ -315,6 +315,7 @@ void RType::Client::newTourreToRoom(const Utils::MessageParsed_s &msg)
 
 void RType::Client::removeAnEntity(const Utils::MessageParsed_s &msg)
 {
+    std::cout << "Remove Entity" << std::endl;
     this->_entities.removeEntity(msg.getFirstShort());
 }
 
@@ -464,9 +465,10 @@ void RType::Client::changeTypeEntityAndMove(const Utils::MessageParsed_s &msg, s
         return;
     Utils::MessageParsed_s NewMsg = this->buildEmptyMsg(entityType);
     NewMsg.setFirstShort(msg.getFirstShort());
-    NewMsg.bytes[3] = msg.bytes[6];
+    // NewMsg.bytes[3] = msg.bytes[6];
+    NewMsg.setSecondShort(static_cast<unsigned short>(msg.bytes[6]));
     this->_entities._entities.erase(it);
-    this->setEntityType(NewMsg);
     lock.unlock();
+    this->setEntityType(NewMsg);
     return this->moveEntity(msg);
 }
