@@ -38,9 +38,9 @@ _commands({
     this->_serverPort = std::stoi(av[2]);
     this->_mutex = std::make_unique<std::mutex>();
     this->_window = std::make_unique<sf::RenderWindow>(sf::VideoMode::getDesktopMode(), "R-Type", sf::Style::Fullscreen);
-    if (this->_music.openFromFile("../Assets/music.ogg") != -1)
-        this->_music.play();
-    this->_socket = std::make_unique<Utils::SocketHandler>("127.0.0.1", 4001 + std::rand() % 3000, std::list<int>({entityType, playerPing, newPlayerConnected, givePlayerId, destroyedRoom, serverStop, entityType, removeEntity, playerDeconnected, newRoomIsCreated, playerGetId, givePlayerId}));
+    // if (this->_music.openFromFile("../Assets/music.ogg") != -1)
+        // this->_music.play();
+    this->_socket = std::make_unique<Utils::SocketHandler>("127.0.0.1", 4001 + std::rand() % 3000, std::list<int>({keyPressed, entityType, playerPing, newPlayerConnected, givePlayerId, destroyedRoom, serverStop, entityType, removeEntity, playerDeconnected, newRoomIsCreated, playerGetId, givePlayerId}));
     this->_threadIsOpen = true;
     this->_actualId = -1;
     this->_predicate = std::make_unique<Prediction>(this->_entities, this->_inputs);
@@ -315,6 +315,7 @@ void RType::Client::newTourreToRoom(const Utils::MessageParsed_s &msg)
 
 void RType::Client::removeAnEntity(const Utils::MessageParsed_s &msg)
 {
+    std::unique_lock<std::mutex> lock(*this->_mutex);
     std::cout << "Remove Entity" << std::endl;
     this->_entities.removeEntity(msg.getFirstShort());
 }
@@ -432,30 +433,20 @@ void RType::Client::gameLoop()
         this->createRoom(1);
         this->_gameAsStarted = true;
     }
-    auto msgKeyPressed = this->buildEmptyMsg(keyPressed);
-    unsigned char actualIndex = 0;
-    _window->clear();   
-    this->_lifeBar->display(this->_window);     
+    _window->clear();
+    this->_lifeBar->display(this->_window);   
+    std::unique_lock<std::mutex> lock(*this->_mutex);
     for (auto &it : this->_entities._entities) {
         this->_window->draw(this->getSpriteFromEntity(it.second, it.first));
     }
+    lock.unlock();
     _window->display();
     this->updateInputs();
-    this->_predicate->PredicatePlayer(this->_actualId, 10);
+    // this->_predicate->PredicatePlayer(this->_actualId, 100);
+    lock.lock();
     this->_predicate->PredicateOtherEntities();
-    while (!this->_inputs.empty()) {
-        if (actualIndex > 5) {
-            this->_socket->send(msgKeyPressed);
-            actualIndex = 0;
-        }
-        msgKeyPressed.bytes[actualIndex] = static_cast<unsigned short>(this->_inputs.back());
-        this->_inputs.pop_back();
-        actualIndex++;
-    }
-    if (actualIndex > 0) {
-        msgKeyPressed.bytes[actualIndex] = 255;
-        this->_socket->send(msgKeyPressed);
-    }
+    lock.unlock();
+    this->sendInputs();
 }
 
 void RType::Client::changeTypeEntityAndMove(const Utils::MessageParsed_s &msg, std::unordered_map<unsigned short, std::shared_ptr<IEntity>>::iterator &it)
@@ -471,4 +462,32 @@ void RType::Client::changeTypeEntityAndMove(const Utils::MessageParsed_s &msg, s
     lock.unlock();
     this->setEntityType(NewMsg);
     return this->moveEntity(msg);
+}
+
+void RType::Client::sendInputs()
+{
+    auto msgKeyPressed = this->buildEmptyMsg(keyPressed);
+    unsigned char actualIndex = 0;
+    auto clock = std::chrono::steady_clock::now();
+    if (std::chrono::duration_cast<std::chrono::microseconds>(clock - this->_sendInputTime).count() < 10)
+        return;
+    this->_sendInputTime = clock;
+    // if (!this->_inputs.empty())
+    //     std::cout << "Inputs size " << this->_inputs.size() << std::endl;
+    // if (this->_inputs.size() < 5)
+    //     return;
+    while (!this->_inputs.empty()) {
+        if (actualIndex > 5) {
+            this->_socket->send(msgKeyPressed);
+            actualIndex = 0;
+        }
+        msgKeyPressed.bytes[actualIndex] = static_cast<unsigned short>(this->_inputs.back());
+        this->_inputs.pop_back();
+        actualIndex++;
+    }
+    if (actualIndex > 0) {
+        msgKeyPressed.bytes[actualIndex] = 255;
+        this->_socket->send(msgKeyPressed);
+    }
+    this->_socket->sendAllMessagesFromImportant();
 }

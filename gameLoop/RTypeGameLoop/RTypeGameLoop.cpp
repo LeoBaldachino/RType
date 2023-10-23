@@ -19,6 +19,7 @@ RType::RTypeGameLoop::~RTypeGameLoop()
 {
 }
 
+int updatePosCp = 0;
 void RType::RTypeGameLoop::updatePlayerPos(std::pair<unsigned short, Utils::MessageParsed_s> msg)
 {
     auto it = this->_core._entities.find(msg.first);
@@ -26,7 +27,9 @@ void RType::RTypeGameLoop::updatePlayerPos(std::pair<unsigned short, Utils::Mess
         return;
     std::shared_ptr<Player> player = std::dynamic_pointer_cast<Player>(it->second);
     player->_inputs->lockInputs();
-    for (unsigned char i = 0; i < 6; ++i) {
+    std::cout << "Update player pos " << updatePosCp << std::endl;
+    ++updatePosCp;
+    for (unsigned char i = 0; i < 7; ++i) {
         if (msg.second.bytes[i] > 6)
             break;
         player->_inputs->addEvents((Inputs::Events)msg.second.bytes[i]);

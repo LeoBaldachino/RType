@@ -74,8 +74,6 @@ void RType::Utils::SocketHandler::send(const struct MessageParsed_s &msg)
     auto toSend = this->_queueMsg->getMessage(isImportant);
     if (isImportant)
         this->_packetTracker->prepareMessageToSend(toSend);
-    if (toSend.msgType == 13)
-        std::cout << "Message delete sended..." << std::endl;
     unsigned long long compressed = toSend.encode();
     boost::asio::const_buffer buffer(&compressed, sizeof(compressed));
     try {
@@ -95,3 +93,22 @@ const std::pair<std::string, int> &RType::Utils::SocketHandler::getIpAndPort() c
     return this->_ipPort;
 }
 
+void RType::Utils::SocketHandler::sendAllMessagesFromImportant()
+{
+    bool isImportant = true;
+    std::unique_lock<std::mutex> lock(*this->_mutex);
+    auto toSend = this->_queueMsg->getMessage(isImportant);
+    while (isImportant) {
+        if (isImportant)
+            this->_packetTracker->prepareMessageToSend(toSend);
+        unsigned long long compressed = toSend.encode();
+        boost::asio::const_buffer buffer(&compressed, sizeof(compressed));
+        try {
+            _socket->send_to(buffer, boost::asio::ip::udp::endpoint(boost::asio::ip::address::from_string(toSend.senderIp), toSend.senderPort));
+        } catch (const boost::system::system_error &err) {
+            std::cerr << "Send error 2 " << err.code() << std::endl; 
+        }
+        toSend = this->_queueMsg->getMessage(isImportant);
+    }   
+
+}

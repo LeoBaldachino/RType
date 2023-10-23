@@ -39,7 +39,7 @@ bool PredictShoot::shootSetVector(unsigned short id, ShotEntity &s)
         Shoot oldShoot = s.getShoot();
         this->checkShootTooFast(dirVec);
         oldShoot.setDirection(dirVec);
-        std::cout << "Shoot direction x = " << dirVec.x << " y = " << dirVec.y << std::endl; 
+        // std::cout << "Shoot direction x = " << dirVec.x << " y = " << dirVec.y << std::endl; 
         s.setShoot(oldShoot);
         return true;
     }

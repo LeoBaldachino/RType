@@ -79,6 +79,7 @@ namespace RType {
             void gameLoop();
             void changeTypeEntityAndMove(const Utils::MessageParsed_s &msg, std::unordered_map<unsigned short, std::shared_ptr<IEntity>>::iterator &it);
             sf::Sprite getSpriteFromEntity(std::shared_ptr<IEntity> entity, unsigned int id);
+            void sendInputs();
             std::unique_ptr<std::thread> _infosThread;
             std::shared_ptr<Utils::SocketHandler> _socket;
             std::unique_ptr<sf::RenderWindow> _window;
