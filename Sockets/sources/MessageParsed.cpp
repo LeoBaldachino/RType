@@ -25,7 +25,7 @@ RType::Utils::MessageParsed_s::MessageParsed_s(unsigned char type, const std::st
     msgType = type;
 }
 
-RType::Utils::MessageParsed_s::MessageParsed_s(unsigned long long toDecode, const std::string &ip, unsigned short port)
+RType::Utils::MessageParsed_s::MessageParsed_s(unsigned long toDecode, const std::string &ip, unsigned short port)
 {
     this->msgType = (toDecode & 0x0000000000000ff);
     this->bytes[0] = (toDecode & 0x0000000000ff00) >> 8;
@@ -93,17 +93,17 @@ bool RType::Utils::MessageParsed_s::operator==(const MessageParsed_s &newMsg)
     return true;
 }
 
-unsigned long long RType::Utils::MessageParsed_s::encode() const
+unsigned long RType::Utils::MessageParsed_s::encode() const
 {
     return 
-       static_cast<unsigned long long>(this->bytes[6]) << 56 |
-       static_cast<unsigned long long>(this->bytes[5]) << 48 |
-       static_cast<unsigned long long>(this->bytes[4]) << 40 |
-       static_cast<unsigned long long>(this->bytes[3]) << 32 |
-       static_cast<unsigned long long>(this->bytes[2]) << 24 |
-       static_cast<unsigned long long>(this->bytes[1]) << 16 |
-       static_cast<unsigned long long>(this->bytes[0]) << 8  |
-       static_cast<unsigned long long>(this->msgType);
+       static_cast<unsigned long>(this->bytes[6]) << 56 |
+       static_cast<unsigned long>(this->bytes[5]) << 48 |
+       static_cast<unsigned long>(this->bytes[4]) << 40 |
+       static_cast<unsigned long>(this->bytes[3]) << 32 |
+       static_cast<unsigned long>(this->bytes[2]) << 24 |
+       static_cast<unsigned long>(this->bytes[1]) << 16 |
+       static_cast<unsigned long>(this->bytes[0]) << 8  |
+       static_cast<unsigned long>(this->msgType);
 }
 
 unsigned short RType::Utils::MessageParsed_s::getFirstShort() const

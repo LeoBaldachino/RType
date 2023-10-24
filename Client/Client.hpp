@@ -18,7 +18,7 @@
 #include <SFML/Audio.hpp>
 #include "Prediction/Prediction.hpp"
 
-#define GET_ID_LIMIT_TIME 500
+#define GET_ID_LIMIT_TIME 1
 
 namespace RType {
     /**

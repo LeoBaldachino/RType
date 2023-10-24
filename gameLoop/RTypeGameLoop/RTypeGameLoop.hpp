@@ -7,9 +7,10 @@
 #pragma once
 #include "../GameLoop.hpp"
 #include "../../Visitor/SystemVisitor.hpp"
-#define REFRESH_ALL_ENTITIES 3
-#define STATUS_ALL_ENTITES 9
-#define REFRESH_PLAYERS 500
+#define TARGET_FPS 30
+#define REFRESH_ALL_ENTITIES 256
+#define STATUS_ALL_ENTITES 1024
+#define REFRESH_PLAYERS 6600
 
 namespace RType {
     /**
@@ -90,8 +91,6 @@ namespace RType {
              * @param toReturn Queue of messages to return
              */
             void sendRefreshPlayers(std::queue<Utils::MessageParsed_s> &toReturn);
-
-
             void refreshStatus(std::queue<Utils::MessageParsed_s> &toReturn);
             void sendNbOfEntites(std::queue<Utils::MessageParsed_s> &toReturn);
             SystemVisitor v;

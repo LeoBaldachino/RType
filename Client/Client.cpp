@@ -512,7 +512,6 @@ void RType::Client::syncNbOfEntities(const Utils::MessageParsed_s &msg)
 
 void RType::Client::setLifeBars()
 {
-    std::cout << "Start life bars !" << std::endl;
     for (auto &it : this->_entities._entities) {
         if (it.second->getEntityType() == bydos) {
             std::unique_lock<std::mutex> lock(*this->_mutex);
@@ -525,5 +524,4 @@ void RType::Client::setLifeBars()
             this->_lifeBar->setLifeBarToPlayer(playerCasted);    
         }
     }
-    std::cout << "End life bars !" << std::endl;
 }

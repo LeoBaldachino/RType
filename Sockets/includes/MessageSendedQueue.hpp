@@ -11,7 +11,7 @@
 #include <list>
 #include "MessageParsed.hpp"
 #define MAX_SIZE_MSG_QUEUE 50
-#define MESSAGE_DELAY 10000
+#define MESSAGE_DELAY 1250
 
 namespace RType {
     class MessageSendedQueue {

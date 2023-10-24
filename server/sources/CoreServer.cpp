@@ -7,19 +7,10 @@
 
 #include "../includes/CoreServer.hpp"
 
-bool runServer = true;
-std::pair<std::string, int> ipPortServer = {};
 
 void SigIntHandler(int signal_num)
 {
-    RType::Utils::SocketHandler socket(ipPortServer.first, ipPortServer.second + 1, std::list<int>({}));
-    RType::Utils::MessageParsed_s msg;
-    msg.msgType = RType::serverStop;
-    msg.senderIp = ipPortServer.first;
-    msg.senderPort = ipPortServer.second;
-    socket.send(msg);
-    runServer = false;
-    return;
+    exit(0);
 }
 
 RType::CoreServer::CoreServer(int ar, char **av)
@@ -39,7 +30,6 @@ RType::CoreServer::CoreServer(int ar, char **av)
         throw std::invalid_argument("Port is not valid");
     this->_socket = std::make_unique<Utils::SocketHandler>((std::string(av[1]) == "localhost" ? "127.0.0.1" : av[1]), port, std::list<int>({entityType, playerPing, newPlayerConnected, givePlayerId, destroyedRoom, serverStop, entityType, removeEntity, playerDeconnected, newRoomIsCreated, playerGetId, givePlayerId}));
     this->_threadPool = std::make_unique<Server::ThreadPool>(std::thread::hardware_concurrency() - 1);
-    ipPortServer = this->_socket->getIpAndPort();
     this->_threadPool->InitThreadPool();
     std::signal(SIGINT, SigIntHandler);
     this->run();
@@ -53,7 +43,7 @@ RType::CoreServer::~CoreServer()
 
 void RType::CoreServer::run()
 {
-    while (runServer) {
+    while (1) {
         RType::Utils::MessageParsed_s tmpMsg = this->_socket->receive();
         if (tmpMsg.msgType == cannotRead)
             continue;

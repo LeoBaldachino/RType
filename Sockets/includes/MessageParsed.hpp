@@ -27,13 +27,13 @@ namespace RType {
                  */
                 MessageParsed_s(unsigned char type, const std::string &ip, unsigned short port, unsigned char allBytes[7]);
                 /**
-                 * @brief Construct a new MessageParsed_s object with an usigned long long to decode
+                 * @brief Construct a new MessageParsed_s object with an usigned long to decode
                  * 
                  * @param toDecode number to decode for put him in the msgType and bytes array
                  * @param ip senderIp
                  * @param port sendPort
                  */
-                MessageParsed_s(unsigned long long toDecode, const std::string &ip, unsigned short port);
+                MessageParsed_s(unsigned long toDecode, const std::string &ip, unsigned short port);
                 /**
                  * @brief Construct a new MessageParsed_s object by copy
                  * 
@@ -71,9 +71,9 @@ namespace RType {
                 /**
                  * @brief encode the message for send him
                  * 
-                 * @return unsigned long long encoded value
+                 * @return unsigned long encoded value
                  */
-                unsigned long long encode() const;
+                unsigned long encode() const;
                 /**
                  * @brief Get the First Short value
                  * 

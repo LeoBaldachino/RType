@@ -43,7 +43,7 @@ RType::Utils::SocketHandler::~SocketHandler()
 
 RType::Utils::MessageParsed_s RType::Utils::SocketHandler::receive()
 {
-    unsigned long long data;
+    unsigned long data;
     boost::asio::mutable_buffer buffer(&data, sizeof(data));
     std::unique_lock<std::mutex> lock(*this->_receiverMutex);
     std::list<Utils::MessageParsed_s> msgNotReceived;
@@ -78,7 +78,7 @@ void RType::Utils::SocketHandler::send(const MessageParsed_s &msg)
     auto toSend = this->_queueMsg->getMessage(isImportant);
     // if (isImportant)
     //     this->_packetTracker->prepareMessageToSend(toSend);
-    unsigned long long compressed = toSend.encode();
+    unsigned long compressed = toSend.encode();
     boost::asio::const_buffer buffer(&compressed, sizeof(compressed));
     try {
         _socket->send_to(buffer, boost::asio::ip::udp::endpoint(boost::asio::ip::address::from_string(toSend.senderIp), toSend.senderPort));
@@ -105,7 +105,7 @@ void RType::Utils::SocketHandler::sendAllMessagesFromImportant()
     while (isImportant) {
         // if (isImportant)
         //     this->_packetTracker->prepareMessageToSend(toSend);
-        unsigned long long compressed = toSend.encode();
+        unsigned long compressed = toSend.encode();
         boost::asio::const_buffer buffer(&compressed, sizeof(compressed));
         try {
             _socket->send_to(buffer, boost::asio::ip::udp::endpoint(boost::asio::ip::address::from_string(toSend.senderIp), toSend.senderPort));
@@ -126,7 +126,7 @@ void RType::Utils::SocketHandler::send()
     auto toSend = this->_queueMsg->getMessage(isImportant);
     // if (isImportant)
     //     this->_packetTracker->prepareMessageToSend(toSend);
-    unsigned long long compressed = toSend.encode();
+    unsigned long compressed = toSend.encode();
     boost::asio::const_buffer buffer(&compressed, sizeof(compressed));
     try {
         _socket->send_to(buffer, boost::asio::ip::udp::endpoint(boost::asio::ip::address::from_string(toSend.senderIp), toSend.senderPort));
