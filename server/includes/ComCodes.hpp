@@ -11,6 +11,7 @@ namespace RType {
         valueSet = 12,
         removeEntity = 13,
         keyPressed = 14,
+        nbOfEntities = 15,
         entityType = 16,
         newPlayerConnected = 21,
         playerDeconnected = 22,

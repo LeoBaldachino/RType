@@ -53,6 +53,7 @@ std::queue<RType::Utils::MessageParsed_s> RType::RTypeGameLoop::runAfterUpdate(s
         this->sendRefreshPlayers(toReturn);
     }
     else {
+        this->sendNbOfEntites(toReturn);
         this->sendRefreshAllEntities(toReturn);
         this->_refreshAllEntities = clock;
     }
@@ -60,6 +61,7 @@ std::queue<RType::Utils::MessageParsed_s> RType::RTypeGameLoop::runAfterUpdate(s
     std::queue<unsigned short> toErase = this->_core.getToErase();
     this->_core.eraseEntity();
     while (!toErase.empty()) {
+        std::cout << "Erase entity..." << std::endl;
         this->addRemoveEntity(toReturn, toErase.front());
         toErase.pop();
     }
@@ -167,7 +169,6 @@ void RType::RTypeGameLoop::addRemoveEntity(std::queue<Utils::MessageParsed_s> &t
     Utils::MessageParsed_s msg;
     msg.msgType = removeEntity;
     msg.setFirstShort(id);
-    std::cout << "Remove entity" << std::endl;
     toReturn.push(msg);
 }
 
@@ -276,4 +277,13 @@ void RType::RTypeGameLoop::refreshStatus(std::queue<Utils::MessageParsed_s> &toR
     this->checkPlayerStatus(toReturn);
     this->checkBydosStatus(toReturn);
     this->checkTourreStatus(toReturn);
+}
+
+void RType::RTypeGameLoop::sendNbOfEntites(std::queue<Utils::MessageParsed_s> &toReturn)
+{
+    std::cout << "Entities size is " << this->_core._entities.size() << std::endl;
+    Utils::MessageParsed_s msg;
+    msg.msgType = nbOfEntities;
+    msg.setFirstShort(static_cast<unsigned short>(this->_core._entities.size()));
+    toReturn.push(msg);
 }

@@ -59,7 +59,7 @@ bool RType::PacketTracker::receiveMessage(const Utils::MessageParsed_s &msg, std
     }
     if (find->second != msg.bytes[6]) {
         this->_interval = {find->second, msg.bytes[6]};
-        // std::cout << "Packet loss detected from " << static_cast<int>(this->_interval.first) << " to " << static_cast<int>(this->_interval.second) << std::endl;
+        std::cout << "Packet loss detected from " << static_cast<int>(this->_interval.first) << " to " << static_cast<int>(this->_interval.second) << std::endl;
         this->_intervalSet = true;
         this->messagesToResend(findMsg, toFill);
         this->_intervalSet = false;

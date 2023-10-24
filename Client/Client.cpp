@@ -19,6 +19,7 @@ _commands({
 {entityType, &RType::Client::setEntityType},
 {removeEntity, &RType::Client::removeAnEntity},
 {valueSet, &RType::Client::setValues},
+{nbOfEntities, &RType::Client::syncNbOfEntities}
 })
 {
     std::srand(std::time(NULL));
@@ -227,6 +228,8 @@ void RType::Client::moveEntity(const Utils::MessageParsed_s &msg)
     // if (!checkAsId())
     //     return;
     std::unique_lock<std::mutex> lock(*this->_mutex);
+    // if (msg.getThirdShort() != 0)
+    //     std::cout << "Get message from entity" << msg.getThirdShort() << std::endl;
     auto it = this->_entities._entities.find(msg.getThirdShort());
     if (it == this->_entities._entities.end()) {
         this->getEntityType(msg.getThirdShort());
@@ -274,6 +277,7 @@ void RType::Client::getEntityType(unsigned short entity)
 
 void RType::Client::setEntityType(const Utils::MessageParsed_s &msg)
 {
+    std::cout << "New entity !" << std::endl;
     switch (msg.getSecondShort()) {
         case RType::player:
             return this->newPlayerToRoom(msg);
@@ -436,13 +440,14 @@ void RType::Client::gameLoop()
     _window->clear();
     this->_lifeBar->display(this->_window);   
     std::unique_lock<std::mutex> lock(*this->_mutex);
-    for (auto &it : this->_entities._entities) {
+    for (auto &it : this->_entities._entities)
         this->_window->draw(this->getSpriteFromEntity(it.second, it.first));
-    }
+    // std::cout << "Entities size is " << this->_entities._entities.size() << std::endl;
     lock.unlock();
     _window->display();
+    this->setLifeBars();
     this->updateInputs();
-    // this->_predicate->PredicatePlayer(this->_actualId, 100);
+    this->_predicate->PredicatePlayer(this->_actualId, 100);
     lock.lock();
     this->_predicate->PredicateOtherEntities();
     lock.unlock();
@@ -476,8 +481,10 @@ void RType::Client::sendInputs()
     //     std::cout << "Inputs size " << this->_inputs.size() << std::endl;
     // if (this->_inputs.size() < 5)
     //     return;
-    while (!this->_inputs.empty()) {
+    int nbOfMsg = 0;
+    while (!this->_inputs.empty() && nbOfMsg < 2) {
         if (actualIndex > 5) {
+            ++nbOfMsg;
             this->_socket->send(msgKeyPressed);
             actualIndex = 0;
         }
@@ -485,9 +492,38 @@ void RType::Client::sendInputs()
         this->_inputs.pop_back();
         actualIndex++;
     }
+    // if (nbOfMsg < 2)
+    //     std::cout << "Max nb of messages..." << std::endl;
     if (actualIndex > 0) {
         msgKeyPressed.bytes[actualIndex] = 255;
         this->_socket->send(msgKeyPressed);
     }
-    this->_socket->sendAllMessagesFromImportant();
+    // this->_socket->sendAllMessagesFromImportant();
+}
+
+void RType::Client::syncNbOfEntities(const Utils::MessageParsed_s &msg)
+{
+    unsigned short actSize = static_cast<unsigned short>(this->_entities._entities.size());
+    unsigned short desiredSize = msg.getFirstShort();
+    std::unique_lock<std::mutex> lock(*this->_mutex);
+    for (; actSize > msg.getFirstShort(); actSize--)
+        this->_entities.removeEntity(actSize);
+}
+
+void RType::Client::setLifeBars()
+{
+    std::cout << "Start life bars !" << std::endl;
+    for (auto &it : this->_entities._entities) {
+        if (it.second->getEntityType() == bydos) {
+            std::unique_lock<std::mutex> lock(*this->_mutex);
+            std::shared_ptr<Bydos> bydosCasted = std::dynamic_pointer_cast<Bydos>(it.second);
+            this->_lifeBar->setLifeBarToBydos(bydosCasted); 
+        }
+        if (it.second->getEntityType() == player) {
+            std::unique_lock<std::mutex> lock(*this->_mutex);
+            std::shared_ptr<Player> playerCasted = std::dynamic_pointer_cast<Player>(it.second);
+            this->_lifeBar->setLifeBarToPlayer(playerCasted);    
+        }
+    }
+    std::cout << "End life bars !" << std::endl;
 }

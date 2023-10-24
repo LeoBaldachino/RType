@@ -93,6 +93,7 @@ namespace RType {
 
 
             void refreshStatus(std::queue<Utils::MessageParsed_s> &toReturn);
+            void sendNbOfEntites(std::queue<Utils::MessageParsed_s> &toReturn);
             SystemVisitor v;
             std::vector<unsigned short> _bydos;
             std::vector<unsigned short> _tourre;
