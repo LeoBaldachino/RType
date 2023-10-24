@@ -40,6 +40,20 @@ class Texture {
                 _text.loadFromFile(fileName);
                 this->screenFX.push_back(_text);
             }
+
+
+            this->gnomeSky.loadFromFile("./../Assets/Gnome/Background/GnomeSky.png");
+            this->gnomeMountainsFirst.loadFromFile("./../Assets/Gnome/Background/GnomeMountainsFirst.png");
+            this->gnomeMountainsSecond.loadFromFile("./../Assets/Gnome/Background/GnomeMountainsSecond.png");
+            this->gnomeFarMountains.loadFromFile("./../Assets/Gnome/Background/GnomeFarMountains.png");
+            this->gnomeMidMountains.loadFromFile("./../Assets/Gnome/Background/GnomeMidMountains.png");
+            this->gnomeLargeClouds.loadFromFile("./../Assets/Gnome/Background/GnomeBigClouds.png");
+            this->gnomeMediumClouds.loadFromFile("./../Assets/Gnome/Background/GnomeMediumClouds.png");
+            this->gnomeSmallClouds.loadFromFile("./../Assets/Gnome/Background/GnomeSmallClouds.png");
+            // this->gnomeAloneCloudOne.loadFromFile("./../Assets/Gnome/Foreground/GnomeAloneCloudOne.png");
+            // this->gnomeAloneCloudTwo.loadFromFile("./../Assets/Gnome/Foreground/GnomeAloneCloudTwo.png"); 
+            // this->gnomeAloneCloudThree.loadFromFile("./../Assets/Gnome/Foreground/GnomeAloneCloudThree.png");
+
         }
 
         sf::Texture tourreTexture;
@@ -54,6 +68,19 @@ class Texture {
         sf::Texture desertForest;
         sf::Texture desertSky;
         std::vector<sf::Texture> desert;
-
         std::vector<sf::Texture> screenFX;
+
+        sf::Texture gnomeSky;
+        sf::Texture gnomeMountainsFirst;
+        sf::Texture gnomeMountainsSecond;
+        sf::Texture gnomeFarMountains;
+        sf::Texture gnomeMidMountains;
+        sf::Texture gnomeLargeClouds;
+        sf::Texture gnomeMediumClouds;
+        sf::Texture gnomeSmallClouds;
+        sf::Texture gnomeAloneCloudOne;
+        sf::Texture gnomeAloneCloudTwo;
+        sf::Texture gnomeAloneCloudThree;
+
+
 };
