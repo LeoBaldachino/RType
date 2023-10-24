@@ -7,6 +7,7 @@
 #pragma once
 #include "../GameLoop.hpp"
 #include "../../Visitor/SystemVisitor.hpp"
+#include "../../server/includes/Parser.hpp"
 #define REFRESH_ALL_ENTITIES 5
 #define REFRESH_PLAYERS 500
 
@@ -90,11 +91,18 @@ namespace RType {
              */
             void sendRefreshPlayers(std::queue<Utils::MessageParsed_s> &toReturn);
 
+            /**
+             * @brief Handle enemies' waves
+             * 
+             * @param toReturn 
+             */
+            void handleWaves(std::queue<Utils::MessageParsed_s> &toReturn);
+
             SystemVisitor v;
             std::vector<unsigned short> _bydos;
             std::vector<unsigned short> _tourre;
             std::chrono::steady_clock::time_point _refreshAllEntities;
             std::chrono::steady_clock::time_point _refreshPlayers;
+            std::vector<std::map<Parser::Enemies, int>> _waves;
     };
-
 }

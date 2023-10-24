@@ -11,6 +11,8 @@ RType::RTypeGameLoop::RTypeGameLoop(Core &core) : GameLoop(core)
 {
     this->_refreshAllEntities = std::chrono::steady_clock::now();
     this->_refreshPlayers = std::chrono::steady_clock::now();
+    this->_waves.push_back({{Parser::Enemies::BYDOS, 4}, {Parser::Enemies::TOURRE, 2}});// TEST
+    this->_waves.push_back({{Parser::Enemies::BYDOS, 6}});                              // TEST
 }
 
 RType::RTypeGameLoop::~RTypeGameLoop()
@@ -43,6 +45,7 @@ std::queue<RType::Utils::MessageParsed_s> RType::RTypeGameLoop::runAfterUpdate(s
     }
     this->handleBydos(toReturn);
     this->handleTourre(toReturn);
+    this->handleWaves(toReturn);
     auto clock = std::chrono::steady_clock::now();
     if (std::chrono::duration_cast<std::chrono::milliseconds>(clock - this->_refreshAllEntities).count() < REFRESH_ALL_ENTITIES) {
         this->sendRefreshPlayers(toReturn);
@@ -107,14 +110,31 @@ void RType::RTypeGameLoop::handleBydos(std::queue<RType::Utils::MessageParsed_s>
         toDelete.pop();
     }
     msg.msgType = entityType;
-    if (this->_bydos.size() < 6) {
-        std::cout << "Add new bydos" << std::endl;
-        unsigned short id = this->_core.getAvailabeIndex();
-        this->_bydos.push_back(id);
-        msg.setFirstShort(id);
-        msg.setSecondShort(bydos);
-        toReturn.push(msg);
-        this->_core.addEntity(std::make_shared<Bydos>(Position(1700 + std::rand() % 200, std::rand() % 1000, 1080, 1920), 1, Vector2d(-1, 0)), id);
+}
+
+void RType::RTypeGameLoop::handleWaves(std::queue<RType::Utils::MessageParsed_s> &toReturn)
+{
+    if (this->_waves.size() != 0 && this->_bydos.size() == 0 && this->_tourre.size() == 0) {
+        Utils::MessageParsed_s msg;
+        while (this->_tourre.size() < this->_waves[0][Parser::Enemies::TOURRE]) {
+            std::cout << "Add new tourre" << std::endl;
+            unsigned short id = this->_core.getAvailabeIndex();
+            this->_tourre.push_back(id);
+            msg.setFirstShort(id);
+            msg.setSecondShort(tourre);
+            toReturn.push(msg);
+            this->_core.addEntity(std::make_shared<Tourre>(Position(1500 + std::rand() % 200, 1080 - 53, 1080, 1920), 1, Vector2d(-1, -1)), id);
+        }
+        while (this->_bydos.size() < this->_waves[0][Parser::Enemies::BYDOS]) {
+            std::cout << "Add new bydos" << std::endl;
+            unsigned short id = this->_core.getAvailabeIndex();
+            this->_bydos.push_back(id);
+            msg.setFirstShort(id);
+            msg.setSecondShort(bydos);
+            toReturn.push(msg);
+            this->_core.addEntity(std::make_shared<Bydos>(Position(1700 + std::rand() % 200, std::rand() % 1000, 1080, 1920), 1, Vector2d(-1, 0)), id);
+        }
+        this->_waves.erase(this->_waves.begin());
     }
 }
 
@@ -148,15 +168,6 @@ void RType::RTypeGameLoop::handleTourre(std::queue<RType::Utils::MessageParsed_s
         toDelete.pop();
     }
     msg.msgType = entityType;
-    if (this->_tourre.size() < 2) {
-        std::cout << "Add new tourre" << std::endl;
-        unsigned short id = this->_core.getAvailabeIndex();
-        this->_tourre.push_back(id);
-        msg.setFirstShort(id);
-        msg.setSecondShort(tourre);
-        toReturn.push(msg);
-        this->_core.addEntity(std::make_shared<Tourre>(Position(1500 + std::rand() % 200, 1080 - 53, 1080, 1920), 1, Vector2d(-1, -1)), id);
-    }
 }
 
 void RType::RTypeGameLoop::addRemoveEntity(std::queue<Utils::MessageParsed_s> &toReturn, unsigned short id)
