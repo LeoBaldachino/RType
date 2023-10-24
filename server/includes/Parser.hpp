@@ -15,12 +15,11 @@
 #include <libconfig.h>
 
 class Parser {
-    enum Enemies {
-        BYDOS,
-        TOURRE
-    };
-
     public:
+        enum Enemies {
+            BYDOS,
+            TOURRE
+        };
         Parser(std::string configFile);
         ~Parser () {};
         void readConfig(std::string configFile);
@@ -36,9 +35,9 @@ class Parser {
     private:
         libconfig::Config config;
         std::unique_ptr<Error> error;
-        std::string _music;
-        int _parallaxIndex;
-        std::string _next_level;
+        std::string _music = "";
+        int _parallaxIndex = 0;
+        std::string _next_level = "";
         std::vector<std::map<Enemies, int>> _waves;
         void initMusic(void);
         void initParallax(void);
