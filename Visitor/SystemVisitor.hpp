@@ -11,6 +11,7 @@
 #include "../Systems/BydosSystem.hpp"
 #include "../Systems/TourreSystem.hpp"
 #include "../Systems/GenieSystem.hpp"
+#include "../Systems/CoinSystem.hpp"
 #include "../EntityTypes/EntityTypes.hpp"
 #include "../Components/ClockTimer.hpp"
 
@@ -20,11 +21,10 @@ class SystemVisitor : public IVisitor {
         void visitPlayer(Player &p, Core &core) {
             p._inputs->lockInputs();
             this->_playerSystem.updatePos(p);
-            this->_playerSystem.createPiercingShots(p, core);
             this->_playerSystem.createShots(p, core);
             p._inputs->unlockInputs();
             for (auto it : core._entities)
-                if (it.second->getEntityType() == RType::bydos || it.second->getEntityType() == RType::bydosShoot)
+                if (it.second->getEntityType() == RType::bydos || it.second->getEntityType() == RType::bydosShoot || it.second->getEntityType() == RType::coin)
                     this->_playerSystem.checkCollision(p, *it.second, core);
             this->_lastPlayerPos = p.getPosition();
         }
@@ -48,7 +48,6 @@ class SystemVisitor : public IVisitor {
             for (auto it : core._entities) {
                 auto entityType = it.second->getEntityType();
             }
-            // this->_tourreSystem.createShots(t, this->_lastPlayer, core);
         };
         void visitGenie(Genie &t, Core &core) {
             if (t.getLifes() == 0)
@@ -67,6 +66,9 @@ class SystemVisitor : public IVisitor {
             this->_piercingShotSystem.updatePos(pS);
             this->_piercingShotSystem.clearShots(pS, core);
         };
+        void visitCoin(Coin &c, Core &core) {
+            this->_coinSystem.updatePos(c);
+        }
     private:
         Player _lastPlayer;
         Position _lastPlayerPos;
@@ -76,4 +78,5 @@ class SystemVisitor : public IVisitor {
         GenieSystem _genieSystem;
         ShotSystem _shotSystem;
         PiercingShotSystem _piercingShotSystem;
+        CoinSystem _coinSystem;
 };

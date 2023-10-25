@@ -12,3 +12,8 @@ if exist boost (
 
 cd boost
 b2.exe headers
+
+cd ..
+mkdir build
+cd build
+cmake ..

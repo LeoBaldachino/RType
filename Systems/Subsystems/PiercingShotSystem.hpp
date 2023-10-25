@@ -17,5 +17,4 @@ class PiercingShotSystem {
         void updatePos(PiercingShotEntity &pS);
         void clearShots(PiercingShotEntity &pS, Core &core);
         Position getPos(PiercingShotEntity &pS) const;
-    private:
 };

@@ -12,10 +12,8 @@
 class StateSystem {
     public:
         StateSystem(const State &state);
-        ~StateSystem();
-
+        ~StateSystem() {};
         void setState(const State &state);
-
     private:
         State _state;
 };

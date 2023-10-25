@@ -19,11 +19,6 @@ RType::LifeBar::LifeBar()
     this->_updatePixels = std::chrono::steady_clock::now();
 }
 
-RType::LifeBar::~LifeBar()
-{
-}
-
-
 void RType::LifeBar::setLifeBarToPlayer(const std::shared_ptr<Player> &pl)
 {
     std::unique_lock<std::mutex> lock(this->_mutex);

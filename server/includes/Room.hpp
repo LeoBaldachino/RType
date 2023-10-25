@@ -189,7 +189,6 @@ namespace RType {
                 std::unique_ptr<std::mutex> _mutexQueue;
                 std::unique_ptr<std::queue<std::pair<unsigned short, Utils::MessageParsed_s>>> _toSendToGameLoop;
                 std::pair<std::string, int> _firstClient;
-
         };
     }
 }

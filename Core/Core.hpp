@@ -1,8 +1,9 @@
-/**
- * @file Core.hpp
- * @author EPITECH PROJECT, 2023
- * @brief Core class definition
- */
+/*
+** EPITECH PROJECT, 2023
+** B-CPP-500-MLH-5-1-rtype-robin.denni
+** File description:
+** Core.hpp
+*/
 
 #pragma once
 #include "../Entity/Player.hpp"

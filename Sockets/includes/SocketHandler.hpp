@@ -1,12 +1,9 @@
-/**
- * @file SocketHandler.hpp
- * @brief SocketHandler class definition
- * 
- * This file contains the SocketHandler class which is used to manage the socket connections.
- * 
- * @author EPITECH PROJECT, 2023
- * @version B-CPP-500-MLH-5-1-rtype-robin.denni
- */
+/*
+** EPITECH PROJECT, 2023
+** B-CPP-500-MLH-5-1-rtype-robin.denni
+** File description:
+** SocketHandler.hpp
+*/
 
 #pragma once
 #include <boost/asio.hpp>

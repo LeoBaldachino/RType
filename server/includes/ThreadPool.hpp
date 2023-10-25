@@ -1,12 +1,9 @@
-/**
- * @file ThreadPool.hpp
- * @brief ThreadPool class definition
- * 
- * This file contains the ThreadPool class which is used to manage a pool of threads for the server.
- * 
- * @author EPITECH PROJECT, 2023
- * @version B-CPP-500-MLH-5-1-rtype-robin.denni
- */
+/*
+** EPITECH PROJECT, 2023
+** B-CPP-500-MLH-5-1-rtype-robin.denni
+** File description:
+** ThreadPool.hpp
+*/
 
 #ifndef THREADPOOL_HPP_
 #define THREADPOOL_HPP_
