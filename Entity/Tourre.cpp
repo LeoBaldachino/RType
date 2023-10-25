@@ -21,12 +21,6 @@ Health(TOURRE_HEALTH)
     this->_movement = Moveable(Vector2d(this->_position.getX(), this->_position.getY()), moveDirection, velocity);
 }
 
-// Shoot Tourre::shoot(const Position &playerPos) const
-// {   
-//     AIShoot aiShoot(playerPos, this->_position);
-//     return aiShoot.shootLogic();
-// }
-
 void Tourre::accept(IVisitor &v, Core &core)
 {
     v.visitTourre(*this, core);
@@ -61,36 +55,6 @@ int Tourre::getVelocity(void) const
 {
     return this->_velocity;
 }
-
-// void Tourre::setShootDmg(int shootDmg)
-// {
-//     this->_shootDmg = shootDmg;
-// }
-
-// int Tourre::getShootDmg(void) const
-// {
-//     return this->_shootDmg;
-// }
-
-// void Tourre::setShootVelocity(int shootVelocity)
-// {
-//     this->_shootVelocity = shootVelocity;
-// }
-
-// int Tourre::getShootVelocity(void) const
-// {
-//     return this->_shootVelocity;
-// }
-
-// void Tourre::setShootGravity(int shootGravity)
-// {
-//     this->_shootGravity = shootGravity;
-// }
-
-// int Tourre::getShootGravity(void) const
-// {
-//     return this->_shootGravity;
-// }
 
 void Tourre::setMoveable(const Moveable &moveable)
 {

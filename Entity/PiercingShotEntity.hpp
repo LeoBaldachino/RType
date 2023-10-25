@@ -1,8 +1,9 @@
-/**
- * @file PiercingShotEntity.hpp
- * @author EPITECH PROJECT, 2023
- * @brief PiercingShotEntity class definition
- */
+/*
+** EPITECH PROJECT, 2023
+** B-CPP-500-MLH-5-1-rtype-robin.denni
+** File description:
+** PiercingShotEntity.hpp
+*/
 
 #pragma once
 #include <fstream>

@@ -1,8 +1,9 @@
-/**
- * @file Tourre.hpp
- * @author EPITECH PROJECT, 2023
- * @brief Tourre class definition
- */
+/*
+** EPITECH PROJECT, 2023
+** B-CPP-500-MLH-5-1-rtype-robin.denni
+** File description:
+** Tourre.hpp
+*/
 
 #pragma once
 #include "IEntity.hpp"
@@ -162,9 +163,6 @@ class Tourre : public IEntity, public Health {
         Position _position;
         Moveable _movement;
         int _velocity;
-        // int _shootDmg = 10;
-        // int _shootVelocity = 5;
-        // int _shootGravity = 0;
         Vector2d _size;
         bool _hasMoved = false;
         ClockTimer _readyShoot;
