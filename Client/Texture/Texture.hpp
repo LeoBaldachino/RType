@@ -64,6 +64,7 @@ class Texture {
         sf::Texture playerShotTexture;
         sf::Texture piercingShotTexture;
         sf::Texture enemyShotTexture;
+        sf::Texture genieTexture;
         sf::Texture coinTexture;
         
         sf::Texture desertMountain;
