@@ -7,6 +7,7 @@
 #pragma once
 #include "Texture/Texture.hpp"
 #include "Parallax/Parallax.hpp"
+#include "Parallax/ParallaxGnome.hpp"
 #include "../Entity/Player.hpp"
 #include "../Core/Core.hpp"
 #include "../EntityTypes/EntityTypes.hpp"
@@ -111,5 +112,9 @@ namespace RType {
             bool _gameAsStarted;
             Texture _texture;
             Parallax _parallax;
+            ParallaxGnome _parallaxGnome;
+
+            unsigned int _level = 2;
+
     };
 }

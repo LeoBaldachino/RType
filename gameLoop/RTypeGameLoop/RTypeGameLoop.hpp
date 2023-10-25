@@ -90,11 +90,25 @@ namespace RType {
              */
             void sendRefreshPlayers(std::queue<Utils::MessageParsed_s> &toReturn);
 
+            /**
+             * @brief Handle enemies' waves
+             * 
+             * @param toReturn 
+             */
+            void handleWaves(std::queue<Utils::MessageParsed_s> &toReturn);
+
+            /**
+             * @brief Set the Enemies Waves
+             * 
+             * @param waves 
+             */
+            void setEnemiesWaves(std::vector<std::map<Parser::Enemies, int>> waves);
+
             SystemVisitor v;
             std::vector<unsigned short> _bydos;
             std::vector<unsigned short> _tourre;
             std::chrono::steady_clock::time_point _refreshAllEntities;
             std::chrono::steady_clock::time_point _refreshPlayers;
+            std::vector<std::map<Parser::Enemies, int>> _waves;
     };
-
 }

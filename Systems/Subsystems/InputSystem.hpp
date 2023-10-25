@@ -7,11 +7,8 @@
 
 #pragma once
 #include "../../Components/Inputs.hpp"
-#include <SFML/Window/Keyboard.hpp>
-#include <SFML/Window/Event.hpp>
 #include <chrono>
 #include <unordered_map>
-#include <SFML/Graphics.hpp>
 #include "../../Entity/Player.hpp"
 
 class InputSystem {

@@ -20,7 +20,8 @@ _commands({
 {removeEntity, &RType::Client::removeAnEntity},
 {valueSet, &RType::Client::setValues},
 }),
-_parallax(_texture)
+_parallax(_texture),
+_parallaxGnome(_texture)
 {
     std::srand(std::time(NULL));
     if (ac < 3)
@@ -38,7 +39,7 @@ _parallax(_texture)
     this->_serverIp = av[1];
     this->_serverPort = std::stoi(av[2]);
     this->_mutex = std::make_unique<std::mutex>();
-    this->_window = std::make_unique<sf::RenderWindow>(sf::VideoMode::getDesktopMode(), "R-Type");
+    this->_window = std::make_unique<sf::RenderWindow>(sf::VideoMode::getDesktopMode(), "R-Type"/*, sf::Style::Fullscreen*/);
     if (this->_music.openFromFile("../Assets/music.ogg") != -1)
         this->_music.play();
     this->_socket = std::make_unique<Utils::SocketHandler>("127.0.0.1", 4001 + std::rand() % 3000, std::list<int>({entityType}));
@@ -417,7 +418,7 @@ sf::Sprite RType::Client::getSpriteFromEntity(std::shared_ptr<IEntity> entity, u
     }
     if (entity->getEntityType() == 1 && id == this->_actualId) {
         ret.setTexture(this->_texture.playerTexture);
-        ret.setTextureRect(sf::Rect<int>(106 * (spriteFrame - 1), 0, 106, 98));
+        ret.setTextureRect(sf::Rect<int>(107 * (spriteFrame - 1), 0, 107, 98));
     }
     if (entity->getEntityType() == 1 && id != this->_actualId) {
         ret.setTexture(this->_texture.otherPlayerTexture);
@@ -436,8 +437,15 @@ void RType::Client::gameLoop()
     auto msgKeyPressed = this->buildEmptyMsg(keyPressed);
     unsigned char actualIndex = 0;
     _window->clear();
-    this->_parallax.drawParallax(this->_window);
-    this->_lifeBar->display(this->_window);     
+    if (this->_level == 1) {
+        this->_parallax.drawBackgroundParallax(this->_window);
+        this->_parallax.drawParallax(this->_window);
+    }
+    if (this->_level == 2)
+    {
+        this->_parallaxGnome.drawGnomeParallax(this->_window);
+    }
+    this->_lifeBar->display(this->_window);
     for (auto &it : this->_entities._entities) {
         this->_window->draw(this->getSpriteFromEntity(it.second, it.first));
     }

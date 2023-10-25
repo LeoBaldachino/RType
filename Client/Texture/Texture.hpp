@@ -31,10 +31,9 @@ class Texture {
                 _text.loadFromFile(fileName);
                 this->desert.push_back(_text);
             }
-            this->desertForest.loadFromFile("./../Assets/Desert/Background/genie_bg_forest_sunny.png");
-            this->desertMountain.loadFromFile("./../Assets/Desert/Background/genie_bg_mountains_sunny.png");
-            this->desertSky.loadFromFile("./../Assets/Desert/Background/genie_bg_sky_loop.png");
-
+            this->desertForest.loadFromFile("./../Assets/Desert/Background/ForestDesert.png");
+            this->desertMountain.loadFromFile("./../Assets/Desert/Background/MoutainsDesert.png");
+            this->desertSky.loadFromFile("./../Assets/Desert/Background/SkyDesert.png");
             for (int i = 0; i != 8; ++i) {
                 sf::Texture _text;
                 std::string fileName = "./../Assets/ScreenFX/screenFX";
@@ -42,6 +41,20 @@ class Texture {
                 _text.loadFromFile(fileName);
                 this->screenFX.push_back(_text);
             }
+
+
+            this->gnomeSky.loadFromFile("./../Assets/Gnome/Background/GnomeSky.png");
+            this->gnomeMountainsFirst.loadFromFile("./../Assets/Gnome/Background/GnomeMountainsFirst.png");
+            this->gnomeMountainsSecond.loadFromFile("./../Assets/Gnome/Background/GnomeMountainsSecond.png");
+            this->gnomeFarMountains.loadFromFile("./../Assets/Gnome/Background/GnomeFarMountains.png");
+            this->gnomeMidMountains.loadFromFile("./../Assets/Gnome/Background/GnomeMidMountains.png");
+            this->gnomeLargeClouds.loadFromFile("./../Assets/Gnome/Background/GnomeBigClouds.png");
+            this->gnomeMediumClouds.loadFromFile("./../Assets/Gnome/Background/GnomeMediumClouds.png");
+            this->gnomeSmallClouds.loadFromFile("./../Assets/Gnome/Background/GnomeSmallClouds.png");
+            // this->gnomeAloneCloudOne.loadFromFile("./../Assets/Gnome/Foreground/GnomeAloneCloudOne.png");
+            // this->gnomeAloneCloudTwo.loadFromFile("./../Assets/Gnome/Foreground/GnomeAloneCloudTwo.png"); 
+            // this->gnomeAloneCloudThree.loadFromFile("./../Assets/Gnome/Foreground/GnomeAloneCloudThree.png");
+
         }
 
         sf::Texture tourreTexture;
@@ -57,6 +70,19 @@ class Texture {
         sf::Texture desertForest;
         sf::Texture desertSky;
         std::vector<sf::Texture> desert;
-
         std::vector<sf::Texture> screenFX;
+
+        sf::Texture gnomeSky;
+        sf::Texture gnomeMountainsFirst;
+        sf::Texture gnomeMountainsSecond;
+        sf::Texture gnomeFarMountains;
+        sf::Texture gnomeMidMountains;
+        sf::Texture gnomeLargeClouds;
+        sf::Texture gnomeMediumClouds;
+        sf::Texture gnomeSmallClouds;
+        sf::Texture gnomeAloneCloudOne;
+        sf::Texture gnomeAloneCloudTwo;
+        sf::Texture gnomeAloneCloudThree;
+
+
 };

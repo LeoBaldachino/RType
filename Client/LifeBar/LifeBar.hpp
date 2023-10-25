@@ -7,6 +7,7 @@
 #pragma once
 
 #include "../../Entity/Player.hpp"
+#include <SFML/Graphics.hpp>
 #include "../../Core/Core.hpp"
 #include "../../EntityTypes/EntityTypes.hpp"
 #include "../../Visitor/SystemVisitor.hpp"
