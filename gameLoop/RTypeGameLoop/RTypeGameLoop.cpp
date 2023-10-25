@@ -78,6 +78,38 @@ RType::EntityTypes RType::RTypeGameLoop::getEntityType(unsigned short id)
     return none;
 }
 
+void RType::RTypeGameLoop::handleCoin(std::queue<Utils::MessageParsed_s> &toReturn)
+{
+    auto it = this->_coin.begin();
+    std::queue<unsigned short> toDelete;
+    Utils::MessageParsed_s msg;
+    msg.msgType = removeEntity;
+    for (; it != this->_coin.end(); it++) {
+        auto finded = this->_core._entities.find(*it);
+        if (finded == this->_core._entities.end()) {
+            toDelete.push(*it);
+            continue;
+        }
+        Position actPos = finded->second->getPosition();
+        if (actPos.getX() < 0 || actPos.getY() < 0) {
+            std::cout << "Entity not not well positionned Coin" << std::endl;
+            this->_core.removeEntityLater(finded->first);
+            toDelete.push(*it);
+            continue;
+        }
+    }
+    while (!toDelete.empty()) {
+        std::cout << "Delete a coin" << std::endl;
+        msg.setFirstShort(toDelete.front());
+        toReturn.push(msg);
+        for (auto it = this->_coin.begin(); it < this->_coin.end(); it++)
+            if (*it == toDelete.front())
+                this->_coin.erase(it);
+        toDelete.pop();
+    }
+    msg.msgType = entityType;
+}
+
 void RType::RTypeGameLoop::handleBydos(std::queue<RType::Utils::MessageParsed_s> &toReturn)
 {
     auto it = this->_bydos.begin();
@@ -131,6 +163,15 @@ void RType::RTypeGameLoop::handleWaves(std::queue<RType::Utils::MessageParsed_s>
             msg.setSecondShort(bydos);
             toReturn.push(msg);
             this->_core.addEntity(std::make_shared<Bydos>(Position(1700 + std::rand() % 200, std::rand() % 1000, 1080, 1920), 1, Vector2d(-1, 0)), id);
+        }
+        while (this->_coin.size() < this->_waves[0][Parser::Enemies::COIN]) {
+            std::cout << "Add new coin" << std::endl;
+            unsigned short id = this->_core.getAvailabeIndex();
+            this->_coin.push_back(id);
+            msg.setFirstShort(id);
+            msg.setSecondShort(coin);
+            toReturn.push(msg);
+            this->_core.addEntity(std::make_shared<Coin>(Position(1700 + std::rand() % 200, std::rand() % 1000, 1080, 1920)), id);
         }
         this->_waves.erase(this->_waves.begin());
     }
