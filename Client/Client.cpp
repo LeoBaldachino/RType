@@ -38,7 +38,7 @@ _parallax(_texture)
     this->_serverIp = av[1];
     this->_serverPort = std::stoi(av[2]);
     this->_mutex = std::make_unique<std::mutex>();
-    this->_window = std::make_unique<sf::RenderWindow>(sf::VideoMode::getDesktopMode(), "R-Type", sf::Style::Fullscreen);
+    this->_window = std::make_unique<sf::RenderWindow>(sf::VideoMode::getDesktopMode(), "R-Type");
     if (this->_music.openFromFile("../Assets/music.ogg") != -1)
         this->_music.play();
     this->_socket = std::make_unique<Utils::SocketHandler>("127.0.0.1", 4001 + std::rand() % 3000, std::list<int>({entityType}));
@@ -386,6 +386,12 @@ sf::Sprite RType::Client::getSpriteFromEntity(std::shared_ptr<IEntity> entity, u
 {
     sf::Sprite ret;
     int spriteFrame = entity->getEntitySpriteFrame() + 1;
+    if (entity->getEntityType() == RType::EntityTypes::genie) {
+        ret.setTexture(this->_texture.tourreTexture);
+        ret.setTextureRect(sf::Rect<int>(0, 420 * (spriteFrame - 1), 494, 420));
+        ret.setScale(0.5, 0.5);
+        ret.setPosition(entity->getPosition().getX(), entity->getPosition().getY());
+    }
     if (entity->getEntityType() == 6) {
         ret.setTexture(this->_texture.tourreTexture);
         ret.setTextureRect(sf::Rect<int>(0, 420 * (spriteFrame - 1), 494, 420));
