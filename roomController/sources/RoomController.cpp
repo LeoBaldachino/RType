@@ -14,7 +14,10 @@ _lineCommands({
     {"kick", &RType::RoomController::kickCommand},
     {"details ", &RType::RoomController::detailsCommand},
     {"help", &RType::RoomController::helpCommand},
-    })
+}),
+_commands({
+    {listOfRooms, &RType::RoomController::showTeam}
+})
 {
     if (ac != 3)
         throw std::invalid_argument("Not enougth arguments");
@@ -50,7 +53,6 @@ void RType::RoomController::run()
 {
     while (true) {
         std::string actual_line;
-        std::cout << "> ";
         if (!std::getline(std::cin, actual_line, '\n'))
             return;
         std::string actLineStart;
@@ -72,8 +74,13 @@ void RType::RoomController::run()
 
 void RType::RoomController::lsCommand(const std::string &command)
 {
+    std::cout << "ls" << std::endl;
     (void)command;
-    std::cout << "This is ls command !" << std::endl;
+    if (this->_actTeam == "") {
+        Utils::MessageParsed_s msg = this->createEmptyMsg(getListOfRooms);
+        this->_socket->send(msg);
+        return;
+    }
 }
 
 void RType::RoomController::selectCommand(const std::string &command)
@@ -102,6 +109,12 @@ void RType::RoomController::detailsCommand(const std::string &command)
 
 void RType::RoomController::helpCommand(const std::string &command)
 {
+    (void)command;
     std::cout << "\nCommands :\n\nls : get the current rooms, get the list of player if the scope is set to a room\n\nselect [ARGUMENT]: change the scope of the controller, precise a room number for get the scope of this room, precise .. for comeback in initial scope\n\n"
     "kick [ARGUMENT] : kick a player from the room, you MUST have your scope set to this room and precise a player id\n\ndetails [ARGUMENT] : get details about a player in a room, you MUST have your scope set to this room and precise the player id\n\nhelp : this help" << std::endl;
+}
+
+void RType::RoomController::showTeam(const Utils::MessageParsed_s &msg)
+{
+    std::cout << "Room number " << static_cast<int>(msg.bytes[0]) << " status " << static_cast<int>(msg.bytes[1]) << "/" << static_cast<int>(msg.bytes[2]) << std::endl;
 }
