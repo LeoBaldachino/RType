@@ -20,6 +20,10 @@ namespace RType {
             void launchGetter();
             void run();
             void lsCommand(const std::string &command);
+            void selectCommand(const std::string &command);
+            void kickCommand(const std::string &command);
+            void detailsCommand(const std::string &command);
+            void helpCommand(const std::string &command);
             std::unordered_map<unsigned char, void (RType::RoomController::*)(const Utils::MessageParsed_s &)> _commands;
             std::unordered_map<std::string, void (RType::RoomController::*)(const std::string &)> _lineCommands;
             std::unique_ptr<std::thread> _commandsThread;
@@ -28,5 +32,6 @@ namespace RType {
             int _serverPort;
             std::shared_ptr<Utils::SocketHandler> _socket;
             std::mutex _mutex;
+            std::string _actTeam;
     };
 }
