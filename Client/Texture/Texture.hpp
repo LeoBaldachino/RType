@@ -20,16 +20,17 @@ class Texture {
             this->tourreTexture.loadFromFile("./../Assets/EntitiesSprites/Cupcake.png");
             this->playerTexture.loadFromFile("./../Assets/EntitiesSprites/CupHead.png");
             this->otherPlayerTexture.loadFromFile("./../Assets/EntitiesSprites/MugMan.png");
+            this->coinTexture.loadFromFile("./../Assets/EntitiesSprites/Coin.png");
             this->playerShotTexture.loadFromFile("./../Assets/shot.png");
             this->piercingShotTexture.loadFromFile("./../Assets/EntitiesSprites/PiercingShot.png");
             this->enemyShotTexture.loadFromFile("./../Assets/EntitiesSprites/EnemyShot.png");
-            for (int i = 0; i != 24; ++i) {
-                sf::Texture _text;
-                std::string fileName = "./../Assets/Desert/Desert/desert";
-                fileName += std::to_string(i) + ".png";
-                _text.loadFromFile(fileName);
-                this->desert.push_back(_text);
-            }
+            // for (int i = 0; i != 24; ++i) {
+            //     sf::Texture _text;
+            //     std::string fileName = "./../Assets/Desert/Desert/desert";
+            //     fileName += std::to_string(i) + ".png";
+            //     _text.loadFromFile(fileName);
+            //     this->desert.push_back(_text);
+            // }
             this->desertForest.loadFromFile("./../Assets/Desert/Background/ForestDesert.png");
             this->desertMountain.loadFromFile("./../Assets/Desert/Background/MoutainsDesert.png");
             this->desertSky.loadFromFile("./../Assets/Desert/Background/SkyDesert.png");
@@ -63,6 +64,7 @@ class Texture {
         sf::Texture playerShotTexture;
         sf::Texture piercingShotTexture;
         sf::Texture enemyShotTexture;
+        sf::Texture coinTexture;
         
         sf::Texture desertMountain;
         sf::Texture desertForest;
