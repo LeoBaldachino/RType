@@ -16,13 +16,14 @@ _lineCommands({
     {"help", &RType::RoomController::helpCommand},
 }),
 _commands({
-    {listOfRooms, &RType::RoomController::showTeam}
+    {listOfRooms, &RType::RoomController::showTeam},
+    {sendRoomMembers, &RType::RoomController::showTeamMembers},
 })
 {
     if (ac != 3)
         throw std::invalid_argument("Not enougth arguments");
     this->_serverIp = av[1];
-    this->_actTeam = "";
+    this->_actTeam = 0;
     this->_serverPort = std::stoi(std::string(av[2]));
     this->_threadOpen = true;
     this->_socket = std::make_unique<Utils::SocketHandler>("127.0.0.1", 4001 + std::rand() % 3000, std::list<int>({keyPressed, entityType, playerPing, newPlayerConnected, givePlayerId, destroyedRoom, serverStop, entityType, removeEntity, playerDeconnected, newRoomIsCreated, playerGetId, givePlayerId}));
@@ -67,33 +68,42 @@ void RType::RoomController::run()
             continue;
         }
         actual_line.erase(0, it->first.size());
-        std::cout << "Actual line " << actual_line << std::endl;
         (this->*it->second)(actual_line);
     }
 }
 
 void RType::RoomController::lsCommand(const std::string &command)
 {
-    std::cout << "ls" << std::endl;
     (void)command;
-    if (this->_actTeam == "") {
+    if (!this->_actTeam) {
         Utils::MessageParsed_s msg = this->createEmptyMsg(getListOfRooms);
         this->_socket->send(msg);
         return;
     }
+    Utils::MessageParsed_s msg = this->createEmptyMsg(getRoomMembers);
+    msg.setFirstShort(this->_actTeam);
+    this->_socket->send(msg);
 }
 
 void RType::RoomController::selectCommand(const std::string &command)
 {
     if (command == "..") {
-        this->_actTeam = "";
+        this->_actTeam = 0;
         return;
     }
+    unsigned short roomId;
+    try {
+        roomId = std::stoi(command);
+    } catch (const std::exception &err) {
+        std::cout << "Invalid room number..." << std::endl;
+        return;
+    }
+    this->_actTeam = roomId;
 }
 
 void RType::RoomController::kickCommand(const std::string &command)
 {
-    if (this->_actTeam.empty()) {
+    if (!this->_actTeam) {
         std::cout << "No room selected..." << std::endl;
         return;
     }
@@ -101,7 +111,7 @@ void RType::RoomController::kickCommand(const std::string &command)
 
 void RType::RoomController::detailsCommand(const std::string &command)
 {
-    if (this->_actTeam.empty()) {
+    if (!this->_actTeam) {
         std::cout << "No room selected..." << std::endl;
         return;
     }
@@ -117,4 +127,15 @@ void RType::RoomController::helpCommand(const std::string &command)
 void RType::RoomController::showTeam(const Utils::MessageParsed_s &msg)
 {
     std::cout << "Room number " << static_cast<int>(msg.bytes[0]) << " status " << static_cast<int>(msg.bytes[1]) << "/" << static_cast<int>(msg.bytes[2]) << std::endl;
+}
+
+void RType::RoomController::showTeamMembers(const Utils::MessageParsed_s &msg)
+{
+    std::cout << "Members of the team " << this->_actTeam << ":\n\n";
+    for (unsigned char i = 0; i < 7; ++i) {
+        if (msg.bytes[i] == 255)
+            break;
+        std::cout << "Player id = " << static_cast<int>(msg.bytes[i]) << "\n";
+    }
+    std::cout << std::endl;
 }

@@ -25,6 +25,7 @@ namespace RType {
             void detailsCommand(const std::string &command);
             void helpCommand(const std::string &command);
             void showTeam(const Utils::MessageParsed_s &msg);
+            void showTeamMembers(const Utils::MessageParsed_s &msg);
             inline Utils::MessageParsed_s createEmptyMsg(ComCodes code) {unsigned char tab[7] = {0, 0, 0, 0, 0, 0, 0};return Utils::MessageParsed_s(code, this->_serverIp, this->_serverPort, tab);};
             std::unordered_map<unsigned char, void (RType::RoomController::*)(const Utils::MessageParsed_s &)> _commands;
             std::unordered_map<std::string, void (RType::RoomController::*)(const std::string &)> _lineCommands;
@@ -34,6 +35,6 @@ namespace RType {
             int _serverPort;
             std::shared_ptr<Utils::SocketHandler> _socket;
             std::mutex _mutex;
-            std::string _actTeam;
+            unsigned short _actTeam;
     };
 }

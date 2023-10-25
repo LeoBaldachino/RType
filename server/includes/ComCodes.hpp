@@ -26,5 +26,10 @@ namespace RType {
         serverStop = 32,
         cannotRead = 33,
         resendMessage = 34,
+        getRoomMembers = 41,
+        sendRoomMembers = 42,
+        getPlayerInfos = 43,
+        kickPlayer = 44,
+        reportPlayer = 45
     };
 }

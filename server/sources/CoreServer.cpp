@@ -66,14 +66,19 @@ void RType::CoreServer::run()
 
 void RType::CoreServer::threadMethod(const Utils::MessageParsed_s &msg)
 {
-    if (msg.msgType == newPlayerConnected)
-        return this->connectToRoom(msg);
-    if (msg.msgType == newRoomIsCreated)
-        return this->newRoomCreated(msg);
-    if (msg.msgType == getListOfRooms)
-        return this->getRoomList(msg);
-    if (msg.msgType == playerDeconnected)
-        return this->getOutFromRoom(msg);
+    switch (msg.msgType)
+    {
+        case newPlayerConnected:
+            return this->connectToRoom(msg);
+        case newRoomIsCreated :
+            return this->newRoomCreated(msg);
+        case getListOfRooms :
+            return this->getRoomList(msg);
+        case playerDeconnected :
+            return this->getOutFromRoom(msg);
+        case RType::getRoomMembers :
+            return this->getRoomMembers(msg);
+    }
     for (auto &it : this->_rooms)
         if (it->isInRoom({msg.senderIp, msg.senderPort})) {
             it->sendMessageToRoom(msg);
@@ -173,4 +178,21 @@ void RType::CoreServer::connectToRoom(const Utils::MessageParsed_s &msg)
             };
             return;
         }
+}
+
+void RType::CoreServer::getRoomMembers(const Utils::MessageParsed_s &msg)
+{
+    Utils::MessageParsed_s newMsg(msg);
+    for (auto &it : this->_rooms)
+        if (it->getId() == msg.getFirstShort()) {
+            newMsg.msgType = sendRoomMembers;
+            unsigned char size = it->getNumberOfPlayer();
+            for (int i = 0; i < size; ++i)
+                newMsg.bytes[i] = i;
+            newMsg.bytes[size] = 255;
+            return this->_socket->send(newMsg);
+        }
+    newMsg.msgType = illegalAction;
+    newMsg.bytes[3] = RType::getRoomMembers;
+    return this->_socket->send(newMsg);
 }
