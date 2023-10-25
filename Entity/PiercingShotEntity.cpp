@@ -7,7 +7,7 @@
 
 #include "PiercingShotEntity.hpp"
 
-PiercingShotEntity::PiercingShotEntity(Shoot &shoot) : _shoot(shoot), _size(PIERCING_SHOT_X, PIERCING_SHOT_Y), _frameClock(100)
+PiercingShotEntity::PiercingShotEntity(Shoot &shoot) : _shoot(shoot), _size(PIERCING_SHOT_X, PIERCING_SHOT_Y), _frameClock(100), _clockMove(MOVE_PIERCING_SHOT)
 {
 }
 
@@ -89,3 +89,4 @@ void PiercingShotEntity::setTempoState(int state)
 {
     this->_currentTempoState = state;
 }
+

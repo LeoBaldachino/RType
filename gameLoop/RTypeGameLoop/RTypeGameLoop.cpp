@@ -196,7 +196,7 @@ void RType::RTypeGameLoop::sendRefreshAllEntities(std::queue<Utils::MessageParse
     this->handleBydos(toReturn);
     this->handleTourre(toReturn);
     for (auto it : this->_core._entities) {
-        if (it.second->getHasMoved()) {
+        // if (it.second->getHasMoved()) {
             Position tmpPos = it.second->getPosition();
             Utils::MessageParsed_s msgReturned;
             msgReturned.setFirstShort(tmpPos.getX());
@@ -205,7 +205,7 @@ void RType::RTypeGameLoop::sendRefreshAllEntities(std::queue<Utils::MessageParse
             msgReturned.bytes[6] = it.second->getEntityType();
             msgReturned.msgType = moveAnEntity;
             toReturn.push(msgReturned);
-        }
+        // }
     }
 }
 
@@ -280,7 +280,7 @@ void RType::RTypeGameLoop::refreshStatus(std::queue<Utils::MessageParsed_s> &toR
 
 void RType::RTypeGameLoop::sendNbOfEntites(std::queue<Utils::MessageParsed_s> &toReturn)
 {
-    std::cout << "Entities size is " << this->_core._entities.size() << std::endl;
+    // std::cout << "Entities size is " << this->_core._entities.size() << std::endl;
     Utils::MessageParsed_s msg;
     msg.msgType = nbOfEntities;
     msg.setFirstShort(static_cast<unsigned short>(this->_core._entities.size()));

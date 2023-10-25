@@ -14,7 +14,7 @@
 
 #define PIERCING_SHOT_X 55
 #define PIERCING_SHOT_Y 50
-
+#define MOVE_PIERCING_SHOT 2
 /**
  * @class PiercingShotEntity
  * @brief Class representing a piercing shot entity
@@ -127,6 +127,11 @@ class PiercingShotEntity : public IEntity {
          */
         void setTempoState(int state);
 
+        /**
+         * @brief Check if the entity is ready to move
+         * @return true if the entity is ready to move, false otherwise
+         */
+        inline bool readyToMove() {return this->_clockMove.clockOk();};
     private:
         Shoot _shoot;
         Vector2d _size;
@@ -134,4 +139,5 @@ class PiercingShotEntity : public IEntity {
         unsigned int _spriteFrame = 0;
         ClockTimer _frameClock;
         int _currentTempoState = 0;
+        ClockTimer _clockMove;
 };

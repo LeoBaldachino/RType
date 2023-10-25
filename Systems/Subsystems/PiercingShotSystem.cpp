@@ -9,6 +9,8 @@
 
 void PiercingShotSystem::updatePos(PiercingShotEntity &pS)
 {
+    if (!pS.readyToMove())
+        return;
     Shoot tmpShoot = pS.getShoot();
     tmpShoot.setOrigin(Vector2d(tmpShoot.getOrigin().x + tmpShoot.getDirection().x
     * tmpShoot.getVelocity(), tmpShoot.getOrigin().y + tmpShoot.getDirection().y * tmpShoot.getVelocity()));

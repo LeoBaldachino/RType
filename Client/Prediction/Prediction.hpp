@@ -53,7 +53,7 @@ namespace RType {
                 //     return;
                 // this->_clockOtherEntities = clock;
                 for (auto &it : this->_core._entities)
-                    it.second->accept(this->_prV, this->_predictionCore);
+                    it.second->accept(this->_prV, this->_core);
                 // for (auto &it : this->_predictionCore._entities)
                 //     it.second->accept(this->_prV, this->_predictionCore);
             }

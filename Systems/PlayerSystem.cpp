@@ -25,12 +25,12 @@ void PlayerSystem::createShots(Player &p, Core &core)
 {
     Shoot tmpShoot(p.shoot());
     while (!p._inputs->isEmpty()) {
-        if (p._inputs->getLastEvent() == Inputs::Events::PiercingShoot)
+        if (p._inputs->getLastEvent() == Inputs::Events::PiercingShoot) {
             core.addEntity(std::make_shared<PiercingShotEntity>(tmpShoot), core.getAvailabeIndex());
+            std::cout << "New percing shoot !" << std::endl;
+        }
         else if (p._inputs->getLastEvent() == Inputs::Events::Shoot)
             core.addEntity(std::make_shared<ShotEntity>(tmpShoot, "../Assets/shot.png", true), core.getAvailabeIndex());
-        // else
-        //     std::cout << "Not a shoot " << p._inputs.getLastEvent() << std::endl;
         p._inputs->popEvent();
     }
 }

@@ -12,8 +12,8 @@ void ShotSystem::updatePos(ShotEntity &s)
     if (!s.readyToMove())
         return;
     Shoot tmpShoot = s.getShoot();
-        tmpShoot.setOrigin(Vector2d(tmpShoot.getOrigin().x + tmpShoot.getDirection().x
-        * tmpShoot.getVelocity(), tmpShoot.getOrigin().y + tmpShoot.getDirection().y * tmpShoot.getVelocity()));
+    tmpShoot.setOrigin(Vector2d(tmpShoot.getOrigin().x + tmpShoot.getDirection().x
+    * tmpShoot.getVelocity(), tmpShoot.getOrigin().y + tmpShoot.getDirection().y * tmpShoot.getVelocity()));
     s.setShoot(tmpShoot);
     s.setHasMoved(true);
 }

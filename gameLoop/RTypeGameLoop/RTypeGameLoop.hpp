@@ -10,7 +10,7 @@
 #define TARGET_FPS 30
 #define REFRESH_ALL_ENTITIES 1000 / 100
 #define STATUS_ALL_ENTITES 1000 / 70
-#define REFRESH_PLAYERS 100
+#define REFRESH_PLAYERS 1000
 
 namespace RType {
     /**
