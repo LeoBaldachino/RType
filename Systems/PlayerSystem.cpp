@@ -43,8 +43,7 @@ void PlayerSystem::checkCollision(Player &p, IEntity &entity, Core &core)
         if (entity.getEntityType() == RType::coin)
             p.addLife();
         if (entity.getEntityType() != RType::coin && p.getLifes() >= 1)
-            if (p.removeOneLife())
-                std::cout << "One life removed !" << std::endl;
+            p.removeOneLife();
         core.removeEntityLater(entity);
     }
 }

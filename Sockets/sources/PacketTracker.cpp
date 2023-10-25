@@ -15,8 +15,6 @@ RType::PacketTracker::PacketTracker()
 void RType::PacketTracker::prepareMessageToSend(Utils::MessageParsed_s &msg)
 {
     std::pair<std::string, int> clientToSend = std::make_pair(msg.senderIp, msg.senderPort);
-    if (this->_sendedMessages.empty())
-        std::cout << "Empty !" << std::endl;
     auto find = this->_sendedMessages.find(clientToSend);
     if (find == this->_sendedMessages.end()) {
         this->_sendedMessages.insert({clientToSend, std::make_shared<std::list<Utils::MessageParsed_s>>()});
@@ -48,10 +46,8 @@ bool RType::PacketTracker::receiveMessage(const Utils::MessageParsed_s &msg, std
             return true;
         }
     find->second++;
-    if (find->second >= 254) {
+    if (find->second >= 254)
         find->second = 0;
-        std::cout << "Reset find..." << std::endl;
-    }
     if (find->second != msg.bytes[6]) {
         this->_interval = {find->second, msg.bytes[6]};
         std::cout << "Packet loss detected from " << static_cast<int>(this->_interval.first) << " to " << static_cast<int>(this->_interval.second) << std::endl;

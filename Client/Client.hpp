@@ -59,7 +59,7 @@ namespace RType {
             /**
              * @brief Destroy the Client object
              */
-            ~Client();
+            ~Client() {};
 
         private:
             void run();

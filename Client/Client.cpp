@@ -49,10 +49,6 @@ _parallaxGnome(_texture)
     this->run();
 }
 
-RType::Client::~Client()
-{
-}
-
 void RType::Client::updateInputs(void)
 {
     std::unique_lock<std::mutex> lock(*this->_mutex);
@@ -131,8 +127,7 @@ void RType::Client::handleInputs(void)
 void RType::Client::run()
 {
     while (_window->isOpen()) {
-        switch (this->_actualScreen)
-        {
+        switch (this->_actualScreen) {
         case game:
             this->gameLoop();
             break;
@@ -145,10 +140,8 @@ void RType::Client::infosThread()
     while (this->_threadIsOpen) {
         Utils::MessageParsed_s msg = this->_socket->receive();
         auto it = this->_commands.find(msg.msgType);
-        if (it == this->_commands.end()) {
-            std::cout << "Get an unhandled message " << static_cast<int>(msg.msgType) << std::endl;
+        if (it == this->_commands.end())
             continue;
-        }
         (this->*it->second)(msg);
     }
 }
@@ -157,7 +150,6 @@ void RType::Client::sendPing(const Utils::MessageParsed_s &recMsg)
 {
     auto msg = this->buildEmptyMsg(playerPing);
     this->_socket->send(msg);
-    std::cout << "Ping sended..." << std::endl;
 }
 
 
@@ -169,7 +161,6 @@ void RType::Client::handleNonAuthorized(const Utils::MessageParsed_s &msg)
         this->_mutex->unlock();
         return this->joinRoom(1);
     }
-    std::cout << "Unauthorized " << static_cast<int>(msg.bytes[0]) << std::endl;
 }
 
 RType::Utils::MessageParsed_s RType::Client::buildEmptyMsg(const ComCodes &code)
@@ -225,8 +216,6 @@ bool RType::Client::checkAsId()
 
 void RType::Client::moveEntity(const Utils::MessageParsed_s &msg)
 {
-    // if (!checkAsId())
-    //     return;
     std::unique_lock<std::mutex> lock(*this->_mutex);
     auto it = this->_entities._entities.find(msg.getThirdShort());
     if (it == this->_entities._entities.end()) {
@@ -234,7 +223,6 @@ void RType::Client::moveEntity(const Utils::MessageParsed_s &msg)
         return;
     }
     it->second->setPosition(Position(msg.getFirstShort(), msg.getSecondShort(), 1080, 1920));
-    // std::cout << "Entity " << msg.getThirdShort() << " moves x = " << msg.getFirstShort() << " y = " << msg.getSecondShort() << std::endl; 
 }
 
 void RType::Client::quitRoom(const Utils::MessageParsed_s &msg)
@@ -287,16 +275,13 @@ void RType::Client::setEntityType(const Utils::MessageParsed_s &msg)
         case RType::coin :
             return this->newCoin(msg);
     }
-    std::cout << "Unknown entity type " << (msg.getSecondShort()) << std::endl;
 }
 
 void RType::Client::newCoin(const Utils::MessageParsed_s &msg)
 {
     auto it = this->_entities._entities.find(msg.getFirstShort());
-    if (it != this->_entities._entities.end()) {
-        // std::cout << "Already in core with id " << msg.getFirstShort() << std::endl;
+    if (it != this->_entities._entities.end())
         return;
-    }
     std::unique_lock<std::mutex> lock(*this->_mutex);
     this->_entities.addEntity(std::make_shared<Coin>(Position(1900, 100, 1080, 1920)), msg.getFirstShort());
 }
@@ -304,10 +289,8 @@ void RType::Client::newCoin(const Utils::MessageParsed_s &msg)
 void RType::Client::newBydosToRoom(const Utils::MessageParsed_s &msg)
 {
     auto it = this->_entities._entities.find(msg.getFirstShort());
-    if (it != this->_entities._entities.end()) {
-        // std::cout << "Already in core with id " << msg.getFirstShort() << std::endl;
+    if (it != this->_entities._entities.end())
         return;
-    }
     std::unique_lock<std::mutex> lock(*this->_mutex);
     this->_entities.addEntity(std::make_shared<Bydos>(Position(1900, 100, 1080, 1920), 1, Vector2d(-1, 0)), msg.getFirstShort());
 }
@@ -315,10 +298,8 @@ void RType::Client::newBydosToRoom(const Utils::MessageParsed_s &msg)
 void RType::Client::newTourreToRoom(const Utils::MessageParsed_s &msg)
 {
     auto it = this->_entities._entities.find(msg.getFirstShort());
-    if (it != this->_entities._entities.end()) {
-        // std::cout << "Already in core with id " << msg.getFirstShort() << std::endl;
+    if (it != this->_entities._entities.end())
         return;
-    }
     std::unique_lock<std::mutex> lock(*this->_mutex);
     this->_entities.addEntity(std::make_shared<Tourre>(Position(1900, 100, 1080, 1920), 1, Vector2d(-1, 0)), msg.getFirstShort());
 }
@@ -331,10 +312,8 @@ void RType::Client::removeAnEntity(const Utils::MessageParsed_s &msg)
 void RType::Client::newEnemyShoot(const Utils::MessageParsed_s &msg)
 {
     auto it = this->_entities._entities.find(msg.getFirstShort());
-    if (it != this->_entities._entities.end()) {
-        // std::cout << "Already in core with id " << msg.getFirstShort() << std::endl;
+    if (it != this->_entities._entities.end())
         return;
-    }
     std::unique_lock<std::mutex> lock(*this->_mutex);
     Position pos(-20, -20);
     AIShoot aiShoot(pos, pos);
@@ -371,10 +350,8 @@ void RType::Client::setValues(const Utils::MessageParsed_s &msg)
 void RType::Client::newMyShoot(const Utils::MessageParsed_s &msg)
 {
     auto it = this->_entities._entities.find(msg.getFirstShort());
-    if (it != this->_entities._entities.end()) {
-        // std::cout << "Already in core with id " << msg.getFirstShort() << std::endl;
+    if (it != this->_entities._entities.end())
         return;
-    }
     std::unique_lock<std::mutex> lock(*this->_mutex);
     Position pos(-20, -20);
     AIShoot aiShoot(pos, pos);
@@ -385,10 +362,8 @@ void RType::Client::newMyShoot(const Utils::MessageParsed_s &msg)
 void RType::Client::newPercingShoot(const Utils::MessageParsed_s &msg)
 {
     auto it = this->_entities._entities.find(msg.getFirstShort());
-    if (it != this->_entities._entities.end()) {
-        // std::cout << "Already in core with id " << msg.getFirstShort() << std::endl;
+    if (it != this->_entities._entities.end())
         return;
-    }
     std::unique_lock<std::mutex> lock(*this->_mutex);
     Position pos(-20, -20);
     AIShoot aiShoot(pos, pos);
@@ -460,13 +435,10 @@ void RType::Client::gameLoop()
         this->_parallax.drawParallax(this->_window);
     }
     if (this->_level == 2)
-    {
         this->_parallaxGnome.drawGnomeParallax(this->_window);
-    }
     this->_lifeBar->display(this->_window);
-    for (auto &it : this->_entities._entities) {
+    for (auto &it : this->_entities._entities)
         this->_window->draw(this->getSpriteFromEntity(it.second, it.first));
-    }
     _window->display();
     this->updateInputs();
     while (!this->_inputs.empty()) {

@@ -27,8 +27,7 @@ void BydosSystem::checkCollision(Bydos &b, IEntity &entity, Core &core, bool isP
 {
     if (this->_hitBoxSystem.entityIntersect(b, entity)) {
         if (b.getLifes() >= 1)
-            if (b.removeOneLife())
-                std::cout << "One life removed from bydos" << std::endl;
+            b.removeOneLife();
         if (!isPercing)
             core.removeEntityLater(entity);
     }

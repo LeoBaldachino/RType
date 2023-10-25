@@ -1,11 +1,11 @@
-/**
- * @file LifeBar.hpp
- * @author EPITECH PROJECT, 2023
- * @brief LifeBar class definition
- */
+/*
+** EPITECH PROJECT, 2023
+** B-CPP-500-MLH-5-1-rtype-robin.denni
+** File description:
+** LifeBar.hpp
+*/
 
 #pragma once
-
 #include "../../Entity/Player.hpp"
 #include <SFML/Graphics.hpp>
 #include "../../Core/Core.hpp"
@@ -33,7 +33,7 @@ namespace RType {
             /**
              * @brief Destructor for LifeBar
              */
-            ~LifeBar();
+            ~LifeBar() {};
 
             /**
              * @brief Set the LifeBar to a Player

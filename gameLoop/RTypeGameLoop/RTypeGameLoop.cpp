@@ -87,14 +87,12 @@ void RType::RTypeGameLoop::handleCoin(std::queue<Utils::MessageParsed_s> &toRetu
         }
         Position actPos = finded->second->getPosition();
         if (actPos.getX() < 0 || actPos.getY() < 0) {
-            std::cout << "Entity not not well positionned Coin" << std::endl;
             this->_core.removeEntityLater(finded->first);
             toDelete.push(*it);
             continue;
         }
     }
     while (!toDelete.empty()) {
-        std::cout << "Delete a coin" << std::endl;
         msg.setFirstShort(toDelete.front());
         toReturn.push(msg);
         for (auto it = this->_coin.begin(); it < this->_coin.end(); it++)
@@ -119,14 +117,12 @@ void RType::RTypeGameLoop::handleBydos(std::queue<RType::Utils::MessageParsed_s>
         }
         Position actPos = finded->second->getPosition();
         if (actPos.getX() < 0 || actPos.getY() < 0) {
-            std::cout << "Entity not not well positionned" << std::endl;
             this->_core.removeEntityLater(finded->first);
             toDelete.push(*it);
             continue;
         }
     }
     while (!toDelete.empty()) {
-        std::cout << "Delete a bydos" << std::endl;
         msg.setFirstShort(toDelete.front());
         toReturn.push(msg);
         for (auto it = this->_bydos.begin(); it < this->_bydos.end(); it++)
@@ -142,7 +138,6 @@ void RType::RTypeGameLoop::handleWaves(std::queue<RType::Utils::MessageParsed_s>
     if (this->_waves.size() != 0 && this->_bydos.size() == 0 && this->_tourre.size() == 0) {
         Utils::MessageParsed_s msg;
         while (this->_tourre.size() < this->_waves[0][Parser::Enemies::TOURRE]) {
-            std::cout << "Add new tourre" << std::endl;
             unsigned short id = this->_core.getAvailabeIndex();
             this->_tourre.push_back(id);
             msg.setFirstShort(id);
@@ -151,7 +146,6 @@ void RType::RTypeGameLoop::handleWaves(std::queue<RType::Utils::MessageParsed_s>
             this->_core.addEntity(std::make_shared<Tourre>(Position(1500 + std::rand() % 200, 1080 - 53, 1080, 1920), 1, Vector2d(-1, -1)), id);
         }
         while (this->_bydos.size() < this->_waves[0][Parser::Enemies::BYDOS]) {
-            std::cout << "Add new bydos" << std::endl;
             unsigned short id = this->_core.getAvailabeIndex();
             this->_bydos.push_back(id);
             msg.setFirstShort(id);
@@ -160,7 +154,6 @@ void RType::RTypeGameLoop::handleWaves(std::queue<RType::Utils::MessageParsed_s>
             this->_core.addEntity(std::make_shared<Bydos>(Position(1700 + std::rand() % 200, std::rand() % 1000, 1080, 1920), 1, Vector2d(-1, 0)), id);
         }
         while (this->_coin.size() < this->_waves[0][Parser::Enemies::COIN]) {
-            std::cout << "Add new coin" << std::endl;
             unsigned short id = this->_core.getAvailabeIndex();
             this->_coin.push_back(id);
             msg.setFirstShort(id);
@@ -186,14 +179,12 @@ void RType::RTypeGameLoop::handleTourre(std::queue<RType::Utils::MessageParsed_s
         }
         Position actPos = finded->second->getPosition();
         if (actPos.getX() < 0 || actPos.getY() < 0) {
-            std::cout << "Entity not not well positionned" << std::endl;
             this->_core.removeEntityLater(finded->first);
             toDelete.push(*it);
             continue;
         }
     }
     while (!toDelete.empty()) {
-        std::cout << "Delete a tourre" << std::endl;
         msg.setFirstShort(toDelete.front());
         toReturn.push(msg);
         for (auto it = this->_tourre.begin(); it < this->_tourre.end(); it++)
@@ -220,10 +211,8 @@ void RType::RTypeGameLoop::checkPlayerStatus(std::queue<Utils::MessageParsed_s> 
         auto find = this->_core._entities.find(it);
         if (find == this->_core._entities.end())
             continue;
-        if (find->second->getEntityType() != player) {
-            std::cout << "Not a bydos..." << std::endl;
+        if (find->second->getEntityType() != player)
             continue;
-        }
         std::shared_ptr<Player> player = std::dynamic_pointer_cast<Player>(find->second);
         msgToSend.setFirstShort(it);
         msgToSend.bytes[3] = player->getLifes();

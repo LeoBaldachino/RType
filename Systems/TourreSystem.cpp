@@ -19,8 +19,7 @@ void TourreSystem::checkCollision(Tourre &t, IEntity &entity, Core &core, bool i
 {
     if (this->_hitBoxSystem.entityIntersect(t, entity)) {
         if (t.getLifes() >= 1)
-            if (t.removeOneLife())
-                std::cout << "One life removed from tourre" << std::endl;
+            t.removeOneLife();
         if (!isTouching)
             core.removeEntityLater(entity);
     }
