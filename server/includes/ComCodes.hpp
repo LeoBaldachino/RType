@@ -30,6 +30,7 @@ namespace RType {
         sendRoomMembers = 42,
         getPlayerInfos = 43,
         kickPlayer = 44,
-        reportPlayer = 45
+        reportPlayer = 45,
+        playerDetails = 46
     };
 }

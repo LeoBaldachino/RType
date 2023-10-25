@@ -12,12 +12,13 @@ _lineCommands({
     {"ls", &RType::RoomController::lsCommand},
     {"select", &RType::RoomController::selectCommand},
     {"kick", &RType::RoomController::kickCommand},
-    {"details ", &RType::RoomController::detailsCommand},
+    {"details", &RType::RoomController::detailsCommand},
     {"help", &RType::RoomController::helpCommand},
 }),
 _commands({
     {listOfRooms, &RType::RoomController::showTeam},
     {sendRoomMembers, &RType::RoomController::showTeamMembers},
+    {playerDetails, &RType::RoomController::showPlayerDetails},
 })
 {
     if (ac != 3)
@@ -115,6 +116,17 @@ void RType::RoomController::detailsCommand(const std::string &command)
         std::cout << "No room selected..." << std::endl;
         return;
     }
+    unsigned char playerId;
+    try {
+        playerId = static_cast<unsigned char>(std::stoi(command));
+    } catch (const std::exception &err) {
+        std::cout << "Invalid player id..." << std::endl;
+        return;
+    }
+    auto msg = this->createEmptyMsg(getPlayerInfos);
+    msg.setFirstShort(this->_actTeam);
+    msg.bytes[3] = playerId;
+    this->_socket->send(msg);
 }
 
 void RType::RoomController::helpCommand(const std::string &command)
@@ -137,5 +149,13 @@ void RType::RoomController::showTeamMembers(const Utils::MessageParsed_s &msg)
             break;
         std::cout << "Player id = " << static_cast<int>(msg.bytes[i]) << "\n";
     }
+    std::cout << std::endl;
+}
+
+void RType::RoomController::showPlayerDetails(const Utils::MessageParsed_s &msg)
+{
+    std::cout << "Details of the " << static_cast<int>(msg.bytes[6]) << " player :\n\n";
+    std::cout << "Position x : " << msg.getFirstShort() << " y : " << msg.getSecondShort() << "\n\n";
+    std::cout << "Number of lifes :" << msg.getThirdShort() << "\n";
     std::cout << std::endl;
 }

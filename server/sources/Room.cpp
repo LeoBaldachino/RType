@@ -275,3 +275,8 @@ void RType::Server::Room::sendEntityType(const Utils::MessageParsed_s &msg)
     newMsg.setSecondShort(this->_gameLoop->getEntityType(msg.getFirstShort()));
     this->_socket->send(newMsg);
 }
+
+std::tuple<unsigned short, unsigned short, unsigned short> RType::Server::Room::getPlayerDetails(unsigned char playerId)
+{
+    return this->_gameLoop->getPlayerDetails(playerId);
+}

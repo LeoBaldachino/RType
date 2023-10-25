@@ -36,6 +36,7 @@ namespace RType {
              * @return std::queue<Utils::MessageParsed_s> updated queue of messages
              */
             std::queue<Utils::MessageParsed_s> updateGameLoop(std::queue<std::pair<unsigned short, Utils::MessageParsed_s>> newMessages);
+            std::tuple<unsigned short, unsigned short, unsigned short> getPlayerDetails(unsigned char playerId);
         protected:
             /**
              * @brief Set the Position Entity From Msg object

@@ -29,6 +29,8 @@ namespace RType {
              * @return EntityTypes Entity type
              */
             virtual EntityTypes getEntityType(unsigned short id) = 0;
+
+            virtual std::tuple<unsigned short, unsigned short, unsigned short> getPlayerDetails(unsigned char playerId) = 0;
         protected :
             /**
              * @brief Run after update

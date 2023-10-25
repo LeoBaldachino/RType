@@ -144,6 +144,8 @@ namespace RType {
                  * @param msg the message from the player
                  */
                 void sendPlayerId(const Utils::MessageParsed_s &msg);
+                
+                std::tuple<unsigned short, unsigned short, unsigned short> getPlayerDetails(unsigned char playerId);
             private:
                 /**
                  * @brief run the room inside of a thread, method launched at the constructor 
@@ -167,6 +169,7 @@ namespace RType {
                  * @param msg the message from the player
                  */
                 void sendEntityType(const Utils::MessageParsed_s &msg);
+
                 std::unique_ptr<std::thread> _roomThread;
                 std::map<std::pair<std::string, int>, unsigned short> _allPlayers;
                 std::map<std::pair<std::string, int>, bool> _playerOnline;
