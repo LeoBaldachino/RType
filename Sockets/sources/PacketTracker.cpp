@@ -12,10 +12,6 @@ RType::PacketTracker::PacketTracker()
     this->_intervalSet = false;
 }
 
-RType::PacketTracker::~PacketTracker()
-{
-}
-
 void RType::PacketTracker::prepareMessageToSend(Utils::MessageParsed_s &msg)
 {
     std::pair<std::string, int> clientToSend = std::make_pair(msg.senderIp, msg.senderPort);
