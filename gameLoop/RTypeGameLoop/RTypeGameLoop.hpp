@@ -27,7 +27,7 @@ namespace RType {
             /**
              * @brief Destroy the RTypeGameLoop object
              */
-            ~RTypeGameLoop();
+            ~RTypeGameLoop() {};
 
             /**
              * @brief Get entity type

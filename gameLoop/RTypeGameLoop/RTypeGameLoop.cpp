@@ -13,10 +13,6 @@ RType::RTypeGameLoop::RTypeGameLoop(Core &core) : GameLoop(core)
     this->_refreshPlayers = std::chrono::steady_clock::now();
 }
 
-RType::RTypeGameLoop::~RTypeGameLoop()
-{
-}
-
 void RType::RTypeGameLoop::updatePlayerPos(std::pair<unsigned short, Utils::MessageParsed_s> msg)
 {
     auto it = this->_core._entities.find(msg.first);
@@ -45,9 +41,8 @@ std::queue<RType::Utils::MessageParsed_s> RType::RTypeGameLoop::runAfterUpdate(s
     this->handleTourre(toReturn);
     this->handleWaves(toReturn);
     auto clock = std::chrono::steady_clock::now();
-    if (std::chrono::duration_cast<std::chrono::milliseconds>(clock - this->_refreshAllEntities).count() < REFRESH_ALL_ENTITIES) {
+    if (std::chrono::duration_cast<std::chrono::milliseconds>(clock - this->_refreshAllEntities).count() < REFRESH_ALL_ENTITIES)
         this->sendRefreshPlayers(toReturn);
-    }
     else {
         this->sendRefreshAllEntities(toReturn);
         this->checkPlayerStatus(toReturn);

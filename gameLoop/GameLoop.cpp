@@ -15,10 +15,6 @@ _commands({
 {
 }
 
-RType::GameLoop::~GameLoop()
-{
-}
-
 std::queue<RType::Utils::MessageParsed_s> RType::GameLoop::updateGameLoop(std::queue<std::pair<unsigned short, Utils::MessageParsed_s>> queueMsg)
 {
     std::queue<std::pair<unsigned short, Utils::MessageParsed_s>> newMessageQueue;
@@ -31,17 +27,6 @@ std::queue<RType::Utils::MessageParsed_s> RType::GameLoop::updateGameLoop(std::q
         queueMsg.pop();
     }
     return this->runAfterUpdate(newMessageQueue);
-}
-
-
-void RType::GameLoop::setPositionEntityFromMsg(const Utils::MessageParsed_s &msg, unsigned short id)
-{
-
-}
-
-void RType::GameLoop::spawnEntityFromMsg(const Utils::MessageParsed_s &msg, unsigned short id)
-{
-
 }
 
 void RType::GameLoop::addPlayer(const Utils::MessageParsed_s &msg, unsigned short id)

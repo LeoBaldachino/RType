@@ -111,9 +111,8 @@ bool RType::Server::Room::sendMessageToRoom(const Utils::MessageParsed_s &msg)
         return true;
     }
     auto it = this->_allPlayers.find({msg.senderIp, msg.senderPort});
-    if (it == this->_allPlayers.end()) {
+    if (it == this->_allPlayers.end())
         return false;
-    }
     std::unique_lock<std::mutex> lock(*this->_mutexQueue);
     this->_toSendToGameLoop->push({it->second, msg});
     return true;
@@ -259,9 +258,8 @@ void RType::Server::Room::sendPlayerId(const Utils::MessageParsed_s &msg)
     Utils::MessageParsed_s newMsg(msg);
     newMsg.msgType = givePlayerId;
     auto it = this->_allPlayers.find({msg.senderIp, msg.senderPort});
-    if (it == this->_allPlayers.end()) {
+    if (it == this->_allPlayers.end())
         return;
-    }
     newMsg.setFirstShort(it->second);
     this->_socket->send(newMsg);
 }
