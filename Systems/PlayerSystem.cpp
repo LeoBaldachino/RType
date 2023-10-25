@@ -63,7 +63,9 @@ void PlayerSystem::updatePos(Player &p)
 void PlayerSystem::checkCollision(Player &p, IEntity &entity, Core &core)
 {
     if (this->_hitBoxSystem.entityIntersect(p, entity)) {
-        if (p.getLifes() >= 1)
+        if (entity.getEntityType() == RType::coin)
+            p.addLife();
+        if (entity.getEntityType() != RType::coin && p.getLifes() >= 1)
             if (p.removeOneLife())
                 std::cout << "One life removed !" << std::endl;
         core.removeEntityLater(entity);
