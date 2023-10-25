@@ -78,6 +78,13 @@ namespace RType {
              * @brief Array of player ids
              */
             std::vector<unsigned short> _playerArray;
+            
+            /**
+             * @brief Set the Enemies Waves
+             * 
+             * @param waves 
+             */
+            void setEnemiesWaves(std::vector<std::map<Parser::Enemies, int>> waves) {};
         private : 
             /**
              * @brief Map of commands

@@ -11,8 +11,6 @@ RType::RTypeGameLoop::RTypeGameLoop(Core &core) : GameLoop(core)
 {
     this->_refreshAllEntities = std::chrono::steady_clock::now();
     this->_refreshPlayers = std::chrono::steady_clock::now();
-    this->_waves.push_back({{Parser::Enemies::BYDOS, 4}, {Parser::Enemies::TOURRE, 2}});// TEST
-    this->_waves.push_back({{Parser::Enemies::BYDOS, 6}});                              // TEST
 }
 
 RType::RTypeGameLoop::~RTypeGameLoop()
@@ -270,4 +268,9 @@ void RType::RTypeGameLoop::checkTourreStatus(std::queue<Utils::MessageParsed_s> 
     msgToSend.bytes[4] = tourre->actuallyInvincible() ? 1 : 0;
     toReturn.push(msgToSend);
     }
+}
+
+void RType::RTypeGameLoop::setEnemiesWaves(std::vector<std::map<Parser::Enemies, int>> waves)
+{
+    this->_waves = waves;
 }

@@ -7,7 +7,6 @@
 #pragma once
 #include "../GameLoop.hpp"
 #include "../../Visitor/SystemVisitor.hpp"
-#include "../../server/includes/Parser.hpp"
 #define REFRESH_ALL_ENTITIES 5
 #define REFRESH_PLAYERS 500
 
@@ -97,6 +96,13 @@ namespace RType {
              * @param toReturn 
              */
             void handleWaves(std::queue<Utils::MessageParsed_s> &toReturn);
+
+            /**
+             * @brief Set the Enemies Waves
+             * 
+             * @param waves 
+             */
+            void setEnemiesWaves(std::vector<std::map<Parser::Enemies, int>> waves);
 
             SystemVisitor v;
             std::vector<unsigned short> _bydos;
