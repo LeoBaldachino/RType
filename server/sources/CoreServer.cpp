@@ -80,6 +80,8 @@ void RType::CoreServer::threadMethod(const Utils::MessageParsed_s &msg)
             return this->getRoomMembers(msg);
         case RType::getPlayerInfos :
             return this->getPlayerDetails(msg);
+        case RType::kickPlayer :
+            return this->kickPlayer(msg);
     }
     for (auto &it : this->_rooms)
         if (it->isInRoom({msg.senderIp, msg.senderPort})) {
@@ -213,5 +215,19 @@ void RType::CoreServer::getPlayerDetails(const Utils::MessageParsed_s &msg)
         }
     newMsg.msgType = illegalAction;
     newMsg.bytes[3] = RType::getPlayerInfos;
+    return this->_socket->send(newMsg); 
+}
+
+void RType::CoreServer::kickPlayer(const Utils::MessageParsed_s &msg)
+{
+    Utils::MessageParsed_s newMsg(msg);
+    for (auto &it : this->_rooms)
+        if (it->getId() == msg.getFirstShort()) {
+            if (!it->removeFromRoom(msg.bytes[3]))
+                break;
+            return;
+        }
+    newMsg.msgType = illegalAction;
+    newMsg.bytes[3] = RType::kickPlayer;
     return this->_socket->send(newMsg); 
 }

@@ -280,3 +280,12 @@ std::tuple<unsigned short, unsigned short, unsigned short> RType::Server::Room::
 {
     return this->_gameLoop->getPlayerDetails(playerId);
 }
+
+
+bool RType::Server::Room::removeFromRoom(unsigned short id)
+{
+    for (auto &it : this->_allPlayers)
+        if (it.second == id)
+            return this->removeFromRoom(it.first);
+    return false;
+}

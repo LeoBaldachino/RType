@@ -108,6 +108,17 @@ void RType::RoomController::kickCommand(const std::string &command)
         std::cout << "No room selected..." << std::endl;
         return;
     }
+    unsigned char playerId;
+    try {
+        playerId = static_cast<unsigned char>(std::stoi(command));
+    } catch (const std::exception &err) {
+        std::cout << "Invalid player id..." << std::endl;
+        return;
+    }
+    auto msg = this->createEmptyMsg(kickPlayer);
+    msg.setFirstShort(this->_actTeam);
+    msg.bytes[3] = playerId;
+    this->_socket->send(msg);
 }
 
 void RType::RoomController::detailsCommand(const std::string &command)

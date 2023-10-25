@@ -72,6 +72,7 @@ namespace RType {
 
             void getRoomMembers(const Utils::MessageParsed_s &msg);
             void getPlayerDetails(const Utils::MessageParsed_s &msg);
+            void kickPlayer(const Utils::MessageParsed_s &msg);
             std::unique_ptr<Server::ThreadPool> _threadPool;
             std::unique_ptr<Utils::SocketHandler> _socket;
             std::mutex _mutex;

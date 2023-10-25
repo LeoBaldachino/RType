@@ -146,6 +146,8 @@ namespace RType {
                 void sendPlayerId(const Utils::MessageParsed_s &msg);
                 
                 std::tuple<unsigned short, unsigned short, unsigned short> getPlayerDetails(unsigned char playerId);
+
+                bool removeFromRoom(unsigned short id);
             private:
                 /**
                  * @brief run the room inside of a thread, method launched at the constructor 
