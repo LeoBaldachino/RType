@@ -16,6 +16,7 @@ class Bydos;
 class Tourre;
 class ShotEntity;
 class PiercingShotEntity;
+class Coin;
 
 class IVisitor {
     public:
@@ -24,4 +25,5 @@ class IVisitor {
         virtual void visitTourre(Tourre &t, Core &core) = 0;
         virtual void visitShot(ShotEntity &s, Core &core) = 0;
         virtual void visitPiercingShot(PiercingShotEntity &pS, Core &core) = 0;
+        virtual void visitCoin(Coin &c, Core &core) = 0;
 };

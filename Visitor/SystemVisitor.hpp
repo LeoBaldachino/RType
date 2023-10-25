@@ -10,6 +10,7 @@
 #include "../Systems/PlayerSystem.hpp"
 #include "../Systems/BydosSystem.hpp"
 #include "../Systems/TourreSystem.hpp"
+#include "../Systems/CoinSystem.hpp"
 #include "../EntityTypes/EntityTypes.hpp"
 #include "../Components/ClockTimer.hpp"
 
@@ -57,6 +58,9 @@ class SystemVisitor : public IVisitor {
             this->_piercingShotSystem.updatePos(pS);
             this->_piercingShotSystem.clearShots(pS, core);
         };
+        void visitCoin(Coin &c, Core &core) {
+            this->_coinSystem.updatePos(c);
+        }
     private:
         Player _lastPlayer;
         Position _lastPlayerPos;
@@ -65,4 +69,5 @@ class SystemVisitor : public IVisitor {
         TourreSystem _tourreSystem;
         ShotSystem _shotSystem;
         PiercingShotSystem _piercingShotSystem;
+        CoinSystem _coinSystem;
 };
