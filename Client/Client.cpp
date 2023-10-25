@@ -35,9 +35,11 @@ _commands({
     this->_actualScreen = Screens::game;
     this->_gameAsStarted = false;
     this->_inputs = {};
+    this->_mouseClicked = false;
     this->_serverIp = av[1];
     this->_serverPort = std::stoi(av[2]);
     this->_mutex = std::make_unique<std::mutex>();
+    this->_buttonList.addButtons([this]{std::cout << "Hello world !" << std::endl;}, "../Assets/buttonTest.png", "Hello !", sf::Vector2f(10.0, 10.0), sf::IntRect(0, 0, 150, 100), 100, 0);
     this->_window = std::make_unique<sf::RenderWindow>(sf::VideoMode::getDesktopMode(), "R-Type", sf::Style::Fullscreen);
     // if (this->_music.openFromFile("../Assets/music.ogg") != -1)
         // this->_music.play();
@@ -70,6 +72,10 @@ void RType::Client::updateInputs(void)
 void RType::Client::handleInputs(void)
 {
     sf::Event event;
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+        this->_mouseClicked = true;
+    else
+        this->_mouseClicked = false;
     while (this->_window->pollEvent(event)) {
         if (event.type == sf::Event::KeyPressed) {
             switch (event.key.code) {
@@ -94,6 +100,7 @@ void RType::Client::handleInputs(void)
                         this->shooting = true;
                     }
                     break;
+
             }
         }
         if (event.type == sf::Event::KeyReleased) {
@@ -122,6 +129,9 @@ void RType::Client::handleInputs(void)
                             this->_inputs.push_back(Events::Shoot);
                         this->shooting = false;
                     }
+                    break;
+                case (sf::Mouse::Left || sf::Mouse::Right) :
+                    this->_mouseClicked = false;
                     break;
             }
         }
@@ -444,6 +454,11 @@ void RType::Client::gameLoop()
         this->_window->draw(this->getSpriteFromEntity(it.second, it.first));
     // std::cout << "Entities size is " << this->_entities._entities.size() << std::endl;
     lock.unlock();
+    auto mousePos = sf::Mouse::getPosition();
+    this->_buttonList.hoverButtons(mousePos);
+    if (this->_mouseClicked)
+        this->_buttonList.clickButtons(mousePos);
+    this->_buttonList.displayButtons(this->_window);
     _window->display();
     this->setLifeBars();
     this->updateInputs();

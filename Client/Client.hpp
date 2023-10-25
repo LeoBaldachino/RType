@@ -17,6 +17,7 @@
 #include <unordered_map>
 #include <SFML/Audio.hpp>
 #include "Prediction/Prediction.hpp"
+#include "Button/ButtonList.hpp"
 
 #define GET_ID_LIMIT_TIME 1
 
@@ -107,5 +108,7 @@ namespace RType {
             bool _gameAsStarted;
             Texture _texture;
             std::unique_ptr<Prediction> _predicate;
+            ButtonList _buttonList;
+            bool _mouseClicked;
     };
 }

@@ -10,7 +10,8 @@
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
 #include <functional>
-
+#include <iostream>
+#include <chrono>
 
 namespace RType {
     class Button {
@@ -25,10 +26,12 @@ namespace RType {
             const std::string _path;
             const std::string _text;
             const sf::Vector2f _pos;
+            sf::IntRect _rectCheck;
             sf::Rect<int> _rect;
             const int _decalHover;
             int _actPosHover;
             sf::Sprite _sprite;
             sf::Texture _texture;
+            std::chrono::steady_clock::time_point _timeout;
     };
 }

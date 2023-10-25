@@ -15,10 +15,15 @@ _pos(pos),
 _rect(rect),
 _decalHover(decalHover)
 {
+    this->_rectCheck.height = decalHover;
+    this->_rectCheck.left = this->_pos.x;
+    this->_rectCheck.top = this->_pos.y;
+    this->_rectCheck.width = this->_rect.width;
     this->_actPosHover = 0;
     this->_texture.loadFromFile(this->_path);
     this->_sprite.setTexture(this->_texture);
     this->_sprite.setPosition(this->_pos);
+    this->_timeout = std::chrono::steady_clock::now();
 }
 
 RType::Button::~Button()
@@ -28,27 +33,20 @@ RType::Button::~Button()
 
 void RType::Button::checkClicked(const sf::Vector2i &pos)
 {
-    sf::IntRect rect;
-    rect.width = 1;
-    rect.height = 1;
-    rect.left = pos.x;
-    rect.left = pos.y;
-    if (this->_rect.intersects(rect)) {
+    if (this->_rectCheck.contains(pos)) {
         this->_actPosHover = 2;
+        auto clock = std::chrono::steady_clock::now();
+        if (std::chrono::duration_cast<std::chrono::milliseconds>(clock - this->_timeout).count() < 500)
+            return;
+        this->_timeout = clock;
         this->_handler();
     }
 }
 
 void RType::Button::checkHover(const sf::Vector2i &pos)
 {
-    sf::IntRect rect;
-    rect.width = 1;
-    rect.height = 1;
-    rect.left = pos.x;
-    rect.left = pos.y;
-    if (this->_rect.intersects(rect))
-        if (this->_actPosHover != 2)
-            this->_actPosHover = 1;
+    if (this->_rectCheck.contains(pos)) 
+        this->_actPosHover = 1;
     else
         this->_actPosHover = 0;
 }
