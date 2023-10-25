@@ -23,7 +23,7 @@ class SystemVisitor : public IVisitor {
             this->_playerSystem.createShots(p, core);
             p._inputs->unlockInputs();
             for (auto it : core._entities)
-                if (it.second->getEntityType() == RType::bydos || it.second->getEntityType() == RType::bydosShoot)
+                if (it.second->getEntityType() == RType::bydos || it.second->getEntityType() == RType::bydosShoot || it.second->getEntityType() == RType::tourre)
                     this->_playerSystem.checkCollision(p, *it.second, core);
             this->_lastPlayerPos = p.getPosition();
         }
@@ -46,6 +46,10 @@ class SystemVisitor : public IVisitor {
             this->_tourreSystem.updatePos(t);
             for (auto it : core._entities) {
                 auto entityType = it.second->getEntityType();
+                if (entityType == RType::playerShoot)
+                    this->_tourreSystem.checkCollision(t, *it.second, core, false);
+                if (entityType == RType::percingShoot)
+                    this->_tourreSystem.checkCollision(t, *it.second, core, true);
             }
             // this->_tourreSystem.createShots(t, this->_lastPlayer, core);
         };
