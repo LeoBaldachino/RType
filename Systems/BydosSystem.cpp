@@ -7,10 +7,6 @@
 
 #include "BydosSystem.hpp"
 
-BydosSystem::BydosSystem()
-{
-}
-
 void BydosSystem::updatePos(Bydos &b)
 {
     if (!b.readyToMove())

@@ -16,10 +16,9 @@
 
 class TourreSystem {
     public:
-        TourreSystem();
+        TourreSystem() {};
         ~TourreSystem() {};
         void updatePos(Tourre &t);
-        // void createShots(Tourre &t, const Player &player, Core &core);
         void checkCollision(Tourre &t, IEntity &entity, Core &core, bool isTouching);
 
     private:

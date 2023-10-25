@@ -14,10 +14,7 @@
 
 class MovementSystem {
     public:
-        MovementSystem();
-        ~MovementSystem();
-
+        MovementSystem() {};
+        ~MovementSystem() {};
         void updatePosition(IEntity &entity);
-
-    private:
 };

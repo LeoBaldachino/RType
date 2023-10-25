@@ -12,11 +12,6 @@ StateSystem::StateSystem(const State &state)
     this->_state = state;
 }
 
-StateSystem::~StateSystem()
-{
-
-}
-
 void StateSystem::setState(const State &state)
 {
     this->_state = state;

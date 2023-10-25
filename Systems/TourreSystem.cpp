@@ -7,10 +7,6 @@
 
 #include "TourreSystem.hpp"
 
-TourreSystem::TourreSystem()
-{
-}
-
 void TourreSystem::updatePos(Tourre &t)
 {
     if (!t.readyToMove())
@@ -18,12 +14,6 @@ void TourreSystem::updatePos(Tourre &t)
     this->_movementSystem.updatePosition(t);
     t.setHasMoved(true);
 }
-
-// void TourreSystem::createShots(Tourre &t, const Player &player, Core &core)
-// {
-//     Shoot tmpShoot(t.shoot(player.getPosition()));
-//     core.addEntity(std::make_shared<ShotEntity>(tmpShoot, "../Assets/enemyShot.png", false), core.getAvailabeIndex());
-// }
 
 void TourreSystem::checkCollision(Tourre &t, IEntity &entity, Core &core, bool isTouching)
 {
