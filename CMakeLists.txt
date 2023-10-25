@@ -53,4 +53,4 @@ file(GLOB SERVER_ENTITYTYPES "EntityTypes/*.cpp")
 
 add_executable(r-type_server ${SERVER_SOURCES} ${SERVER_CORE} ${SERVER_SOCKET} ${SERVER_SYSTEMS} ${SERVER_SUBSYSTEMS} ${SERVER_ENTITY} ${SERVER_GAMELOOP} ${SERVER_RTYPEGAMELOOP} ${SERVER_ENTITYTYPES})
 
-target_link_libraries(r-type_server PRIVATE boost_system boost_thread boost_serialization pthread config++)
+target_link_libraries(r-type_server PRIVATE boost_system boost_serialization pthread config++)

@@ -10,6 +10,7 @@
 #include "../Systems/PlayerSystem.hpp"
 #include "../Systems/BydosSystem.hpp"
 #include "../Systems/TourreSystem.hpp"
+#include "../Systems/GenieSystem.hpp"
 #include "../EntityTypes/EntityTypes.hpp"
 #include "../Components/ClockTimer.hpp"
 
@@ -49,6 +50,15 @@ class SystemVisitor : public IVisitor {
             }
             // this->_tourreSystem.createShots(t, this->_lastPlayer, core);
         };
+        void visitGenie(Genie &t, Core &core) {
+            if (t.getLifes() == 0)
+                return (void)core.removeEntityLater(t);
+            this->_genieSystem.updatePos(t);
+            for (auto it : core._entities) {
+                auto entityType = it.second->getEntityType();
+            }
+            // this->_tourreSystem.createShots(t, this->_lastPlayer, core);
+        };
         void visitShot(ShotEntity &s, Core &core) {
             this->_shotSystem.updatePos(s);
             this->_shotSystem.clearShots(s, core);
@@ -63,6 +73,7 @@ class SystemVisitor : public IVisitor {
         PlayerSystem _playerSystem;
         BydosSystem _bydosSystem;
         TourreSystem _tourreSystem;
+        GenieSystem _genieSystem;
         ShotSystem _shotSystem;
         PiercingShotSystem _piercingShotSystem;
 };

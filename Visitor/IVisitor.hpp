@@ -14,6 +14,7 @@ class Core;
 class Player;
 class Bydos;
 class Tourre;
+class Genie;
 class ShotEntity;
 class PiercingShotEntity;
 
@@ -23,5 +24,6 @@ class IVisitor {
         virtual void visitBydos(Bydos &b, Core &core) = 0;
         virtual void visitTourre(Tourre &t, Core &core) = 0;
         virtual void visitShot(ShotEntity &s, Core &core) = 0;
+        virtual void visitGenie(Genie &s, Core &core) = 0;
         virtual void visitPiercingShot(PiercingShotEntity &pS, Core &core) = 0;
 };
