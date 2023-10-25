@@ -45,8 +45,6 @@ std::queue<RType::Utils::MessageParsed_s> RType::RTypeGameLoop::runAfterUpdate(s
             this->updatePlayerPos(newMessages.front());
         newMessages.pop();
     }
-    this->handleBydos(toReturn);
-    this->handleTourre(toReturn);
     auto clock = std::chrono::steady_clock::now();
     if (std::chrono::duration_cast<std::chrono::milliseconds>(clock - this->_refreshAllEntities).count() < REFRESH_ALL_ENTITIES) {
         this->sendRefreshPlayers(toReturn);
@@ -122,9 +120,6 @@ void RType::RTypeGameLoop::handleBydos(std::queue<RType::Utils::MessageParsed_s>
         std::cout << "Add new bydos" << std::endl;
         unsigned short id = this->_core.getAvailabeIndex();
         this->_bydos.push_back(id);
-        msg.setFirstShort(id);
-        msg.setSecondShort(bydos);
-        toReturn.push(msg);
         this->_core.addEntity(std::make_shared<Bydos>(Position(1700 + std::rand() % 200, std::rand() % 1000, 1080, 1920), 1, Vector2d(-1, 0)), id);
     }
 }
@@ -163,9 +158,6 @@ void RType::RTypeGameLoop::handleTourre(std::queue<RType::Utils::MessageParsed_s
         std::cout << "Add new tourre" << std::endl;
         unsigned short id = this->_core.getAvailabeIndex();
         this->_tourre.push_back(id);
-        msg.setFirstShort(id);
-        msg.setSecondShort(tourre);
-        toReturn.push(msg);
         this->_core.addEntity(std::make_shared<Tourre>(Position(1500 + std::rand() % 200, 1080 - 53, 1080, 1920), 1, Vector2d(-1, -1)), id);
     }
 }
@@ -201,8 +193,10 @@ void RType::RTypeGameLoop::checkPlayerStatus(std::queue<Utils::MessageParsed_s> 
 
 void RType::RTypeGameLoop::sendRefreshAllEntities(std::queue<Utils::MessageParsed_s> &toReturn)
 {
+    this->handleBydos(toReturn);
+    this->handleTourre(toReturn);
     for (auto it : this->_core._entities) {
-        // if (it.second->getHasMoved()) {
+        if (it.second->getHasMoved()) {
             Position tmpPos = it.second->getPosition();
             Utils::MessageParsed_s msgReturned;
             msgReturned.setFirstShort(tmpPos.getX());
@@ -211,7 +205,7 @@ void RType::RTypeGameLoop::sendRefreshAllEntities(std::queue<Utils::MessageParse
             msgReturned.bytes[6] = it.second->getEntityType();
             msgReturned.msgType = moveAnEntity;
             toReturn.push(msgReturned);
-        // }
+        }
     }
 }
 

@@ -23,6 +23,12 @@ class PredictVisitor : public IVisitor {
         void visitPlayer(Player &p, Core &core) {
             (void)core;
             this->_playerSystem.updatePos(p);
+            // p._inputs->lockInputs();
+            // this->_playerSystem.createPiercingShots(p, core);
+            // this->_playerSystem.createShots(p, core);
+            // p._inputs->unlockInputs();
+            while (!p._inputs->isEmpty())
+                p._inputs->popEvent();
         };
         void visitBydos(Bydos &b, Core &core) {
             (void)core;
@@ -33,14 +39,16 @@ class PredictVisitor : public IVisitor {
             this->_tourreSystem.updatePos(t);
         }
         void visitShot(ShotEntity &s, Core &core) {
-            unsigned short id = core.getEntityId(s);
-            if (id == 0)
-                return;
-            if (this->_predictShoot.shootSetVector(id, s))
-                this->_shot.updatePos(s);
+            // unsigned short id = core.getEntityId(s);
+            // if (id == 0)
+            //     return;
+            // if (this->_predictShoot.shootSetVector(id, s))
+            // this->_shot.updatePos(s);
+            // this->_shot.clearShots(s, core);
         }
         void visitPiercingShot(PiercingShotEntity &pS, Core &core) {
-
+            // this->_piercingShotSystem.updatePos(pS);
+            // this->_piercingShotSystem.clearShots(pS, core);
         }
     private:
         PlayerSystem _playerSystem;
@@ -48,4 +56,5 @@ class PredictVisitor : public IVisitor {
         TourreSystem _tourreSystem;
         ShotSystem _shot;
         PredictShoot _predictShoot;
+        PiercingShotSystem _piercingShotSystem;
 };

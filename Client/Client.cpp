@@ -44,7 +44,7 @@ _commands({
     this->_socket = std::make_unique<Utils::SocketHandler>("127.0.0.1", 4001 + std::rand() % 3000, std::list<int>({keyPressed, entityType, playerPing, newPlayerConnected, givePlayerId, destroyedRoom, serverStop, entityType, removeEntity, playerDeconnected, newRoomIsCreated, playerGetId, givePlayerId}));
     this->_threadIsOpen = true;
     this->_actualId = -1;
-    this->_predicate = std::make_unique<Prediction>(this->_entities, this->_inputs);
+    this->_predicate = std::make_unique<Prediction>(this->_entities, this->_predictionCore, this->_inputs);
     this->_infosThread = std::make_unique<std::thread>(&RType::Client::infosThread, this);
     this->run();
 }
@@ -202,6 +202,7 @@ void RType::Client::createRoom(unsigned char roomNb)
 
 void RType::Client::newPlayerToRoom(const Utils::MessageParsed_s &msg)
 {
+    std::unique_lock<std::mutex> lock(*this->_mutex);
     std::cout << "New player connected !!" << std::endl;
     auto pl = std::make_shared<Player>(Position(0, 0, 1080, 1920));
     this->_lifeBar->setLifeBarToPlayer(pl);
@@ -277,7 +278,6 @@ void RType::Client::getEntityType(unsigned short entity)
 
 void RType::Client::setEntityType(const Utils::MessageParsed_s &msg)
 {
-    std::cout << "New entity !" << std::endl;
     switch (msg.getSecondShort()) {
         case RType::player:
             return this->newPlayerToRoom(msg);
@@ -297,41 +297,40 @@ void RType::Client::setEntityType(const Utils::MessageParsed_s &msg)
 
 void RType::Client::newBydosToRoom(const Utils::MessageParsed_s &msg)
 {
+    std::unique_lock<std::mutex> lock(*this->_mutex);
     auto it = this->_entities._entities.find(msg.getFirstShort());
     if (it != this->_entities._entities.end()) {
         // std::cout << "Already in core with id " << msg.getFirstShort() << std::endl;
         return;
     }
-    std::unique_lock<std::mutex> lock(*this->_mutex);
     this->_entities.addEntity(std::make_shared<Bydos>(Position(1900, 100, 1080, 1920), 1, Vector2d(-1, 0)), msg.getFirstShort());
 }
 
 void RType::Client::newTourreToRoom(const Utils::MessageParsed_s &msg)
 {
+    std::unique_lock<std::mutex> lock(*this->_mutex);
     auto it = this->_entities._entities.find(msg.getFirstShort());
     if (it != this->_entities._entities.end()) {
         // std::cout << "Already in core with id " << msg.getFirstShort() << std::endl;
         return;
     }
-    std::unique_lock<std::mutex> lock(*this->_mutex);
     this->_entities.addEntity(std::make_shared<Tourre>(Position(1900, 100, 1080, 1920), 1, Vector2d(-1, 0)), msg.getFirstShort());
 }
 
 void RType::Client::removeAnEntity(const Utils::MessageParsed_s &msg)
 {
     std::unique_lock<std::mutex> lock(*this->_mutex);
-    std::cout << "Remove Entity" << std::endl;
     this->_entities.removeEntity(msg.getFirstShort());
 }
 
 void RType::Client::newEnemyShoot(const Utils::MessageParsed_s &msg)
 {
+    std::unique_lock<std::mutex> lock(*this->_mutex);
     auto it = this->_entities._entities.find(msg.getFirstShort());
     if (it != this->_entities._entities.end()) {
         // std::cout << "Already in core with id " << msg.getFirstShort() << std::endl;
         return;
     }
-    std::unique_lock<std::mutex> lock(*this->_mutex);
     Position pos(-20, -20);
     AIShoot aiShoot(pos, pos);
     auto tmpShoot = aiShoot.shootLogic();
@@ -340,24 +339,22 @@ void RType::Client::newEnemyShoot(const Utils::MessageParsed_s &msg)
 
 void RType::Client::setValues(const Utils::MessageParsed_s &msg)
 {
+    std::unique_lock<std::mutex> lock(*this->_mutex);
     auto find = this->_entities._entities.find(msg.getFirstShort());
     if (find == this->_entities._entities.end())
         return;
     if (find->second->getEntityType() == player) {
-        std::unique_lock<std::mutex> lock(*this->_mutex);
         std::shared_ptr<Player> playerCasted = std::dynamic_pointer_cast<Player>(find->second);
         playerCasted->setLife(msg.bytes[3]);
         this->_lifeBar->setLifeBarToPlayer(playerCasted);
     }
     if (find->second->getEntityType() == bydos) {
-        std::unique_lock<std::mutex> lock(*this->_mutex);
         std::shared_ptr<Bydos> bydosCasted = std::dynamic_pointer_cast<Bydos>(find->second);
         bydosCasted->setLife(msg.bytes[3]);
         this->_lifeBar->setLifeBarToBydos(bydosCasted); 
     }
 
     if (find->second->getEntityType() == tourre) {
-        std::unique_lock<std::mutex> lock(*this->_mutex);
         std::shared_ptr<Tourre> tourreCasted = std::dynamic_pointer_cast<Tourre>(find->second);
         tourreCasted->setLife(msg.bytes[3]);
         this->_lifeBar->setLifeBarToTourre(tourreCasted);
@@ -366,12 +363,12 @@ void RType::Client::setValues(const Utils::MessageParsed_s &msg)
 
 void RType::Client::newMyShoot(const Utils::MessageParsed_s &msg)
 {
+    std::unique_lock<std::mutex> lock(*this->_mutex);
     auto it = this->_entities._entities.find(msg.getFirstShort());
     if (it != this->_entities._entities.end()) {
         // std::cout << "Already in core with id " << msg.getFirstShort() << std::endl;
         return;
     }
-    std::unique_lock<std::mutex> lock(*this->_mutex);
     Position pos(-20, -20);
     AIShoot aiShoot(pos, pos);
     auto tmpShoot = aiShoot.shootLogic();
@@ -380,12 +377,13 @@ void RType::Client::newMyShoot(const Utils::MessageParsed_s &msg)
 
 void RType::Client::newPercingShoot(const Utils::MessageParsed_s &msg)
 {
+    std::unique_lock<std::mutex> lock(*this->_mutex);
     auto it = this->_entities._entities.find(msg.getFirstShort());
     if (it != this->_entities._entities.end()) {
         // std::cout << "Already in core with id " << msg.getFirstShort() << std::endl;
         return;
     }
-    std::unique_lock<std::mutex> lock(*this->_mutex);
+    std::cout << "New percing shoot !" << std::endl;
     Position pos(-20, -20);
     AIShoot aiShoot(pos, pos);
     auto tmpShoot = aiShoot.shootLogic();
@@ -442,6 +440,8 @@ void RType::Client::gameLoop()
     std::unique_lock<std::mutex> lock(*this->_mutex);
     for (auto &it : this->_entities._entities)
         this->_window->draw(this->getSpriteFromEntity(it.second, it.first));
+    for (auto &it : this->_predictionCore._entities)
+        this->_window->draw(this->getSpriteFromEntity(it.second, it.first));
     // std::cout << "Entities size is " << this->_entities._entities.size() << std::endl;
     lock.unlock();
     _window->display();
@@ -477,28 +477,21 @@ void RType::Client::sendInputs()
     if (std::chrono::duration_cast<std::chrono::microseconds>(clock - this->_sendInputTime).count() < 10)
         return;
     this->_sendInputTime = clock;
-    // if (!this->_inputs.empty())
-    //     std::cout << "Inputs size " << this->_inputs.size() << std::endl;
-    // if (this->_inputs.size() < 5)
-    //     return;
-    int nbOfMsg = 0;
-    while (!this->_inputs.empty() && nbOfMsg < 2) {
+    while (!this->_inputs.empty()) {
         if (actualIndex > 5) {
-            ++nbOfMsg;
             this->_socket->send(msgKeyPressed);
             actualIndex = 0;
         }
         msgKeyPressed.bytes[actualIndex] = static_cast<unsigned short>(this->_inputs.back());
+        if (msgKeyPressed.bytes[actualIndex] == percingShoot)
+            std::cout << "Percing shoot sended..." << std::endl;
         this->_inputs.pop_back();
         actualIndex++;
     }
-    // if (nbOfMsg < 2)
-    //     std::cout << "Max nb of messages..." << std::endl;
     if (actualIndex > 0) {
         msgKeyPressed.bytes[actualIndex] = 255;
         this->_socket->send(msgKeyPressed);
     }
-    // this->_socket->sendAllMessagesFromImportant();
 }
 
 void RType::Client::syncNbOfEntities(const Utils::MessageParsed_s &msg)
@@ -512,14 +505,13 @@ void RType::Client::syncNbOfEntities(const Utils::MessageParsed_s &msg)
 
 void RType::Client::setLifeBars()
 {
+    std::unique_lock<std::mutex> lock(*this->_mutex);
     for (auto &it : this->_entities._entities) {
         if (it.second->getEntityType() == bydos) {
-            std::unique_lock<std::mutex> lock(*this->_mutex);
             std::shared_ptr<Bydos> bydosCasted = std::dynamic_pointer_cast<Bydos>(it.second);
             this->_lifeBar->setLifeBarToBydos(bydosCasted); 
         }
         if (it.second->getEntityType() == player) {
-            std::unique_lock<std::mutex> lock(*this->_mutex);
             std::shared_ptr<Player> playerCasted = std::dynamic_pointer_cast<Player>(it.second);
             this->_lifeBar->setLifeBarToPlayer(playerCasted);    
         }

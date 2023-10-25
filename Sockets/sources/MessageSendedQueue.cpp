@@ -31,6 +31,8 @@ void RType::MessageSendedQueue::addMessage(const Utils::MessageParsed_s &msg)
 
 RType::Utils::MessageParsed_s RType::MessageSendedQueue::getMessage(bool &isImportant)
 {
+    // std::cout << "Important size " << this->_queueImportantMessages.size() << std::endl;
+    // std::cout << "Normal size    " << this->_queueMessage.size() << std::endl;
     if (!this->_queueImportantMessages.empty()) {
         auto ret = this->_queueImportantMessages.front();
         this->_queueImportantMessages.pop_front();
@@ -51,8 +53,9 @@ RType::Utils::MessageParsed_s RType::MessageSendedQueue::getMessage(bool &isImpo
 bool RType::MessageSendedQueue::readyToGetMessage()
 {
     auto clock = std::chrono::steady_clock::now();
-    if (std::chrono::duration_cast<std::chrono::microseconds>(clock - this->_delay).count() < MESSAGE_DELAY)
+    if (std::chrono::duration_cast<std::chrono::microseconds>(clock - this->_delay).count() < this->_messageDelay) {
         return false;
+    }
     this->_delay = clock;
     return true;
 }

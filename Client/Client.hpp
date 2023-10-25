@@ -87,6 +87,7 @@ namespace RType {
             std::unique_ptr<sf::RenderWindow> _window;
             SystemVisitor _visitor;
             Core _entities;
+            Core _predictionCore;
             std::unique_ptr<std::mutex> _mutex;
             std::string _serverIp;
             int _serverPort;

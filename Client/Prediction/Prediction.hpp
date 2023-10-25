@@ -17,12 +17,12 @@
 #include "../ClientEvents.hpp"
 #include "../../Visitor/PredictVisitor.hpp"
 
-#define PREDICATE_ENTITIES_TIMER 300
+#define PREDICATE_ENTITIES_TIMER 0
 
 namespace RType {
     class Prediction {
         public:
-            Prediction(Core &core, std::vector<Events> &events) : _core(core), _inputs(events) {
+            Prediction(Core &core, Core &predictionCore, std::vector<Events> &events) : _core(core), _inputs(events), _predictionCore(predictionCore) {
                 this->_clockOtherEntities = std::chrono::steady_clock::now();
             };
             ~Prediction() {
@@ -48,15 +48,18 @@ namespace RType {
                     ptrPlayer->_inputs->addEvents((Inputs::Events)(it));
             }
             void PredicateOtherEntities() {
-                auto clock = std::chrono::steady_clock::now();
-                if (std::chrono::duration_cast<std::chrono::microseconds>(clock - this->_clockOtherEntities).count() < PREDICATE_ENTITIES_TIMER)
-                    return;
-                this->_clockOtherEntities = clock;
+                // auto clock = std::chrono::steady_clock::now();
+                // if (std::chrono::duration_cast<std::chrono::microseconds>(clock - this->_clockOtherEntities).count() < PREDICATE_ENTITIES_TIMER)
+                //     return;
+                // this->_clockOtherEntities = clock;
                 for (auto &it : this->_core._entities)
-                    it.second->accept(this->_prV, this->_core);
+                    it.second->accept(this->_prV, this->_predictionCore);
+                // for (auto &it : this->_predictionCore._entities)
+                //     it.second->accept(this->_prV, this->_predictionCore);
             }
         private:
-            Core &_core;
+            Core & _core;
+            Core & _predictionCore;
             std::vector<Events> &_inputs;
             std::unordered_map<unsigned short, std::pair<std::chrono::steady_clock::time_point, size_t>> _updatesTime;
             std::chrono::steady_clock::time_point _clockOtherEntities;
