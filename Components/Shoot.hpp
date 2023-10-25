@@ -1,8 +1,9 @@
-/**
- * @file Shoot.hpp
- * @author EPITECH PROJECT, 2023
- * @brief Shoot class definition
- */
+/*
+** EPITECH PROJECT, 2023
+** B-CPP-500-MLH-5-1-rtype-robin.denni
+** File description:
+** Shoot.hpp
+*/
 
 #pragma once
 #include "Vector2d.hpp"
