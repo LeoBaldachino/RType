@@ -16,7 +16,7 @@
 namespace RType {
     class Button {
         public:
-            Button(const std::function<void()>& handler, const std::string &path, const std::string &text, const sf::Vector2f pos, const sf::IntRect rect, int decalHover);
+            Button(const std::function<void()>& handler, const std::string &path, const std::string &text, const sf::Vector2f pos, const sf::IntRect rect, int decalHover, const sf::Font &font);
             ~Button();
             void checkClicked(const sf::Vector2i &pos);
             void checkHover(const sf::Vector2i &pos);
@@ -26,7 +26,9 @@ namespace RType {
             const std::string _path;
             const std::string _text;
             const sf::Vector2f _pos;
+            const sf::Font & _font;
             sf::IntRect _rectCheck;
+            sf::Text _sfText;
             sf::Rect<int> _rect;
             const int _decalHover;
             int _actPosHover;

@@ -13,7 +13,7 @@
 namespace RType {
     class ButtonList {
         public:
-            ButtonList();
+            ButtonList(const std::string &fontPath);
             ~ButtonList();
             void addButtons(const std::function<void()>& handler, const std::string &path, const std::string &text, const sf::Vector2f pos, const sf::IntRect rect, int decalHover, unsigned int id);
             void removeButton(unsigned int id);
@@ -22,5 +22,6 @@ namespace RType {
             void clickButtons(const sf::Vector2i &mousePos);
         private:
             std::unordered_map<unsigned int, std::unique_ptr<Button>> _buttons;
+            sf::Font _buttonsFont;
     };
 }

@@ -7,8 +7,9 @@
 
 #include "ButtonList.hpp"
 
-RType::ButtonList::ButtonList()
+RType::ButtonList::ButtonList(const std::string &fontFile)
 {
+    this->_buttonsFont.loadFromFile(fontFile);
 }
 
 RType::ButtonList::~ButtonList()
@@ -21,7 +22,7 @@ void RType::ButtonList::addButtons(const std::function<void()>& handler, const s
     auto it = this->_buttons.find(id);
     if (it != this->_buttons.end())
         throw std::invalid_argument("A button already exists with this id :" + id);
-    this->_buttons.insert({id, std::make_unique<Button>(handler, path, text, pos, rect, decalHover)});
+    this->_buttons.insert({id, std::make_unique<Button>(handler, path, text, pos, rect, decalHover, this->_buttonsFont)});
 }
 
 void RType::ButtonList::removeButton(unsigned int id)

@@ -20,7 +20,8 @@ _commands({
 {removeEntity, &RType::Client::removeAnEntity},
 {valueSet, &RType::Client::setValues},
 {nbOfEntities, &RType::Client::syncNbOfEntities}
-})
+}),
+_buttonList("../Assets/insanibu.ttf")
 {
     std::srand(std::time(NULL));
     if (ac < 3)

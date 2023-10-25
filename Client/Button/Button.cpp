@@ -7,13 +7,14 @@
 
 #include "Button.hpp"
 
-RType::Button::Button(const std::function<void()>& handler, const std::string &path, const std::string &text, const sf::Vector2f pos, const sf::IntRect rect, int decalHover) :
+RType::Button::Button(const std::function<void()>& handler, const std::string &path, const std::string &text, const sf::Vector2f pos, const sf::IntRect rect, int decalHover, const sf::Font &font) :
 _handler(handler),
 _path(path),
 _text(text),
 _pos(pos),
 _rect(rect),
-_decalHover(decalHover)
+_decalHover(decalHover),
+_font(font)
 {
     this->_rectCheck.height = decalHover;
     this->_rectCheck.left = this->_pos.x;
@@ -23,6 +24,9 @@ _decalHover(decalHover)
     this->_texture.loadFromFile(this->_path);
     this->_sprite.setTexture(this->_texture);
     this->_sprite.setPosition(this->_pos);
+    this->_sfText.setFont(this->_font);
+    this->_sfText.setString(this->_text);
+    this->_sfText.setPosition(this->_pos);
     this->_timeout = std::chrono::steady_clock::now();
 }
 
@@ -56,4 +60,5 @@ void RType::Button::display(std::unique_ptr<sf::RenderWindow> &window)
     this->_rect.top = this->_actPosHover * this->_decalHover;
     this->_sprite.setTextureRect(this->_rect);
     window->draw(this->_sprite);
+    window->draw(this->_sfText);
 }
