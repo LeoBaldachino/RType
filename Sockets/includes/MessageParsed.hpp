@@ -8,6 +8,7 @@
 #pragma once
 #include <iostream>
 #include <ostream>
+#define ENCODED_MESSAGE_SIZE 64
 
 namespace RType {
     namespace Utils {
@@ -111,11 +112,30 @@ namespace RType {
                  * @return unsigned long encoded value
                  */
                 unsigned long encode() const;
-
+                /**
+                 * @brief decode the message for use him
+                 * 
+                 * @param toDecode the binary value to decode
+                 * @return MessageParsed_s decoded value
+                 */
                 MessageParsed_s decode(unsigned long toDecode) const;
 
         };
+        /**
+         * @brief operator for serialize a MessageParsed_s
+         * 
+         * @param os the stream to serialize
+         * @param msg the message to serialize
+         * @return std::ostream& the stream added to the serialized data
+         */
         std::ostream& operator<<(std::ostream& os, const RType::Utils::MessageParsed_s& msg);
+        /**
+         * @brief operator for deserialze a MessageParsed_s
+         * 
+         * @param is the stream to read from
+         * @param msg the message to fill
+         * @return std::istream& the stream without the data
+         */
         std::istream& operator>>(std::istream& is, RType::Utils::MessageParsed_s& msg);
     }
 }

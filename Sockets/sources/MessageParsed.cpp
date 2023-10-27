@@ -147,8 +147,8 @@ std::ostream& RType::Utils::operator<<(std::ostream& os, const RType::Utils::Mes
 
 std::istream& RType::Utils::operator>>(std::istream& is, RType::Utils::MessageParsed_s& msg)
 {
-    std::string tmpStr;
-    is >> tmpStr;
-    msg = msg.decode(std::stoul(tmpStr));
+    unsigned long tmpL;
+    is >> tmpL;
+    msg = msg.decode(tmpL);
     return is;
 }

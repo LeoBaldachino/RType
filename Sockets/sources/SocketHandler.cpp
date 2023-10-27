@@ -52,9 +52,9 @@ RType::Utils::MessageParsed_s RType::Utils::SocketHandler::receive()
     std::list<Utils::MessageParsed_s> msgNotReceived;
     boost::asio::streambuf response;
     MessageParsed_s msg;
-    auto buff = response.prepare(64);
+    auto buff = response.prepare(ENCODED_MESSAGE_SIZE);
     this->_socket->receive_from(buff, _Endpoint);
-    response.commit(64);
+    response.commit(ENCODED_MESSAGE_SIZE);
     std::istream respStream(&response);
     respStream >> msg;
     msg.senderIp = _Endpoint.address().to_v4().to_string();
