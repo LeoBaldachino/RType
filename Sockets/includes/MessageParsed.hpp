@@ -7,6 +7,7 @@
 
 #pragma once
 #include <iostream>
+#include <ostream>
 
 namespace RType {
     namespace Utils {
@@ -26,14 +27,6 @@ namespace RType {
                  * @param allBytes bytes
                  */
                 MessageParsed_s(unsigned char type, const std::string &ip, unsigned short port, unsigned char allBytes[7]);
-                /**
-                 * @brief Construct a new MessageParsed_s object with an usigned long to decode
-                 * 
-                 * @param toDecode number to decode for put him in the msgType and bytes array
-                 * @param ip senderIp
-                 * @param port sendPort
-                 */
-                MessageParsed_s(unsigned long toDecode, const std::string &ip, unsigned short port);
                 /**
                  * @brief Construct a new MessageParsed_s object by copy
                  * 
@@ -68,12 +61,6 @@ namespace RType {
                  * @return false otherwise
                  */
                 bool operator==(const MessageParsed_s &newMsg);
-                /**
-                 * @brief encode the message for send him
-                 * 
-                 * @return unsigned long encoded value
-                 */
-                unsigned long encode() const;
                 /**
                  * @brief Get the First Short value
                  * 
@@ -110,10 +97,25 @@ namespace RType {
                  * @param toSet 
                  */
                 void setThirdShort(unsigned short toSet);
+
                 unsigned char msgType;
                 unsigned char bytes[7];
                 std::string senderIp;
                 unsigned short senderPort;
+                friend std::ostream& operator<<(std::ostream& os, const RType::Utils::MessageParsed_s& msg);
+                friend std::istream& operator>>(std::istream& is, RType::Utils::MessageParsed_s& msg);
+            private :
+                /**
+                 * @brief encode the message for send him
+                 * 
+                 * @return unsigned long encoded value
+                 */
+                unsigned long encode() const;
+
+                MessageParsed_s decode(unsigned long toDecode) const;
+
         };
+        std::ostream& operator<<(std::ostream& os, const RType::Utils::MessageParsed_s& msg);
+        std::istream& operator>>(std::istream& is, RType::Utils::MessageParsed_s& msg);
     }
 }

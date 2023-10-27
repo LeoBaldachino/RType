@@ -34,8 +34,7 @@ _commands({
 
 RType::RoomController::~RoomController()
 {
-    this->_threadOpen = false;
-    this->_commandsThread->join();
+    std::exit(0);
 }
 
 void RType::RoomController::launchGetter()

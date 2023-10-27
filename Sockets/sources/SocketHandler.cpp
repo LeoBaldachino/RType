@@ -47,11 +47,19 @@ size_t nbMsg = 0;
 RType::Utils::MessageParsed_s RType::Utils::SocketHandler::receive()
 {
     unsigned long data;
-    boost::asio::mutable_buffer buffer(&data, sizeof(data));
+    // boost::asio::mutable_buffer buffer(&data, sizeof(data));
     std::unique_lock<std::mutex> lock(*this->_receiverMutex);
     std::list<Utils::MessageParsed_s> msgNotReceived;
-    _socket->receive_from(buffer, _Endpoint);
-    Utils::MessageParsed_s msg(data, _Endpoint.address().to_v4().to_string(), _Endpoint.port());
+    boost::asio::streambuf response;
+    MessageParsed_s msg;
+    auto buff = response.prepare(64);
+    this->_socket->receive_from(buff, _Endpoint);
+    response.commit(64);
+    std::istream respStream(&response);
+    respStream >> msg;
+    msg.senderIp = _Endpoint.address().to_v4().to_string();
+    msg.senderPort = _Endpoint.port();
+    // Utils::MessageParsed_s msg(data, _Endpoint.address().to_v4().to_string(), _Endpoint.port());
     auto clock = std::chrono::steady_clock::now();
     nbMsg++;
     if (std::chrono::duration_cast<std::chrono::microseconds>(clock - clockReceive).count() > 1000000) {
@@ -107,25 +115,6 @@ const std::pair<std::string, int> &RType::Utils::SocketHandler::getIpAndPort() c
     return this->_ipPort;
 }
 
-void RType::Utils::SocketHandler::sendAllMessagesFromImportant()
-{
-    bool isImportant = true;
-    std::unique_lock<std::mutex> lock(*this->_mutex);
-    auto toSend = this->_queueMsg->getMessage(isImportant);
-    while (isImportant) {
-        // if (isImportant)
-        //     this->_packetTracker->prepareMessageToSend(toSend);
-        unsigned long compressed = toSend.encode();
-        boost::asio::const_buffer buffer(&compressed, sizeof(compressed));
-        try {
-            _socket->send_to(buffer, boost::asio::ip::udp::endpoint(boost::asio::ip::address::from_string(toSend.senderIp), toSend.senderPort));
-        } catch (const boost::system::system_error &err) {
-            std::cerr << "Send error 2 " << err.code() << std::endl; 
-        }
-        toSend = this->_queueMsg->getMessage(isImportant);
-    }   
-
-}
 
 auto clockSend = std::chrono::steady_clock::now();
 size_t nbMsgSend = 0;
@@ -139,10 +128,12 @@ void RType::Utils::SocketHandler::send()
     auto toSend = this->_queueMsg->getMessage(isImportant);
     // if (isImportant)
     //     this->_packetTracker->prepareMessageToSend(toSend);
-    unsigned long compressed = toSend.encode();
-    boost::asio::const_buffer buffer(&compressed, sizeof(compressed));
+    boost::asio::streambuf request;
+    std::ostream reqStream(&request);
+    reqStream << toSend;
+    auto buff = request.data();
     try {
-        _socket->send_to(buffer, boost::asio::ip::udp::endpoint(boost::asio::ip::address::from_string(toSend.senderIp), toSend.senderPort));
+        _socket->send_to(buff, boost::asio::ip::udp::endpoint(boost::asio::ip::address::from_string(toSend.senderIp), toSend.senderPort));
     } catch (const boost::system::system_error &err) {
         std::cerr << "Send error " << err.code() << std::endl; 
     }

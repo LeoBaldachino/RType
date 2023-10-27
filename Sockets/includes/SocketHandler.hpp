@@ -70,14 +70,8 @@ namespace RType {
                  * @return const std::pair<std::string, int> ip, port
                  */
                 const std::pair<std::string, int> &getIpAndPort() const;
-                /**
-                 * @brief 
-                 * 
-                 */
-                void sendAllMessagesFromImportant();
-
+            private:
                 void send();
-            protected:
                 void senderThread();
                 boost::asio::io_service _ioService;
                 std::shared_ptr<boost::asio::ip::udp::socket> _socket;
