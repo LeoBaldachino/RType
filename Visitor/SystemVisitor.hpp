@@ -57,13 +57,13 @@ class SystemVisitor : public IVisitor {
             if (t.getLifes() == 0)
                 return (void)core.removeEntityLater(t);
             this->_genieSystem.updatePos(t);
-            for (auto it : core._entities) {
-                auto entityType = it.second->getEntityType();
-                if (entityType == RType::playerShoot)
-                    this->_tourreSystem.checkCollision(t, *it.second, core, false);
-                if (entityType == RType::percingShoot)
-                    this->_tourreSystem.checkCollision(t, *it.second, core, true);
-            }
+            // for (auto it : core._entities) {
+            //     auto entityType = it.second->getEntityType();
+            //     if (entityType == RType::playerShoot)
+            //         this->_tourreSystem.checkCollision(t, *it.second, core, false);
+            //     if (entityType == RType::percingShoot)
+            //         this->_tourreSystem.checkCollision(t, *it.second, core, true);
+            // }
             // this->_tourreSystem.createShots(t, this->_lastPlayer, core);
         };
         void visitShot(ShotEntity &s, Core &core) {

@@ -146,7 +146,6 @@ class PiercingShotEntity : public IEntity {
         bool _hasMoved = false;
         unsigned int _spriteFrame = 0;
         ClockTimer _frameClock;
-        int _currentTempoState = 0;
         ClockTimer _clockMove;
         ClockTimer _currentTempoState;
 };

@@ -299,10 +299,10 @@ void RType::Client::setEntityType(const Utils::MessageParsed_s &msg)
 
 void RType::Client::newCoin(const Utils::MessageParsed_s &msg)
 {
+    std::unique_lock<std::mutex> lock(*this->_mutex);
     auto it = this->_entities._entities.find(msg.getFirstShort());
     if (it != this->_entities._entities.end())
         return;
-    std::unique_lock<std::mutex> lock(*this->_mutex);
     this->_entities.addEntity(std::make_shared<Coin>(Position(1900, 100, 1080, 1920)), msg.getFirstShort());
 }
 
@@ -312,7 +312,6 @@ void RType::Client::newBydosToRoom(const Utils::MessageParsed_s &msg)
     auto it = this->_entities._entities.find(msg.getFirstShort());
     if (it != this->_entities._entities.end())
         return;
-    std::unique_lock<std::mutex> lock(*this->_mutex);
     this->_entities.addEntity(std::make_shared<Bydos>(Position(1900, 100, 1080, 1920), 1, Vector2d(-1, 0)), msg.getFirstShort());
 }
 
@@ -322,7 +321,6 @@ void RType::Client::newTourreToRoom(const Utils::MessageParsed_s &msg)
     auto it = this->_entities._entities.find(msg.getFirstShort());
     if (it != this->_entities._entities.end())
         return;
-    std::unique_lock<std::mutex> lock(*this->_mutex);
     this->_entities.addEntity(std::make_shared<Tourre>(Position(1900, 100, 1080, 1920), 1, Vector2d(-1, 0)), msg.getFirstShort());
 }
 
@@ -338,7 +336,6 @@ void RType::Client::newEnemyShoot(const Utils::MessageParsed_s &msg)
     auto it = this->_entities._entities.find(msg.getFirstShort());
     if (it != this->_entities._entities.end())
         return;
-    std::unique_lock<std::mutex> lock(*this->_mutex);
     Position pos(-20, -20);
     AIShoot aiShoot(pos, pos);
     auto tmpShoot = aiShoot.shootLogic();
@@ -375,7 +372,6 @@ void RType::Client::newMyShoot(const Utils::MessageParsed_s &msg)
     auto it = this->_entities._entities.find(msg.getFirstShort());
     if (it != this->_entities._entities.end())
         return;
-    std::unique_lock<std::mutex> lock(*this->_mutex);
     Position pos(-20, -20);
     AIShoot aiShoot(pos, pos);
     auto tmpShoot = aiShoot.shootLogic();
@@ -388,7 +384,6 @@ void RType::Client::newPercingShoot(const Utils::MessageParsed_s &msg)
     auto it = this->_entities._entities.find(msg.getFirstShort());
     if (it != this->_entities._entities.end())
         return;
-    std::unique_lock<std::mutex> lock(*this->_mutex);
     Position pos(-20, -20);
     AIShoot aiShoot(pos, pos);
     auto tmpShoot = aiShoot.shootLogic();

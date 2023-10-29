@@ -18,7 +18,6 @@ FetchContent_Declare(SFML
     GIT_TAG 2.6.x)
 FetchContent_MakeAvailable(SFML)
 include_directories(${SFML_SOURCE_DIR}/include)
-include_directories(${SFML_SOURCE_DIR}/include)
 
 file(GLOB SUBSYSTEMS "Systems/Subsystems/*.cpp")
 file(GLOB SYSTEMS "Systems/*.cpp")
@@ -29,11 +28,10 @@ file(GLOB SOCKET_FILES "Sockets/sources/*.cpp")
 file(GLOB ENTITY_TYPES "EntityTypes/*.cpp")
 file(GLOB LIFE_BAR "Client/LifeBar/*.cpp")
 file(GLOB PARALLAX "Client/Parallax/*.cpp")
+file(GLOB BUTTON "Client/Button/*.cpp")
 
-add_executable(r-type_client ${CLIENT_FILES} ${SUBSYSTEMS} ${SYSTEMS} ${ENTITY} ${CORE} ${SOCKET_FILES} ${ENTITY_TYPES} ${LIFE_BAR} ${PARALLAX})
+add_executable(r-type_client ${CLIENT_FILES} ${SUBSYSTEMS} ${SYSTEMS} ${ENTITY} ${CORE} ${SOCKET_FILES} ${ENTITY_TYPES} ${LIFE_BAR} ${PARALLAX} ${BUTTON})
 
-find_package(Threads REQUIRED)
-target_link_libraries(r-type_client PRIVATE sfml-graphics sfml-window sfml-system sfml-audio Threads::Threads)
 find_package(Threads REQUIRED)
 target_link_libraries(r-type_client PRIVATE sfml-graphics sfml-window sfml-system sfml-audio Threads::Threads)
 
@@ -46,8 +44,6 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
-include_directories(${CMAKE_SOURCE_DIR}/boost)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libconfig)
 include_directories(${CMAKE_SOURCE_DIR}/boost)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libconfig)
 
@@ -64,7 +60,4 @@ file(GLOB SERVER_ENTITYTYPES "EntityTypes/*.cpp")
 add_executable(r-type_server ${SERVER_SOURCES} ${SERVER_CORE} ${SERVER_SOCKET} ${SERVER_SYSTEMS} ${SERVER_SUBSYSTEMS} ${SERVER_ENTITY} ${SERVER_GAMELOOP} ${SERVER_RTYPEGAMELOOP} ${SERVER_ENTITYTYPES})
 
 # Link against libconfig
-target_link_libraries(r-type_server PRIVATE boost_system boost_serialization Threads::Threads config++ libconfig)
-
-# Link against libconfig
-target_link_libraries(r-type_server PRIVATE boost_system boost_serialization Threads::Threads config++ libconfig)
+target_link_libraries(r-type_server PRIVATE boost_system boost_serialization Threads::Threads config++ config)

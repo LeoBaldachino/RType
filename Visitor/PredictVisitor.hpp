@@ -50,6 +50,13 @@ class PredictVisitor : public IVisitor {
             // this->_piercingShotSystem.updatePos(pS);
             // this->_piercingShotSystem.clearShots(pS, core);
         }
+        void visitGenie(Genie &s, Core &core) {
+
+        }
+        void visitCoin(Coin &c, Core &core)
+        {
+
+        }
     private:
         PlayerSystem _playerSystem;
         BydosSystem _bydosSystem;

@@ -12,6 +12,7 @@
 #include <functional>
 #include <iostream>
 #include <chrono>
+#include <memory>
 
 namespace RType {
     class Button {
