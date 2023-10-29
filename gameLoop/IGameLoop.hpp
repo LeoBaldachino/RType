@@ -5,6 +5,7 @@
  */
 
 #pragma once
+#include "../server/includes/Parser.hpp"
 #include "../Core/Core.hpp"
 #include "../Sockets/includes/MessageParsed.hpp"
 #include "../EntityTypes/EntityTypes.hpp"
@@ -31,6 +32,12 @@ namespace RType {
             virtual EntityTypes getEntityType(unsigned short id) = 0;
 
             virtual std::tuple<unsigned short, unsigned short, unsigned short> getPlayerDetails(unsigned char playerId) = 0;
+            /**
+             * @brief Set the Enemies Waves
+             * 
+             * @param waves 
+             */
+            virtual void setEnemiesWaves(std::vector<std::map<Parser::Enemies, int>> waves) = 0;
         protected :
             /**
              * @brief Run after update

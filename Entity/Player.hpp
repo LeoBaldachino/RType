@@ -1,8 +1,9 @@
-/**
- * @file Player.hpp
- * @author EPITECH PROJECT, 2023
- * @brief Player class definition
- */
+/*
+** EPITECH PROJECT, 2023
+** B-CPP-500-MLH-5-1-rtype-robin.denni
+** File description:
+** Player.hpp
+*/
 
 #pragma once
 #include "IEntity.hpp"
@@ -44,12 +45,6 @@ class Player : public IEntity, public Health {
          * @return Shoot object
          */
         Shoot shoot() const;
-
-        /**
-         * @brief Move the player
-         * @param direction Direction of the movement
-         */
-        void move(Vector2d direction);
 
         /**
          * @brief Set the Position of the player

@@ -7,6 +7,7 @@
 #pragma once
 #include "Texture/Texture.hpp"
 #include "Parallax/Parallax.hpp"
+#include "Parallax/ParallaxGnome.hpp"
 #include "../Entity/Player.hpp"
 #include "../Core/Core.hpp"
 #include "../EntityTypes/EntityTypes.hpp"
@@ -51,7 +52,7 @@ namespace RType {
             /**
              * @brief Destroy the Client object
              */
-            ~Client();
+            ~Client() {};
 
         private:
             void run();
@@ -72,6 +73,7 @@ namespace RType {
             void handleInputs(void);
             void updateInputs(void);
             void newBydosToRoom(const Utils::MessageParsed_s &msg);
+            void newCoin(const Utils::MessageParsed_s &msg);
             void newTourreToRoom(const Utils::MessageParsed_s &msg);
             void removeAnEntity(const Utils::MessageParsed_s &msg);
             void newEnemyShoot(const Utils::MessageParsed_s &msg);
@@ -112,5 +114,9 @@ namespace RType {
             ButtonList _buttonList;
             bool _mouseClicked;
             Parallax _parallax;
+            ParallaxGnome _parallaxGnome;
+
+            unsigned int _level = 2;
+
     };
 }

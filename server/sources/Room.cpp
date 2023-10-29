@@ -7,7 +7,7 @@
 
 #include "../includes/Room.hpp"
 
-RType::Server::Room::Room(unsigned char id, unsigned char maxSize, std::shared_ptr<Utils::SocketHandler> setSocket) : _socket(setSocket)
+RType::Server::Room::Room(unsigned char id, unsigned char maxSize, std::shared_ptr<Utils::SocketHandler> setSocket, std::vector<std::map<Parser::Enemies, int>> waves) : _socket(setSocket)
 {
     std::unique_lock<std::mutex> lock(this->_mutex);
     this->_willBeDestroyed = false;
@@ -20,6 +20,7 @@ RType::Server::Room::Room(unsigned char id, unsigned char maxSize, std::shared_p
     this->_mutexQueue = std::make_unique<std::mutex>();
     this->_toSendToGameLoop = std::make_unique<std::queue<std::pair<unsigned short, Utils::MessageParsed_s>>>();
     this->_gameLoop = std::make_unique<RTypeGameLoop>(this->_core);
+    this->setEnemiesWaves(waves);
     this->_roomThread = std::make_unique<std::thread>(&RType::Server::Room::runRoom, this);
 }
 
@@ -110,9 +111,8 @@ bool RType::Server::Room::sendMessageToRoom(const Utils::MessageParsed_s &msg)
         return true;
     }
     auto it = this->_allPlayers.find({msg.senderIp, msg.senderPort});
-    if (it == this->_allPlayers.end()) {
+    if (it == this->_allPlayers.end())
         return false;
-    }
     std::unique_lock<std::mutex> lock(*this->_mutexQueue);
     this->_toSendToGameLoop->push({it->second, msg});
     return true;
@@ -258,9 +258,8 @@ void RType::Server::Room::sendPlayerId(const Utils::MessageParsed_s &msg)
     Utils::MessageParsed_s newMsg(msg);
     newMsg.msgType = givePlayerId;
     auto it = this->_allPlayers.find({msg.senderIp, msg.senderPort});
-    if (it == this->_allPlayers.end()) {
+    if (it == this->_allPlayers.end())
         return;
-    }
     newMsg.setFirstShort(it->second);
     this->_socket->send(newMsg);
 }
@@ -288,4 +287,8 @@ bool RType::Server::Room::removeFromRoom(unsigned short id)
         if (it.second == id)
             return this->removeFromRoom(it.first);
     return false;
+}
+void RType::Server::Room::setEnemiesWaves(std::vector<std::map<Parser::Enemies, int>> waves)
+{
+    this->_gameLoop->setEnemiesWaves(waves);
 }

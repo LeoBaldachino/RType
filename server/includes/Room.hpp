@@ -47,7 +47,7 @@ namespace RType {
                  * @param maxSize number max of user in this room
                  * @param setSocket instance of the shared pointer of socketHandler
                  */
-                Room(unsigned char id, unsigned char maxSize, std::shared_ptr<Utils::SocketHandler> setSocket);
+                Room(unsigned char id, unsigned char maxSize, std::shared_ptr<Utils::SocketHandler> setSocket, std::vector<std::map<Parser::Enemies, int>> waves);
                 /**
                  * @brief Destroy the Room object
                  * 
@@ -172,6 +172,12 @@ namespace RType {
                  */
                 void sendEntityType(const Utils::MessageParsed_s &msg);
 
+                /**
+                 * @brief Set the Enemies Waves in RTypeGameLoop
+                 * 
+                 * @param waves 
+                 */
+                void setEnemiesWaves(std::vector<std::map<Parser::Enemies, int>> waves);
                 std::unique_ptr<std::thread> _roomThread;
                 std::map<std::pair<std::string, int>, unsigned short> _allPlayers;
                 std::map<std::pair<std::string, int>, bool> _playerOnline;
@@ -188,7 +194,6 @@ namespace RType {
                 std::unique_ptr<std::mutex> _mutexQueue;
                 std::unique_ptr<std::queue<std::pair<unsigned short, Utils::MessageParsed_s>>> _toSendToGameLoop;
                 std::pair<std::string, int> _firstClient;
-
         };
     }
 }

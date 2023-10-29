@@ -25,10 +25,15 @@ RType::CoreServer::CoreServer(int ar, char **av)
     }
     if (ar < 3)
         throw std::invalid_argument("Not enough arguments");
-    int port = std::atoi(av[2]);
+    int port = std::atoi(av[1]);
     if (port < 100)
         throw std::invalid_argument("Port is not valid");
-    this->_socket = std::make_unique<Utils::SocketHandler>((std::string(av[1]) == "localhost" ? "127.0.0.1" : av[1]), port, std::list<int>({entityType, playerPing, newPlayerConnected, givePlayerId, destroyedRoom, serverStop, entityType, removeEntity, playerDeconnected, newRoomIsCreated, playerGetId, givePlayerId}));
+    this->_socket = std::make_unique<Utils::SocketHandler>((std::string("127.0.0.1")), port, std::list<int>({entityType, playerPing, newPlayerConnected, givePlayerId, destroyedRoom, serverStop, entityType, removeEntity, playerDeconnected, newRoomIsCreated, playerGetId, givePlayerId}));
+    Parser parser(av[2]);
+    this->_music = parser.getMusic();
+    this->_waves = parser.getWaves();
+    this->_nextLevel = parser.getNextLevel();
+    this->_parallaxIndex = parser.getParallax();
     this->_threadPool = std::make_unique<Server::ThreadPool>(std::thread::hardware_concurrency() - 1);
     this->_threadPool->InitThreadPool();
     std::signal(SIGINT, SigIntHandler);
@@ -98,8 +103,6 @@ void RType::CoreServer::newRoomCreated(const Utils::MessageParsed_s &msg)
         if (it->getId() == msg.bytes[0] || it->isInRoom({msg.senderIp, msg.senderPort})) {
             Utils::MessageParsed_s newMsg;
             newMsg.msgType = illegalAction;
-            //need to set the id of the object
-            //newMsg.byte[0];newMsg.bytes[1]
             newMsg.bytes[0] = 1;
             newMsg.bytes[1] = 2;
             newMsg.bytes[2] = newRoomIsCreated;
@@ -111,7 +114,7 @@ void RType::CoreServer::newRoomCreated(const Utils::MessageParsed_s &msg)
         }
     std::unique_lock<std::mutex> lock(this->_mutex);
     std::cerr << "Team " << static_cast<int>(msg.bytes[0]) << " is created !" << std::endl;
-    this->_rooms.push_back(std::make_unique<Server::Room>(msg.bytes[0], Server::ROOM_MAX_SIZE, this->_socket->getInstance()));
+    this->_rooms.push_back(std::make_unique<Server::Room>(msg.bytes[0], Server::ROOM_MAX_SIZE, this->_socket->getInstance(), this->_waves));
     this->_rooms.back()->addToRoom({msg.senderIp, msg.senderPort});
     return;
 }
@@ -131,8 +134,6 @@ void RType::CoreServer::getOutFromRoom(const Utils::MessageParsed_s &msg)
     std::cout << "No rooms with this id" << std::endl;
     Utils::MessageParsed_s newMsg;
     newMsg.msgType = illegalAction;
-    //need to set the id of the object
-    //newMsg.byte[0];newMsg.bytes[1]
     newMsg.bytes[0] = 1;
     newMsg.bytes[1] = 2;
     newMsg.bytes[2] = playerDeconnected;
@@ -158,8 +159,6 @@ void RType::CoreServer::connectToRoom(const Utils::MessageParsed_s &msg)
 {
     Utils::MessageParsed_s newMsg;
     newMsg.msgType = illegalAction;
-    //need to set the id of the object
-    //newMsg.byte[0];newMsg.bytes[1]
     newMsg.bytes[0] = 1;
     newMsg.bytes[1] = 2;
     newMsg.bytes[2] = newPlayerConnected;
@@ -183,6 +182,7 @@ void RType::CoreServer::connectToRoom(const Utils::MessageParsed_s &msg)
             return;
         }
 }
+
 
 void RType::CoreServer::getRoomMembers(const Utils::MessageParsed_s &msg)
 {

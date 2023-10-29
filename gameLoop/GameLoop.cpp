@@ -15,10 +15,6 @@ _commands({
 {
 }
 
-RType::GameLoop::~GameLoop()
-{
-}
-
 std::queue<RType::Utils::MessageParsed_s> RType::GameLoop::updateGameLoop(std::queue<std::pair<unsigned short, Utils::MessageParsed_s>> queueMsg)
 {
     std::queue<std::pair<unsigned short, Utils::MessageParsed_s>> newMessageQueue;
@@ -33,35 +29,19 @@ std::queue<RType::Utils::MessageParsed_s> RType::GameLoop::updateGameLoop(std::q
     return this->runAfterUpdate(newMessageQueue);
 }
 
-
-void RType::GameLoop::setPositionEntityFromMsg(const Utils::MessageParsed_s &msg, unsigned short id)
-{
-
-}
-
-void RType::GameLoop::spawnEntityFromMsg(const Utils::MessageParsed_s &msg, unsigned short id)
-{
-
-}
-
 void RType::GameLoop::addPlayer(const Utils::MessageParsed_s &msg, unsigned short id)
 {
     for (auto it = this->_playerArray.begin(); it < this->_playerArray.end(); it++)
-        if (*it == id) {
-            std::cout << "Already in the tab..." << std::endl;
+        if (*it == id)
             return;
-        }
     this->_playerArray.push_back(id);
-    std::cout << "Add player " << id << " To the tab " << std::endl;
 }
 
 void RType::GameLoop::removePlayer(const Utils::MessageParsed_s &msg, unsigned short id)
 {
-    std::cout << "Start remove player" << std::endl;
     for (auto it = this->_playerArray.begin(); it < this->_playerArray.end(); it++)
         if (*it == id) {
             this->_playerArray.erase(it);
-            std::cout << "Remove player " << id << " of the tab " << std::endl;
             return;
         }
     std::cout << "This player does not exist..." << std::endl;

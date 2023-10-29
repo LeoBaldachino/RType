@@ -1,8 +1,9 @@
-/**
- * @file Bydos.hpp
- * @author EPITECH PROJECT, 2023
- * @brief Bydos class definition
- */
+/*
+** EPITECH PROJECT, 2023
+** B-CPP-500-MLH-5-1-rtype-robin.denni
+** File description:
+** Bydos.hpp
+*/
 
 #pragma once
 #include "IEntity.hpp"

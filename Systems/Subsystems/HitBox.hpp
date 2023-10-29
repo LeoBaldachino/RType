@@ -12,8 +12,8 @@
 
 class HitBox {
     public:
-        HitBox();
-        ~HitBox();
+        HitBox() {};
+        ~HitBox() {};
         bool entityIntersect(IEntity &first, IEntity &sec);
     private:
 };

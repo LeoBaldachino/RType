@@ -7,20 +7,6 @@
 
 #include "PlayerSystem.hpp"
 
-PlayerSystem::PlayerSystem()
-{
-
-}
-
-void PlayerSystem::getInputs(Player &p)
-{
-    // int rE = rand() % 6;
-    // this->_inputSystem._inputs.addEvents((Inputs::Events) rE);
-    // // sf::Event event;
-    // // while (window->pollEvent(event))
-    // //     this->_inputSystem.handleInput();
-}
-
 void PlayerSystem::createShots(Player &p, Core &core)
 {
     Shoot tmpShoot(p.shoot());
@@ -33,13 +19,6 @@ void PlayerSystem::createShots(Player &p, Core &core)
             core.addEntity(std::make_shared<ShotEntity>(tmpShoot, "../Assets/shot.png", true), core.getAvailabeIndex());
         p._inputs->popEvent();
     }
-}
-
-void PlayerSystem::createPiercingShots(Player &p, Core &core)
-{
-    // while (!p._inputs.getEvents().empty() && p._inputs.getEvents().front() == Inputs::Events::PiercingShoot) {
-    //     p._inputs.popEvent();
-    // }
 }
 
 void PlayerSystem::updatePos(Player &p)
@@ -63,9 +42,10 @@ void PlayerSystem::updatePos(Player &p)
 void PlayerSystem::checkCollision(Player &p, IEntity &entity, Core &core)
 {
     if (this->_hitBoxSystem.entityIntersect(p, entity)) {
-        if (p.getLifes() >= 1)
-            if (p.removeOneLife())
-                std::cout << "One life removed !" << std::endl;
+        if (entity.getEntityType() == RType::coin)
+            p.addLife();
+        if (entity.getEntityType() != RType::coin && p.getLifes() >= 1)
+            p.removeOneLife();
         core.removeEntityLater(entity);
     }
 }

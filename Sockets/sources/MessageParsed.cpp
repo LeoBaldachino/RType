@@ -34,11 +34,6 @@ RType::Utils::MessageParsed_s::MessageParsed_s(const MessageParsed_s &newMsg)
     senderPort = newMsg.senderPort;
 }
 
-RType::Utils::MessageParsed_s::~MessageParsed_s() 
-{
-
-};
-
 RType::Utils::MessageParsed_s &RType::Utils::MessageParsed_s::operator=(const MessageParsed_s &newMsg) 
 {
     msgType = newMsg.msgType;

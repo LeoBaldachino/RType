@@ -17,12 +17,10 @@
 
 class PlayerSystem {
     public:
-        PlayerSystem();
+        PlayerSystem() {};
         ~PlayerSystem() {};
-        void getInputs(Player &p);
         void updatePos(Player &p);
         void createShots(Player &p, Core &core);
-        void createPiercingShots(Player &p, Core &core);
         void checkCollision(Player &p, IEntity &entity, Core &core);
     private:
         InputSystem _inputSystem;
