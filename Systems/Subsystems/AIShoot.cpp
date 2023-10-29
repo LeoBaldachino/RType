@@ -41,10 +41,10 @@ Shoot AIShoot::shootLogic(void)
 {
     float testX = this->_playerPos.getX() - this->_shooterPos.getX();
     float testY = this->_playerPos.getY() - this->_shooterPos.getY();
-    if (std::abs(testX) < std::abs(testY))
-        for (; std::abs(testX) >= 1; testX /= 10, testY /= 10);
+    if (std::abs(testX) > std::abs(testY))
+        for (; std::abs(testX) >= 5; testX /= 10, testY /= 10);
     else
-        for (; std::abs(testY) >= 1; testX /= 10, testY /= 10);
+        for (; std::abs(testY) >= 5; testX /= 10, testY /= 10);
     return (Shoot(Vector2d(testX, testY), Vector2d(this->_shooterPos.getX(), this->_shooterPos.getY()),
     this->_dmg, this->_velocity, this->_gravity, false));
 }

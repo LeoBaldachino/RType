@@ -9,37 +9,41 @@
 
 MovementSystem::MovementSystem()
 {
-
 }
 
 MovementSystem::~MovementSystem()
 {
-
 }
 
-void MovementSystem::updatePosition(IEntity &entity)
+void MovementSystem::updatePosition(IEntity& entity)
 {
-    std::vector<int> rangePos = entity.getEntityPositionRange();
+    std::vector<float> rangePos = entity.getEntityPositionRange();
+    Vector2d lastDirection = entity.getMoveable().getDirection();
+    Moveable tmpMv = entity.getMoveable();
+    bool waited = false;
     if (rangePos[0] || rangePos[1]) {
-        Moveable tmpMv = entity.getMoveable();
+        if (!entity.getTempoState().clockOk()) {
+            tmpMv.setDirection(Vector2d(tmpMv.getDirection().x, 0));
+            entity.setMoveable(tmpMv);
+            std::cout << entity.getTempoState().getRemainingTime() << std::endl;
+            waited = true;
+        }
         if (entity.getPosition().getY() >= rangePos[0]) {
-            if (rangePos[2] == rangePos[3]) {
-                tmpMv.setDirection(Vector2d(tmpMv.getDirection().x, -1.0));
-                entity.setMoveable(tmpMv);
-                entity.setTempoState(0);
-            } else {
-                tmpMv.setDirection(Vector2d(tmpMv.getDirection().x, 0));
-                entity.setMoveable(tmpMv);
-                entity.setTempoState(rangePos[2] + 1);
-            }
-
+            tmpMv.setDirection(Vector2d(tmpMv.getDirection().x, -1.0));
+            entity.setMoveable(tmpMv);
+            entity.setTempoState(ClockTimer(rangePos[3]));
         }
         if (entity.getPosition().getY() <= rangePos[1]) {
             tmpMv.setDirection(Vector2d(tmpMv.getDirection().x, 1.0));
             entity.setMoveable(tmpMv);
+            entity.setTempoState(ClockTimer(rangePos[2]));
         }
     }
     entity.setPosition(Position(entity.getPosition().getX() + entity.getMoveable().getDirection().x * entity.getMoveable().getVelocity(),
-    entity.getPosition().getY() + entity.getMoveable().getDirection().y * entity.getMoveable().getVelocity(),
-    entity.getPosition().getHeight(), entity.getPosition().getWidth()));
+        entity.getPosition().getY() + entity.getMoveable().getDirection().y * entity.getMoveable().getVelocity(),
+        entity.getPosition().getHeight(), entity.getPosition().getWidth()));
+    if (waited) {
+        tmpMv.setDirection(lastDirection);
+        entity.setMoveable(tmpMv);
+    }
 }

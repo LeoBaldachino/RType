@@ -7,12 +7,16 @@
 
 #include "Player.hpp"
 
-Player::Player() : Health(BASE_HEALTH), _timer(READY_MOVE), _frameClock(100)
+Player::Player() : 
+Health(BASE_HEALTH),
+_timer(READY_MOVE),
+_frameClock(100),
+_currentTempoState(getEntityPositionRange()[3])
 {
     this->_inputs = std::make_unique<Inputs>();
 }
 
-Player::Player(Position position) : _size(PLAYER_X, PLAYER_Y),  Health(BASE_HEALTH) , _timer(READY_MOVE), _frameClock(100)
+Player::Player(Position position) : _size(PLAYER_X, PLAYER_Y),  Health(BASE_HEALTH) , _timer(READY_MOVE), _frameClock(100), _currentTempoState(getEntityPositionRange()[3])
 {
     this->_position = position;
     this->_state = State(100);
@@ -120,7 +124,12 @@ unsigned int Player::getEntitySpriteFrame()
     return (this->_spriteFrame);
 }
 
-void Player::setTempoState(int state)
+void Player::setTempoState(ClockTimer state)
 {
     this->_currentTempoState = state;
+}
+
+ClockTimer Player::getTempoState(void)
+{
+    return this->_currentTempoState;
 }

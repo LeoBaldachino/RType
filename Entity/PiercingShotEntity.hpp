@@ -118,14 +118,21 @@ class PiercingShotEntity : public IEntity {
          * 
          * @param frame 
          */
-        std::vector<int> getEntityPositionRange() {return std::vector<int>(4, 0);};
+        std::vector<float> getEntityPositionRange() {return std::vector<float>{0, 0, 0, 0, 0, 0};};
 
         /**
          * @brief Set the Tempo State
          * 
          * @param state New tempo state
          */
-        void setTempoState(int state);
+        void setTempoState(ClockTimer state);
+
+        /**
+         * @brief Get the Tempo State
+         * 
+         * @return ClockTimer 
+         */
+        ClockTimer getTempoState(void);
 
         /**
          * @brief Check if the entity is ready to move
@@ -140,4 +147,5 @@ class PiercingShotEntity : public IEntity {
         ClockTimer _frameClock;
         int _currentTempoState = 0;
         ClockTimer _clockMove;
+        ClockTimer _currentTempoState;
 };

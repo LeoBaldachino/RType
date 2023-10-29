@@ -6,6 +6,7 @@
 
 #pragma once
 #include "Texture/Texture.hpp"
+#include "Parallax/Parallax.hpp"
 #include "../Entity/Player.hpp"
 #include "../Core/Core.hpp"
 #include "../EntityTypes/EntityTypes.hpp"
@@ -110,5 +111,6 @@ namespace RType {
             std::unique_ptr<Prediction> _predicate;
             ButtonList _buttonList;
             bool _mouseClicked;
+            Parallax _parallax;
     };
 }

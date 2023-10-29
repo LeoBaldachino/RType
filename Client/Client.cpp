@@ -21,7 +21,8 @@ _commands({
 {valueSet, &RType::Client::setValues},
 {nbOfEntities, &RType::Client::syncNbOfEntities}
 }),
-_buttonList("../Assets/insanibu.ttf")
+_buttonList("../Assets/insanibu.ttf"),
+_parallax(_texture)
 {
     std::srand(std::time(NULL));
     if (ac < 3)
@@ -446,6 +447,12 @@ void RType::Client::gameLoop()
         this->createRoom(1);
         this->_gameAsStarted = true;
     }
+    auto msgKeyPressed = this->buildEmptyMsg(keyPressed);
+    unsigned char actualIndex = 0;
+    _window->clear();
+    this->_parallax.drawParallax(this->_window);
+    this->_lifeBar->display(this->_window);     
+    for (auto &it : this->_entities._entities) {
     _window->clear();
     this->_lifeBar->display(this->_window);   
     std::unique_lock<std::mutex> lock(*this->_mutex);
