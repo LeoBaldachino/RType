@@ -43,7 +43,7 @@ _parallaxGnome(_texture)
     this->_serverPort = std::stoi(av[2]);
     this->_mutex = std::make_unique<std::mutex>();
     this->_buttonList.addButtons([this]{std::cout << "Hello world !" << std::endl;}, "../Assets/buttonTest.png", "Hello !", sf::Vector2f(10.0, 10.0), sf::IntRect(0, 0, 150, 100), 100, 0);
-    this->_window = std::make_unique<sf::RenderWindow>(sf::VideoMode::getDesktopMode(), "R-Type"/*, sf::Style::Fullscreen*/);
+    this->_window = std::make_unique<sf::RenderWindow>(sf::VideoMode::getDesktopMode(), "R-Type" /*,sf::Style::Fullscreen */);
     // if (this->_music.openFromFile("../Assets/music.ogg") != -1)
         // this->_music.play();
     this->_socket = std::make_unique<Utils::SocketHandler>("127.0.0.1", 4001 + std::rand() % 3000, std::list<int>({keyPressed, entityType, playerPing, newPlayerConnected, givePlayerId, destroyedRoom, serverStop, entityType, removeEntity, playerDeconnected, newRoomIsCreated, playerGetId, givePlayerId}));
@@ -207,7 +207,6 @@ void RType::Client::createRoom(unsigned char roomNb)
 void RType::Client::newPlayerToRoom(const Utils::MessageParsed_s &msg)
 {
     std::unique_lock<std::mutex> lock(*this->_mutex);
-    std::cout << "New player connected !!" << std::endl;
     auto pl = std::make_shared<Player>(Position(0, 0, 1080, 1920));
     this->_lifeBar->setLifeBarToPlayer(pl);
     this->_entities.addEntity(pl, msg.getFirstShort());
@@ -466,7 +465,10 @@ void RType::Client::gameLoop()
         this->_window->draw(this->getSpriteFromEntity(it.second, it.first));
     // std::cout << "Entities size is " << this->_entities._entities.size() << std::endl;
     lock.unlock();
-    auto mousePos = sf::Mouse::getPosition();
+    auto mousePos = sf::Mouse::getPosition(*this->_window);
+    std::cout << "Old pos " << mousePos.x << " y " << mousePos.y << std::endl;
+    mousePos = static_cast<sf::Vector2i>(this->_window->mapCoordsToPixel(static_cast<sf::Vector2f>(mousePos)));
+    std::cout << "new pos " << mousePos.x << " y " << mousePos.y << std::endl;
     this->_buttonList.hoverButtons(mousePos);
     if (this->_mouseClicked)
         this->_buttonList.clickButtons(mousePos);
@@ -510,8 +512,6 @@ void RType::Client::sendInputs()
             actualIndex = 0;
         }
         msgKeyPressed.bytes[actualIndex] = static_cast<unsigned short>(this->_inputs.back());
-        if (msgKeyPressed.bytes[actualIndex] == percingShoot)
-            std::cout << "Percing shoot sended..." << std::endl;
         this->_inputs.pop_back();
         actualIndex++;
     }
