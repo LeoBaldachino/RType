@@ -10,6 +10,8 @@
 RType::Menu::Menu(PopUp &popUp) :
 _popUp(popUp)
 {
+    this->_text.loadFromFile("../Assets/background_game_real.png");
+    this->_sprite.setTexture(this->_text);
     this->_panel = baseMenu;
     this->_closeMenu = false;
 }
@@ -22,6 +24,7 @@ RType::Menu::~Menu()
 void RType::Menu::displayMenu(std::unique_ptr<sf::RenderWindow> &window, bool mouseClicked)
 {
     // std::cout << "Start display menu" << std::endl;
+    window->draw(this->_sprite);
     auto mousePos = sf::Mouse::getPosition(*window);
     if (this->_panel == loadingScreen)
         std::cout << "Loading screen..." << std::endl;

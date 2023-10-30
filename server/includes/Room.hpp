@@ -102,7 +102,7 @@ namespace RType {
                  * @return true if successfully removed 
                  * @return false otherwise
                  */
-                bool removeFromRoom(const std::pair<std::string, int> &toRemove);
+                bool removeFromRoom(const Utils::MessageParsed_s &toRemove);
                 /**
                  * @brief check if the room will be destroyed
                  * 
@@ -145,7 +145,7 @@ namespace RType {
                  */
                 void sendPlayerId(const Utils::MessageParsed_s &msg);
                 
-                std::tuple<unsigned short, unsigned short, unsigned short> getPlayerDetails(unsigned char playerId);
+                std::tuple<unsigned short, unsigned short, unsigned short, unsigned short> getPlayerDetails(unsigned char playerId);
 
                 bool removeFromRoom(unsigned short id);
             private:
