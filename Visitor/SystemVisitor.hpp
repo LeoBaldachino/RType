@@ -26,7 +26,7 @@ class SystemVisitor : public IVisitor {
             p._inputs->unlockInputs();
             for (auto it : core._entities)
                 if (it.second->getEntityType() == RType::bydos || it.second->getEntityType() == RType::bydosShoot
-                || it.second->getEntityType() == RType::coin || it.second->getEntityType() == RType::genie)
+                || it.second->getEntityType() == RType::coin || it.second->getEntityType() == RType::genie || it.second->getEntityType() == RType::genieShot)
                     this->_playerSystem.checkCollision(p, *it.second, core);
             this->_lastPlayerPos = p.getPosition();
         }
