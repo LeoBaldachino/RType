@@ -40,6 +40,16 @@ For the client
 ./r-type_client [SERVER_IP] [SERVER_PORT]
 ```
 
+For the client
+```sh
+./r-type_client [SERVER_IP] [SERVER_PORT]
+```
+
+For the room controller
+```sh
+./r-type_room_controller [SERVER_IP] [SERVER_PORT]
+```
+
 ## Documentation Links :link:
 
 For more detailed information about the project, refer to the following documentation:
