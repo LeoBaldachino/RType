@@ -23,7 +23,8 @@ _commands({
 }),
 _buttonList("../Assets/insanibu.ttf"),
 _parallax(_texture),
-_parallaxGnome(_texture)
+_parallaxGnome(_texture),
+_popUp("Welcome the the R-Type !", "../Assets/insanibu.ttf")
 {
     std::srand(std::time(NULL));
     if (ac < 3)
@@ -478,6 +479,7 @@ void RType::Client::gameLoop()
     if (this->_mouseClicked)
         this->_buttonList.clickButtons(mousePos);
     this->_buttonList.displayButtons(this->_window);
+    this->_popUp.display(this->_window);
     _window->display();
     this->setLifeBars();
     this->updateInputs();
@@ -567,5 +569,6 @@ void RType::Client::displayMenu()
         this->checkAsId();
         this->_actualScreen = game;
     }
+    this->_popUp.display(this->_window);
     this->_window->display();
 }

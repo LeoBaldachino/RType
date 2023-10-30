@@ -21,6 +21,7 @@
 #include "Prediction/Prediction.hpp"
 #include "Button/ButtonList.hpp"
 #include "Menu/Menu.hpp"
+#include "PopUp/PopUp.hpp"
 
 #define GET_ID_LIMIT_TIME 1
 
@@ -119,6 +120,7 @@ namespace RType {
             ParallaxGnome _parallaxGnome;
             Menu _menu;
             unsigned int _level = 2;
+            PopUp _popUp;
 
     };
 }
