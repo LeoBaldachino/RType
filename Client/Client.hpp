@@ -89,6 +89,7 @@ namespace RType {
             void syncNbOfEntities(const Utils::MessageParsed_s &msg);
             void setLifeBars();
             void displayMenu();
+            void quitActualRoom();
             std::unique_ptr<std::thread> _infosThread;
             std::shared_ptr<Utils::SocketHandler> _socket;
             std::unique_ptr<sf::RenderWindow> _window;
@@ -121,6 +122,7 @@ namespace RType {
             Menu _menu;
             unsigned int _level = 2;
             PopUp _popUp;
+            bool _quittedRoom = false;
 
     };
 }

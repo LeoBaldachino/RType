@@ -24,7 +24,8 @@ _commands({
 _buttonList("../Assets/insanibu.ttf"),
 _parallax(_texture),
 _parallaxGnome(_texture),
-_popUp("Welcome the the R-Type !", "../Assets/insanibu.ttf")
+_popUp("Welcome the the R-Type !", "../Assets/insanibu.ttf"),
+_menu(this->_popUp)
 {
     std::srand(std::time(NULL));
     if (ac < 3)
@@ -92,7 +93,7 @@ void RType::Client::handleInputs(void)
                     this->_keysDown[Events::Right] = true;
                     break;
                 case (sf::Keyboard::Escape) :
-                    this->_inputs.push_back(Events::CloseWindow);
+                    this->quitActualRoom();
                     break;
                 case (sf::Keyboard::Space) :
                     if (!this->shooting) {
@@ -176,6 +177,7 @@ void RType::Client::sendPing(const Utils::MessageParsed_s &recMsg)
 
 void RType::Client::handleNonAuthorized(const Utils::MessageParsed_s &msg)
 {
+    this->_popUp.setText("Unauthorized action with type :" + std::to_string(static_cast<int>(msg.bytes[2])));
     if (msg.bytes[2] == newRoomIsCreated) {
         this->_mutex->lock();
         this->_actualRoom = 0;
@@ -254,11 +256,15 @@ void RType::Client::moveEntity(const Utils::MessageParsed_s &msg)
 
 void RType::Client::quitRoom(const Utils::MessageParsed_s &msg)
 {
+    std::unique_lock<std::mutex> lock(*this->_mutex);
     (void)msg;
     this->_actualId = -1;
-    this->_threadIsOpen = false;
-    this->_window->close();
-    exit(0);
+    this->_quittedRoom = true;
+    this->_actualScreen = menu;
+    this->_entities._entities.clear();
+    // this->_threadIsOpen = false;
+    // this->_window->close();
+    // exit(0);
 }
 
 void RType::Client::serverStopped(const Utils::MessageParsed_s &msg)
@@ -563,12 +569,23 @@ void RType::Client::displayMenu()
         auto msg = this->_menu.sendMsg();
         msg.senderIp = this->_serverIp;
         msg.senderPort = this->_serverPort;
+        this->_quittedRoom = false;
         this->_socket->send(msg);
     }
-    if (this->_menu.closeMenu()) {
+    if (this->_menu.closeMenu() && !this->_quittedRoom) {
         this->checkAsId();
         this->_actualScreen = game;
     }
     this->_popUp.display(this->_window);
     this->_window->display();
+}
+
+void RType::Client::quitActualRoom()
+{
+    if (this->_actualId == -1)
+        return std::exit(0);
+    auto msg = this->buildEmptyMsg(playerDeconnected);
+    msg.bytes[0] = this->_menu.getRoomId();
+    msg.bytes[1] = this->_actualId;
+    this->_socket->send(msg);
 }
