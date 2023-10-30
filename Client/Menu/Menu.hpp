@@ -36,6 +36,8 @@ namespace RType {
             std::mutex _mutex;
             std::queue<Utils::MessageParsed_s> _messagesQueue;
             std::queue<Utils::MessageParsed_s> _toSend;
+            sf::Sprite _sprite;
+            sf::Texture _text;
             Core _core;
             Panel _panel;
             BaseMenu _baseMenu;

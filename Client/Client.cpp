@@ -218,6 +218,7 @@ void RType::Client::createRoom(unsigned char roomNb)
 void RType::Client::newPlayerToRoom(const Utils::MessageParsed_s &msg)
 {
     std::unique_lock<std::mutex> lock(*this->_mutex);
+    this->_popUp.setText("New player to Room !");
     auto pl = std::make_shared<Player>(Position(0, 0, 1080, 1920));
     this->_lifeBar->setLifeBarToPlayer(pl);
     this->_entities.addEntity(pl, msg.getFirstShort());
@@ -259,8 +260,10 @@ void RType::Client::quitRoom(const Utils::MessageParsed_s &msg)
 {
     std::unique_lock<std::mutex> lock(*this->_mutex);
     (void)msg;
-    if (msg.msgType == playerDeconnected && (msg.bytes[1] != this->_actualId))
+    if (msg.msgType == playerDeconnected && (msg.bytes[1] != this->_actualId)) {
+        this->_popUp.setText("Player " + std::to_string(static_cast<int>(msg.bytes[1])) + " has quitted the room.");
         return (void)this->_entities.removeEntity(msg.bytes[1]);
+    }
     this->_actualId = -1;
     this->_quittedRoom = true;
     this->_actualScreen = menu;
@@ -470,11 +473,10 @@ void RType::Client::gameLoop()
         this->_parallax.drawBackgroundParallax(this->_window);
         this->_parallax.drawParallax(this->_window);
     }
-    if (this->_level == 2)
+    if (this->_level == 2) {}
         this->_parallaxGnome.drawGnomeParallax(this->_window);
     this->_lifeBar->display(this->_window);
     for (auto &it : this->_entities._entities)
-    _window->clear();
     this->_lifeBar->display(this->_window);   
     std::unique_lock<std::mutex> lock(*this->_mutex);
     for (auto &it : this->_entities._entities)
