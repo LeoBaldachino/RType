@@ -72,7 +72,8 @@ template<typename T>
 T Parser::getSetting(std::string settingsName)
 {
     try {
-        return T(config.lookup(settingsName));
+        T tmp = config.lookup(settingsName);
+        return (tmp);
     } catch (libconfig::SettingNotFoundException &e) {
         this->error->writeLogs("No " + settingsName + " setting in configuration file.\n");
         return (T(NULL));
