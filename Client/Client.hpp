@@ -8,6 +8,7 @@
 #include "Texture/Texture.hpp"
 #include "Parallax/Parallax.hpp"
 #include "Parallax/ParallaxGnome.hpp"
+#include "Parallax/ParallaxDragon.hpp"
 #include "../Entity/Player.hpp"
 #include "../Core/Core.hpp"
 #include "../EntityTypes/EntityTypes.hpp"
@@ -115,8 +116,9 @@ namespace RType {
             Texture _texture;
             Parallax _parallax;
             ParallaxGnome _parallaxGnome;
+            ParallaxDragon _parallaxDragon;
 
-            unsigned int _level = 2;
+            unsigned int _level = 3;
 
     };
 }
