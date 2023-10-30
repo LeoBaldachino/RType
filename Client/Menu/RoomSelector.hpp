@@ -10,11 +10,12 @@
 #include "../Button/ButtonList.hpp"
 #include "../../Sockets/includes/MessageParsed.hpp"
 #include "../../server/includes/ComCodes.hpp"
+#include <thread>
 
 namespace RType {
     class RoomSelector {
         public:
-            RoomSelector();
+            RoomSelector(std::function<void()> &createServer);
             ~RoomSelector();
             void display(std::unique_ptr<sf::RenderWindow> &toDraw);
             void hoverButtons(const sf::Vector2i &mousePos);
@@ -29,5 +30,6 @@ namespace RType {
             bool _sendedMessage;
             Utils::MessageParsed_s _messageToSend;
             std::vector<unsigned char> _currentRoomList;
+            std::function<void()> _createServer;
     };
 }

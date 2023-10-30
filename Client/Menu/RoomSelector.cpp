@@ -7,8 +7,9 @@
 
 #include "RoomSelector.hpp"
 
-RType::RoomSelector::RoomSelector() :
-_list("../Assets/insanibu.ttf")
+RType::RoomSelector::RoomSelector(std::function<void()> &createServer) :
+_list("../Assets/insanibu.ttf"),
+_createServer(createServer)
 {
     this->_actualRoom = 0;
     this->_sendedMessage = true;
@@ -21,6 +22,16 @@ _list("../Assets/insanibu.ttf")
         // std::cout << "clicked ???" << std::endl;
     }, 
     "../Assets/buttonTest.png", "Create a \nnew room", sf::Vector2f(20.0, 20.0), sf::IntRect(0, 0, 150, 100), 100, 0);
+        this->_list.addButtons([this]{
+        this->_createServer();
+        std::this_thread::sleep_for(std::chrono::seconds(2));
+        this->_actualRoom = this->_currentRoomList.size() + 1;
+        this->_messageToSend.msgType = newRoomIsCreated;
+        this->_messageToSend.bytes[0] = this->_actualRoom;
+        this->_sendedMessage = true;
+        // std::cout << "clicked ???" << std::endl;
+    }, 
+    "../Assets/buttonTest.png", "Be the\nnew server", sf::Vector2f(1700.0, 20.0), sf::IntRect(0, 0, 150, 100), 100, 1);
 }
 
 RType::RoomSelector::~RoomSelector()
@@ -57,7 +68,7 @@ void RType::RoomSelector::handleMessage(const Utils::MessageParsed_s &msg)
         this->_sendedMessage = true;
     }, 
     "../Assets/buttonTest.png", "Room :" + std::to_string(static_cast<int>(roomId)) + "\n" + std::to_string(static_cast<int>(msg.bytes[1])) + " / " + std::to_string(static_cast<int>(msg.bytes[2])), 
-    sf::Vector2f(20.0 + 110.0 * this->_currentRoomList.size(), 300.0), sf::IntRect(0, 0, 150, 100), 100, this->_currentRoomList.size() + 1);
+    sf::Vector2f(20.0 + 110.0 * this->_currentRoomList.size(), 300.0), sf::IntRect(0, 0, 150, 100), 100, this->_currentRoomList.size() + 2);
     this->_currentRoomList.push_back(roomId);
 }
 

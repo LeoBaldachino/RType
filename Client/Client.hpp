@@ -123,6 +123,7 @@ namespace RType {
             unsigned int _level = 2;
             PopUp _popUp;
             bool _quittedRoom = false;
+            int _serverPid;
 
     };
 }

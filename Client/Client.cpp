@@ -26,7 +26,17 @@ _buttonList("../Assets/insanibu.ttf"),
 _parallax(_texture),
 _parallaxGnome(_texture),
 _popUp("Welcome the the R-Type !", "../Assets/insanibu.ttf"),
-_menu(this->_popUp)
+_menu(this->_popUp, [this]{
+    int pid = fork();
+    int random = std::rand() % 1000 + 3000; 
+    if (!pid) {
+        std::system(std::string("./r-type_server "+ std::to_string(random) + " ../test.cfg").c_str());
+        std::exit(0);
+    }
+    this->_serverPid = pid;
+    this->_serverIp = "127.0.0.1";
+    this->_serverPort = random;
+})
 {
     std::srand(std::time(NULL));
     if (ac < 3)
@@ -43,6 +53,7 @@ _menu(this->_popUp)
     this->_inputs = {};
     this->_mouseClicked = false;
     this->_serverIp = av[1];
+    this->_serverPid = -1;
     this->_serverPort = std::stoi(av[2]);
     this->_mutex = std::make_unique<std::mutex>();
     // this->_buttonList.addButtons([this]{std::cout << "Hello world !" << std::endl;}, "../Assets/buttonTest.png", "Hello !", sf::Vector2f(10.0, 10.0), sf::IntRect(0, 0, 150, 100), 100, 0);
@@ -587,8 +598,14 @@ void RType::Client::displayMenu()
 
 void RType::Client::quitActualRoom()
 {
-    if (this->_actualId == -1)
+    if (this->_actualId == -1) {
+        #ifdef __unix__
+            if (this->_serverPid != -1) {
+                kill(this->_serverPid, SIGTERM);
+            }
+        #endif
         return std::exit(0);
+    }
     auto msg = this->buildEmptyMsg(playerDeconnected);
     msg.bytes[0] = this->_menu.getRoomId();
     msg.bytes[1] = this->_actualId;
