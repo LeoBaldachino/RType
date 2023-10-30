@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2023
 ** B-CPP-500-MLH-5-1-rtype-robin.denni
 ** File description:
-** Tourre.hpp
+** GenieShot.cpp
 */
 
 #pragma once
@@ -14,31 +14,27 @@
 #include "../Components/ClockTimer.hpp"
 #include "../Components/Health.hpp"
 
-#define SHOOT_SPEED 3000
-#define JUMP_SPEED 3000
 #define MOVE_SPEED 3
-#define TOURRE_X 247 * 0.5
-#define TOURRE_Y 220 * 0.5
-#define TOURRE_HEALTH 2
+#define GENIESHOT_X 198 * 0.5
+#define GENIESHOT_Y 254 * 0.5
+#define GENIESHOT_HEALTH 2
 
 /**
- * @brief Class representing Tourre in the game
+ * @brief Class representing GenieShot in the game
  */
-class Tourre : public IEntity, public Health {
+class GenieShot : public IEntity, public Health {
     public:
         /**
-         * @brief Construct a new Tourre object
+         * @brief Construct a new GenieShot object
          */
-        Tourre();
+        GenieShot();
         /**
-         * @brief Construct a new Tourre object
+         * @brief Construct a new GenieShot object
          * 
-         * @param position Position of the Tourre
-         * @param velocity Velocity of the Tourre
-         * @param moveDirection Direction of the Tourre movement
+         * @param position Position of the GenieShot
          */
-        Tourre(Position position, int velocity, Vector2d moveDirection);
-        ~Tourre(){};
+        GenieShot(Position position);
+        ~GenieShot(){};
         /**
          * @brief Accept method for visitor
          * 
@@ -47,61 +43,61 @@ class Tourre : public IEntity, public Health {
          */
         void accept(IVisitor &v, Core &core);
         /**
-         * @brief Set the Position of the tourre
+         * @brief Set the Position of the GenieShot
          * 
          * @param position New position
          */
         void setPosition(const Position &position);
         /**
-         * @brief Get the Position of the tourre
+         * @brief Get the Position of the GenieShot
          * 
          * @return Position object
          */
         Position getPosition() const;
         /**
-         * @brief Set the State of the tourre
+         * @brief Set the State of the GenieShot
          * 
          * @param state New state
          */
         void setState(State state);
         /**
-         * @brief Get the State of the tourre
+         * @brief Get the State of the GenieShot
          * 
          * @return State object
          */
         State getState() const;
         /**
-         * @brief Set the Velocity of the tourre
+         * @brief Set the Velocity of the GenieShot
          * 
          * @param velocity New velocity
          */
         void setVelocity(int velocity);
         /**
-         * @brief Get the Velocity of the tourre
+         * @brief Get the Velocity of the GenieShot
          * 
          * @return Velocity value
          */
         int getVelocity(void) const;
         /**
-         * @brief Set the Moveable of the tourre
+         * @brief Set the Moveable of the GenieShot
          * 
          * @param moveable New moveable
          */
         void setMoveable(const Moveable &moveable);
         /**
-         * @brief Get the Moveable of the tourre
+         * @brief Get the Moveable of the GenieShot
          * 
          * @return Moveable object
          */
         Moveable getMoveable(void) const;
         /**
-         * @brief Check if the tourre is colliding with another entity
+         * @brief Check if the GenieShot is colliding with another entity
          * @param entity Entity to check collision with
          * @return True if colliding, False otherwise
          */
         bool isColidingWith(IEntity &entity);
         /**
-         * @brief Get the Size of the tourre
+         * @brief Get the Size of the GenieShot
          * 
          * @return Vector2d object
          */
@@ -111,21 +107,21 @@ class Tourre : public IEntity, public Health {
          * 
          * @return Type of the entity
          */
-        inline unsigned char getEntityType() {return RType::tourre;}
+        inline unsigned char getEntityType() {return RType::genieShot;}
         /**
-         * @brief Check if the tourre is ready to move
+         * @brief Check if the GenieShot is ready to move
          * 
          * @return True if ready, False otherwise
          */
         inline bool readyToMove() {return this->_readyMove.clockOk();};
         /**
-         * @brief Check if the tourre has moved
+         * @brief Check if the GenieShot has moved
          * 
          * @return True if moved, False otherwise
          */
         bool getHasMoved(void);
         /**
-         * @brief Set the Has Moved status of the tourre
+         * @brief Set the Has Moved status of the GenieShot
          * 
          * @param state New has moved status
          */
@@ -158,6 +154,10 @@ class Tourre : public IEntity, public Health {
          */
         ClockTimer getTempoState(void);
 
+        Position getOriginalPos(void) const;
+        void setGoingUp(bool state);
+        bool getGoingUp(void) const;
+
     private:
         State _state;
         Position _position;
@@ -165,9 +165,10 @@ class Tourre : public IEntity, public Health {
         int _velocity;
         Vector2d _size;
         bool _hasMoved = false;
-        ClockTimer _readyShoot;
         ClockTimer _readyMove;
         unsigned int _spriteFrame = 0;
         ClockTimer _frameClock;
         ClockTimer _currentTempoState;
+        Position _originalPos;
+        bool _goingUp = true;
 };

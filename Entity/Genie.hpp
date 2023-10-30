@@ -13,11 +13,11 @@
 #include "../Components/ClockTimer.hpp"
 #include "../Components/Health.hpp"
 
-#define SHOOT_SPEED 3000
+#define GENIESHOOT_SPEED 3000
 #define JUMP_SPEED 3000
 #define MOVE_SPEED 3
-#define GENIE_X 500 * SIZE_SCALE
-#define GENIE_Y 541 * SIZE_SCALE
+#define GENIE_X 500
+#define GENIE_Y 541
 #define GENIE_HEALTH 100
 
 /**
@@ -33,8 +33,6 @@ class Genie : public IEntity, public Health {
          * @brief Construct a new Genie object
          * 
          * @param position Position of the Genie
-         * @param velocity Velocity of the Genie
-         * @param moveDirection Direction of the Genie movement
          */
         Genie(Position position);
         ~Genie(){};
@@ -62,6 +60,12 @@ class Genie : public IEntity, public Health {
          * 
          * @param state New state
          */
+        /**
+         * @brief Checks if the entity is ready to shoot
+         * @return bool
+         */
+        inline bool readyToShoot() {return this->_readyShoot.clockOk();};
+
         void setState(State state);
         /**
          * @brief Get the State of the Genie

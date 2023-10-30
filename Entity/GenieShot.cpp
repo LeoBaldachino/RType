@@ -2,74 +2,74 @@
 ** EPITECH PROJECT, 2023
 ** B-CPP-500-MLH-5-1-rtype-robin.denni
 ** File description:
-** Genie.cpp
+** GenieShot.cpp
 */
 
-#include "Genie.hpp"
+#include "GenieShot.hpp"
 
-Genie::Genie(Position position) :
+GenieShot::GenieShot(Position position) :
 _frameClock(75),
-_size(GENIE_X, GENIE_Y),
-_readyShoot(GENIESHOOT_SPEED),
+_size(GENIESHOT_X, GENIESHOT_Y),
 _readyMove(MOVE_SPEED),
 _currentTempoState(getEntityPositionRange()[3]),
-Health(GENIE_HEALTH)
+Health(GENIESHOT_HEALTH)
 {
     this->_position = position;
     this->_state = State(100);
+    this->_originalPos = position;
 }
 
-void Genie::accept(IVisitor &v, Core &core)
+void GenieShot::accept(IVisitor &v, Core &core)
 {
-    v.visitGenie(*this, core);
+    v.visitGenieShot(*this, core);
 }
 
-void Genie::setPosition(const Position &position)
+void GenieShot::setPosition(const Position &position)
 {
     this->_position = position;
 }
 
-Position Genie::getPosition() const
+Position GenieShot::getPosition() const
 {
     return this->_position;
 }
 
-void Genie::setState(State state)
+void GenieShot::setState(State state)
 {
     this->_state = state;
 }
 
-State Genie::getState() const
+State GenieShot::getState() const
 {
     return this->_state;
 }
 
-void Genie::setVelocity(int velocity)
+void GenieShot::setVelocity(int velocity)
 {
     this->_velocity = velocity;
 }
 
-int Genie::getVelocity(void) const
+int GenieShot::getVelocity(void) const
 {
     return this->_velocity;
 }
 
-void Genie::setMoveable(const Moveable &moveable)
+void GenieShot::setMoveable(const Moveable &moveable)
 {
     this->_movement = moveable;
 }
 
-Moveable Genie::getMoveable(void) const
+Moveable GenieShot::getMoveable(void) const
 {
     return (this->_movement);
 }
 
-Vector2d Genie::getSize(void)
+Vector2d GenieShot::getSize(void)
 {
     return (this->_size);
 }
 
-bool Genie::isColidingWith(IEntity &entity)
+bool GenieShot::isColidingWith(IEntity &entity)
 {
     for (int i = entity.getPosition().getX(); i <= entity.getPosition().getX() + entity.getSize().x; i++)
         for (int j = entity.getPosition().getY(); j <= entity.getPosition().getY() + entity.getSize().y; j++)
@@ -81,49 +81,54 @@ bool Genie::isColidingWith(IEntity &entity)
     return (false);
 }
 
-bool Genie::getHasMoved(void)
+bool GenieShot::getHasMoved(void)
 {
     bool tmpHasMoved = this->_hasMoved;
     this->_hasMoved = !this->_hasMoved ? true : false;
     return (tmpHasMoved);
 }
-void Genie::setHasMoved(bool state)
+void GenieShot::setHasMoved(bool state)
 {
     this->_hasMoved = state;
 }
 
-unsigned int Genie::getEntitySpriteFrame()
+unsigned int GenieShot::getEntitySpriteFrame()
 {
     if (this->_frameClock.clockOk()) {
         ++this->_spriteFrame;
-        this->_spriteFrame = this->_spriteFrame >= 32 ? 0 : this->_spriteFrame;
+        this->_spriteFrame = this->_spriteFrame >= 3 ? 0 : this->_spriteFrame;
     }
     return (this->_spriteFrame);
 }
 
-std::vector<float> Genie::getEntityPositionRange()
+std::vector<float> GenieShot::getEntityPositionRange()
 {
     std::vector<float> range = {1080 - 53, 730, 100, 1000};
 
     return range;
 }
 
-void Genie::setTempoState(ClockTimer state)
+void GenieShot::setTempoState(ClockTimer state)
 {
     this->_currentTempoState = state;
 }
 
-ClockTimer Genie::getTempoState(void)
+ClockTimer GenieShot::getTempoState(void)
 {
     return this->_currentTempoState;
 }
 
-bool Genie::getGoingUp(void) const
+Position GenieShot::getOriginalPos(void) const
 {
-    return (this->_goingUp);
+    return (this->_originalPos);
 }
 
-void Genie::setGoingUp(bool state)
+void GenieShot::setGoingUp(bool state)
 {
     this->_goingUp = state;
+}
+
+bool GenieShot::getGoingUp(void) const
+{
+    return (this->_goingUp);
 }

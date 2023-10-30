@@ -7,10 +7,6 @@
 
 #include "GenieSystem.hpp"
 
-GenieSystem::GenieSystem()
-{
-}
-
 void GenieSystem::updatePos(Genie &t)
 {
     if (!t.readyToMove())
@@ -39,4 +35,12 @@ void GenieSystem::checkCollision(Genie &t, IEntity &entity, Core &core, bool isT
         if (!isTouching)
             core.removeEntityLater(entity);
     }
+}
+
+void GenieSystem::shot(Genie &t, Core &core)
+{
+    if (!t.readyToShoot())
+        return;
+    GenieShot tmpGenieShot(t.getPosition());
+    core.addEntity(std::make_shared<GenieShot>(tmpGenieShot), core.getAvailabeIndex());
 }
