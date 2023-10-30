@@ -7,7 +7,7 @@
 
 #pragma once
 #include "../../Entity/PiercingShotEntity.hpp"
-#include "../../Core/Core.hpp"
+#include "../../../Core/Core.hpp"
 #include "ShotSystem.hpp"
 
 class PiercingShotSystem {

@@ -20,7 +20,7 @@
 #include "../../gameLoop/IGameLoop.hpp"
 #include "../../gameLoop/RTypeGameLoop/RTypeGameLoop.hpp"
 #include "../../EntityTypes/EntityTypes.hpp"
-#include "../../Entity/Player.hpp"
+#include "../../ECS/Entity/Player.hpp"
 
 namespace RType {
     namespace Server {

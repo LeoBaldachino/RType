@@ -7,7 +7,7 @@
 
 #pragma once
 #include <memory>
-#include "../../Core/Core.hpp"
+#include "../../../Core/Core.hpp"
 #include "../../Components/Position.hpp"
 #include "../../Entity/ShotEntity.hpp"
 
