@@ -31,7 +31,7 @@ namespace RType {
              */
             virtual EntityTypes getEntityType(unsigned short id) = 0;
 
-            virtual std::tuple<unsigned short, unsigned short, unsigned short> getPlayerDetails(unsigned char playerId) = 0;
+            virtual std::tuple<unsigned short, unsigned short, unsigned short, unsigned short> getPlayerDetails(unsigned char playerId) = 0;
             /**
              * @brief Set the Enemies Waves
              * 

@@ -123,14 +123,16 @@ void RType::CoreServer::newRoomCreated(const Utils::MessageParsed_s &msg)
 void RType::CoreServer::getOutFromRoom(const Utils::MessageParsed_s &msg)
 {
     for (auto it = this->_rooms.begin(); it < this->_rooms.end(); it++) {
-        if ((*it)->getId() == msg.bytes[0])
-            if ((*it)->removeFromRoom({msg.senderIp, msg.senderPort}) && (*it)->willBeDestroyed()) {
+        if ((*it)->getId() == msg.bytes[0]) {
+            std::cout << "Find room" << std::endl;
+            if ((*it)->removeFromRoom(msg) && (*it)->willBeDestroyed()) {
                 (*it)->waitForDestroy();
                 std::unique_lock<std::mutex>(this->_mutex);
                 std::cout << "Remove room with id " << (*it)->getId() << std::endl;
                 this->_rooms.erase(it);
                 return;
             }
+        }
     }
     std::cout << "No rooms with this id" << std::endl;
     Utils::MessageParsed_s newMsg;

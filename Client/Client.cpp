@@ -19,7 +19,8 @@ _commands({
 {entityType, &RType::Client::setEntityType},
 {removeEntity, &RType::Client::removeAnEntity},
 {valueSet, &RType::Client::setValues},
-{nbOfEntities, &RType::Client::syncNbOfEntities}
+{nbOfEntities, &RType::Client::syncNbOfEntities},
+{playerDeconnected, &RType::Client::quitRoom}
 }),
 _buttonList("../Assets/insanibu.ttf"),
 _parallax(_texture),
@@ -258,6 +259,8 @@ void RType::Client::quitRoom(const Utils::MessageParsed_s &msg)
 {
     std::unique_lock<std::mutex> lock(*this->_mutex);
     (void)msg;
+    if (msg.msgType == playerDeconnected && (msg.bytes[1] != this->_actualId))
+        return (void)this->_entities.removeEntity(msg.bytes[1]);
     this->_actualId = -1;
     this->_quittedRoom = true;
     this->_actualScreen = menu;
