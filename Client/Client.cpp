@@ -21,7 +21,8 @@ _commands({
 {valueSet, &RType::Client::setValues},
 }),
 _parallax(_texture),
-_parallaxGnome(_texture)
+_parallaxGnome(_texture),
+_parallaxDragon(_texture)
 {
     std::srand(std::time(NULL));
     if (ac < 3)
@@ -39,7 +40,7 @@ _parallaxGnome(_texture)
     this->_serverIp = av[1];
     this->_serverPort = std::stoi(av[2]);
     this->_mutex = std::make_unique<std::mutex>();
-    this->_window = std::make_unique<sf::RenderWindow>(sf::VideoMode::getDesktopMode(), "R-Type"/*, sf::Style::Fullscreen*/);
+    this->_window = std::make_unique<sf::RenderWindow>(sf::VideoMode::getDesktopMode(), "R-Type", sf::Style::Fullscreen);
     if (this->_music.openFromFile("../Assets/music.ogg") != -1)
         this->_music.play();
     this->_socket = std::make_unique<Utils::SocketHandler>("127.0.0.1", 4001 + std::rand() % 3000, std::list<int>({entityType}));
@@ -436,9 +437,9 @@ void RType::Client::gameLoop()
         this->_parallax.drawParallax(this->_window);
     }
     if (this->_level == 2)
-    {
         this->_parallaxGnome.drawGnomeParallax(this->_window);
-    }
+    if (this->_level == 3)
+        this->_parallaxDragon.drawDragonParallax(this->_window);
     this->_lifeBar->display(this->_window);
     for (auto &it : this->_entities._entities) {
         this->_window->draw(this->getSpriteFromEntity(it.second, it.first));
