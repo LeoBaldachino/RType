@@ -44,7 +44,7 @@ namespace RType {
                  * @brief Destroy the MessageParsed_s object
                  * 
                  */
-                ~MessageParsed_s();
+                ~MessageParsed_s() {};
                 /**
                  * @brief equal operator
                  * 

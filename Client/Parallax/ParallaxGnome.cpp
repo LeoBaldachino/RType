@@ -87,7 +87,6 @@ void ParallaxGnome::handleCloudsFrame(void)
 {
     auto clock = std::chrono::steady_clock::now();
 
-
     if (std::chrono::duration_cast<std::chrono::milliseconds>(clock - this->_smallCloudsClock).count() < 10)
         return;
     this->_smallCloudsClock = std::chrono::steady_clock::now();
@@ -110,7 +109,6 @@ void ParallaxGnome::handleCloudsFrame(void)
 void ParallaxGnome::drawGnomeParallax(std::unique_ptr<sf::RenderWindow> &window)
 {
     this->handleCloudsFrame();
-
     this->drawStaticSky(window);
     this->drawFarElements(window);
     this->drawMidElements(window);

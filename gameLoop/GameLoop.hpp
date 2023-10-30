@@ -27,7 +27,7 @@ namespace RType {
             /**
              * @brief Destroy the Game Loop object
              */
-            ~GameLoop();
+            ~GameLoop() {};
 
             /**
              * @brief Update game loop
@@ -37,22 +37,6 @@ namespace RType {
              */
             std::queue<Utils::MessageParsed_s> updateGameLoop(std::queue<std::pair<unsigned short, Utils::MessageParsed_s>> newMessages);
         protected:
-            /**
-             * @brief Set the Position Entity From Msg object
-             * 
-             * @param msg message parsed
-             * @param id id of the entity
-             */
-            void setPositionEntityFromMsg(const Utils::MessageParsed_s &msg, unsigned short id);
-
-            /**
-             * @brief Spawn Entity From Msg object
-             * 
-             * @param msg message parsed
-             * @param id id of the entity
-             */
-            void spawnEntityFromMsg(const Utils::MessageParsed_s &msg, unsigned short id);
-
             /**
              * @brief Add Player object
              * 

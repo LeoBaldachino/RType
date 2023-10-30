@@ -17,7 +17,7 @@ namespace RType {
     class MessageSendedQueue {
         public:
             MessageSendedQueue(const std::list<int> &importantMessages);
-            ~MessageSendedQueue();
+            ~MessageSendedQueue() {};
             void addMessage(const Utils::MessageParsed_s &msg);
             Utils::MessageParsed_s getMessage();
             bool readyToGetMessage();

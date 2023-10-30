@@ -22,6 +22,7 @@ public:
         this->tourreTexture.loadFromFile("./../Assets/EntitiesSprites/Cupcake.png");
         this->playerTexture.loadFromFile("./../Assets/EntitiesSprites/CupHead.png");
         this->otherPlayerTexture.loadFromFile("./../Assets/EntitiesSprites/MugMan.png");
+            this->coinTexture.loadFromFile("./../Assets/EntitiesSprites/Coin.png");
         this->playerShotTexture.loadFromFile("./../Assets/shot.png");
         this->piercingShotTexture.loadFromFile("./../Assets/EntitiesSprites/PiercingShot.png");
         this->enemyShotTexture.loadFromFile("./../Assets/EntitiesSprites/EnemyShot.png");
@@ -80,6 +81,8 @@ public:
     sf::Texture playerShotTexture;
     sf::Texture piercingShotTexture;
     sf::Texture enemyShotTexture;
+        sf::Texture genieTexture;
+        sf::Texture coinTexture;
 
     sf::Texture desertMountain;
     sf::Texture desertForest;

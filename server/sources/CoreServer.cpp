@@ -104,8 +104,6 @@ void RType::CoreServer::newRoomCreated(const Utils::MessageParsed_s &msg)
         if (it->getId() == msg.bytes[0] || it->isInRoom({msg.senderIp, msg.senderPort})) {
             Utils::MessageParsed_s newMsg;
             newMsg.msgType = illegalAction;
-            //need to set the id of the object
-            //newMsg.byte[0];newMsg.bytes[1]
             newMsg.bytes[0] = 1;
             newMsg.bytes[1] = 2;
             newMsg.bytes[2] = newRoomIsCreated;
@@ -137,8 +135,6 @@ void RType::CoreServer::getOutFromRoom(const Utils::MessageParsed_s &msg)
     std::cout << "No rooms with this id" << std::endl;
     Utils::MessageParsed_s newMsg;
     newMsg.msgType = illegalAction;
-    //need to set the id of the object
-    //newMsg.byte[0];newMsg.bytes[1]
     newMsg.bytes[0] = 1;
     newMsg.bytes[1] = 2;
     newMsg.bytes[2] = playerDeconnected;
@@ -164,8 +160,6 @@ void RType::CoreServer::connectToRoom(const Utils::MessageParsed_s &msg)
 {
     Utils::MessageParsed_s newMsg;
     newMsg.msgType = illegalAction;
-    //need to set the id of the object
-    //newMsg.byte[0];newMsg.bytes[1]
     newMsg.bytes[0] = 1;
     newMsg.bytes[1] = 2;
     newMsg.bytes[2] = newPlayerConnected;

@@ -27,7 +27,7 @@ namespace RType {
             /**
              * @brief Destroy the RTypeGameLoop object
              */
-            ~RTypeGameLoop();
+            ~RTypeGameLoop() {};
 
             /**
              * @brief Get entity type
@@ -56,6 +56,8 @@ namespace RType {
             void handleBydos(std::queue<Utils::MessageParsed_s> &toReturn);
 
             void handleTourre(std::queue<Utils::MessageParsed_s> &toReturn);
+
+            void handleCoin(std::queue<Utils::MessageParsed_s> &toReturn);
 
             /**
              * @brief Add or remove entity
@@ -107,6 +109,7 @@ namespace RType {
             SystemVisitor v;
             std::vector<unsigned short> _bydos;
             std::vector<unsigned short> _tourre;
+            std::vector<unsigned short> _coin;
             std::chrono::steady_clock::time_point _refreshAllEntities;
             std::chrono::steady_clock::time_point _refreshPlayers;
             std::vector<std::map<Parser::Enemies, int>> _waves;

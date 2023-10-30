@@ -7,7 +7,6 @@
 
 #include "../includes/SocketHandler.hpp"
 
-
 RType::Utils::SocketHandler::SocketHandler(const std::string &ipAdress, int port, const std::list<int> &importantMessagesCode)
 {
     _socket = std::make_shared<boost::asio::ip::udp::socket>(_ioService, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), port));
@@ -83,4 +82,3 @@ const std::pair<std::string, int> &RType::Utils::SocketHandler::getIpAndPort() c
 {
     return this->_ipPort;
 }
-

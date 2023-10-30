@@ -2,18 +2,18 @@
 ** EPITECH PROJECT, 2023
 ** B-CPP-500-MLH-5-1-rtype-robin.denni
 ** File description:
-** Tourre.cpp
+** Genie.cpp
 */
 
-#include "Tourre.hpp"
+#include "Genie.hpp"
 
-Tourre::Tourre(Position position, int velocity, Vector2d moveDirection) :
+Genie::Genie(Position position, int velocity, Vector2d moveDirection) :
 _frameClock(125),
-_size(TOURRE_X, TOURRE_Y),
+_size(GENIE_X, GENIE_Y),
 _readyShoot(SHOOT_SPEED),
 _readyMove(MOVE_SPEED),
 _currentTempoState(getEntityPositionRange()[3]),
-Health(TOURRE_HEALTH)
+Health(GENIE_HEALTH)
 {
     this->_position = position;
     this->_state = State(100);
@@ -21,57 +21,93 @@ Health(TOURRE_HEALTH)
     this->_movement = Moveable(Vector2d(this->_position.getX(), this->_position.getY()), moveDirection, velocity);
 }
 
-void Tourre::accept(IVisitor &v, Core &core)
+// Shoot Genie::shoot(const Position &playerPos) const
+// {   
+//     AIShoot aiShoot(playerPos, this->_position);
+//     return aiShoot.shootLogic();
+// }
+
+void Genie::accept(IVisitor &v, Core &core)
 {
-    v.visitTourre(*this, core);
+    v.visitGenie(*this, core);
 }
 
-void Tourre::setPosition(const Position &position)
+void Genie::setPosition(const Position &position)
 {
     this->_position = position;
 }
 
-Position Tourre::getPosition() const
+Position Genie::getPosition() const
 {
     return this->_position;
 }
 
-void Tourre::setState(State state)
+void Genie::setState(State state)
 {
     this->_state = state;
 }
 
-State Tourre::getState() const
+State Genie::getState() const
 {
     return this->_state;
 }
 
-void Tourre::setVelocity(int velocity)
+void Genie::setVelocity(int velocity)
 {
     this->_velocity = velocity;
 }
 
-int Tourre::getVelocity(void) const
+int Genie::getVelocity(void) const
 {
     return this->_velocity;
 }
 
-void Tourre::setMoveable(const Moveable &moveable)
+// void Genie::setShootDmg(int shootDmg)
+// {
+//     this->_shootDmg = shootDmg;
+// }
+
+// int Genie::getShootDmg(void) const
+// {
+//     return this->_shootDmg;
+// }
+
+// void Genie::setShootVelocity(int shootVelocity)
+// {
+//     this->_shootVelocity = shootVelocity;
+// }
+
+// int Genie::getShootVelocity(void) const
+// {
+//     return this->_shootVelocity;
+// }
+
+// void Genie::setShootGravity(int shootGravity)
+// {
+//     this->_shootGravity = shootGravity;
+// }
+
+// int Genie::getShootGravity(void) const
+// {
+//     return this->_shootGravity;
+// }
+
+void Genie::setMoveable(const Moveable &moveable)
 {
     this->_movement = moveable;
 }
 
-Moveable Tourre::getMoveable(void) const
+Moveable Genie::getMoveable(void) const
 {
     return (this->_movement);
 }
 
-Vector2d Tourre::getSize(void)
+Vector2d Genie::getSize(void)
 {
     return (this->_size);
 }
 
-bool Tourre::isColidingWith(IEntity &entity)
+bool Genie::isColidingWith(IEntity &entity)
 {
     for (int i = entity.getPosition().getX(); i <= entity.getPosition().getX() + entity.getSize().x; i++)
         for (int j = entity.getPosition().getY(); j <= entity.getPosition().getY() + entity.getSize().y; j++)
@@ -83,18 +119,18 @@ bool Tourre::isColidingWith(IEntity &entity)
     return (false);
 }
 
-bool Tourre::getHasMoved(void)
+bool Genie::getHasMoved(void)
 {
     bool tmpHasMoved = this->_hasMoved;
     this->_hasMoved = !this->_hasMoved ? true : false;
     return (tmpHasMoved);
 }
-void Tourre::setHasMoved(bool state)
+void Genie::setHasMoved(bool state)
 {
     this->_hasMoved = state;
 }
 
-unsigned int Tourre::getEntitySpriteFrame()
+unsigned int Genie::getEntitySpriteFrame()
 {
     if (this->_frameClock.clockOk()) {
         ++this->_spriteFrame;
@@ -103,19 +139,19 @@ unsigned int Tourre::getEntitySpriteFrame()
     return (this->_spriteFrame);
 }
 
-std::vector<float> Tourre::getEntityPositionRange()
+std::vector<float> Genie::getEntityPositionRange()
 {
     std::vector<float> range = {1080 - 53, 730, 100, 1000};
 
     return range;
 }
 
-void Tourre::setTempoState(ClockTimer state)
+void Genie::setTempoState(ClockTimer state)
 {
     this->_currentTempoState = state;
 }
 
-ClockTimer Tourre::getTempoState(void)
+ClockTimer Genie::getTempoState(void)
 {
     return this->_currentTempoState;
 }

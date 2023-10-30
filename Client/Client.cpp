@@ -50,10 +50,6 @@ _parallaxDragon(_texture)
     this->run();
 }
 
-RType::Client::~Client()
-{
-}
-
 void RType::Client::updateInputs(void)
 {
     std::unique_lock<std::mutex> lock(*this->_mutex);
@@ -132,8 +128,7 @@ void RType::Client::handleInputs(void)
 void RType::Client::run()
 {
     while (_window->isOpen()) {
-        switch (this->_actualScreen)
-        {
+        switch (this->_actualScreen) {
         case game:
             this->gameLoop();
             break;
@@ -146,10 +141,8 @@ void RType::Client::infosThread()
     while (this->_threadIsOpen) {
         Utils::MessageParsed_s msg = this->_socket->receive();
         auto it = this->_commands.find(msg.msgType);
-        if (it == this->_commands.end()) {
-            std::cout << "Get an unhandled message " << static_cast<int>(msg.msgType) << std::endl;
+        if (it == this->_commands.end())
             continue;
-        }
         (this->*it->second)(msg);
     }
 }
@@ -158,7 +151,6 @@ void RType::Client::sendPing(const Utils::MessageParsed_s &recMsg)
 {
     auto msg = this->buildEmptyMsg(playerPing);
     this->_socket->send(msg);
-    std::cout << "Ping sended..." << std::endl;
 }
 
 
@@ -170,7 +162,6 @@ void RType::Client::handleNonAuthorized(const Utils::MessageParsed_s &msg)
         this->_mutex->unlock();
         return this->joinRoom(1);
     }
-    std::cout << "Unauthorized " << static_cast<int>(msg.bytes[0]) << std::endl;
 }
 
 RType::Utils::MessageParsed_s RType::Client::buildEmptyMsg(const ComCodes &code)
@@ -226,8 +217,6 @@ bool RType::Client::checkAsId()
 
 void RType::Client::moveEntity(const Utils::MessageParsed_s &msg)
 {
-    // if (!checkAsId())
-    //     return;
     std::unique_lock<std::mutex> lock(*this->_mutex);
     auto it = this->_entities._entities.find(msg.getThirdShort());
     if (it == this->_entities._entities.end()) {
@@ -235,7 +224,6 @@ void RType::Client::moveEntity(const Utils::MessageParsed_s &msg)
         return;
     }
     it->second->setPosition(Position(msg.getFirstShort(), msg.getSecondShort(), 1080, 1920));
-    // std::cout << "Entity " << msg.getThirdShort() << " moves x = " << msg.getFirstShort() << " y = " << msg.getSecondShort() << std::endl; 
 }
 
 void RType::Client::quitRoom(const Utils::MessageParsed_s &msg)
@@ -285,17 +273,25 @@ void RType::Client::setEntityType(const Utils::MessageParsed_s &msg)
             return this->newMyShoot(msg);
         case RType::percingShoot :
             return this->newPercingShoot(msg);
+        case RType::coin :
+            return this->newCoin(msg);
     }
-    std::cout << "Unknown entity type " << (msg.getSecondShort()) << std::endl;
+}
+
+void RType::Client::newCoin(const Utils::MessageParsed_s &msg)
+{
+    auto it = this->_entities._entities.find(msg.getFirstShort());
+    if (it != this->_entities._entities.end())
+        return;
+    std::unique_lock<std::mutex> lock(*this->_mutex);
+    this->_entities.addEntity(std::make_shared<Coin>(Position(1900, 100, 1080, 1920)), msg.getFirstShort());
 }
 
 void RType::Client::newBydosToRoom(const Utils::MessageParsed_s &msg)
 {
     auto it = this->_entities._entities.find(msg.getFirstShort());
-    if (it != this->_entities._entities.end()) {
-        // std::cout << "Already in core with id " << msg.getFirstShort() << std::endl;
+    if (it != this->_entities._entities.end())
         return;
-    }
     std::unique_lock<std::mutex> lock(*this->_mutex);
     this->_entities.addEntity(std::make_shared<Bydos>(Position(1900, 100, 1080, 1920), 1, Vector2d(-1, 0)), msg.getFirstShort());
 }
@@ -303,10 +299,8 @@ void RType::Client::newBydosToRoom(const Utils::MessageParsed_s &msg)
 void RType::Client::newTourreToRoom(const Utils::MessageParsed_s &msg)
 {
     auto it = this->_entities._entities.find(msg.getFirstShort());
-    if (it != this->_entities._entities.end()) {
-        // std::cout << "Already in core with id " << msg.getFirstShort() << std::endl;
+    if (it != this->_entities._entities.end())
         return;
-    }
     std::unique_lock<std::mutex> lock(*this->_mutex);
     this->_entities.addEntity(std::make_shared<Tourre>(Position(1900, 100, 1080, 1920), 1, Vector2d(-1, 0)), msg.getFirstShort());
 }
@@ -319,10 +313,8 @@ void RType::Client::removeAnEntity(const Utils::MessageParsed_s &msg)
 void RType::Client::newEnemyShoot(const Utils::MessageParsed_s &msg)
 {
     auto it = this->_entities._entities.find(msg.getFirstShort());
-    if (it != this->_entities._entities.end()) {
-        // std::cout << "Already in core with id " << msg.getFirstShort() << std::endl;
+    if (it != this->_entities._entities.end())
         return;
-    }
     std::unique_lock<std::mutex> lock(*this->_mutex);
     Position pos(-20, -20);
     AIShoot aiShoot(pos, pos);
@@ -359,10 +351,8 @@ void RType::Client::setValues(const Utils::MessageParsed_s &msg)
 void RType::Client::newMyShoot(const Utils::MessageParsed_s &msg)
 {
     auto it = this->_entities._entities.find(msg.getFirstShort());
-    if (it != this->_entities._entities.end()) {
-        // std::cout << "Already in core with id " << msg.getFirstShort() << std::endl;
+    if (it != this->_entities._entities.end())
         return;
-    }
     std::unique_lock<std::mutex> lock(*this->_mutex);
     Position pos(-20, -20);
     AIShoot aiShoot(pos, pos);
@@ -373,10 +363,8 @@ void RType::Client::newMyShoot(const Utils::MessageParsed_s &msg)
 void RType::Client::newPercingShoot(const Utils::MessageParsed_s &msg)
 {
     auto it = this->_entities._entities.find(msg.getFirstShort());
-    if (it != this->_entities._entities.end()) {
-        // std::cout << "Already in core with id " << msg.getFirstShort() << std::endl;
+    if (it != this->_entities._entities.end())
         return;
-    }
     std::unique_lock<std::mutex> lock(*this->_mutex);
     Position pos(-20, -20);
     AIShoot aiShoot(pos, pos);
@@ -388,34 +376,45 @@ sf::Sprite RType::Client::getSpriteFromEntity(std::shared_ptr<IEntity> entity, u
 {
     sf::Sprite ret;
     int spriteFrame = entity->getEntitySpriteFrame() + 1;
-    if (entity->getEntityType() == 6) {
+    if (entity->getEntityType() == RType::EntityTypes::tourre) {
         ret.setTexture(this->_texture.tourreTexture);
         ret.setTextureRect(sf::Rect<int>(0, 420 * (spriteFrame - 1), 494, 420));
         ret.setScale(0.5, 0.5);
         ret.setPosition(entity->getPosition().getX(), entity->getPosition().getY());
     }
-    if (entity->getEntityType() == 5) {
+    if (entity->getEntityType() == RType::EntityTypes::bydosShoot) {
         ret.setTexture(this->_texture.enemyShotTexture);
         ret.setTextureRect(sf::Rect<int>(98 * (spriteFrame - 1), 0, 98, 92));
         ret.setScale(0.5, 0.5);
     }
-    if (entity->getEntityType() == 4) {
+    if (entity->getEntityType() == RType::EntityTypes::bydos) {
         ret.setTexture(this->_texture.bydosTexture);
         ret.setTextureRect(sf::Rect<int>(140 * (spriteFrame - 1), 0, 140, 132));
         ret.setScale(0.8, 0.8);
     }
-    if (entity->getEntityType() == 3) {
+    if (entity->getEntityType() == RType::EntityTypes::percingShoot) {
         ret.setTexture(this->_texture.piercingShotTexture);
         ret.setTextureRect(sf::Rect<int>(55 * (spriteFrame - 1), 0, 55, 50));
     }
-    if (entity->getEntityType() == 2) {
+    if (entity->getEntityType() == RType::EntityTypes::coin) {
+        ret.setTexture(this->_texture.coinTexture);
+        ret.setTextureRect(sf::Rect<int>(103 * (spriteFrame - 1), 0, 103, 130));
+    }
+    if (entity->getEntityType() == RType::EntityTypes::playerShoot) {
         ret.setTexture(this->_texture.playerShotTexture);
     }
-    if (entity->getEntityType() == 1 && id == this->_actualId) {
+    if (entity->getEntityType() == RType::EntityTypes::player && id == this->_actualId) {
         ret.setTexture(this->_texture.playerTexture);
         ret.setTextureRect(sf::Rect<int>(107 * (spriteFrame - 1), 0, 107, 98));
+        // int r = rand() % 3;
+        // if (r == 0)
+            // ret.setTextureRect(sf::Rect<int>(107 * (spriteFrame - 1), 0, 107, 98));
+        // else if (r == 1)
+            // ret.setTextureRect(sf::Rect<int>(109 * (spriteFrame - 1), 106, 109, 89));
+        // else
+            // ret.setTextureRect(sf::Rect<int>(106 * (spriteFrame - 1), 201, 106, 99));
     }
-    if (entity->getEntityType() == 1 && id != this->_actualId) {
+    if (entity->getEntityType() == RType::EntityTypes::player && id != this->_actualId) {
         ret.setTexture(this->_texture.otherPlayerTexture);
         ret.setTextureRect(sf::Rect<int>(109 * (spriteFrame - 1), 0, 109, 98));
     }
@@ -441,9 +440,8 @@ void RType::Client::gameLoop()
     if (this->_level == 3)
         this->_parallaxDragon.drawDragonParallax(this->_window);
     this->_lifeBar->display(this->_window);
-    for (auto &it : this->_entities._entities) {
+    for (auto &it : this->_entities._entities)
         this->_window->draw(this->getSpriteFromEntity(it.second, it.first));
-    }
     _window->display();
     this->updateInputs();
     while (!this->_inputs.empty()) {

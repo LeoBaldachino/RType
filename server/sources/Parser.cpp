@@ -65,7 +65,8 @@ void Parser::initWaves(void)
             const libconfig::Setting &wave = waves[i];
             int bydosCount = this->getEnemy("bydos", wave, e + std::to_string(i + 1));
             int tourreCount = this->getEnemy("tourre", wave, e + std::to_string(i + 1));
-            std::map<Enemies, int> tmpMap = {{Enemies::BYDOS, bydosCount}, {Enemies::TOURRE, tourreCount}};
+            int coinCount = this->getEnemy("coin", wave, e + std::to_string(i + 1));
+            std::map<Enemies, int> tmpMap = {{Enemies::BYDOS, bydosCount}, {Enemies::TOURRE, tourreCount}, {Enemies::COIN, coinCount}};
             this->_waves.push_back(tmpMap);
         }
     } catch (const libconfig::SettingNotFoundException &e) {

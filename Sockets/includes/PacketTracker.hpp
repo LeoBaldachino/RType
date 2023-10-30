@@ -15,7 +15,7 @@ namespace RType {
     class PacketTracker {
         public:
             PacketTracker();
-            ~PacketTracker();
+            ~PacketTracker() {};
             void prepareMessageToSend(Utils::MessageParsed_s &msg);
             bool receiveMessage(const Utils::MessageParsed_s &msg, std::list<Utils::MessageParsed_s> &toFill);
             bool reSendMessage(Utils::MessageParsed_s &toFill, const Utils::MessageParsed_s &msg);

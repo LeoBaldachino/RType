@@ -2,11 +2,11 @@
 ** EPITECH PROJECT, 2023
 ** B-CPP-500-MLH-5-1-rtype-robin.denni
 ** File description:
-** BydosSystem.hpp
+** GenieSystem.hpp
 */
 
 #pragma once
-#include "../Entity/Bydos.hpp"
+#include "../Entity/Genie.hpp"
 #include "../Core/Core.hpp"
 #include "Subsystems/MovementSystem.hpp"
 #include "Subsystems/ShotSystem.hpp"
@@ -14,13 +14,14 @@
 
 #include <chrono>
 
-class BydosSystem {
+class GenieSystem {
     public:
-        BydosSystem() {};
-        ~BydosSystem() {};
-        void updatePos(Bydos &b);
-        void createShots(Bydos &b, const Position &playerPos, Core &core);
-        void checkCollision(Bydos &b, IEntity &entity, Core &core, bool isPercing);
+        GenieSystem();
+        ~GenieSystem() {};
+        void updatePos(Genie &t);
+        // void createShots(Genie &t, const Player &player, Core &core);
+        void checkCollision(Genie &t, IEntity &entity, Core &core, bool isTouching);
+
     private:
         MovementSystem _movementSystem;
         HitBox _hitBoxSystem;

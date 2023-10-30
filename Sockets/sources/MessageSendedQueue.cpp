@@ -13,10 +13,6 @@ RType::MessageSendedQueue::MessageSendedQueue(const std::list<int> &importantMes
     this->_importantMessages.push_back(34);
 }
 
-RType::MessageSendedQueue::~MessageSendedQueue()
-{
-}
-
 void RType::MessageSendedQueue::addMessage(const Utils::MessageParsed_s &msg)
 {
     for (auto it : this->_importantMessages)

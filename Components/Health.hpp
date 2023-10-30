@@ -23,7 +23,6 @@ class Health {
         bool removeOneLife() {
             if (this->isInvincible())
                 return false;
-            std::cout << "One life removed..." << std::endl;
             this->_lifes--;
             this->_asBeenHit = true;
             this->_chronoHit = std::chrono::steady_clock::now();
