@@ -159,8 +159,9 @@ void RType::Server::Room::runRoom()
     }
 }
 
-bool RType::Server::Room::removeFromRoom(const std::pair<std::string, int> &toRemove)
+bool RType::Server::Room::removeFromRoom(const Utils::MessageParsed_s &toRm)
 {
+    std::pair<std::string, int> toRemove(toRm.senderIp, toRm.senderPort);
     bool isFirst = false;
     if (this->_willBeDestroyed)
         return false;
@@ -174,11 +175,10 @@ bool RType::Server::Room::removeFromRoom(const std::pair<std::string, int> &toRe
             }
             {
                 std::unique_lock<std::mutex> lock(*this->_mutexQueue);
-                Utils::MessageParsed_s newMsg;
+                Utils::MessageParsed_s newMsg(toRm);
                 newMsg.msgType = playerDeconnected;
-                newMsg.senderIp = toRemove.first;
-                newMsg.senderPort = toRemove.second;
                 this->_toSendToGameLoop->push({it->second, newMsg});
+                this->notifyAllPlayer(newMsg);
             }
             this->_allPlayers.erase(it);
             return isFirst;
@@ -228,14 +228,21 @@ void RType::Server::Room::checkCrashed()
         return this->notifyAllPlayer(msg);
     }
     _actualPing = 0;
-    std::queue<std::pair<std::string, int>> playerDisconnected;
+    std::queue<std::pair<std::pair<std::string, int>, unsigned char>> playerDisconnected;
+    int cp = 0;
     for (auto &it : this->_playerOnline) {
         if (!it.second)
-            playerDisconnected.push(it.first);
+            playerDisconnected.push({it.first, cp});
         it.second = false;
+        ++cp;
     }
     while (!playerDisconnected.empty()) {
-        this->removeFromRoom(playerDisconnected.front());
+        Utils::MessageParsed_s msg;
+        msg.bytes[0] = this->_id;
+        msg.bytes[1] = static_cast<unsigned char>(std::get<3>(this->_gameLoop->getPlayerDetails(playerDisconnected.front().second)));
+        msg.senderPort = playerDisconnected.front().first.second;
+        msg.senderIp = playerDisconnected.front().first.first;
+        this->removeFromRoom(msg);
         playerDisconnected.pop();
     }
 }
@@ -275,7 +282,7 @@ void RType::Server::Room::sendEntityType(const Utils::MessageParsed_s &msg)
     this->_socket->send(newMsg);
 }
 
-std::tuple<unsigned short, unsigned short, unsigned short> RType::Server::Room::getPlayerDetails(unsigned char playerId)
+std::tuple<unsigned short, unsigned short, unsigned short, unsigned short> RType::Server::Room::getPlayerDetails(unsigned char playerId)
 {
     return this->_gameLoop->getPlayerDetails(playerId);
 }
@@ -283,9 +290,15 @@ std::tuple<unsigned short, unsigned short, unsigned short> RType::Server::Room::
 
 bool RType::Server::Room::removeFromRoom(unsigned short id)
 {
+    Utils::MessageParsed_s msg;
+    msg.bytes[0] = this->_id;
+    msg.bytes[1] = id;
     for (auto &it : this->_allPlayers)
-        if (it.second == id)
-            return this->removeFromRoom(it.first);
+        if (it.second == id) {
+            msg.senderIp = it.first.first;
+            msg.senderPort = it.first.second;
+            return this->removeFromRoom(msg);
+        }
     return false;
 }
 void RType::Server::Room::setEnemiesWaves(std::vector<std::map<Parser::Enemies, int>> waves)
