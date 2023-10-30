@@ -16,7 +16,7 @@
 
 class BydosSystem {
     public:
-        BydosSystem();
+        BydosSystem() {};
         ~BydosSystem() {};
         void updatePos(Bydos &b);
         void createShots(Bydos &b, const Position &playerPos, Core &core);

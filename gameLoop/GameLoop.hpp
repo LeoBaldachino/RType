@@ -27,7 +27,7 @@ namespace RType {
             /**
              * @brief Destroy the Game Loop object
              */
-            ~GameLoop();
+            ~GameLoop() {};
 
             /**
              * @brief Update game loop
@@ -36,23 +36,8 @@ namespace RType {
              * @return std::queue<Utils::MessageParsed_s> updated queue of messages
              */
             std::queue<Utils::MessageParsed_s> updateGameLoop(std::queue<std::pair<unsigned short, Utils::MessageParsed_s>> newMessages);
+            std::tuple<unsigned short, unsigned short, unsigned short> getPlayerDetails(unsigned char playerId);
         protected:
-            /**
-             * @brief Set the Position Entity From Msg object
-             * 
-             * @param msg message parsed
-             * @param id id of the entity
-             */
-            void setPositionEntityFromMsg(const Utils::MessageParsed_s &msg, unsigned short id);
-
-            /**
-             * @brief Spawn Entity From Msg object
-             * 
-             * @param msg message parsed
-             * @param id id of the entity
-             */
-            void spawnEntityFromMsg(const Utils::MessageParsed_s &msg, unsigned short id);
-
             /**
              * @brief Add Player object
              * 
@@ -78,6 +63,13 @@ namespace RType {
              * @brief Array of player ids
              */
             std::vector<unsigned short> _playerArray;
+            
+            /**
+             * @brief Set the Enemies Waves
+             * 
+             * @param waves 
+             */
+            void setEnemiesWaves(std::vector<std::map<Parser::Enemies, int>> waves) {};
         private : 
             /**
              * @brief Map of commands

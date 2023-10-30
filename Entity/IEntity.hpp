@@ -1,19 +1,18 @@
-/**
- * @file IEntity.hpp
- * @author EPITECH PROJECT, 2023
- * @brief File description
- */
+/*
+** EPITECH PROJECT, 2023
+** B-CPP-500-MLH-5-1-rtype-robin.denni
+** File description:
+** IEntity.hpp
+*/
 
 #pragma once
 #include <fstream>
 #include <iostream>
 #include <queue>
-#include <SFML/Graphics.hpp>
-#include <SFML/Window.hpp>
-#include <SFML/System.hpp>
 #include "../Components/Moveable.hpp"
 #include "../Components/Position.hpp"
 #include "../Visitor/IVisitor.hpp"
+#include "../Components/ClockTimer.hpp"
 
 #define SIZE_SCALE 2
 
@@ -73,14 +72,36 @@ class IEntity {
         virtual void setHasMoved(bool state) = 0;
 
         /**
-         * @brief Draw the entity
-         * @param window Window to draw on
-         */
-        virtual void drawEntity(std::unique_ptr<sf::RenderWindow> &window) = 0;
-
-        /**
          * @brief Get the type of the entity
          * @return unsigned char
          */
         virtual inline unsigned char getEntityType() = 0;
+
+        /**
+         * @brief Get the Entity Sprite Frame count
+         * 
+         * @return unsigned int 
+         */
+        virtual unsigned int getEntitySpriteFrame() = 0;
+
+        /**
+         * @brief Return if the position range of the entity and the temporisation, returns four 0 if no range
+         * 
+         * @param frame 
+         */
+        virtual std::vector<float> getEntityPositionRange() = 0;
+
+        /**
+         * @brief Set the Tempo State of the entity
+         * 
+         * @param state New tempo state
+         */
+        virtual void setTempoState(ClockTimer state) = 0;
+
+        /**
+         * @brief Get the Tempo State
+         * 
+         * @return ClockTimer 
+         */
+        virtual ClockTimer getTempoState() = 0;
 };

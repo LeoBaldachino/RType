@@ -7,7 +7,12 @@
 
 #include "PiercingShotEntity.hpp"
 
-PiercingShotEntity::PiercingShotEntity(Shoot &shoot) : _drawable("../Assets/piercingShot.png", 1), _shoot(shoot), _size(PIERCING_SHOT_X, PIERCING_SHOT_Y)
+PiercingShotEntity::PiercingShotEntity(Shoot &shoot) : 
+_shoot(shoot),
+_size(PIERCING_SHOT_X, PIERCING_SHOT_Y),
+_frameClock(100),
+_currentTempoState(getEntityPositionRange()[3]),
+_clockMove(MOVE_PIERCING_SHOT)
 {
 }
 
@@ -19,16 +24,6 @@ Shoot PiercingShotEntity::getShoot(void) const
 void PiercingShotEntity::setShoot(const Shoot &shoot)
 {
     this->_shoot = shoot;
-}
-
-Drawable PiercingShotEntity::getDrawable(void) const
-{
-    return (this->_drawable);
-}
-
-void PiercingShotEntity::setDrawable(const Drawable &drawable)
-{
-    this->_drawable = drawable;
 }
 
 Vector2d PiercingShotEntity::getSize(void)
@@ -70,13 +65,6 @@ void PiercingShotEntity::setPosition(const Position &position)
     this->_shoot.setOrigin(Vector2d(position.getX(), position.getY()));
 }
 
-void PiercingShotEntity::drawEntity(std::unique_ptr<sf::RenderWindow> &window)
-{
-    sf::Sprite sprite = this->_drawable.getSprite();
-    sprite.setPosition(this->_shoot.getOrigin().x, this->_shoot.getOrigin().y);
-    window->draw(sprite);
-}
-
 void PiercingShotEntity::accept(IVisitor &v, Core &core)
 {
     v.visitPiercingShot(*this, core);
@@ -91,4 +79,23 @@ bool PiercingShotEntity::getHasMoved(void)
 void PiercingShotEntity::setHasMoved(bool state)
 {
     this->_hasMoved = state;
+}
+
+unsigned int PiercingShotEntity::getEntitySpriteFrame()
+{
+    if (this->_frameClock.clockOk()) {
+        ++this->_spriteFrame;
+        this->_spriteFrame = this->_spriteFrame >= 4 ? 0 : this->_spriteFrame;
+    }
+    return (this->_spriteFrame);
+}
+
+void PiercingShotEntity::setTempoState(ClockTimer state)
+{
+    this->_currentTempoState = state;
+}
+
+ClockTimer PiercingShotEntity::getTempoState(void)
+{
+    return this->_currentTempoState;
 }

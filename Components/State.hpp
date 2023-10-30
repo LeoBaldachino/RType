@@ -1,8 +1,9 @@
-/**
- * @file State.hpp
- * @author EPITECH PROJECT, 2023
- * @brief State class definition
- */
+/*
+** EPITECH PROJECT, 2023
+** B-CPP-500-MLH-5-1-rtype-robin.denni
+** File description:
+** State.hpp
+*/
 
 #pragma once
 

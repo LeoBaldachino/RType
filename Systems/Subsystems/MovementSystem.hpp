@@ -9,14 +9,12 @@
 #include "../../Entity/IEntity.hpp"
 #include "../../Components/Moveable.hpp"
 #include "../../Components/Position.hpp"
-
+#include "../../Components/ClockTimer.hpp"
+#include <vector>
 
 class MovementSystem {
     public:
-        MovementSystem();
-        ~MovementSystem();
-
+        MovementSystem() {};
+        ~MovementSystem() {};
         void updatePosition(IEntity &entity);
-
-    private:
 };

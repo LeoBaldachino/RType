@@ -7,14 +7,6 @@
 
 #include "HitBox.hpp"
 
-HitBox::HitBox()
-{
-}
-
-HitBox::~HitBox()
-{
-}
-
 bool HitBox::entityIntersect(IEntity &first, IEntity &sec)
 {
     Vector2d sizeFirst = first.getSize();

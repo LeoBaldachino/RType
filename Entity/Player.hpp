@@ -1,21 +1,21 @@
-/**
- * @file Player.hpp
- * @author EPITECH PROJECT, 2023
- * @brief Player class definition
- */
+/*
+** EPITECH PROJECT, 2023
+** B-CPP-500-MLH-5-1-rtype-robin.denni
+** File description:
+** Player.hpp
+*/
 
 #pragma once
 #include "IEntity.hpp"
 #include "../Components/Shoot.hpp"
 #include "../Components/State.hpp"
-#include "../Components/Drawable.hpp"
 #include "../EntityTypes/EntityTypes.hpp"
 #include "../Components/Inputs.hpp"
 #include "../Components/Health.hpp"
 #include "../Components/ClockTimer.hpp"
 
-#define PLAYER_X 32 * SIZE_SCALE
-#define PLAYER_Y 14 * SIZE_SCALE
+#define PLAYER_X 106
+#define PLAYER_Y 98
 #define BASE_HEALTH 3
 #define READY_MOVE 3
 
@@ -45,12 +45,6 @@ class Player : public IEntity, public Health {
          * @return Shoot object
          */
         Shoot shoot() const;
-
-        /**
-         * @brief Move the player
-         * @param direction Direction of the movement
-         */
-        void move(Vector2d direction);
 
         /**
          * @brief Set the Position of the player
@@ -87,18 +81,6 @@ class Player : public IEntity, public Health {
          * @return Moveable object
          */
         Moveable getMoveable() const;
-
-        /**
-         * @brief Set the Drawable of the player
-         * @param drawable New drawable
-         */
-        void setDrawable(Drawable drawable);
-
-        /**
-         * @brief Get the Drawable of the player
-         * @return Drawable object
-         */
-        Drawable getDrawable() const;
 
         /**
          * @brief Set the Velocity of the player
@@ -149,12 +131,6 @@ class Player : public IEntity, public Health {
         int getShootGravity(void) const;
 
         /**
-         * @brief Draw the player entity
-         * @param window Window to draw on
-         */
-        void drawEntity(std::unique_ptr<sf::RenderWindow> &window);
-
-        /**
          * @brief Get the type of the entity
          * @return Type of the entity
          */
@@ -197,12 +173,39 @@ class Player : public IEntity, public Health {
          */
         inline bool isReady() {return this->_timer.clockOk();};
 
+        /**
+         * @brief Get the Entity Sprite Frame count
+         * 
+         * @return unsigned int 
+         */
+        unsigned int getEntitySpriteFrame();
+
+        /**
+         * @brief Return if the position range of the entity and the temporisation, returns four 0 if no range
+         * 
+         * @param frame 
+         */
+        std::vector<float> getEntityPositionRange() {return std::vector<float>{0, 0, 0, 0, 0, 0};}
+
+        /**
+         * @brief Set the Tempo State
+         * 
+         * @param state New tempo state
+         */
+        void setTempoState(ClockTimer state);
+
+        /**
+         * @brief Get the Tempo State
+         * 
+         * @return ClockTimer 
+         */
+        ClockTimer getTempoState(void);
+
         std::unique_ptr<Inputs> _inputs;
     private:
         State _state;
         Position _position;
         Moveable _movement;
-        Drawable _drawable;
         ClockTimer _timer;
         int _velocity;
         int _shootDmg = 10;
@@ -210,4 +213,7 @@ class Player : public IEntity, public Health {
         int _shootGravity = 0;
         Vector2d _size;
         bool _hasMoved = false;
+        unsigned int _spriteFrame = 0;
+        ClockTimer _frameClock;
+        ClockTimer _currentTempoState;
 };

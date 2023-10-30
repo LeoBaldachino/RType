@@ -7,19 +7,10 @@
 
 #include "../includes/CoreServer.hpp"
 
-bool runServer = true;
-std::pair<std::string, int> ipPortServer = {};
 
 void SigIntHandler(int signal_num)
 {
-    RType::Utils::SocketHandler socket(ipPortServer.first, ipPortServer.second + 1, false);
-    RType::Utils::MessageParsed_s msg;
-    msg.msgType = RType::serverStop;
-    msg.senderIp = ipPortServer.first;
-    msg.senderPort = ipPortServer.second;
-    socket.send(msg);
-    runServer = false;
-    return;
+    exit(0);
 }
 
 RType::CoreServer::CoreServer(int ar, char **av)
@@ -34,14 +25,20 @@ RType::CoreServer::CoreServer(int ar, char **av)
     }
     if (ar < 3)
         throw std::invalid_argument("Not enough arguments");
-    int port = std::atoi(av[2]);
+    int port = std::atoi(av[1]);
     if (port < 100)
         throw std::invalid_argument("Port is not valid");
-    this->_socket = std::make_unique<Utils::SocketHandler>((std::string(av[1]) == "localhost" ? "127.0.0.1" : av[1]), port, true);
+    this->_socket = std::make_unique<Utils::SocketHandler>((std::string("127.0.0.1")), port, std::list<int>({entityType, playerPing, newPlayerConnected, givePlayerId, destroyedRoom, serverStop, entityType, removeEntity, playerDeconnected, newRoomIsCreated, playerGetId, givePlayerId}));
+    Parser parser(av[2]);
+    this->_music = parser.getMusic();
+    this->_waves = parser.getWaves();
+    this->_nextLevel = parser.getNextLevel();
+    this->_parallaxIndex = parser.getParallax();
     this->_threadPool = std::make_unique<Server::ThreadPool>(std::thread::hardware_concurrency() - 1);
-    ipPortServer = this->_socket->getIpAndPort();
     this->_threadPool->InitThreadPool();
-    std::signal(SIGINT, SigIntHandler);
+    #ifdef __unix__
+        std::signal(SIGINT, SigIntHandler);
+    #endif
     this->run();
 }
 
@@ -53,7 +50,7 @@ RType::CoreServer::~CoreServer()
 
 void RType::CoreServer::run()
 {
-    while (runServer) {
+    while (1) {
         RType::Utils::MessageParsed_s tmpMsg = this->_socket->receive();
         if (tmpMsg.msgType == cannotRead)
             continue;
@@ -76,20 +73,28 @@ void RType::CoreServer::run()
 
 void RType::CoreServer::threadMethod(const Utils::MessageParsed_s &msg)
 {
-    if (msg.msgType == newPlayerConnected)
-        return this->connectToRoom(msg);
-    if (msg.msgType == newRoomIsCreated)
-        return this->newRoomCreated(msg);
-    if (msg.msgType == getListOfRooms)
-        return this->getRoomList(msg);
-    if (msg.msgType == playerDeconnected)
-        return this->getOutFromRoom(msg);
+    switch (msg.msgType)
+    {
+        case newPlayerConnected:
+            return this->connectToRoom(msg);
+        case newRoomIsCreated :
+            return this->newRoomCreated(msg);
+        case getListOfRooms :
+            return this->getRoomList(msg);
+        case playerDeconnected :
+            return this->getOutFromRoom(msg);
+        case RType::getRoomMembers :
+            return this->getRoomMembers(msg);
+        case RType::getPlayerInfos :
+            return this->getPlayerDetails(msg);
+        case RType::kickPlayer :
+            return this->kickPlayer(msg);
+    }
     for (auto &it : this->_rooms)
         if (it->isInRoom({msg.senderIp, msg.senderPort})) {
             it->sendMessageToRoom(msg);
             return;
         }
-    std::unique_lock<std::mutex> lock(this->_mutex);
     std::cerr << "This user is in no rooms" << std::endl;
 }
 
@@ -99,8 +104,6 @@ void RType::CoreServer::newRoomCreated(const Utils::MessageParsed_s &msg)
         if (it->getId() == msg.bytes[0] || it->isInRoom({msg.senderIp, msg.senderPort})) {
             Utils::MessageParsed_s newMsg;
             newMsg.msgType = illegalAction;
-            //need to set the id of the object
-            //newMsg.byte[0];newMsg.bytes[1]
             newMsg.bytes[0] = 1;
             newMsg.bytes[1] = 2;
             newMsg.bytes[2] = newRoomIsCreated;
@@ -112,7 +115,7 @@ void RType::CoreServer::newRoomCreated(const Utils::MessageParsed_s &msg)
         }
     std::unique_lock<std::mutex> lock(this->_mutex);
     std::cerr << "Team " << static_cast<int>(msg.bytes[0]) << " is created !" << std::endl;
-    this->_rooms.push_back(std::make_unique<Server::Room>(msg.bytes[0], Server::ROOM_MAX_SIZE, this->_socket->getInstance()));
+    this->_rooms.push_back(std::make_unique<Server::Room>(msg.bytes[0], Server::ROOM_MAX_SIZE, this->_socket->getInstance(), this->_waves));
     this->_rooms.back()->addToRoom({msg.senderIp, msg.senderPort});
     return;
 }
@@ -132,8 +135,6 @@ void RType::CoreServer::getOutFromRoom(const Utils::MessageParsed_s &msg)
     std::cout << "No rooms with this id" << std::endl;
     Utils::MessageParsed_s newMsg;
     newMsg.msgType = illegalAction;
-    //need to set the id of the object
-    //newMsg.byte[0];newMsg.bytes[1]
     newMsg.bytes[0] = 1;
     newMsg.bytes[1] = 2;
     newMsg.bytes[2] = playerDeconnected;
@@ -145,6 +146,7 @@ void RType::CoreServer::getOutFromRoom(const Utils::MessageParsed_s &msg)
 
 void RType::CoreServer::getRoomList(const Utils::MessageParsed_s &msg)
 {
+    std::cout << "Get room list..." << std::endl;
     Utils::MessageParsed_s newMsg = msg;
     newMsg.msgType = listOfRooms;
     for (auto &it : this->_rooms) {
@@ -159,8 +161,6 @@ void RType::CoreServer::connectToRoom(const Utils::MessageParsed_s &msg)
 {
     Utils::MessageParsed_s newMsg;
     newMsg.msgType = illegalAction;
-    //need to set the id of the object
-    //newMsg.byte[0];newMsg.bytes[1]
     newMsg.bytes[0] = 1;
     newMsg.bytes[1] = 2;
     newMsg.bytes[2] = newPlayerConnected;
@@ -183,4 +183,53 @@ void RType::CoreServer::connectToRoom(const Utils::MessageParsed_s &msg)
             };
             return;
         }
+}
+
+
+void RType::CoreServer::getRoomMembers(const Utils::MessageParsed_s &msg)
+{
+    Utils::MessageParsed_s newMsg(msg);
+    for (auto &it : this->_rooms)
+        if (it->getId() == msg.getFirstShort()) {
+            newMsg.msgType = sendRoomMembers;
+            unsigned char size = it->getNumberOfPlayer();
+            for (int i = 0; i < size; ++i)
+                newMsg.bytes[i] = i;
+            newMsg.bytes[size] = 255;
+            return this->_socket->send(newMsg);
+        }
+    newMsg.msgType = illegalAction;
+    newMsg.bytes[3] = RType::getRoomMembers;
+    return this->_socket->send(newMsg);
+}
+
+void RType::CoreServer::getPlayerDetails(const Utils::MessageParsed_s &msg)
+{
+    Utils::MessageParsed_s newMsg(msg);
+    for (auto &it : this->_rooms)
+        if (it->getId() == msg.getFirstShort()) {
+            newMsg.msgType = playerDetails;
+            auto details = it->getPlayerDetails(msg.bytes[3]);
+            newMsg.setFirstShort(std::get<0>(details));
+            newMsg.setSecondShort(std::get<1>(details));
+            newMsg.setThirdShort(std::get<2>(details));
+            return this->_socket->send(newMsg);
+        }
+    newMsg.msgType = illegalAction;
+    newMsg.bytes[3] = RType::getPlayerInfos;
+    return this->_socket->send(newMsg); 
+}
+
+void RType::CoreServer::kickPlayer(const Utils::MessageParsed_s &msg)
+{
+    Utils::MessageParsed_s newMsg(msg);
+    for (auto &it : this->_rooms)
+        if (it->getId() == msg.getFirstShort()) {
+            if (!it->removeFromRoom(msg.bytes[3]))
+                break;
+            return;
+        }
+    newMsg.msgType = illegalAction;
+    newMsg.bytes[3] = RType::kickPlayer;
+    return this->_socket->send(newMsg); 
 }

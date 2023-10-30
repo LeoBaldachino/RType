@@ -1,20 +1,21 @@
-/**
- * @file PiercingShotEntity.hpp
- * @author EPITECH PROJECT, 2023
- * @brief PiercingShotEntity class definition
- */
+/*
+** EPITECH PROJECT, 2023
+** B-CPP-500-MLH-5-1-rtype-robin.denni
+** File description:
+** PiercingShotEntity.hpp
+*/
 
 #pragma once
 #include <fstream>
 #include <iostream>
 #include "../Components/Shoot.hpp"
-#include "../Components/Drawable.hpp"
+#include "../Components/ClockTimer.hpp"
 #include "IEntity.hpp"
 #include "../EntityTypes/EntityTypes.hpp"
 
-#define PIERCING_SHOT_X 80
-#define PIERCING_SHOT_Y 16
-
+#define PIERCING_SHOT_X 55
+#define PIERCING_SHOT_Y 50
+#define MOVE_PIERCING_SHOT 2
 /**
  * @class PiercingShotEntity
  * @brief Class representing a piercing shot entity
@@ -40,12 +41,6 @@ class PiercingShotEntity : public IEntity {
         void accept(IVisitor &v, Core &core);
 
         /**
-         * @brief Draw entity on window
-         * @param window SFML RenderWindow
-         */
-        void drawEntity(std::unique_ptr<sf::RenderWindow> &window);
-
-        /**
          * @brief Get shoot component
          * @return Shoot component
          */
@@ -56,18 +51,6 @@ class PiercingShotEntity : public IEntity {
          * @param shoot New shoot component
          */
         void setShoot(const Shoot &shoot);
-
-        /**
-         * @brief Get drawable component
-         * @return Drawable component
-         */
-        Drawable getDrawable(void) const;
-
-        /**
-         * @brief Set drawable component
-         * @param drawable New drawable component
-         */
-        void setDrawable(const Drawable &drawable);
 
         /**
          * @brief Get size of entity
@@ -124,9 +107,45 @@ class PiercingShotEntity : public IEntity {
          */
         void setHasMoved(bool state);
 
+        /**
+         * @brief Get the Entity Sprite Frame count
+         * 
+         * @return unsigned int 
+         */
+        unsigned int getEntitySpriteFrame();
+
+        /**
+         * @brief Return if the position range of the entity and the temporisation, returns four 0 if no range
+         * 
+         * @param frame 
+         */
+        std::vector<float> getEntityPositionRange() {return std::vector<float>{0, 0, 0, 0, 0, 0};};
+
+        /**
+         * @brief Set the Tempo State
+         * 
+         * @param state New tempo state
+         */
+        void setTempoState(ClockTimer state);
+
+        /**
+         * @brief Get the Tempo State
+         * 
+         * @return ClockTimer 
+         */
+        ClockTimer getTempoState(void);
+
+        /**
+         * @brief Check if the entity is ready to move
+         * @return true if the entity is ready to move, false otherwise
+         */
+        inline bool readyToMove() {return this->_clockMove.clockOk();};
     private:
         Shoot _shoot;
-        Drawable _drawable;
         Vector2d _size;
         bool _hasMoved = false;
+        unsigned int _spriteFrame = 0;
+        ClockTimer _frameClock;
+        ClockTimer _clockMove;
+        ClockTimer _currentTempoState;
 };

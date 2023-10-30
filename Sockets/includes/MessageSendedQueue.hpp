@@ -10,21 +10,25 @@
 #include <chrono>
 #include <list>
 #include "MessageParsed.hpp"
-#define MAX_SIZE_MSG_QUEUE 50
-#define MESSAGE_DELAY 5
+#define MAX_SIZE_MSG_QUEUE 200
+
 
 namespace RType {
     class MessageSendedQueue {
         public:
-            MessageSendedQueue(std::list<int> importantMessages);
-            ~MessageSendedQueue();
+            MessageSendedQueue(const std::list<int> &importantMessages);
+            ~MessageSendedQueue() {};
             void addMessage(const Utils::MessageParsed_s &msg);
-            Utils::MessageParsed_s getMessage();
+            Utils::MessageParsed_s getMessage(bool &isImportant);
             bool readyToGetMessage();
+            bool isImportant(const Utils::MessageParsed_s &msg);
+            inline bool empty() const {return (this->_queueImportantMessages.empty() && this->_queueMessage.empty());};
+            inline int getMessageDelay() const{return this->_messageDelay;};
         private:
             std::list<Utils::MessageParsed_s> _queueMessage;
             std::list<Utils::MessageParsed_s> _queueImportantMessages;
             std::chrono::steady_clock::time_point _delay;
-            const std::list<int> _importantMessages;
+            std::list<int> _importantMessages;
+            int _messageDelay = 100;
     };
 }

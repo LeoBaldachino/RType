@@ -1,12 +1,9 @@
-/**
- * @file SocketHandler.hpp
- * @brief SocketHandler class definition
- * 
- * This file contains the SocketHandler class which is used to manage the socket connections.
- * 
- * @author EPITECH PROJECT, 2023
- * @version B-CPP-500-MLH-5-1-rtype-robin.denni
- */
+/*
+** EPITECH PROJECT, 2023
+** B-CPP-500-MLH-5-1-rtype-robin.denni
+** File description:
+** SocketHandler.hpp
+*/
 
 #pragma once
 #include <boost/asio.hpp>
@@ -14,7 +11,9 @@
 #include <boost/array.hpp>
 #include <tuple>
 #include <mutex>
+#include <thread>
 #include "MessageSendedQueue.hpp"
+#include "PacketTracker.hpp"
 
 namespace RType {
     namespace Utils {
@@ -32,7 +31,7 @@ namespace RType {
              * @param ipAdress The IP address to connect to
              * @param port The port to connect to
              */
-                SocketHandler(const std::string &ipAdress, int port, bool check);
+                SocketHandler(const std::string &ipAdress, int port, const std::list<int> &importantMessagesCode);
                 /**
                  * @brief copy constructor of the socketHandler
                  * 
@@ -68,7 +67,9 @@ namespace RType {
                  * @return const std::pair<std::string, int> ip, port
                  */
                 const std::pair<std::string, int> &getIpAndPort() const;
-            protected:
+            private:
+                void send();
+                void senderThread();
                 boost::asio::io_service _ioService;
                 std::shared_ptr<boost::asio::ip::udp::socket> _socket;
                 boost::asio::ip::udp::endpoint _Endpoint;
@@ -77,6 +78,9 @@ namespace RType {
                 std::shared_ptr<std::mutex> _receiverMutex;
                 std::shared_ptr<MessageSendedQueue> _queueMsg;
                 std::pair<std::string, int> _ipPort;
+                std::shared_ptr<PacketTracker> _packetTracker;
+                std::shared_ptr<std::thread> _senderThread;
+                std::shared_ptr<bool> _threadOpen;
         };
     }
 }

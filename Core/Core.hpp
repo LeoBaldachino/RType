@@ -1,8 +1,9 @@
-/**
- * @file Core.hpp
- * @author EPITECH PROJECT, 2023
- * @brief Core class definition
- */
+/*
+** EPITECH PROJECT, 2023
+** B-CPP-500-MLH-5-1-rtype-robin.denni
+** File description:
+** Core.hpp
+*/
 
 #pragma once
 #include "../Entity/Player.hpp"
@@ -86,6 +87,13 @@ class Core {
          */
         inline std::queue<unsigned short> getToErase() {return this->_erase;};
 
+        /**
+         * @brief Get the  id of the entity
+         * 
+         * @param entity the entity you want to know the id
+         * @return unsigned short the id
+         */
+        unsigned short getEntityId(IEntity &entity);
     private:
         /**
          * @brief Queue of present indices

@@ -1,14 +1,14 @@
-/**
- * @file Bydos.hpp
- * @author EPITECH PROJECT, 2023
- * @brief Bydos class definition
- */
+/*
+** EPITECH PROJECT, 2023
+** B-CPP-500-MLH-5-1-rtype-robin.denni
+** File description:
+** Bydos.hpp
+*/
 
 #pragma once
 #include "IEntity.hpp"
 #include "../Components/State.hpp"
 #include "../Systems/Subsystems/AIShoot.hpp"
-#include "../Components/Drawable.hpp"
 #include "../Entity/Player.hpp"
 #include "../EntityTypes/EntityTypes.hpp"
 #include "../Components/ClockTimer.hpp"
@@ -16,8 +16,8 @@
 
 #define SHOOT_SPEED 3000
 #define MOVE_SPEED 3
-#define BYDOS_X 21 * SIZE_SCALE
-#define BYDOS_Y 24 * SIZE_SCALE
+#define BYDOS_X 140 * 0.8
+#define BYDOS_Y 132 * 0.8
 #define BYDOS_HEALTH 2
 
 /**
@@ -67,18 +67,6 @@ class Bydos : public IEntity, public Health {
          * @return State
          */
         State getState() const;
-
-        /**
-         * @brief Sets the drawable
-         * @param drawable Drawable
-         */
-        void setDrawable(Drawable drawable);
-
-        /**
-         * @brief Gets the drawable
-         * @return Drawable
-         */
-        Drawable getDrawable() const;
 
         /**
          * @brief Sets the velocity
@@ -154,12 +142,6 @@ class Bydos : public IEntity, public Health {
         Vector2d getSize(void);
 
         /**
-         * @brief Draws the entity
-         * @param window Window
-         */
-        void drawEntity(std::unique_ptr<sf::RenderWindow> &window);
-
-        /**
          * @brief Gets the entity type
          * @return unsigned char
          */
@@ -188,12 +170,39 @@ class Bydos : public IEntity, public Health {
          * @param state State
          */
         void setHasMoved(bool state);
+        
+        /**
+         * @brief Get the Entity Sprite Frame count
+         * 
+         * @return unsigned int 
+         */
+        unsigned int getEntitySpriteFrame();
+
+        /**
+         * @brief Return if the position range of the entity and the temporisation, returns four 0 if no range
+         * 
+         * @param frame 
+         */
+        std::vector<float> getEntityPositionRange();
+
+        /**
+         * @brief Set the Tempo State
+         * 
+         * @param state New tempo state
+         */
+        void setTempoState(ClockTimer state);
+
+        /**
+         * @brief Get the Tempo State
+         * 
+         * @return ClockTimer 
+         */
+        ClockTimer getTempoState(void);
 
     private:
         State _state;
         Position _position;
         Moveable _movement;
-        Drawable _drawable;
         int _velocity;
         int _shootDmg = 10;
         int _shootVelocity = 5;
@@ -202,4 +211,7 @@ class Bydos : public IEntity, public Health {
         bool _hasMoved = false;
         ClockTimer _readyShoot;
         ClockTimer _readyMove;
+        unsigned int _spriteFrame = 0;
+        ClockTimer _frameClock;
+        ClockTimer _currentTempoState;
 };

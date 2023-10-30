@@ -7,8 +7,10 @@
 #pragma once
 #include "../GameLoop.hpp"
 #include "../../Visitor/SystemVisitor.hpp"
-#define REFRESH_ALL_ENTITIES 5
-#define REFRESH_PLAYERS 500
+#define TARGET_FPS 30
+#define REFRESH_ALL_ENTITIES 1000 / 100
+#define STATUS_ALL_ENTITES 1000 / 70
+#define REFRESH_PLAYERS 1000
 
 namespace RType {
     /**
@@ -27,7 +29,7 @@ namespace RType {
             /**
              * @brief Destroy the RTypeGameLoop object
              */
-            ~RTypeGameLoop();
+            ~RTypeGameLoop() {};
 
             /**
              * @brief Get entity type
@@ -55,6 +57,10 @@ namespace RType {
              */
             void handleBydos(std::queue<Utils::MessageParsed_s> &toReturn);
 
+            void handleTourre(std::queue<Utils::MessageParsed_s> &toReturn);
+
+            void handleCoin(std::queue<Utils::MessageParsed_s> &toReturn);
+
             /**
              * @brief Add or remove entity
              * @param toReturn Queue of messages to return
@@ -74,6 +80,8 @@ namespace RType {
              */
             void checkBydosStatus(std::queue<Utils::MessageParsed_s> &toReturn);
 
+            void checkTourreStatus(std::queue<Utils::MessageParsed_s> &toReturn);
+
             /**
              * @brief Send refresh all entities
              * @param toReturn Queue of messages to return
@@ -86,10 +94,28 @@ namespace RType {
              */
             void sendRefreshPlayers(std::queue<Utils::MessageParsed_s> &toReturn);
 
+            /**
+             * @brief Handle enemies' waves
+             * 
+             * @param toReturn 
+             */
+            void handleWaves(std::queue<Utils::MessageParsed_s> &toReturn);
+
+            /**
+             * @brief Set the Enemies Waves
+             * 
+             * @param waves 
+             */
+            void setEnemiesWaves(std::vector<std::map<Parser::Enemies, int>> waves);
+            void refreshStatus(std::queue<Utils::MessageParsed_s> &toReturn);
+            void sendNbOfEntites(std::queue<Utils::MessageParsed_s> &toReturn);
             SystemVisitor v;
             std::vector<unsigned short> _bydos;
+            std::vector<unsigned short> _tourre;
+            std::vector<unsigned short> _coin;
             std::chrono::steady_clock::time_point _refreshAllEntities;
             std::chrono::steady_clock::time_point _refreshPlayers;
+            std::vector<std::map<Parser::Enemies, int>> _waves;
+            std::chrono::steady_clock::time_point _refreshStatus;
     };
-
 }
