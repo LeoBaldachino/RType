@@ -7,13 +7,13 @@
 
 #pragma once
 #include "IVisitor.hpp"
-#include "../Systems/PlayerSystem.hpp"
-#include "../Systems/BydosSystem.hpp"
-#include "../Systems/TourreSystem.hpp"
+#include "../ECS/Systems/PlayerSystem.hpp"
+#include "../ECS/Systems/BydosSystem.hpp"
+#include "../ECS/Systems/TourreSystem.hpp"
 #include "../EntityTypes/EntityTypes.hpp"
-#include "../Components/ClockTimer.hpp"
-#include "../Systems/TourreSystem.hpp"
-#include "../Systems/Subsystems/PredictShoot.hpp"
+#include "../ECS/Components/ClockTimer.hpp"
+#include "../ECS/Systems/TourreSystem.hpp"
+#include "../ECS/Systems/Subsystems/PredictShoot.hpp"
 
 class PredictVisitor : public IVisitor {
     public:

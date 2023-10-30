@@ -7,13 +7,13 @@
 
 #pragma once
 #include "IVisitor.hpp"
-#include "../Systems/PlayerSystem.hpp"
-#include "../Systems/BydosSystem.hpp"
-#include "../Systems/TourreSystem.hpp"
-#include "../Systems/GenieSystem.hpp"
-#include "../Systems/CoinSystem.hpp"
+#include "../ECS/Systems/PlayerSystem.hpp"
+#include "../ECS/Systems/BydosSystem.hpp"
+#include "../ECS/Systems/TourreSystem.hpp"
+#include "../ECS/Systems/GenieSystem.hpp"
+#include "../ECS/Systems/CoinSystem.hpp"
 #include "../EntityTypes/EntityTypes.hpp"
-#include "../Components/ClockTimer.hpp"
+#include "../ECS/Components/ClockTimer.hpp"
 
 class SystemVisitor : public IVisitor {
     public:

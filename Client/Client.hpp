@@ -8,7 +8,7 @@
 #include "Texture/Texture.hpp"
 #include "Parallax/Parallax.hpp"
 #include "Parallax/ParallaxGnome.hpp"
-#include "../Entity/Player.hpp"
+#include "../ECS/Entity/Player.hpp"
 #include "../Core/Core.hpp"
 #include "../EntityTypes/EntityTypes.hpp"
 #include "../Visitor/SystemVisitor.hpp"
