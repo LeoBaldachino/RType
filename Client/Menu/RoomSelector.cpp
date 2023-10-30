@@ -57,7 +57,7 @@ void RType::RoomSelector::handleMessage(const Utils::MessageParsed_s &msg)
         this->_sendedMessage = true;
     }, 
     "../Assets/buttonTest.png", "Room :" + std::to_string(static_cast<int>(roomId)) + "\n" + std::to_string(static_cast<int>(msg.bytes[1])) + " / " + std::to_string(static_cast<int>(msg.bytes[2])), 
-    sf::Vector2f(500.0, 20.0 + 110.0 * this->_currentRoomList.size()), sf::IntRect(0, 0, 150, 100), 100, this->_currentRoomList.size() + 1);
+    sf::Vector2f(20.0 + 110.0 * this->_currentRoomList.size(), 300.0), sf::IntRect(0, 0, 150, 100), 100, this->_currentRoomList.size() + 1);
     this->_currentRoomList.push_back(roomId);
 }
 
