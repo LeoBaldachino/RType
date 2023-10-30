@@ -36,7 +36,9 @@ RType::CoreServer::CoreServer(int ar, char **av)
     this->_parallaxIndex = parser.getParallax();
     this->_threadPool = std::make_unique<Server::ThreadPool>(std::thread::hardware_concurrency() - 1);
     this->_threadPool->InitThreadPool();
-    std::signal(SIGINT, SigIntHandler);
+    #ifdef __unix__
+        std::signal(SIGINT, SigIntHandler);
+    #endif
     this->run();
 }
 

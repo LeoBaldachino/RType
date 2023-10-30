@@ -20,6 +20,7 @@ namespace RType {
             void displayButtons(std::unique_ptr<sf::RenderWindow> &window);
             void hoverButtons(const sf::Vector2i &mousePos);
             void clickButtons(const sf::Vector2i &mousePos);
+            inline size_t getLength() const {return this->_buttons.size();};
         private:
             std::unordered_map<unsigned int, std::unique_ptr<Button>> _buttons;
             sf::Font _buttonsFont;

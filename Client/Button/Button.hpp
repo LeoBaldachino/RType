@@ -23,7 +23,7 @@ namespace RType {
             void checkHover(const sf::Vector2i &pos);
             void display(std::unique_ptr<sf::RenderWindow> &window);
         private:
-            const std::function<void()>& _handler;
+            const std::function<void()> _handler;
             const std::string _path;
             const std::string _text;
             const sf::Vector2f _pos;

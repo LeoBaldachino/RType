@@ -20,6 +20,7 @@
 #include <SFML/Audio.hpp>
 #include "Prediction/Prediction.hpp"
 #include "Button/ButtonList.hpp"
+#include "Menu/Menu.hpp"
 
 #define GET_ID_LIMIT_TIME 1
 
@@ -86,6 +87,7 @@ namespace RType {
             void sendInputs();
             void syncNbOfEntities(const Utils::MessageParsed_s &msg);
             void setLifeBars();
+            void displayMenu();
             std::unique_ptr<std::thread> _infosThread;
             std::shared_ptr<Utils::SocketHandler> _socket;
             std::unique_ptr<sf::RenderWindow> _window;
@@ -115,7 +117,7 @@ namespace RType {
             bool _mouseClicked;
             Parallax _parallax;
             ParallaxGnome _parallaxGnome;
-
+            Menu _menu;
             unsigned int _level = 2;
 
     };

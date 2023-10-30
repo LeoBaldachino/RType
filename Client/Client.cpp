@@ -35,7 +35,7 @@ _parallaxGnome(_texture)
             {Events::Right, false},};
     this->_sendInputTime = std::chrono::steady_clock::now();
     this->_lifeBar = std::make_unique<LifeBar>();
-    this->_actualScreen = Screens::game;
+    this->_actualScreen = Screens::menu;
     this->_gameAsStarted = false;
     this->_inputs = {};
     this->_mouseClicked = false;
@@ -144,6 +144,9 @@ void RType::Client::run()
         case game:
             this->gameLoop();
             break;
+        case menu:
+            this->displayMenu();
+            break;
         }
     }
 }
@@ -152,6 +155,10 @@ void RType::Client::infosThread()
 {
     while (this->_threadIsOpen) {
         Utils::MessageParsed_s msg = this->_socket->receive();
+        if (this->_actualScreen == menu) {
+            this->_menu.addMessage(msg);
+            continue;
+        }
         auto it = this->_commands.find(msg.msgType);
         if (it == this->_commands.end())
             continue;
@@ -442,7 +449,7 @@ sf::Sprite RType::Client::getSpriteFromEntity(std::shared_ptr<IEntity> entity, u
 void RType::Client::gameLoop()
 {
     if (!this->_gameAsStarted) {
-        this->createRoom(1);
+        // this->createRoom(1);
         this->_gameAsStarted = true;
     }
     auto msgKeyPressed = this->buildEmptyMsg(keyPressed);
@@ -466,9 +473,6 @@ void RType::Client::gameLoop()
     // std::cout << "Entities size is " << this->_entities._entities.size() << std::endl;
     lock.unlock();
     auto mousePos = sf::Mouse::getPosition(*this->_window);
-    std::cout << "Old pos " << mousePos.x << " y " << mousePos.y << std::endl;
-    mousePos = static_cast<sf::Vector2i>(this->_window->mapCoordsToPixel(static_cast<sf::Vector2f>(mousePos)));
-    std::cout << "new pos " << mousePos.x << " y " << mousePos.y << std::endl;
     this->_buttonList.hoverButtons(mousePos);
     if (this->_mouseClicked)
         this->_buttonList.clickButtons(mousePos);
@@ -544,4 +548,21 @@ void RType::Client::setLifeBars()
             this->_lifeBar->setLifeBarToPlayer(playerCasted);    
         }
     }
+}
+
+void RType::Client::displayMenu()
+{
+    this->handleInputs();
+    this->_window->clear(sf::Color::Black);
+    this->_menu.displayMenu(this->_window, this->_mouseClicked);
+    if (this->_menu.needToSendMessage()) {
+        std::cout << "message sended !" << std::endl;
+        auto msg = this->_menu.sendMsg();
+        msg.senderIp = this->_serverIp;
+        msg.senderPort = this->_serverPort;
+        this->_socket->send(msg);
+    }
+    if (this->_menu.closeMenu())
+        this->_actualScreen = game;
+    this->_window->display();
 }
