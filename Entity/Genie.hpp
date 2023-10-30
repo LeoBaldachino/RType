@@ -18,7 +18,7 @@
 #define MOVE_SPEED 3
 #define GENIE_X 500 * SIZE_SCALE
 #define GENIE_Y 541 * SIZE_SCALE
-#define GENIE_HEALTH 2
+#define GENIE_HEALTH 100
 
 /**
  * @brief Class representing Genie in the game

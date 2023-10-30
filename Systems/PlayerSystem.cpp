@@ -44,6 +44,7 @@ void PlayerSystem::checkCollision(Player &p, IEntity &entity, Core &core)
             p.addLife();
         if (entity.getEntityType() != RType::coin && p.getLifes() >= 1)
             p.removeOneLife();
-        core.removeEntityLater(entity);
+        if (entity.getEntityType() != RType::genie)
+            core.removeEntityLater(entity);
     }
 }

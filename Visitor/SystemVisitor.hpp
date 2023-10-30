@@ -24,7 +24,8 @@ class SystemVisitor : public IVisitor {
             this->_playerSystem.createShots(p, core);
             p._inputs->unlockInputs();
             for (auto it : core._entities)
-                if (it.second->getEntityType() == RType::bydos || it.second->getEntityType() == RType::bydosShoot || it.second->getEntityType() == RType::coin)
+                if (it.second->getEntityType() == RType::bydos || it.second->getEntityType() == RType::bydosShoot
+                || it.second->getEntityType() == RType::coin || it.second->getEntityType() == RType::genie)
                     this->_playerSystem.checkCollision(p, *it.second, core);
             this->_lastPlayerPos = p.getPosition();
         }
@@ -49,14 +50,17 @@ class SystemVisitor : public IVisitor {
                 auto entityType = it.second->getEntityType();
             }
         };
-        void visitGenie(Genie &t, Core &core) {
-            if (t.getLifes() == 0)
-                return (void)core.removeEntityLater(t);
-            this->_genieSystem.updatePos(t);
+        void visitGenie(Genie &g, Core &core) {
+            if (g.getLifes() == 0)
+                return (void)core.removeEntityLater(g);
+            this->_genieSystem.updatePos(g);
             for (auto it : core._entities) {
                 auto entityType = it.second->getEntityType();
+                if (entityType == RType::playerShoot)
+                    this->_genieSystem.checkCollision(g, *it.second, core, false);
+                if (entityType == RType::percingShoot)
+                    this->_genieSystem.checkCollision(g, *it.second, core, true);
             }
-            // this->_tourreSystem.createShots(t, this->_lastPlayer, core);
         };
         void visitShot(ShotEntity &s, Core &core) {
             this->_shotSystem.updatePos(s);
