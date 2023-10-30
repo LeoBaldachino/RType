@@ -259,11 +259,11 @@ void RType::Client::moveEntity(const Utils::MessageParsed_s &msg)
 void RType::Client::quitRoom(const Utils::MessageParsed_s &msg)
 {
     std::unique_lock<std::mutex> lock(*this->_mutex);
-    (void)msg;
     if (msg.msgType == playerDeconnected && (msg.bytes[1] != this->_actualId)) {
         this->_popUp.setText("Player " + std::to_string(static_cast<int>(msg.bytes[1])) + " has quitted the room.");
         return (void)this->_entities.removeEntity(msg.bytes[1]);
     }
+    this->_popUp.setText("You have quitted/kicked from your Room");
     this->_actualId = -1;
     this->_quittedRoom = true;
     this->_actualScreen = menu;

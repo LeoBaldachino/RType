@@ -16,23 +16,23 @@ To run this project, you will need the following installed on your system:
 
 To start the server and the client, navigate to the project directory and run the following commands:
 
-- Create the build folder
+- Create the build folder and build it
 
 ```sh
-mkdir build ; cd build
+./build.sh
 ```
 
-- Compile the project
+- go the folder
 
 ```sh
-cmake .. && make
+cd build
 ```
 
 - Run the executables !
 
 For the server
 ```sh
-./r-type_server [IP] [PORT]
+./r-type_server [PORT] [CONFIG FILE(.cfg file)]
 ```
 
 For the client
