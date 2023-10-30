@@ -95,7 +95,6 @@ void RType::CoreServer::threadMethod(const Utils::MessageParsed_s &msg)
             it->sendMessageToRoom(msg);
             return;
         }
-    std::unique_lock<std::mutex> lock(this->_mutex);
     std::cerr << "This user is in no rooms" << std::endl;
 }
 
@@ -147,6 +146,7 @@ void RType::CoreServer::getOutFromRoom(const Utils::MessageParsed_s &msg)
 
 void RType::CoreServer::getRoomList(const Utils::MessageParsed_s &msg)
 {
+    std::cout << "Get room list..." << std::endl;
     Utils::MessageParsed_s newMsg = msg;
     newMsg.msgType = listOfRooms;
     for (auto &it : this->_rooms) {

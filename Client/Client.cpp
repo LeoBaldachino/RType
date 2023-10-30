@@ -42,7 +42,7 @@ _parallaxGnome(_texture)
     this->_serverIp = av[1];
     this->_serverPort = std::stoi(av[2]);
     this->_mutex = std::make_unique<std::mutex>();
-    this->_buttonList.addButtons([this]{std::cout << "Hello world !" << std::endl;}, "../Assets/buttonTest.png", "Hello !", sf::Vector2f(10.0, 10.0), sf::IntRect(0, 0, 150, 100), 100, 0);
+    // this->_buttonList.addButtons([this]{std::cout << "Hello world !" << std::endl;}, "../Assets/buttonTest.png", "Hello !", sf::Vector2f(10.0, 10.0), sf::IntRect(0, 0, 150, 100), 100, 0);
     this->_window = std::make_unique<sf::RenderWindow>(sf::VideoMode::getDesktopMode(), "R-Type" /*,sf::Style::Fullscreen */);
     // if (this->_music.openFromFile("../Assets/music.ogg") != -1)
         // this->_music.play();
@@ -448,6 +448,7 @@ sf::Sprite RType::Client::getSpriteFromEntity(std::shared_ptr<IEntity> entity, u
 
 void RType::Client::gameLoop()
 {
+    this->checkAsId();
     if (!this->_gameAsStarted) {
         // this->createRoom(1);
         this->_gameAsStarted = true;
@@ -562,7 +563,9 @@ void RType::Client::displayMenu()
         msg.senderPort = this->_serverPort;
         this->_socket->send(msg);
     }
-    if (this->_menu.closeMenu())
+    if (this->_menu.closeMenu()) {
+        this->checkAsId();
         this->_actualScreen = game;
+    }
     this->_window->display();
 }
