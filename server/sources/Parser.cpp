@@ -26,7 +26,6 @@ void Parser::readConfig(std::string configFile)
     }
     this->initMusic();
     this->initParallax();
-    this->initNextLevel();
     this->initWaves();
 }
 
@@ -43,16 +42,6 @@ void Parser::initMusic(void)
 void Parser::initParallax(void)
 {
     this->_parallaxIndex = this->getSetting<int>("parallax.index");
-}
-
-void Parser::initNextLevel(void)
-{
-    try {
-        this->_next_level = this->getSetting<std::string>("next-level.filepath");
-    }
-    catch (std::logic_error &e) {
-        return;
-    }
 }
 
 void Parser::initWaves(void)
@@ -139,11 +128,6 @@ T Parser::getSetting(std::string settingsName, const libconfig::Setting &setting
 std::string Parser::getMusic(void) const
 {
     return (this->_music);
-}
-
-std::string Parser::getNextLevel(void) const
-{
-    return (this->_next_level);
 }
 
 int Parser::getParallax(void) const

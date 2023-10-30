@@ -31,7 +31,6 @@ class Parser {
         T getSetting(std::string settingsName, const libconfig::Setting &setting, const std::string errorSupp = "");
         int getEnemy(std::string settingsName, const libconfig::Setting &setting, const std::string errorSupp);
         std::string getMusic(void) const;
-        std::string getNextLevel(void) const;
         int getParallax(void) const;
         std::vector<std::map<Enemies, int>> getWaves(void) const;
     private:
@@ -43,6 +42,5 @@ class Parser {
         std::vector<std::map<Enemies, int>> _waves;
         void initMusic(void);
         void initParallax(void);
-        void initNextLevel(void);
         void initWaves(void);
 };
