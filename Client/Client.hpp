@@ -81,6 +81,7 @@ namespace RType {
             void updateInputs(void);
             void newBydosToRoom(const Utils::MessageParsed_s &msg);
             void newCoin(const Utils::MessageParsed_s &msg);
+            void newGenie(const Utils::MessageParsed_s &msg);
             void newTourreToRoom(const Utils::MessageParsed_s &msg);
             void removeAnEntity(const Utils::MessageParsed_s &msg);
             void newEnemyShoot(const Utils::MessageParsed_s &msg);

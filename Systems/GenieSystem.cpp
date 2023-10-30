@@ -15,7 +15,19 @@ void GenieSystem::updatePos(Genie &t)
 {
     if (!t.readyToMove())
         return;
-    this->_movementSystem.updatePosition(t);
+    if (t.getPosition().getX() > 1920 - 500)
+        t.setPosition(Position(t.getPosition().getX() - 1, t.getPosition().getY()));
+    else {
+        if (t.getGoingUp()) {
+            t.setPosition(Position(t.getPosition().getX(), t.getPosition().getY() - 1));
+            if (t.getPosition().getY() < 50)
+                t.setGoingUp(false);
+        } else {
+            t.setPosition(Position(t.getPosition().getX(), t.getPosition().getY() + 1));
+            if (t.getPosition().getY() > 500)
+                t.setGoingUp(true);
+        }
+    }
     t.setHasMoved(true);
 }
 

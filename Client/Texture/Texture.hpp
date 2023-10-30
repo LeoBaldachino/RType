@@ -24,6 +24,7 @@ class Texture {
             this->playerShotTexture.loadFromFile("./../Assets/shot.png");
             this->piercingShotTexture.loadFromFile("./../Assets/EntitiesSprites/PiercingShot.png");
             this->enemyShotTexture.loadFromFile("./../Assets/EntitiesSprites/EnemyShot.png");
+            this->genieTexture.loadFromFile("./../Assets/Genie/Idle/Genie.png");
             // for (int i = 0; i != 24; ++i) {
             //     sf::Texture _text;
             //     std::string fileName = "./../Assets/Desert/Desert/desert";

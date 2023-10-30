@@ -16,8 +16,8 @@
 #define SHOOT_SPEED 3000
 #define JUMP_SPEED 3000
 #define MOVE_SPEED 3
-#define GENIE_X 247 * SIZE_SCALE
-#define GENIE_Y 220 * SIZE_SCALE
+#define GENIE_X 500 * SIZE_SCALE
+#define GENIE_Y 541 * SIZE_SCALE
 #define GENIE_HEALTH 2
 
 /**
@@ -36,7 +36,7 @@ class Genie : public IEntity, public Health {
          * @param velocity Velocity of the Genie
          * @param moveDirection Direction of the Genie movement
          */
-        Genie(Position position, int velocity, Vector2d moveDirection);
+        Genie(Position position);
         ~Genie(){};
         /**
          * @brief Accept method for visitor
@@ -157,14 +157,14 @@ class Genie : public IEntity, public Health {
          */
         ClockTimer getTempoState(void);
 
+        bool getGoingUp(void) const;
+        void setGoingUp(bool state);
+
     private:
         State _state;
         Position _position;
         Moveable _movement;
         int _velocity;
-        // int _shootDmg = 10;
-        // int _shootVelocity = 5;
-        // int _shootGravity = 0;
         Vector2d _size;
         bool _hasMoved = false;
         ClockTimer _readyShoot;
@@ -172,4 +172,5 @@ class Genie : public IEntity, public Health {
         unsigned int _spriteFrame = 0;
         ClockTimer _frameClock;
         ClockTimer _currentTempoState;
+        bool _goingUp = true;
 };

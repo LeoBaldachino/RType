@@ -39,6 +39,7 @@ std::queue<RType::Utils::MessageParsed_s> RType::RTypeGameLoop::runAfterUpdate(s
     }
     this->handleBydos(toReturn);
     this->handleTourre(toReturn);
+    this->handleCoin(toReturn);
     this->handleWaves(toReturn);
     auto clock = std::chrono::steady_clock::now();
     if (std::chrono::duration_cast<std::chrono::milliseconds>(clock - this->_refreshAllEntities).count() < REFRESH_ALL_ENTITIES)
@@ -160,6 +161,14 @@ void RType::RTypeGameLoop::handleWaves(std::queue<RType::Utils::MessageParsed_s>
             msg.setSecondShort(coin);
             toReturn.push(msg);
             this->_core.addEntity(std::make_shared<Coin>(Position(1700 + std::rand() % 200, std::rand() % 1000, 1080, 1920)), id);
+        }
+        if (this->_waves[0][Parser::Enemies::GENIE] != 0) {
+            unsigned short id = this->_core.getAvailabeIndex();
+            this->_genie = id;
+            msg.setFirstShort(id);
+            msg.setSecondShort(genie);
+            toReturn.push(msg);
+            this->_core.addEntity(std::make_shared<Genie>(Position(1920, (1080 - 541) / 2, 1080, 1920)), id);
         }
         this->_waves.erase(this->_waves.begin());
     }

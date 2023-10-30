@@ -7,8 +7,8 @@
 
 #include "Genie.hpp"
 
-Genie::Genie(Position position, int velocity, Vector2d moveDirection) :
-_frameClock(125),
+Genie::Genie(Position position) :
+_frameClock(75),
 _size(GENIE_X, GENIE_Y),
 _readyShoot(SHOOT_SPEED),
 _readyMove(MOVE_SPEED),
@@ -17,15 +17,7 @@ Health(GENIE_HEALTH)
 {
     this->_position = position;
     this->_state = State(100);
-    this->_velocity = velocity;
-    this->_movement = Moveable(Vector2d(this->_position.getX(), this->_position.getY()), moveDirection, velocity);
 }
-
-// Shoot Genie::shoot(const Position &playerPos) const
-// {   
-//     AIShoot aiShoot(playerPos, this->_position);
-//     return aiShoot.shootLogic();
-// }
 
 void Genie::accept(IVisitor &v, Core &core)
 {
@@ -61,36 +53,6 @@ int Genie::getVelocity(void) const
 {
     return this->_velocity;
 }
-
-// void Genie::setShootDmg(int shootDmg)
-// {
-//     this->_shootDmg = shootDmg;
-// }
-
-// int Genie::getShootDmg(void) const
-// {
-//     return this->_shootDmg;
-// }
-
-// void Genie::setShootVelocity(int shootVelocity)
-// {
-//     this->_shootVelocity = shootVelocity;
-// }
-
-// int Genie::getShootVelocity(void) const
-// {
-//     return this->_shootVelocity;
-// }
-
-// void Genie::setShootGravity(int shootGravity)
-// {
-//     this->_shootGravity = shootGravity;
-// }
-
-// int Genie::getShootGravity(void) const
-// {
-//     return this->_shootGravity;
-// }
 
 void Genie::setMoveable(const Moveable &moveable)
 {
@@ -134,7 +96,7 @@ unsigned int Genie::getEntitySpriteFrame()
 {
     if (this->_frameClock.clockOk()) {
         ++this->_spriteFrame;
-        this->_spriteFrame = this->_spriteFrame >= 29 ? 0 : this->_spriteFrame;
+        this->_spriteFrame = this->_spriteFrame >= 32 ? 0 : this->_spriteFrame;
     }
     return (this->_spriteFrame);
 }
@@ -154,4 +116,14 @@ void Genie::setTempoState(ClockTimer state)
 ClockTimer Genie::getTempoState(void)
 {
     return this->_currentTempoState;
+}
+
+bool Genie::getGoingUp(void) const
+{
+    return (this->_goingUp);
+}
+
+void Genie::setGoingUp(bool state)
+{
+    this->_goingUp = state;
 }

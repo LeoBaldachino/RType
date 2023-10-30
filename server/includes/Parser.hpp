@@ -19,7 +19,8 @@ class Parser {
         enum Enemies {
             BYDOS,
             TOURRE,
-            COIN
+            COIN,
+            GENIE
         };
         Parser(std::string configFile);
         ~Parser () {};

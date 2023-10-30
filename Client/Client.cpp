@@ -268,13 +268,24 @@ void RType::Client::setEntityType(const Utils::MessageParsed_s &msg)
             return this->newEnemyShoot(msg);
         case RType::tourre:
             return this->newTourreToRoom(msg);
-        case RType::playerShoot :
+        case RType::playerShoot:
             return this->newMyShoot(msg);
-        case RType::percingShoot :
+        case RType::percingShoot:
             return this->newPercingShoot(msg);
-        case RType::coin :
+        case RType::coin:
             return this->newCoin(msg);
+        case RType::genie:
+            return this->newGenie(msg);
     }
+}
+
+void RType::Client::newGenie(const Utils::MessageParsed_s &msg)
+{
+    auto it = this->_entities._entities.find(msg.getFirstShort());
+    if (it != this->_entities._entities.end())
+        return;
+    std::unique_lock<std::mutex> lock(*this->_mutex);
+    this->_entities.addEntity(std::make_shared<Genie>(Position(1900, 100, 1080, 1920)), msg.getFirstShort());
 }
 
 void RType::Client::newCoin(const Utils::MessageParsed_s &msg)
@@ -398,6 +409,10 @@ sf::Sprite RType::Client::getSpriteFromEntity(std::shared_ptr<IEntity> entity, u
     if (entity->getEntityType() == RType::EntityTypes::coin) {
         ret.setTexture(this->_texture.coinTexture);
         ret.setTextureRect(sf::Rect<int>(103 * (spriteFrame - 1), 0, 103, 130));
+    }
+    if (entity->getEntityType() == RType::EntityTypes::genie) {
+        ret.setTexture(this->_texture.genieTexture);
+        ret.setTextureRect(sf::Rect<int>(500 * (spriteFrame - 1), 0, 500, 541));
     }
     if (entity->getEntityType() == RType::EntityTypes::playerShoot) {
         ret.setTexture(this->_texture.playerShotTexture);
