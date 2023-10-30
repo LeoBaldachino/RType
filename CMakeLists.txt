@@ -30,8 +30,9 @@ file(GLOB LIFE_BAR "Client/LifeBar/*.cpp")
 file(GLOB PARALLAX "Client/Parallax/*.cpp")
 file(GLOB BUTTON "Client/Button/*.cpp")
 file(GLOB MENU "Client/Menu/*.cpp")
+file(GLOB POPUP "Client/PopUp/*.cpp")
 
-add_executable(r-type_client ${CLIENT_FILES} ${SUBSYSTEMS} ${SYSTEMS} ${ENTITY} ${CORE} ${SOCKET_FILES} ${ENTITY_TYPES} ${LIFE_BAR} ${PARALLAX} ${BUTTON} ${MENU})
+add_executable(r-type_client ${CLIENT_FILES} ${SUBSYSTEMS} ${SYSTEMS} ${ENTITY} ${CORE} ${SOCKET_FILES} ${ENTITY_TYPES} ${LIFE_BAR} ${PARALLAX} ${BUTTON} ${MENU} ${POPUP})
 
 find_package(Threads REQUIRED)
 target_link_libraries(r-type_client PRIVATE sfml-graphics sfml-window sfml-system sfml-audio Threads::Threads)
@@ -62,3 +63,15 @@ add_executable(r-type_server ${SERVER_SOURCES} ${SERVER_CORE} ${SERVER_SOCKET} $
 
 # Link against libconfig
 target_link_libraries(r-type_server PRIVATE boost_system boost_serialization Threads::Threads config++ config)
+
+
+project(r-type_room_controller)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+file(GLOB ROOM_SOCKET "Sockets/sources/*.cpp")
+file(GLOB ROOM_CONTROLLER "roomController/sources/*.cpp")
+
+
+add_executable(r-type_room_controller ${ROOM_SOCKET} ${ROOM_CONTROLLER})
+target_link_libraries(r-type_room_controller PRIVATE boost_system boost_serialization Threads::Threads)

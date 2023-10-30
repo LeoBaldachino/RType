@@ -11,8 +11,8 @@ RType::BaseMenu::BaseMenu() :
 _list("../Assets/insanibu.ttf")
 {
     this->_exited = false;
-    this->_list.addButtons([this]{std::cout<< "mod" <<std::endl;this->_exited = true; std::cout << "endmod" << std::endl;}, "../Assets/buttonTest.png", "Start", sf::Vector2f(1035.0, 400.0), sf::IntRect(0, 0, 150, 100), 100, 0);
-    this->_list.addButtons([this]{std::exit(0);}, "../Assets/buttonTest.png", "Quit", sf::Vector2f(1035.0, 700.0), sf::IntRect(0, 0, 150, 100), 100, 1);
+    this->_list.addButtons([this]{std::cout<< "mod" <<std::endl;this->_exited = true; std::cout << "endmod" << std::endl;}, "../Assets/buttonTest.png", "Start", sf::Vector2f(885.0, 400.0), sf::IntRect(0, 0, 150, 100), 100, 0);
+    this->_list.addButtons([this]{std::exit(0);}, "../Assets/buttonTest.png", "Quit", sf::Vector2f(885.0, 700.0), sf::IntRect(0, 0, 150, 100), 100, 1);
 }
 
 RType::BaseMenu::~BaseMenu()

@@ -14,6 +14,7 @@
 #include <SFML/Graphics.hpp>
 #include "BaseMenu.hpp"
 #include "RoomSelector.hpp"
+#include "../PopUp/PopUp.hpp"
 
 namespace RType {
     enum Panel {
@@ -23,13 +24,14 @@ namespace RType {
     };
     class Menu {
         public:
-            Menu();
+            Menu(PopUp &popUp);
             ~Menu();
             void displayMenu(std::unique_ptr<sf::RenderWindow> &window, bool mouseClicked);
             void addMessage(const Utils::MessageParsed_s &msg);
             inline bool closeMenu() const {return this->_closeMenu;};
             inline bool needToSendMessage() const {return !this->_toSend.empty();};
             inline Utils::MessageParsed_s sendMsg() {auto msg = this->_toSend.front();this->_toSend.pop(); return msg;};
+            inline int getRoomId() const {return this->_roomSelector.getRoom();};
         private:
             std::mutex _mutex;
             std::queue<Utils::MessageParsed_s> _messagesQueue;
@@ -39,5 +41,6 @@ namespace RType {
             BaseMenu _baseMenu;
             RoomSelector _roomSelector;
             bool _closeMenu;
+            PopUp &_popUp;
     };
 }

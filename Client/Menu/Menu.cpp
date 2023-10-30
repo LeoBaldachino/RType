@@ -7,7 +7,8 @@
 
 #include "Menu.hpp"
 
-RType::Menu::Menu()
+RType::Menu::Menu(PopUp &popUp) :
+_popUp(popUp)
 {
     this->_panel = baseMenu;
     this->_closeMenu = false;

@@ -21,6 +21,7 @@
 #include "Prediction/Prediction.hpp"
 #include "Button/ButtonList.hpp"
 #include "Menu/Menu.hpp"
+#include "PopUp/PopUp.hpp"
 
 #define GET_ID_LIMIT_TIME 1
 
@@ -88,6 +89,7 @@ namespace RType {
             void syncNbOfEntities(const Utils::MessageParsed_s &msg);
             void setLifeBars();
             void displayMenu();
+            void quitActualRoom();
             std::unique_ptr<std::thread> _infosThread;
             std::shared_ptr<Utils::SocketHandler> _socket;
             std::unique_ptr<sf::RenderWindow> _window;
@@ -119,6 +121,8 @@ namespace RType {
             ParallaxGnome _parallaxGnome;
             Menu _menu;
             unsigned int _level = 2;
+            PopUp _popUp;
+            bool _quittedRoom = false;
 
     };
 }
