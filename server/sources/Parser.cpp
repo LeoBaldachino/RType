@@ -66,6 +66,12 @@ void Parser::initWaves(void)
                 mermaidCount = 1;
             }
             std::map<Enemies, int> tmpMap = {{Enemies::BYDOS, bydosCount}, {Enemies::TOURRE, tourreCount}, {Enemies::COIN, coinCount}, {Enemies::GENIE, genieCount}, {Enemies::MERMAID, mermaidCount}};
+            int dragonCount = this->getEnemy("dragon", wave, e + std::to_string(i + 1));
+            if (dragonCount > 1) {
+                this->error->writeLogs("Only one dragon can be spawned\n");
+                dragonCount = 1;
+            }
+            std::map<Enemies, int> tmpMap = {{Enemies::BYDOS, bydosCount}, {Enemies::TOURRE, tourreCount}, {Enemies::COIN, coinCount}, {Enemies::GENIE, genieCount}, {Enemies::DRAGON, dragonCount}};
             this->_waves.push_back(tmpMap);
         }
     } catch (const libconfig::SettingNotFoundException &e) {
@@ -77,7 +83,8 @@ template<typename T>
 T Parser::getSetting(std::string settingsName)
 {
     try {
-        return T(config.lookup(settingsName));
+        T tmp = config.lookup(settingsName);
+        return (tmp);
     } catch (libconfig::SettingNotFoundException &e) {
         this->error->writeLogs("No " + settingsName + " setting in configuration file.\n");
         return (T(NULL));

@@ -29,7 +29,7 @@ class ShotEntity : public IEntity {
          * @param spriteFile Path to the sprite file
          * @param playerShoot Boolean indicating if the shot is from the player
          */
-        ShotEntity(Shoot &shoot, std::string spriteFile, bool playerShoot);
+        ShotEntity(Shoot &shoot, RType::EntityTypes type, bool playerShoot);
         ~ShotEntity() {};
 
         /**
@@ -149,4 +149,5 @@ class ShotEntity : public IEntity {
         unsigned int _spriteFrame = 0;
         ClockTimer _frameClock;
         ClockTimer _currentTempoState;
+        RType::EntityTypes _type;
 };

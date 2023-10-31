@@ -7,7 +7,7 @@
 
 #include "ShotEntity.hpp"
 
-ShotEntity::ShotEntity(Shoot &shoot, std::string spriteFile, bool playerShoot) :
+ShotEntity::ShotEntity(Shoot &shoot, RType::EntityTypes type, bool playerShoot) :
 _shoot(shoot),
 _size(SHOT_X, SHOT_Y),
 _clockMove(MOVE_SHOT),
@@ -15,6 +15,7 @@ _frameClock(100),
 _currentTempoState(getEntityPositionRange()[3])
 {
     this->_playerShoot = playerShoot;
+    this->_type = type;
 }
 
 Shoot ShotEntity::getShoot(void) const

@@ -29,6 +29,10 @@ public:
         // this->genieTexture.loadFromFile("./../Assets/Genie/Genie.png");
         // this->genieShotTexture.loadFromFile("./../Assets/Genie/genieShot.png");
         this->mermaidTexture.loadFromFile("./../Assets/Mermaid/Mermaid.png");
+        this->genieTexture.loadFromFile("./../Assets/Genie/Genie.png");
+        this->dragonTexture.loadFromFile("./../Assets/Dragon/Dragon/dragon.png");
+        this->dragonShotTexture.loadFromFile("./../Assets/Dragon/DragonShot/dragonShot.png");
+        this->genieShotTexture.loadFromFile("./../Assets/Genie/genieShot.png");
         // for (int i = 0; i != 24; ++i) {
         //     sf::Texture _text;
         //     std::string fileName = "./../Assets/Desert/Desert/desert";
@@ -83,6 +87,8 @@ public:
     sf::Texture piercingShotTexture;
     sf::Texture enemyShotTexture;
     sf::Texture genieTexture;
+    sf::Texture dragonTexture;
+    sf::Texture dragonShotTexture;
     sf::Texture genieShotTexture;
     sf::Texture coinTexture;
     sf::Texture mermaidTexture;

@@ -21,7 +21,8 @@ class Parser {
             TOURRE,
             COIN,
             GENIE,
-            MERMAID
+            MERMAID,
+            DRAGON
         };
         Parser(std::string configFile);
         ~Parser () {};

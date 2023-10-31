@@ -11,6 +11,8 @@
 #include "../Systems/BydosSystem.hpp"
 #include "../Systems/TourreSystem.hpp"
 #include "../Systems/GenieSystem.hpp"
+#include "../Systems/DragonSystem.hpp"
+#include "../Systems/DragonShotSystem.hpp"
 #include "../Systems/CoinSystem.hpp"
 #include "../Systems/GenieShotSystem.hpp"
 #include "../EntityTypes/EntityTypes.hpp"
@@ -28,7 +30,8 @@ class SystemVisitor : public IVisitor {
             p._inputs->unlockInputs();
             for (auto it : core._entities)
                 if (it.second->getEntityType() == RType::bydos || it.second->getEntityType() == RType::bydosShoot
-                || it.second->getEntityType() == RType::coin || it.second->getEntityType() == RType::genie)
+                || it.second->getEntityType() == RType::coin || it.second->getEntityType() == RType::genie
+                || it.second->getEntityType() == RType::genieShot || it.second->getEntityType() == RType::dragon)
                     this->_playerSystem.checkCollision(p, *it.second, core);
             this->_lastPlayerPos = p.getPosition();
         }
@@ -81,6 +84,41 @@ class SystemVisitor : public IVisitor {
                     this->_mermaidSystem.checkCollision(m, *it.second, core, true);
             }
         };
+        void visitDragon(Dragon &d, Core &core) {
+            if (d.getLifes() == 0)
+                return (void)core.removeEntityLater(d);
+            this->_dragonSystem.updatePos(d);
+            if (d.getPosition().getX() <= 1920 - 667)
+                this->_dragonSystem.shot(d, core);
+            for (auto it : core._entities) {
+                auto entityType = it.second->getEntityType();
+                if (entityType == RType::playerShoot)
+                    this->_dragonSystem.checkCollision(d, *it.second, core, false);
+                if (entityType == RType::percingShoot)
+                    this->_dragonSystem.checkCollision(d, *it.second, core, true);
+            }
+        };
+        void visitDragonShot(DragonShot &dS, Core &core) {
+            if (dS.getLifes() == 0) {
+                Shoot tmpShoot(Vector2d(-1, 0), Vector2d(dS.getPosition().getX(), dS.getPosition().getY()), 1, 3, 1, false);
+                core.addEntity(std::make_shared<ShotEntity>(tmpShoot, RType::bydosShoot, false), core.getAvailabeIndex());
+                tmpShoot.setDirection(Vector2d(0, -1));
+                core.addEntity(std::make_shared<ShotEntity>(tmpShoot, RType::bydosShoot, false), core.getAvailabeIndex());
+                tmpShoot.setDirection(Vector2d(0, 1));
+                core.addEntity(std::make_shared<ShotEntity>(tmpShoot, RType::bydosShoot, false), core.getAvailabeIndex());
+                tmpShoot.setDirection(Vector2d(1, 0));
+                core.addEntity(std::make_shared<ShotEntity>(tmpShoot, RType::bydosShoot, false), core.getAvailabeIndex());
+                return (void)core.removeEntityLater(dS);
+            }
+            this->_dragonShotSystem.updatePos(dS, this->_lastPlayerPos);
+            for (auto it : core._entities) {
+                auto entityType = it.second->getEntityType();
+                if (entityType == RType::playerShoot)
+                    this->_dragonShotSystem.checkCollision(dS, *it.second, core, false);
+                if (entityType == RType::percingShoot)
+                    this->_dragonShotSystem.checkCollision(dS, *it.second, core, true);
+            }
+        }
         void visitGenieShot(GenieShot &gS, Core &core) {
             this->_genieShotSystem.updatePos(gS);
             for (auto it : core._entities) {
@@ -114,4 +152,6 @@ class SystemVisitor : public IVisitor {
         CoinSystem _coinSystem;
         GenieShotSystem _genieShotSystem;
         MermaidSystem _mermaidSystem;
+        DragonSystem _dragonSystem;
+        DragonShotSystem _dragonShotSystem;
 };

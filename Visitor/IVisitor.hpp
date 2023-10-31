@@ -20,6 +20,8 @@ class PiercingShotEntity;
 class Coin;
 class GenieShot;
 class Mermaid;
+class Dragon;
+class DragonShot;
 
 class IVisitor {
     public:
@@ -33,4 +35,7 @@ class IVisitor {
         virtual void visitGenieShot(GenieShot &c, Core &core) = 0;
         virtual void visitMermaid(Mermaid &c, Core &core) = 0;
         // virtual void visitMermaidShot(MermaidShot &c, Core &core) = 0;
+        virtual void visitGenieShot(GenieShot &gS, Core &core) = 0;
+        virtual void visitDragon(Dragon &d, Core &core) = 0;
+        virtual void visitDragonShot(DragonShot &dS, Core &core) = 0;
 };
