@@ -279,6 +279,8 @@ void RType::Client::setEntityType(const Utils::MessageParsed_s &msg)
             return this->newGenie(msg);
         case RType::genieShot:
             return this->newGenieShot(msg);
+        case RType::mermaid:
+            return this->newMermaid(msg);
     }
 }
 
@@ -298,6 +300,15 @@ void RType::Client::newGenie(const Utils::MessageParsed_s &msg)
         return;
     std::unique_lock<std::mutex> lock(*this->_mutex);
     this->_entities.addEntity(std::make_shared<Genie>(Position(1900, 100, 1080, 1920)), msg.getFirstShort());
+}
+
+void RType::Client::newMermaid(const Utils::MessageParsed_s &msg)
+{
+    auto it = this->_entities._entities.find(msg.getFirstShort());
+    if (it != this->_entities._entities.end())
+        return;
+    std::unique_lock<std::mutex> lock(*this->_mutex);
+    this->_entities.addEntity(std::make_shared<Mermaid>(Position(1900, 100, 1080, 1920)), msg.getFirstShort());
 }
 
 void RType::Client::newCoin(const Utils::MessageParsed_s &msg)
@@ -426,6 +437,12 @@ sf::Sprite RType::Client::getSpriteFromEntity(std::shared_ptr<IEntity> entity, u
         ret.setTexture(this->_texture.genieTexture);
         ret.setTextureRect(sf::Rect<int>(500 * (spriteFrame - 1), 0, 500, 541));
     }
+
+    if (entity->getEntityType() == RType::EntityTypes::mermaid) {
+        ret.setTexture(this->_texture.mermaidTexture);
+        ret.setTextureRect(sf::Rect<int>(520 * (spriteFrame - 1), 0, 520, 813));
+    }
+
     if (entity->getEntityType() == RType::EntityTypes::genieShot) {
         ret.setTexture(this->_texture.genieShotTexture);
         ret.setTextureRect(sf::Rect<int>(198 * (spriteFrame - 1), 0, 198, 254));
@@ -462,6 +479,7 @@ void RType::Client::gameLoop()
     auto msgKeyPressed = this->buildEmptyMsg(keyPressed);
     unsigned char actualIndex = 0;
     _window->clear();
+
     if (this->_level == 1) {
         this->_parallax.drawBackgroundParallax(this->_window);
         this->_parallax.drawParallax(this->_window);
@@ -470,6 +488,7 @@ void RType::Client::gameLoop()
         this->_parallaxGnome.drawGnomeParallax(this->_window);
     if (this->_level == 3)
         this->_parallaxDragon.drawDragonParallax(this->_window);
+    
     this->_lifeBar->display(this->_window);
     for (auto &it : this->_entities._entities)
         this->_window->draw(this->getSpriteFromEntity(it.second, it.first));
@@ -488,5 +507,5 @@ void RType::Client::gameLoop()
         msgKeyPressed.bytes[actualIndex] = 255;
         this->_socket->send(msgKeyPressed);
     }
-    this->_parallax.drawScreenFX(this->_window);
+    // this->_parallax.drawScreenFX(this->_window);
 }

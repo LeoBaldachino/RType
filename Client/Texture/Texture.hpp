@@ -26,8 +26,9 @@ public:
         this->playerShotTexture.loadFromFile("./../Assets/shot.png");
         this->piercingShotTexture.loadFromFile("./../Assets/EntitiesSprites/PiercingShot.png");
         this->enemyShotTexture.loadFromFile("./../Assets/EntitiesSprites/EnemyShot.png");
-        this->genieTexture.loadFromFile("./../Assets/Genie/Genie.png");
-        this->genieShotTexture.loadFromFile("./../Assets/Genie/genieShot.png");
+        // this->genieTexture.loadFromFile("./../Assets/Genie/Genie.png");
+        // this->genieShotTexture.loadFromFile("./../Assets/Genie/genieShot.png");
+        this->mermaidTexture.loadFromFile("./../Assets/Mermaid/Mermaid.png");
         // for (int i = 0; i != 24; ++i) {
         //     sf::Texture _text;
         //     std::string fileName = "./../Assets/Desert/Desert/desert";
@@ -38,13 +39,13 @@ public:
         this->desertForest.loadFromFile("./../Assets/Desert/Background/ForestDesert.png");
         this->desertMountain.loadFromFile("./../Assets/Desert/Background/MoutainsDesert.png");
         this->desertSky.loadFromFile("./../Assets/Desert/Background/SkyDesert.png");
-        for (int i = 0; i != 8; ++i) {
-            sf::Texture _text;
-            std::string fileName = "./../Assets/ScreenFX/screenFX";
-            fileName += std::to_string(i) + ".png";
-            _text.loadFromFile(fileName);
-            this->screenFX.push_back(_text);
-        }
+        // for (int i = 0; i != 8; ++i) {
+        //     sf::Texture _text;
+        //     std::string fileName = "./../Assets/ScreenFX/screenFX";
+        //     fileName += std::to_string(i) + ".png";
+        //     _text.loadFromFile(fileName);
+        //     this->screenFX.push_back(_text);
+        // }
 
         this->gnomeSky.loadFromFile("./../Assets/Gnome/Background/GnomeSky.png");
         this->gnomeMountainsFirst.loadFromFile("./../Assets/Gnome/Background/GnomeMountainsFirst.png");
@@ -84,6 +85,7 @@ public:
     sf::Texture genieTexture;
     sf::Texture genieShotTexture;
     sf::Texture coinTexture;
+    sf::Texture mermaidTexture;
 
     sf::Texture desertMountain;
     sf::Texture desertForest;
@@ -111,4 +113,6 @@ public:
     sf::Texture dragonForeCloudsSecond;
     sf::Texture dragonForeCloudsThird;
     std::vector<sf::Texture> tower;
+
+
 };
