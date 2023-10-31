@@ -240,14 +240,14 @@ void RType::Client::createRoom(unsigned char roomNb)
     this->_socket->send(msg);
     std::unique_lock<std::mutex> lock(*this->_mutex);
     this->_actualRoom = 1;
-    this->_entities.addEntity(std::make_shared<Player>(Position(0, 0, 1080, 1920)), 0);
+    this->_entities.addEntity(std::make_shared<Player>(Position(0, 0, 1080, 1920), 1), 0);
 }
 
 void RType::Client::newPlayerToRoom(const Utils::MessageParsed_s &msg)
 {
     std::unique_lock<std::mutex> lock(*this->_mutex);
     this->_popUp.setText("New player to Room !");
-    auto pl = std::make_shared<Player>(Position(0, 0, 1080, 1920));
+    auto pl = std::make_shared<Player>(Position(0, 0, 1080, 1920), 3);
     this->_lifeBar->setLifeBarToPlayer(pl);
     this->_entities.addEntity(pl, msg.getFirstShort());
 }
@@ -398,6 +398,7 @@ void RType::Client::setValues(const Utils::MessageParsed_s &msg)
     if (find->second->getEntityType() == player) {
         std::shared_ptr<Player> playerCasted = std::dynamic_pointer_cast<Player>(find->second);
         playerCasted->setLife(msg.bytes[3]);
+        playerCasted->setMaxLife(msg.bytes[5]);
         this->_lifeBar->setLifeBarToPlayer(playerCasted);
     }
     if (find->second->getEntityType() == bydos) {

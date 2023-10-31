@@ -115,7 +115,7 @@ void RType::CoreServer::newRoomCreated(const Utils::MessageParsed_s &msg)
         }
     std::unique_lock<std::mutex> lock(this->_mutex);
     std::cerr << "Team " << static_cast<int>(msg.bytes[0]) << " is created !" << std::endl;
-    this->_rooms.push_back(std::make_unique<Server::Room>(msg.bytes[0], Server::ROOM_MAX_SIZE, this->_socket->getInstance(), this->_waves));
+    this->_rooms.push_back(std::make_unique<Server::Room>(msg.bytes[0], msg.bytes[1], this->_socket->getInstance(), this->_waves, msg.bytes[2]));
     this->_rooms.back()->addToRoom({msg.senderIp, msg.senderPort});
     return;
 }

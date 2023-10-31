@@ -226,6 +226,7 @@ void RType::RTypeGameLoop::checkPlayerStatus(std::queue<Utils::MessageParsed_s> 
         msgToSend.setFirstShort(it);
         msgToSend.bytes[3] = player->getLifes();
         msgToSend.bytes[4] = player->actuallyInvincible() ? 1 : 0;
+        msgToSend.bytes[5] = player->getMaxLife();
         toReturn.push(msgToSend);
     }
 }

@@ -33,6 +33,7 @@ class Health {
         inline void addLife() {this->_lifes < this->_maxLife ? this->_lifes++ : 0;};
         inline void setLife(unsigned char life) {this->_lifes = life;};
         inline unsigned char getMaxLife() const {return this->_maxLife;};
+        inline void setMaxLife(unsigned char maxLife){this->_maxLife = maxLife;};
     private:
         bool isInvincible() const {
             if (!this->_asBeenHit)

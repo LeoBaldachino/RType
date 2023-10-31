@@ -78,7 +78,7 @@ class SystemVisitor : public IVisitor {
             this->_coinSystem.updatePos(c);
         }
     private:
-        Player _lastPlayer;
+        // Player _lastPlayer;
         Position _lastPlayerPos;
         PlayerSystem _playerSystem;
         BydosSystem _bydosSystem;

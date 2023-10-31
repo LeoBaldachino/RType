@@ -16,7 +16,6 @@
 
 #define PLAYER_X 106
 #define PLAYER_Y 98
-#define BASE_HEALTH 3
 #define READY_MOVE 3
 
 /**
@@ -29,8 +28,8 @@ class Player : public IEntity, public Health {
          * @brief Construct a new Player object
          * @param position Position of the player
          */
-        Player(Position position);
-        Player();
+        Player(Position position, unsigned char life);
+        Player(unsigned char life);
         ~Player() {};
 
         /**

@@ -7,8 +7,8 @@
 
 #include "Player.hpp"
 
-Player::Player() : 
-Health(BASE_HEALTH),
+Player::Player(unsigned char life) : 
+Health(life),
 _timer(READY_MOVE),
 _frameClock(100),
 _currentTempoState(getEntityPositionRange()[3])
@@ -16,7 +16,7 @@ _currentTempoState(getEntityPositionRange()[3])
     this->_inputs = std::make_unique<Inputs>();
 }
 
-Player::Player(Position position) : _size(PLAYER_X, PLAYER_Y),  Health(BASE_HEALTH) , _timer(READY_MOVE), _frameClock(100), _currentTempoState(getEntityPositionRange()[3])
+Player::Player(Position position, unsigned char life) : _size(PLAYER_X, PLAYER_Y),  Health(life) , _timer(READY_MOVE), _frameClock(100), _currentTempoState(getEntityPositionRange()[3])
 {
     this->_position = position;
     this->_state = State(100);
