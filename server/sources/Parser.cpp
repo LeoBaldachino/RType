@@ -57,6 +57,7 @@ void Parser::initWaves(void)
             int coinCount = this->getEnemy("coin", wave, e + std::to_string(i + 1));
             int genieCount = this->getEnemy("genie", wave, e + std::to_string(i + 1));
             int mermaidCount = this->getEnemy("mermaid", wave, e + std::to_string(i + 1));
+            int bossCount = 0;
             if (genieCount > 1) {
                 this->error->writeLogs("Only one genie can be spawned\n");
                 genieCount = 1;
@@ -70,8 +71,19 @@ void Parser::initWaves(void)
                 this->error->writeLogs("Only one dragon can be spawned\n");
                 dragonCount = 1;
             }
-            std::map<Enemies, int> tmpMap = {{Enemies::BYDOS, bydosCount}, {Enemies::TOURRE, tourreCount}, {Enemies::COIN, coinCount}, {Enemies::GENIE, genieCount}, {Enemies::MERMAID, mermaidCount}, {Enemies::DRAGON, dragonCount}};
-            // std::map<Enemies, int> tmpMap = {{Enemies::BYDOS, bydosCount}, {Enemies::TOURRE, tourreCount}, {Enemies::COIN, coinCount}, {Enemies::GENIE, genieCount}, {Enemies::DRAGON, dragonCount}};
+            bossCount += dragonCount == 1 ? 1 : 0;
+            bossCount += genieCount == 1 ? 1 : 0;
+            bossCount += mermaidCount == 1 ? 1 : 0;
+            if (bossCount >= 2) {
+                if (dragonCount == 1) {
+                    genieCount = 0;
+                    mermaidCount = 0;
+                }
+                if (genieCount == 1)
+                    mermaidCount = 0;
+                this->error->writeLogs("Only one boss can be spawned at once\n");
+            }
+            std::map<Enemies, int> tmpMap = {{Enemies::BYDOS, bydosCount}, {Enemies::TOURRE, tourreCount}, {Enemies::COIN, coinCount}, {Enemies::GENIE, genieCount}, {Enemies::DRAGON, dragonCount}, {Enemies::MERMAID, mermaidCount}};
             this->_waves.push_back(tmpMap);
         }
     } catch (const libconfig::SettingNotFoundException &e) {

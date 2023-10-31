@@ -136,58 +136,64 @@ void RType::RTypeGameLoop::handleBydos(std::queue<RType::Utils::MessageParsed_s>
 
 void RType::RTypeGameLoop::handleWaves(std::queue<RType::Utils::MessageParsed_s> &toReturn)
 {
-    if (this->_waves.size() != 0 && this->_bydos.size() == 0 && this->_tourre.size() == 0) {
-        Utils::MessageParsed_s msg;
-        while (this->_tourre.size() < this->_waves[0][Parser::Enemies::TOURRE]) {
-            unsigned short id = this->_core.getAvailabeIndex();
-            this->_tourre.push_back(id);
-            msg.setFirstShort(id);
-            msg.setSecondShort(tourre);
-            toReturn.push(msg);
-            this->_core.addEntity(std::make_shared<Tourre>(Position(1500 + std::rand() % 200, 1080 - 53, 1080, 1920), 1, Vector2d(-1, -1)), id);
-        }
-        while (this->_bydos.size() < this->_waves[0][Parser::Enemies::BYDOS]) {
-            unsigned short id = this->_core.getAvailabeIndex();
-            this->_bydos.push_back(id);
-            msg.setFirstShort(id);
-            msg.setSecondShort(bydos);
-            toReturn.push(msg);
-            this->_core.addEntity(std::make_shared<Bydos>(Position(1700 + std::rand() % 200, std::rand() % 1000, 1080, 1920), 1, Vector2d(-1, 0)), id);
-        }
-        while (this->_coin.size() < this->_waves[0][Parser::Enemies::COIN]) {
-            unsigned short id = this->_core.getAvailabeIndex();
-            this->_coin.push_back(id);
-            msg.setFirstShort(id);
-            msg.setSecondShort(coin);
-            toReturn.push(msg);
-            this->_core.addEntity(std::make_shared<Coin>(Position(1700 + std::rand() % 200, std::rand() % 1000, 1080, 1920)), id);
-        }
-        if (this->_waves[0][Parser::Enemies::GENIE] != 0) {
-            unsigned short id = this->_core.getAvailabeIndex();
-            this->_genie = id;
-            msg.setFirstShort(id);
-            msg.setSecondShort(genie);
-            toReturn.push(msg);
-            this->_core.addEntity(std::make_shared<Genie>(Position(1920, (1080 - 541) / 2, 1080, 1920)), id);
-        }
-        if (this->_waves[0][Parser::Enemies::MERMAID] != 0) {
-            unsigned short id = this->_core.getAvailabeIndex();
-            this->_genie = id;
-            msg.setFirstShort(id);
-            msg.setSecondShort(mermaid);
-            toReturn.push(msg);
-            this->_core.addEntity(std::make_shared<Mermaid>(Position(1920, (1080 - 400) / 2, 1080, 1920)), id);
-        }
-        if (this->_waves[0][Parser::Enemies::DRAGON] != 0) {
-            unsigned short id = this->_core.getAvailabeIndex();
-            this->_dragon = id;
-            msg.setFirstShort(id);
-            msg.setSecondShort(dragon);
-            toReturn.push(msg);
-            this->_core.addEntity(std::make_shared<Dragon>(Position(1920, (1080 - 667) / 2, 1080, 1920)), id);
-        }
-        this->_waves.erase(this->_waves.begin());
+    auto genieIt = this->_core._entities.find(this->_genie);
+    auto dragonIt = this->_core._entities.find(this->_dragon);
+    auto mermaidIt = this->_core._entities.find(this->_mermaid);
+    if (this->_waves.size() == 0 || this->_bydos.size() != 0 || this->_tourre.size() != 0
+    || (this->_genie != -1 && genieIt != this->_core._entities.end() && genieIt->second->getEntityType() == RType::genie)
+    || (this->_mermaid != -1 && mermaidIt != this->_core._entities.end() && mermaidIt->second->getEntityType() == RType::mermaid)
+    || (this->_dragon != -1 && dragonIt != this->_core._entities.end() && dragonIt->second->getEntityType() == RType::dragon))
+        return;
+    Utils::MessageParsed_s msg;
+    while (this->_tourre.size() < this->_waves[0][Parser::Enemies::TOURRE]) {
+        unsigned short id = this->_core.getAvailabeIndex();
+        this->_tourre.push_back(id);
+        msg.setFirstShort(id);
+        msg.setSecondShort(tourre);
+        toReturn.push(msg);
+        this->_core.addEntity(std::make_shared<Tourre>(Position(1500 + std::rand() % 200, 1080 - 53, 1080, 1920), 1, Vector2d(-1, -1)), id);
     }
+    while (this->_bydos.size() < this->_waves[0][Parser::Enemies::BYDOS]) {
+        unsigned short id = this->_core.getAvailabeIndex();
+        this->_bydos.push_back(id);
+        msg.setFirstShort(id);
+        msg.setSecondShort(bydos);
+        toReturn.push(msg);
+        this->_core.addEntity(std::make_shared<Bydos>(Position(1700 + std::rand() % 200, std::rand() % 1000, 1080, 1920), 1, Vector2d(-1, 0)), id);
+    }
+    while (this->_coin.size() < this->_waves[0][Parser::Enemies::COIN]) {
+        unsigned short id = this->_core.getAvailabeIndex();
+        this->_coin.push_back(id);
+        msg.setFirstShort(id);
+        msg.setSecondShort(coin);
+        toReturn.push(msg);
+        this->_core.addEntity(std::make_shared<Coin>(Position(1700 + std::rand() % 200, std::rand() % 1000, 1080, 1920)), id);
+    }
+    if (this->_waves[0][Parser::Enemies::GENIE] != 0) {
+        unsigned short id = this->_core.getAvailabeIndex();
+        this->_genie = id;
+        msg.setFirstShort(id);
+        msg.setSecondShort(genie);
+        toReturn.push(msg);
+        this->_core.addEntity(std::make_shared<Genie>(Position(1920, (1080 - 541) / 2, 1080, 1920)), id);
+    }
+    if (this->_waves[0][Parser::Enemies::DRAGON] != 0) {
+        unsigned short id = this->_core.getAvailabeIndex();
+        this->_dragon = id;
+        msg.setFirstShort(id);
+        msg.setSecondShort(dragon);
+        toReturn.push(msg);
+        this->_core.addEntity(std::make_shared<Dragon>(Position(1920, (1080 - 667) / 2, 1080, 1920)), id);
+    }
+    if (this->_waves[0][Parser::Enemies::MERMAID] != 0) {
+        unsigned short id = this->_core.getAvailabeIndex();
+        this->_mermaid = id;
+        msg.setFirstShort(id);
+        msg.setSecondShort(mermaid);
+        toReturn.push(msg);
+        this->_core.addEntity(std::make_shared<Mermaid>(Position(1920, (1080 - 400) / 2, 1080, 1920)), id);
+    }
+    this->_waves.erase(this->_waves.begin());
 }
 
 void RType::RTypeGameLoop::handleTourre(std::queue<RType::Utils::MessageParsed_s> &toReturn)
