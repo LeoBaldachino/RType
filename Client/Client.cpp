@@ -609,7 +609,6 @@ void RType::Client::displayMenu()
     this->_window->clear(sf::Color::Black);
     this->_menu.displayMenu(this->_window, this->_mouseClicked);
     if (this->_menu.needToSendMessage()) {
-        std::cout << "message sended !" << std::endl;
         auto msg = this->_menu.sendMsg();
         msg.senderIp = this->_serverIp;
         msg.senderPort = this->_serverPort;

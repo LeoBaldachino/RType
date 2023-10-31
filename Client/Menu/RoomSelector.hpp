@@ -11,6 +11,7 @@
 #include "../../Sockets/includes/MessageParsed.hpp"
 #include "../../server/includes/ComCodes.hpp"
 #include <thread>
+#include "RoomEditor.hpp"
 
 namespace RType {
     class RoomSelector {
@@ -31,5 +32,8 @@ namespace RType {
             Utils::MessageParsed_s _messageToSend;
             std::vector<unsigned char> _currentRoomList;
             std::function<void()> _createServer;
+            std::chrono::steady_clock::time_point _clock;
+            RoomEditor _roomEditor;
+            bool _openRoomEditor;
     };
 }

@@ -36,10 +36,8 @@ void RType::Menu::displayMenu(std::unique_ptr<sf::RenderWindow> &window, bool mo
             this->_roomSelector.handleMessage(this->_messagesQueue.front());
             this->_messagesQueue.pop();
         }
-        if (this->_roomSelector.needToSendMessage()) {
-            std::cout << "need to send message" << std::endl;
+        if (this->_roomSelector.needToSendMessage())
             this->_toSend.push(this->_roomSelector.sendMessage());
-        }
         this->_roomSelector.display(window);
         // std::cout << "Room selector end ?" << std::endl;
     }
