@@ -630,6 +630,7 @@ void RType::Client::quitActualRoom()
         #ifdef __unix__
             if (this->_serverPid != -1) {
                 kill(this->_serverPid, SIGINT);
+                kill(this->_serverPid, SIGTERM);
             }
         #endif
         return std::exit(0);
