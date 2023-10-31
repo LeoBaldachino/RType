@@ -41,6 +41,6 @@ void GenieSystem::shot(Genie &t, Core &core)
 {
     if (!t.readyToShoot())
         return;
-    GenieShot tmpGenieShot(t.getPosition());
+    GenieShot tmpGenieShot(Position(t.getPosition().getX(), t.getPosition().getY() + rand() % 541));
     core.addEntity(std::make_shared<GenieShot>(tmpGenieShot), core.getAvailabeIndex());
 }
