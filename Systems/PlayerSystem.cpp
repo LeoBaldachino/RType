@@ -14,7 +14,7 @@ void PlayerSystem::createShots(Player &p, Core &core)
         if (p._inputs->getLastEvent() == Inputs::Events::PiercingShoot)
             core.addEntity(std::make_shared<PiercingShotEntity>(tmpShoot), core.getAvailabeIndex());
         else if (p._inputs->getLastEvent() == Inputs::Events::Shoot)
-            core.addEntity(std::make_shared<ShotEntity>(tmpShoot, "../Assets/shot.png", true), core.getAvailabeIndex());
+            core.addEntity(std::make_shared<ShotEntity>(tmpShoot, RType::playerShoot, true), core.getAvailabeIndex());
         p._inputs->popEvent();
     }
 }
@@ -44,7 +44,7 @@ void PlayerSystem::checkCollision(Player &p, IEntity &entity, Core &core)
             p.addLife();
         if (entity.getEntityType() != RType::coin && p.getLifes() >= 1)
             p.removeOneLife();
-        if (entity.getEntityType() != RType::genie || entity.getEntityType() != RType::genieShot)
+        if (entity.getEntityType() != RType::genie && entity.getEntityType() != RType::dragon)
             core.removeEntityLater(entity);
     }
 }
