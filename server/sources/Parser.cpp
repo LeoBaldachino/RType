@@ -60,7 +60,12 @@ void Parser::initWaves(void)
                 this->error->writeLogs("Only one genie can be spawned\n");
                 genieCount = 1;
             }
-            std::map<Enemies, int> tmpMap = {{Enemies::BYDOS, bydosCount}, {Enemies::TOURRE, tourreCount}, {Enemies::COIN, coinCount}, {Enemies::GENIE, genieCount}};
+            int dragonCount = this->getEnemy("dragon", wave, e + std::to_string(i + 1));
+            if (dragonCount > 1) {
+                this->error->writeLogs("Only one dragon can be spawned\n");
+                dragonCount = 1;
+            }
+            std::map<Enemies, int> tmpMap = {{Enemies::BYDOS, bydosCount}, {Enemies::TOURRE, tourreCount}, {Enemies::COIN, coinCount}, {Enemies::GENIE, genieCount}, {Enemies::DRAGON, dragonCount}};
             this->_waves.push_back(tmpMap);
         }
     } catch (const libconfig::SettingNotFoundException &e) {

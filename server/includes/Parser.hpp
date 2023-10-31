@@ -20,7 +20,8 @@ class Parser {
             BYDOS,
             TOURRE,
             COIN,
-            GENIE
+            GENIE,
+            DRAGON
         };
         Parser(std::string configFile);
         ~Parser () {};

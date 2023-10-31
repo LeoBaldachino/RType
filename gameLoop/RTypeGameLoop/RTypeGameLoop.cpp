@@ -170,6 +170,14 @@ void RType::RTypeGameLoop::handleWaves(std::queue<RType::Utils::MessageParsed_s>
             toReturn.push(msg);
             this->_core.addEntity(std::make_shared<Genie>(Position(1920, (1080 - 541) / 2, 1080, 1920)), id);
         }
+        if (this->_waves[0][Parser::Enemies::DRAGON] != 0) {
+            unsigned short id = this->_core.getAvailabeIndex();
+            this->_dragon = id;
+            msg.setFirstShort(id);
+            msg.setSecondShort(dragon);
+            toReturn.push(msg);
+            this->_core.addEntity(std::make_shared<Dragon>(Position(1920, (1080 - 667) / 2, 1080, 1920)), id);
+        }
         this->_waves.erase(this->_waves.begin());
     }
 }
