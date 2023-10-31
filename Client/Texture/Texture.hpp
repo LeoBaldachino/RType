@@ -26,30 +26,30 @@ public:
         this->playerShotTexture.loadFromFile("./../Assets/shot.png");
         this->piercingShotTexture.loadFromFile("./../Assets/EntitiesSprites/PiercingShot.png");
         this->enemyShotTexture.loadFromFile("./../Assets/EntitiesSprites/EnemyShot.png");
-        // this->genieTexture.loadFromFile("./../Assets/Genie/Genie.png");
-        // this->genieShotTexture.loadFromFile("./../Assets/Genie/genieShot.png");
+        this->genieTexture.loadFromFile("./../Assets/Genie/Genie.png");
+        this->genieShotTexture.loadFromFile("./../Assets/Genie/genieShot.png");
         this->mermaidTexture.loadFromFile("./../Assets/Mermaid/Mermaid.png");
         this->genieTexture.loadFromFile("./../Assets/Genie/Genie.png");
         this->dragonTexture.loadFromFile("./../Assets/Dragon/Dragon/dragon.png");
         this->dragonShotTexture.loadFromFile("./../Assets/Dragon/DragonShot/dragonShot.png");
         this->genieShotTexture.loadFromFile("./../Assets/Genie/genieShot.png");
-        // for (int i = 0; i != 24; ++i) {
-        //     sf::Texture _text;
-        //     std::string fileName = "./../Assets/Desert/Desert/desert";
-        //     fileName += std::to_string(i) + ".png";
-        //     _text.loadFromFile(fileName);
-        //     this->desert.push_back(_text);
-        // }
+        for (int i = 0; i != 24; ++i) {
+            sf::Texture _text;
+            std::string fileName = "./../Assets/Desert/Desert/desert";
+            fileName += std::to_string(i) + ".png";
+            _text.loadFromFile(fileName);
+            this->desert.push_back(_text);
+        }
         this->desertForest.loadFromFile("./../Assets/Desert/Background/ForestDesert.png");
         this->desertMountain.loadFromFile("./../Assets/Desert/Background/MoutainsDesert.png");
         this->desertSky.loadFromFile("./../Assets/Desert/Background/SkyDesert.png");
-        // for (int i = 0; i != 8; ++i) {
-        //     sf::Texture _text;
-        //     std::string fileName = "./../Assets/ScreenFX/screenFX";
-        //     fileName += std::to_string(i) + ".png";
-        //     _text.loadFromFile(fileName);
-        //     this->screenFX.push_back(_text);
-        // }
+        for (int i = 0; i != 8; ++i) {
+            sf::Texture _text;
+            std::string fileName = "./../Assets/ScreenFX/screenFX";
+            fileName += std::to_string(i) + ".png";
+            _text.loadFromFile(fileName);
+            this->screenFX.push_back(_text);
+        }
 
         this->gnomeSky.loadFromFile("./../Assets/Gnome/Background/GnomeSky.png");
         this->gnomeMountainsFirst.loadFromFile("./../Assets/Gnome/Background/GnomeMountainsFirst.png");

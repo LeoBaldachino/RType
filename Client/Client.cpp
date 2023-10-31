@@ -530,5 +530,5 @@ void RType::Client::gameLoop()
         msgKeyPressed.bytes[actualIndex] = 255;
         this->_socket->send(msgKeyPressed);
     }
-    // this->_parallax.drawScreenFX(this->_window);
+    this->_parallax.drawScreenFX(this->_window);
 }
