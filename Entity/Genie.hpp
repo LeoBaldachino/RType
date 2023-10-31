@@ -13,7 +13,7 @@
 #include "../Components/ClockTimer.hpp"
 #include "../Components/Health.hpp"
 
-#define GENIESHOOT_SPEED 3000
+#define GENIESHOOT_SPEED 1500
 #define JUMP_SPEED 3000
 #define MOVE_SPEED 3
 #define GENIE_X 500

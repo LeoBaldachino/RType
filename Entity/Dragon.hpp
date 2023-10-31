@@ -14,7 +14,7 @@
 #include "../Components/ClockTimer.hpp"
 #include "../Components/Health.hpp"
 
-#define DRAGONSHOOT_SPEED 3000
+#define DRAGONSHOOT_SPEED 1500
 #define JUMP_SPEED 3000
 #define MOVE_SPEED 3
 #define DRAGON_X 667
