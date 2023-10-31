@@ -15,6 +15,8 @@
 #include "../Systems/GenieShotSystem.hpp"
 #include "../EntityTypes/EntityTypes.hpp"
 #include "../Components/ClockTimer.hpp"
+#include "../Systems/BydosSystem.hpp"
+#include "../Systems/MermaidSystem.hpp"
 
 class SystemVisitor : public IVisitor {
     public:
@@ -65,6 +67,20 @@ class SystemVisitor : public IVisitor {
                     this->_genieSystem.checkCollision(g, *it.second, core, true);
             }
         };
+        void visitMermaid(Mermaid &m, Core &core) {
+            if (m.getLifes() == 0)
+                return (void)core.removeEntityLater(m);
+            this->_mermaidSystem.updatePos(m);
+            // if (m.getPosition().getX() <= 1920 - 500)
+            //     this->_mermaidSystem.shot(m, core);
+            for (auto it : core._entities) {
+                auto entityType = it.second->getEntityType();
+                if (entityType == RType::playerShoot)
+                    this->_mermaidSystem.checkCollision(m, *it.second, core, false);
+                if (entityType == RType::percingShoot)
+                    this->_mermaidSystem.checkCollision(m, *it.second, core, true);
+            }
+        };
         void visitGenieShot(GenieShot &gS, Core &core) {
             this->_genieShotSystem.updatePos(gS);
             for (auto it : core._entities) {
@@ -97,4 +113,5 @@ class SystemVisitor : public IVisitor {
         PiercingShotSystem _piercingShotSystem;
         CoinSystem _coinSystem;
         GenieShotSystem _genieShotSystem;
+        MermaidSystem _mermaidSystem;
 };

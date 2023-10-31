@@ -170,6 +170,14 @@ void RType::RTypeGameLoop::handleWaves(std::queue<RType::Utils::MessageParsed_s>
             toReturn.push(msg);
             this->_core.addEntity(std::make_shared<Genie>(Position(1920, (1080 - 541) / 2, 1080, 1920)), id);
         }
+        if (this->_waves[0][Parser::Enemies::MERMAID] != 0) {
+            unsigned short id = this->_core.getAvailabeIndex();
+            this->_genie = id;
+            msg.setFirstShort(id);
+            msg.setSecondShort(mermaid);
+            toReturn.push(msg);
+            this->_core.addEntity(std::make_shared<Mermaid>(Position(1920, (1080 - 400) / 2, 1080, 1920)), id);
+        }
         this->_waves.erase(this->_waves.begin());
     }
 }
