@@ -110,6 +110,10 @@ bool RType::Server::Room::sendMessageToRoom(const Utils::MessageParsed_s &msg)
         this->sendEntityType(msg);
         return true;
     }
+    if (msg.msgType == message) {
+        this->notifyAllPlayer(msg);
+        return true;
+    }
     auto it = this->_allPlayers.find({msg.senderIp, msg.senderPort});
     if (it == this->_allPlayers.end())
         return false;

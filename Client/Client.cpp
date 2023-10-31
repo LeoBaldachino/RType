@@ -20,22 +20,27 @@ _commands({
 {removeEntity, &RType::Client::removeAnEntity},
 {valueSet, &RType::Client::setValues},
 {nbOfEntities, &RType::Client::syncNbOfEntities},
-{playerDeconnected, &RType::Client::quitRoom}
+{playerDeconnected, &RType::Client::quitRoom},
+{message, &RType::Client::newMessage},
 }),
 _buttonList("../Assets/insanibu.ttf"),
 _parallax(_texture),
 _parallaxGnome(_texture),
 _popUp("Welcome the the R-Type !", "../Assets/insanibu.ttf"),
 _menu(this->_popUp, [this]{
-    int pid = fork();
-    int random = std::rand() % 1000 + 3000; 
-    if (!pid) {
-        std::system(std::string("./r-type_server "+ std::to_string(random) + " ../test.cfg").c_str());
-        std::exit(0);
-    }
-    this->_serverPid = pid;
-    this->_serverIp = "127.0.0.1";
-    this->_serverPort = random;
+    #ifdef __unix__
+        int random = std::rand() % 1000 + 3000; 
+        int pid = fork();
+        if (!pid) {
+            std::system(std::string("./r-type_server "+ std::to_string(random) + " ../test.cfg").c_str());
+            std::exit(0);
+        }
+        this->_serverPid = pid;
+        this->_serverIp = "127.0.0.1";
+        this->_serverPort = random;
+        return;
+    #endif
+    this->_popUp.setText("Feature only available in linux systems");
 })
 {
     std::srand(std::time(NULL));
@@ -107,11 +112,23 @@ void RType::Client::handleInputs(void)
                 case (sf::Keyboard::Escape) :
                     this->quitActualRoom();
                     break;
+                case (sf::Keyboard::C) :
+                    if (this->_msgPanel.isOpen())
+                        this->_msgPanel.closePanel();
+                    else
+                        this->_msgPanel.openPanel();
                 case (sf::Keyboard::Space) :
                     if (!this->shooting) {
                         this->shotTime = std::chrono::steady_clock::now();
                         this->shooting = true;
                     }
+                    break;
+                case (sf::Keyboard::W) :
+                    sf::Texture text;
+                    text.create(1920, 1080);
+                    text.update(*this->_window);
+                    auto img = text.copyToImage();
+                    img.saveToFile("screenshoot.png");
                     break;
 
             }
@@ -497,11 +514,22 @@ void RType::Client::gameLoop()
     // std::cout << "Entities size is " << this->_entities._entities.size() << std::endl;
     lock.unlock();
     auto mousePos = sf::Mouse::getPosition(*this->_window);
-    this->_buttonList.hoverButtons(mousePos);
-    if (this->_mouseClicked)
+    if (this->_mouseClicked) {
+        this->_msgPanel.clickButtons(mousePos);
         this->_buttonList.clickButtons(mousePos);
+    } else {
+        this->_msgPanel.hoverButtons(mousePos);
+        this->_buttonList.hoverButtons(mousePos);
+    }
     this->_buttonList.displayButtons(this->_window);
     this->_popUp.display(this->_window);
+    this->_msgPanel.display(this->_window);
+    if (this->_msgPanel.needSendMessage()) {
+        auto msgg = this->_msgPanel.sendMessage();
+        msgg.senderIp = this->_serverIp;
+        msgg.senderPort = this->_serverPort;
+        this->_socket->send(msgg);
+    }
     _window->display();
     this->setLifeBars();
     this->updateInputs();
@@ -601,7 +629,7 @@ void RType::Client::quitActualRoom()
     if (this->_actualId == -1) {
         #ifdef __unix__
             if (this->_serverPid != -1) {
-                kill(this->_serverPid, SIGTERM);
+                kill(this->_serverPid, SIGINT);
             }
         #endif
         return std::exit(0);
@@ -610,4 +638,11 @@ void RType::Client::quitActualRoom()
     msg.bytes[0] = this->_menu.getRoomId();
     msg.bytes[1] = this->_actualId;
     this->_socket->send(msg);
+}
+
+
+void RType::Client::newMessage(const Utils::MessageParsed_s &msg)
+{
+    std::cout << "New message" << std::endl;
+    this->_popUp.setText(this->_msgPanel.decyptMessage(msg));
 }

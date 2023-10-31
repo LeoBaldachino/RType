@@ -31,8 +31,9 @@ file(GLOB PARALLAX "Client/Parallax/*.cpp")
 file(GLOB BUTTON "Client/Button/*.cpp")
 file(GLOB MENU "Client/Menu/*.cpp")
 file(GLOB POPUP "Client/PopUp/*.cpp")
+file(GLOB MESSAGE_PANEL "Client/MessagePanel/*.cpp")
 
-add_executable(r-type_client ${CLIENT_FILES} ${SUBSYSTEMS} ${SYSTEMS} ${ENTITY} ${CORE} ${SOCKET_FILES} ${ENTITY_TYPES} ${LIFE_BAR} ${PARALLAX} ${BUTTON} ${MENU} ${POPUP})
+add_executable(r-type_client ${CLIENT_FILES} ${SUBSYSTEMS} ${SYSTEMS} ${ENTITY} ${CORE} ${SOCKET_FILES} ${ENTITY_TYPES} ${LIFE_BAR} ${PARALLAX} ${BUTTON} ${MENU} ${POPUP} ${MESSAGE_PANEL})
 
 find_package(Threads REQUIRED)
 target_link_libraries(r-type_client PRIVATE sfml-graphics sfml-window sfml-system sfml-audio Threads::Threads)
