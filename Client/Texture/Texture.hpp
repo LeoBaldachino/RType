@@ -27,6 +27,8 @@ public:
         this->piercingShotTexture.loadFromFile("./../Assets/EntitiesSprites/PiercingShot.png");
         this->enemyShotTexture.loadFromFile("./../Assets/EntitiesSprites/EnemyShot.png");
         this->genieTexture.loadFromFile("./../Assets/Genie/Genie.png");
+        this->dragonTexture.loadFromFile("./../Assets/Dragon/Dragon/dragon.png");
+        this->dragonShotTexture.loadFromFile("./../Assets/Dragon/DragonShot/dragonShot.png");
         this->genieShotTexture.loadFromFile("./../Assets/Genie/genieShot.png");
         // for (int i = 0; i != 24; ++i) {
         //     sf::Texture _text;
@@ -82,6 +84,8 @@ public:
     sf::Texture piercingShotTexture;
     sf::Texture enemyShotTexture;
     sf::Texture genieTexture;
+    sf::Texture dragonTexture;
+    sf::Texture dragonShotTexture;
     sf::Texture genieShotTexture;
     sf::Texture coinTexture;
 

@@ -266,7 +266,7 @@ void RType::Client::setEntityType(const Utils::MessageParsed_s &msg)
         case RType::bydos:
             return this->newBydosToRoom(msg);
         case RType::bydosShoot:
-            return this->newEnemyShoot(msg);
+            return this->newBydosShoot(msg);
         case RType::tourre:
             return this->newTourreToRoom(msg);
         case RType::playerShoot:
@@ -279,7 +279,20 @@ void RType::Client::setEntityType(const Utils::MessageParsed_s &msg)
             return this->newGenie(msg);
         case RType::genieShot:
             return this->newGenieShot(msg);
+        case RType::dragon:
+            return this->newDragon(msg);
+        case RType::dragonShot:
+            return this->newDragonShot(msg);
     }
+}
+
+void RType::Client::newDragonShot(const Utils::MessageParsed_s &msg)
+{
+    auto it = this->_entities._entities.find(msg.getFirstShort());
+    if (it != this->_entities._entities.end())
+        return;
+    std::unique_lock<std::mutex> lock(*this->_mutex);
+    this->_entities.addEntity(std::make_shared<DragonShot>(Position(1900, 100, 1080, 1920)), msg.getFirstShort());
 }
 
 void RType::Client::newGenieShot(const Utils::MessageParsed_s &msg)
@@ -289,6 +302,15 @@ void RType::Client::newGenieShot(const Utils::MessageParsed_s &msg)
         return;
     std::unique_lock<std::mutex> lock(*this->_mutex);
     this->_entities.addEntity(std::make_shared<GenieShot>(Position(1900, 100, 1080, 1920)), msg.getFirstShort());
+}
+
+void RType::Client::newDragon(const Utils::MessageParsed_s &msg)
+{
+    auto it = this->_entities._entities.find(msg.getFirstShort());
+    if (it != this->_entities._entities.end())
+        return;
+    std::unique_lock<std::mutex> lock(*this->_mutex);
+    this->_entities.addEntity(std::make_shared<Dragon>(Position(1900, 100, 1080, 1920)), msg.getFirstShort());
 }
 
 void RType::Client::newGenie(const Utils::MessageParsed_s &msg)
@@ -332,7 +354,7 @@ void RType::Client::removeAnEntity(const Utils::MessageParsed_s &msg)
     this->_entities.removeEntity(msg.getFirstShort());
 }
 
-void RType::Client::newEnemyShoot(const Utils::MessageParsed_s &msg)
+void RType::Client::newBydosShoot(const Utils::MessageParsed_s &msg)
 {
     auto it = this->_entities._entities.find(msg.getFirstShort());
     if (it != this->_entities._entities.end())
@@ -341,7 +363,7 @@ void RType::Client::newEnemyShoot(const Utils::MessageParsed_s &msg)
     Position pos(-20, -20);
     AIShoot aiShoot(pos, pos);
     auto tmpShoot = aiShoot.shootLogic();
-    this->_entities.addEntity(std::make_shared<ShotEntity>(tmpShoot, "../Assets/EntitiesSprites/tEnemyShot.png", false), msg.getFirstShort());
+    this->_entities.addEntity(std::make_shared<ShotEntity>(tmpShoot, RType::bydosShoot, false), msg.getFirstShort());
 }
 
 void RType::Client::setValues(const Utils::MessageParsed_s &msg)
@@ -379,7 +401,7 @@ void RType::Client::newMyShoot(const Utils::MessageParsed_s &msg)
     Position pos(-20, -20);
     AIShoot aiShoot(pos, pos);
     auto tmpShoot = aiShoot.shootLogic();
-    this->_entities.addEntity(std::make_shared<ShotEntity>(tmpShoot, "../Assets/shot.png", true), msg.getFirstShort());  
+    this->_entities.addEntity(std::make_shared<ShotEntity>(tmpShoot, RType::playerShoot, true), msg.getFirstShort());  
 }
 
 void RType::Client::newPercingShoot(const Utils::MessageParsed_s &msg)
@@ -426,10 +448,18 @@ sf::Sprite RType::Client::getSpriteFromEntity(std::shared_ptr<IEntity> entity, u
         ret.setTexture(this->_texture.genieTexture);
         ret.setTextureRect(sf::Rect<int>(500 * (spriteFrame - 1), 0, 500, 541));
     }
+    if (entity->getEntityType() == RType::EntityTypes::dragon) {
+        ret.setTexture(this->_texture.dragonTexture);
+        ret.setTextureRect(sf::Rect<int>(667 * (spriteFrame - 1), 0, 667, 836));
+    }
     if (entity->getEntityType() == RType::EntityTypes::genieShot) {
         ret.setTexture(this->_texture.genieShotTexture);
         ret.setTextureRect(sf::Rect<int>(198 * (spriteFrame - 1), 0, 198, 254));
         ret.setScale(0.5, 0.5);
+    }
+    if (entity->getEntityType() == RType::EntityTypes::dragonShot) {
+        ret.setTexture(this->_texture.dragonShotTexture);
+        ret.setTextureRect(sf::Rect<int>(130 * (spriteFrame - 1), 0, 130, 130));
     }
     if (entity->getEntityType() == RType::EntityTypes::playerShoot) {
         ret.setTexture(this->_texture.playerShotTexture);
@@ -437,13 +467,6 @@ sf::Sprite RType::Client::getSpriteFromEntity(std::shared_ptr<IEntity> entity, u
     if (entity->getEntityType() == RType::EntityTypes::player && id == this->_actualId) {
         ret.setTexture(this->_texture.playerTexture);
         ret.setTextureRect(sf::Rect<int>(107 * (spriteFrame - 1), 0, 107, 98));
-        // int r = rand() % 3;
-        // if (r == 0)
-            // ret.setTextureRect(sf::Rect<int>(107 * (spriteFrame - 1), 0, 107, 98));
-        // else if (r == 1)
-            // ret.setTextureRect(sf::Rect<int>(109 * (spriteFrame - 1), 106, 109, 89));
-        // else
-            // ret.setTextureRect(sf::Rect<int>(106 * (spriteFrame - 1), 201, 106, 99));
     }
     if (entity->getEntityType() == RType::EntityTypes::player && id != this->_actualId) {
         ret.setTexture(this->_texture.otherPlayerTexture);

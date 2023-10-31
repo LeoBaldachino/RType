@@ -83,10 +83,12 @@ namespace RType {
             void newBydosToRoom(const Utils::MessageParsed_s &msg);
             void newCoin(const Utils::MessageParsed_s &msg);
             void newGenie(const Utils::MessageParsed_s &msg);
+            void newDragon(const Utils::MessageParsed_s &msg);
+            void newDragonShot(const Utils::MessageParsed_s &msg);
             void newGenieShot(const Utils::MessageParsed_s &msg);
             void newTourreToRoom(const Utils::MessageParsed_s &msg);
             void removeAnEntity(const Utils::MessageParsed_s &msg);
-            void newEnemyShoot(const Utils::MessageParsed_s &msg);
+            void newBydosShoot(const Utils::MessageParsed_s &msg);
             void setValues(const Utils::MessageParsed_s &msg);
             void newMyShoot(const Utils::MessageParsed_s &msg);
             void newPercingShoot(const Utils::MessageParsed_s &msg);
