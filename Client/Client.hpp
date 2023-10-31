@@ -87,6 +87,7 @@ namespace RType {
             void newDragonShot(const Utils::MessageParsed_s &msg);
             void newGenieShot(const Utils::MessageParsed_s &msg);
             void newMermaid(const Utils::MessageParsed_s &msg);
+            void newMermaidShot(const Utils::MessageParsed_s &msg);
             void newTourreToRoom(const Utils::MessageParsed_s &msg);
             void removeAnEntity(const Utils::MessageParsed_s &msg);
             void newBydosShoot(const Utils::MessageParsed_s &msg);

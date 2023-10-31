@@ -19,6 +19,7 @@
 #include "../Components/ClockTimer.hpp"
 #include "../Systems/BydosSystem.hpp"
 #include "../Systems/MermaidSystem.hpp"
+#include "../Systems/MermaidShotSystem.hpp"
 
 class SystemVisitor : public IVisitor {
     public:
@@ -74,14 +75,37 @@ class SystemVisitor : public IVisitor {
             if (m.getLifes() == 0)
                 return (void)core.removeEntityLater(m);
             this->_mermaidSystem.updatePos(m);
-            // if (m.getPosition().getX() <= 1920 - 500)
-            //     this->_mermaidSystem.shot(m, core);
+            if (m.getPosition().getX() <= 1920 - 500)
+                this->_mermaidSystem.shot(m, core);
             for (auto it : core._entities) {
                 auto entityType = it.second->getEntityType();
                 if (entityType == RType::playerShoot)
                     this->_mermaidSystem.checkCollision(m, *it.second, core, false);
                 if (entityType == RType::percingShoot)
                     this->_mermaidSystem.checkCollision(m, *it.second, core, true);
+            }
+        };
+        void visitMermaidShot(MermaidShot &mS, Core &core) {
+            // if (mS.getLifes() == 0) {
+            //     // Position(1700 + std::rand() % 200, std::rand() % 1000, 1080, 1920
+            //     Shoot tmpShoot(Vector2d(0, -1), Vector2d(std::rand() % 500, 1100), 1, 3, 1, false);
+            //     // Shoot tmpShoot(Vector2d(-1, 0), Vector2d(mS.getPosition().getX(), mS.getPosition().getY()), 1, 3, 1, false);
+            //     core.addEntity(std::make_shared<ShotEntity>(tmpShoot, RType::bydosShoot, false), core.getAvailabeIndex());
+            //     tmpShoot.setDirection(Vector2d(0, -1));
+            //     core.addEntity(std::make_shared<ShotEntity>(tmpShoot, RType::bydosShoot, false), core.getAvailabeIndex());
+            //     tmpShoot.setDirection(Vector2d(0, 1));
+            //     core.addEntity(std::make_shared<ShotEntity>(tmpShoot, RType::bydosShoot, false), core.getAvailabeIndex());
+            //     tmpShoot.setDirection(Vector2d(1, 0));
+            //     core.addEntity(std::make_shared<ShotEntity>(tmpShoot, RType::bydosShoot, false), core.getAvailabeIndex());
+            //     return (void)core.removeEntityLater(mS);
+            // }
+            this->_mermaidShotSystem.updatePos(mS, this->_lastPlayerPos);
+            for (auto it : core._entities) {
+                auto entityType = it.second->getEntityType();
+                if (entityType == RType::playerShoot)
+                    this->_mermaidShotSystem.checkCollision(mS, *it.second, core, false);
+                if (entityType == RType::percingShoot)
+                    this->_mermaidShotSystem.checkCollision(mS, *it.second, core, true);
             }
         };
         void visitDragon(Dragon &d, Core &core) {
@@ -152,6 +176,7 @@ class SystemVisitor : public IVisitor {
         CoinSystem _coinSystem;
         GenieShotSystem _genieShotSystem;
         MermaidSystem _mermaidSystem;
+        MermaidShotSystem _mermaidShotSystem;
         DragonSystem _dragonSystem;
         DragonShotSystem _dragonShotSystem;
 };

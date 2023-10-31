@@ -20,7 +20,7 @@ namespace RType {
         genie,
         genieShot,
         mermaid,
-        mermaidshot,
+        mermaidShot,
         dragon,
         dragonShot
     };

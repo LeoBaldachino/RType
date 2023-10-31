@@ -15,7 +15,7 @@
 #include "../Components/ClockTimer.hpp"
 #include "../Components/Health.hpp"
 
-#define MERMAIDSHOOT_SPEED 3000
+#define MERMAIDSHOOT_SPEED 1200
 #define JUMP_SPEED 3000
 #define MOVE_SPEED 3
 #define MERMAID_X 520

@@ -333,6 +333,15 @@ void RType::Client::newMermaid(const Utils::MessageParsed_s &msg)
     this->_entities.addEntity(std::make_shared<Mermaid>(Position(1900, 100, 1080, 1920)), msg.getFirstShort());
 }
 
+void RType::Client::newMermaidShot(const Utils::MessageParsed_s &msg)
+{
+    auto it = this->_entities._entities.find(msg.getFirstShort());
+    if (it != this->_entities._entities.end())
+        return;
+    std::unique_lock<std::mutex> lock(*this->_mutex);
+    this->_entities.addEntity(std::make_shared<MermaidShot>(Position(1900, 100, 1080, 1920)), msg.getFirstShort());
+}
+
 void RType::Client::newCoin(const Utils::MessageParsed_s &msg)
 {
     auto it = this->_entities._entities.find(msg.getFirstShort());
@@ -463,6 +472,10 @@ sf::Sprite RType::Client::getSpriteFromEntity(std::shared_ptr<IEntity> entity, u
     if (entity->getEntityType() == RType::EntityTypes::mermaid) {
         ret.setTexture(this->_texture.mermaidTexture);
         ret.setTextureRect(sf::Rect<int>(520 * (spriteFrame - 1), 0, 520, 813));
+    }
+    if (entity.get()->getEntityType() == RType::EntityTypes::mermaidShot) {
+        ret.setTexture(this->_texture.mermaidShotTexture);
+        ret.setTextureRect(sf::Rect<int>(130 * (spriteFrame - 1), 0, 130, 130));
     }
 
     if (entity->getEntityType() == RType::EntityTypes::dragon) {

@@ -37,10 +37,10 @@ void MermaidSystem::checkCollision(Mermaid &t, IEntity &entity, Core &core, bool
     }
 }
 
-// void MermaidSystem::shot(Mermaid &t, Core &core)
-// {
-//     if (!t.readyToShoot())
-//         return;
-//     MermaidShot tmpMermaidShot(t.getPosition());
-//     core.addEntity(std::make_shared<MermaidShot>(tmpMermaidShot), core.getAvailabeIndex());
-// }
+void MermaidSystem::shot(Mermaid &t, Core &core)
+{
+    if (!t.readyToShoot())
+        return;
+    MermaidShot tmpMermaidShot(Position(std::rand() % 900, 1100, 1080, 1920));
+    core.addEntity(std::make_shared<MermaidShot>(tmpMermaidShot), core.getAvailabeIndex());
+}
