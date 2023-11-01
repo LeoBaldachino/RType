@@ -33,7 +33,7 @@ public:
         this->dragonTexture.loadFromFile("./../Assets/Dragon/Dragon/dragon.png");
         this->dragonShotTexture.loadFromFile("./../Assets/Dragon/DragonShot/dragonShot.png");
         this->genieShotTexture.loadFromFile("./../Assets/Genie/genieShot.png");
-        this->mermaidShotTexture.loadFromFile("./../Assets/Genie/genieShot.png");
+        this->mermaidShotTexture.loadFromFile("./../Assets/Mermaid/MermaidShots.png");
         for (int i = 0; i != 24; ++i) {
             sf::Texture _text;
             std::string fileName = "./../Assets/Desert/Desert/desert";

@@ -33,7 +33,8 @@ class SystemVisitor : public IVisitor {
                 if (it.second->getEntityType() == RType::bydos || it.second->getEntityType() == RType::bydosShoot
                 || it.second->getEntityType() == RType::coin || it.second->getEntityType() == RType::genie
                 || it.second->getEntityType() == RType::genieShot || it.second->getEntityType() == RType::dragon
-                || it.second->getEntityType() == RType::dragonShot)
+                || it.second->getEntityType() == RType::dragonShot || it.second->getEntityType() == RType::mermaid
+                || it.second->getEntityType() == RType::mermaidShot)
                     this->_playerSystem.checkCollision(p, *it.second, core);
             this->_lastPlayerPos = p.getPosition();
         }
@@ -87,19 +88,9 @@ class SystemVisitor : public IVisitor {
             }
         };
         void visitMermaidShot(MermaidShot &mS, Core &core) {
-            // if (mS.getLifes() == 0) {
-            //     // Position(1700 + std::rand() % 200, std::rand() % 1000, 1080, 1920
-            //     Shoot tmpShoot(Vector2d(0, -1), Vector2d(std::rand() % 500, 1100), 1, 3, 1, false);
-            //     // Shoot tmpShoot(Vector2d(-1, 0), Vector2d(mS.getPosition().getX(), mS.getPosition().getY()), 1, 3, 1, false);
-            //     core.addEntity(std::make_shared<ShotEntity>(tmpShoot, RType::bydosShoot, false), core.getAvailabeIndex());
-            //     tmpShoot.setDirection(Vector2d(0, -1));
-            //     core.addEntity(std::make_shared<ShotEntity>(tmpShoot, RType::bydosShoot, false), core.getAvailabeIndex());
-            //     tmpShoot.setDirection(Vector2d(0, 1));
-            //     core.addEntity(std::make_shared<ShotEntity>(tmpShoot, RType::bydosShoot, false), core.getAvailabeIndex());
-            //     tmpShoot.setDirection(Vector2d(1, 0));
-            //     core.addEntity(std::make_shared<ShotEntity>(tmpShoot, RType::bydosShoot, false), core.getAvailabeIndex());
-            //     return (void)core.removeEntityLater(mS);
-            // }
+            if (mS.getLifes() == 0) {
+                return (void)core.removeEntityLater(mS);
+            }
             this->_mermaidShotSystem.updatePos(mS, this->_lastPlayerPos);
             for (auto it : core._entities) {
                 auto entityType = it.second->getEntityType();

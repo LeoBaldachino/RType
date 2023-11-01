@@ -96,7 +96,7 @@ unsigned int MermaidShot::getEntitySpriteFrame()
 {
     if (this->_frameClock.clockOk()) {
         ++this->_spriteFrame;
-        this->_spriteFrame = this->_spriteFrame >= 32 ? 5 : this->_spriteFrame;
+        this->_spriteFrame = this->_spriteFrame >= 13 ? 0 : this->_spriteFrame;
     }
     return (this->_spriteFrame);
 }

@@ -15,8 +15,8 @@
 #include "../Components/Health.hpp"
 
 #define MERMAIDSHOT_SPEED 1
-#define MERMAIDSHOT_X 130
-#define MERMAIDSHOT_Y 130
+#define MERMAIDSHOT_X 138
+#define MERMAIDSHOT_Y 135
 #define MERMAIDSHOT_HEALTH 1
 
 /**
@@ -107,7 +107,7 @@ class MermaidShot : public IEntity, public Health {
          * 
          * @return Type of the entity
          */
-        inline unsigned char getEntityType() {return RType::dragonShot;}
+        inline unsigned char getEntityType() {return RType::mermaidShot;}
         /**
          * @brief Check if the MermaidShot is ready to move
          * 

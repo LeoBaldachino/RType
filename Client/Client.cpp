@@ -281,6 +281,8 @@ void RType::Client::setEntityType(const Utils::MessageParsed_s &msg)
             return this->newGenieShot(msg);
         case RType::mermaid:
             return this->newMermaid(msg);
+        case RType::mermaidShot:
+            return this->newMermaidShot(msg);
         case RType::dragon:
             return this->newDragon(msg);
         case RType::dragonShot:
@@ -475,7 +477,7 @@ sf::Sprite RType::Client::getSpriteFromEntity(std::shared_ptr<IEntity> entity, u
     }
     if (entity.get()->getEntityType() == RType::EntityTypes::mermaidShot) {
         ret.setTexture(this->_texture.mermaidShotTexture);
-        ret.setTextureRect(sf::Rect<int>(130 * (spriteFrame - 1), 0, 130, 130));
+        ret.setTextureRect(sf::Rect<int>(138 * (spriteFrame - 1), 0, 138, 135));
     }
 
     if (entity->getEntityType() == RType::EntityTypes::dragon) {
