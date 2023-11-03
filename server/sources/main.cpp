@@ -10,6 +10,7 @@
 int main(int ar, char **av)
 {
     try {
+        std::srand(time(NULL));
         RType::CoreServer server(ar, av);
     } catch (const std::exception &err) {
         std::cerr << err.what() << std::endl;
