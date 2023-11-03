@@ -38,6 +38,9 @@ add_executable(r-type_client ${CLIENT_FILES} ${SUBSYSTEMS} ${SYSTEMS} ${ENTITY} 
 find_package(Threads REQUIRED)
 target_link_libraries(r-type_client PRIVATE sfml-graphics sfml-window sfml-system sfml-audio Threads::Threads)
 
+target_compile_options(r-type_client PRIVATE -fsanitize=address -g)
+target_link_options(r-type_client PRIVATE -fsanitize=address -g)
+
 if(CMAKE_COMPILER_IS_GNUCXX)
     target_compile_options(r-type_client PRIVATE "-Wno-unused-result")
 endif()
@@ -61,6 +64,9 @@ file(GLOB SERVER_RTYPEGAMELOOP "gameLoop/RTypeGameLoop/*.cpp")
 file(GLOB SERVER_ENTITYTYPES "EntityTypes/*.cpp")
 
 add_executable(r-type_server ${SERVER_SOURCES} ${SERVER_CORE} ${SERVER_SOCKET} ${SERVER_SYSTEMS} ${SERVER_SUBSYSTEMS} ${SERVER_ENTITY} ${SERVER_GAMELOOP} ${SERVER_RTYPEGAMELOOP} ${SERVER_ENTITYTYPES})
+
+target_compile_options(r-type_server PRIVATE -fsanitize=address -g)
+target_link_options(r-type_server PRIVATE -fsanitize=address -g)
 
 # Link against libconfig
 target_link_libraries(r-type_server PRIVATE boost_system boost_serialization Threads::Threads config++ config)

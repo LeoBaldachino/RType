@@ -29,7 +29,7 @@ class ShotEntity : public IEntity {
          * @param spriteFile Path to the sprite file
          * @param playerShoot Boolean indicating if the shot is from the player
          */
-        ShotEntity(Shoot &shoot, std::string spriteFile, bool playerShoot);
+        ShotEntity(Shoot &shoot, std::string spriteFile, bool playerShoot, IEntity &sender);
         ~ShotEntity() {};
 
         /**
@@ -139,7 +139,12 @@ class ShotEntity : public IEntity {
          * @return ClockTimer 
          */
         ClockTimer getTempoState(void);
-
+        /**
+         * @brief Get the Sender 
+         * 
+         * @return IEntity& 
+         */
+        inline IEntity *getSender() {return &this->_sender;};
     private:
         Shoot _shoot;
         Vector2d _size;
@@ -149,4 +154,5 @@ class ShotEntity : public IEntity {
         unsigned int _spriteFrame = 0;
         ClockTimer _frameClock;
         ClockTimer _currentTempoState;
+        IEntity &_sender;
 };

@@ -52,7 +52,7 @@ bool RType::Server::Room::addToRoom(const std::pair<std::string, int> &newPlayer
             this->_firstClient = newPlayer;
         newId = this->_core.getAvailabeIndex();
         std::cout << "Add a new player with " << static_cast<int>(this->_baseLife) << " life" <<std::endl;
-        this->_core.addEntity(std::make_shared<Player>(Position(0, 0, 1920, 1080), this->_baseLife), newId);
+        this->_core.addEntity(std::make_shared<Player>(Position(0, 0, 1920, 1080), this->_baseLife, newPlayer.first), newId);
         for (auto &it : this->_allPlayers) {
             msg.msgType = newPlayerConnected;
             msg.setFirstShort(it.second);

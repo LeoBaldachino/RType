@@ -10,6 +10,7 @@
 #include "../Core/Core.hpp"
 #include "Subsystems/MovementSystem.hpp"
 #include "Subsystems/ShotSystem.hpp"
+#include "Subsystems/PiercingShotSystem.hpp"
 #include "Subsystems/HitBox.hpp"
 
 #include <chrono>

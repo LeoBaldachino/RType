@@ -128,7 +128,7 @@ void RType::CoreServer::getOutFromRoom(const Utils::MessageParsed_s &msg)
             if ((*it)->removeFromRoom(msg) && (*it)->willBeDestroyed()) {
                 (*it)->waitForDestroy();
                 std::unique_lock<std::mutex>(this->_mutex);
-                std::cout << "Remove room with id " << (*it)->getId() << std::endl;
+                std::cout << "Remove room with id " << static_cast<int>((*it)->getId()) << std::endl;
                 this->_rooms.erase(it);
                 return;
             }
