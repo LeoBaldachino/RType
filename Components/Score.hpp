@@ -29,20 +29,19 @@ class Score {
                 return;
             while (std::getline(scores, line))
                 if (line.rfind(name, 0) == 0) {
-                    line += name.length() + 1;
+                    std::cout << "Find line !" << std::endl;
+                    line.erase(0, name.size() + 1);
                     break;
                 }
             scores.close();
-            if (line.length() == 0);
-                return;
             try {
+                std::cout << "Get act score..." << std::endl;
                 this->_actScore = std::stof(line);
             } catch (const std::exception &err) {
                 std::cout << "Error when getting the score of the " << name << " entity" << std::endl;
             }
         };
         ~Score() {
-            std::cout << "Score destruction" << std::endl;
             if (this->_readOnly)
                 return;
             std::ifstream scores;

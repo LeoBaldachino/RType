@@ -23,6 +23,7 @@
 #include "Menu/Menu.hpp"
 #include "PopUp/PopUp.hpp"
 #include "MessagePanel/MessagePanel.hpp"
+#include "Hud/Hud.hpp"
 
 #define GET_ID_LIMIT_TIME 1
 
@@ -127,6 +128,6 @@ namespace RType {
             bool _quittedRoom = false;
             int _serverPid;
             MessagePanel _msgPanel;
-
+            Hud _hud;
     };
 }

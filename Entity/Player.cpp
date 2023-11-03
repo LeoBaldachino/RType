@@ -38,7 +38,7 @@ Player::Player(Position position, unsigned char life, const std::string &name) :
 {
     this->_position = position;
     this->_state = State(100);
-    this->_velocity = 1;
+    this->_velocity = 2;
     this->_inputs = std::make_unique<Inputs>();
 }
 

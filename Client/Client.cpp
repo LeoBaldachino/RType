@@ -41,7 +41,8 @@ _menu(this->_popUp, [this]{
         return;
     #endif
     this->_popUp.setText("Feature only available in linux systems");
-})
+}),
+_hud(sf::Vector2f(1700.0, 20.0))
 {
     std::srand(std::time(NULL));
     if (ac < 3)
@@ -400,6 +401,7 @@ void RType::Client::setValues(const Utils::MessageParsed_s &msg)
         playerCasted->setLife(msg.bytes[3]);
         playerCasted->setMaxLife(msg.bytes[5]);
         this->_lifeBar->setLifeBarToPlayer(playerCasted);
+        this->_hud.setScore(msg.bytes[6]);
     }
     if (find->second->getEntityType() == bydos) {
         std::shared_ptr<Bydos> bydosCasted = std::dynamic_pointer_cast<Bydos>(find->second);
@@ -531,6 +533,7 @@ void RType::Client::gameLoop()
         msgg.senderPort = this->_serverPort;
         this->_socket->send(msgg);
     }
+    this->_hud.display(this->_window);
     _window->display();
     this->setLifeBars();
     this->updateInputs();
