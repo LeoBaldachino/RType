@@ -7,10 +7,12 @@
 
 #include "../includes/Room.hpp"
 
-RType::Server::Room::Room(unsigned char id, unsigned char maxSize, std::shared_ptr<Utils::SocketHandler> setSocket, std::vector<std::map<Parser::Enemies, int>> waves) : _socket(setSocket)
+RType::Server::Room::Room(unsigned char id, unsigned char maxSize, std::shared_ptr<Utils::SocketHandler> setSocket, std::vector<std::map<Parser::Enemies, int>> waves, unsigned char playerBaseLife) : 
+_socket(setSocket)
 {
     std::unique_lock<std::mutex> lock(this->_mutex);
     this->_willBeDestroyed = false;
+    this->_baseLife = playerBaseLife;
     this->_id = id;
     this->_maxSize = maxSize;
     this->_isOpen = true;
@@ -49,7 +51,8 @@ bool RType::Server::Room::addToRoom(const std::pair<std::string, int> &newPlayer
         if (this->_firstClient.first == "" && this->_firstClient.second == -1)
             this->_firstClient = newPlayer;
         newId = this->_core.getAvailabeIndex();
-        this->_core.addEntity(std::make_shared<Player>(Position(0, 0, 1920, 1080)), newId);
+        std::cout << "Add a new player with " << static_cast<int>(this->_baseLife) << " life" <<std::endl;
+        this->_core.addEntity(std::make_shared<Player>(Position(0, 0, 1920, 1080), this->_baseLife, newPlayer.first), newId);
         for (auto &it : this->_allPlayers) {
             msg.msgType = newPlayerConnected;
             msg.setFirstShort(it.second);
@@ -108,6 +111,10 @@ bool RType::Server::Room::sendMessageToRoom(const Utils::MessageParsed_s &msg)
     }
     if (msg.msgType == entityType) {
         this->sendEntityType(msg);
+        return true;
+    }
+    if (msg.msgType == message) {
+        this->notifyAllPlayer(msg);
         return true;
     }
     auto it = this->_allPlayers.find({msg.senderIp, msg.senderPort});

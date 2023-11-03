@@ -11,6 +11,7 @@
 #include "Subsystems/MovementSystem.hpp"
 #include "Subsystems/ShotSystem.hpp"
 #include "Subsystems/HitBox.hpp"
+#include "Subsystems/PiercingShotSystem.hpp"
 
 #include <chrono>
 

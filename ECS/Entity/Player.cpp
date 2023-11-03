@@ -7,20 +7,38 @@
 
 #include "Player.hpp"
 
-Player::Player() : 
-Health(BASE_HEALTH),
+Player::Player(unsigned char life) : 
+Health(life),
 _timer(READY_MOVE),
 _frameClock(100),
-_currentTempoState(getEntityPositionRange()[3])
+_currentTempoState(getEntityPositionRange()[3]),
+Score("")
 {
     this->_inputs = std::make_unique<Inputs>();
 }
 
-Player::Player(Position position) : _size(PLAYER_X, PLAYER_Y),  Health(BASE_HEALTH) , _timer(READY_MOVE), _frameClock(100), _currentTempoState(getEntityPositionRange()[3])
+Player::Player(Player &player) : Health(player), Score(player), _timer(READY_MOVE), _frameClock(100), _currentTempoState(getEntityPositionRange()[3])
+{
+    _state = player._state;
+    _position = player._position;
+    _movement = player._movement;
+    _timer = player._timer;
+    _velocity = player._velocity;
+    _shootDmg = player._shootDmg;
+    _shootVelocity = player._shootVelocity;
+    _shootGravity = player._shootGravity;
+    _size = player._size;
+    _hasMoved = player._hasMoved;
+    _spriteFrame = player._spriteFrame;
+    _frameClock = player._frameClock;
+    _currentTempoState = player._currentTempoState;
+}
+
+Player::Player(Position position, unsigned char life, const std::string &name) : _size(PLAYER_X, PLAYER_Y),  Health(life) , _timer(READY_MOVE), _frameClock(100), _currentTempoState(getEntityPositionRange()[3]), Score(name)
 {
     this->_position = position;
     this->_state = State(100);
-    this->_velocity = 1;
+    this->_velocity = 2;
     this->_inputs = std::make_unique<Inputs>();
 }
 

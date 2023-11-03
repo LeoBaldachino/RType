@@ -24,7 +24,7 @@ namespace RType {
     };
     class Menu {
         public:
-            Menu(PopUp &popUp);
+            Menu(PopUp &popUp, std::function<void()> fn);
             ~Menu();
             void displayMenu(std::unique_ptr<sf::RenderWindow> &window, bool mouseClicked);
             void addMessage(const Utils::MessageParsed_s &msg);

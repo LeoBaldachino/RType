@@ -7,12 +7,13 @@
 
 #include "PiercingShotEntity.hpp"
 
-PiercingShotEntity::PiercingShotEntity(Shoot &shoot) : 
+PiercingShotEntity::PiercingShotEntity(Shoot &shoot, IEntity &sender) : 
 _shoot(shoot),
 _size(PIERCING_SHOT_X, PIERCING_SHOT_Y),
 _frameClock(100),
 _currentTempoState(getEntityPositionRange()[3]),
-_clockMove(MOVE_PIERCING_SHOT)
+_clockMove(MOVE_PIERCING_SHOT),
+_sender(sender)
 {
 }
 

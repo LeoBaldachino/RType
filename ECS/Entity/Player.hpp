@@ -13,24 +13,25 @@
 #include "../Components/Inputs.hpp"
 #include "../Components/Health.hpp"
 #include "../Components/ClockTimer.hpp"
+#include "../Components/Score.hpp"
 
 #define PLAYER_X 106
 #define PLAYER_Y 98
-#define BASE_HEALTH 3
 #define READY_MOVE 3
 
 /**
  * @class Player
  * @brief Class representing a player in the game
  */
-class Player : public IEntity, public Health {
+class Player : public IEntity, public Health, public Score {
     public:
         /**
          * @brief Construct a new Player object
          * @param position Position of the player
          */
-        Player(Position position);
-        Player();
+        Player(Position position, unsigned char life, const std::string &name);
+        Player(unsigned char life);
+        Player(Player &player);
         ~Player() {};
 
         /**

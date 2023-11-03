@@ -33,8 +33,10 @@ file(GLOB PARALLAX "Client/Parallax/*.cpp")
 file(GLOB BUTTON "Client/Button/*.cpp")
 file(GLOB MENU "Client/Menu/*.cpp")
 file(GLOB POPUP "Client/PopUp/*.cpp")
-
-add_executable(r-type_client ${CLIENT_FILES} ${SUBSYSTEMS} ${SYSTEMS} ${ENTITY} ${CORE} ${SOCKET_FILES} ${ENTITY_TYPES} ${LIFE_BAR} ${PARALLAX} ${BUTTON} ${MENU} ${POPUP})
+file(GLOB HUD "Client/Hud/*.cpp")
+file(GLOB SOUND_PLAYER "Client/SoundPlayer/*.cpp")
+file(GLOB MESSAGE_PANEL "Client/MessagePanel/*.cpp")
+add_executable(r-type_client ${CLIENT_FILES} ${SUBSYSTEMS} ${SYSTEMS} ${ENTITY} ${CORE} ${SOCKET_FILES} ${ENTITY_TYPES} ${LIFE_BAR} ${PARALLAX} ${BUTTON} ${MENU} ${POPUP} ${MESSAGE_PANEL} ${HUD} ${SOUND_PLAYER} ${MESSAGE_PANEL})
 
 find_package(Threads REQUIRED)
 

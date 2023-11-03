@@ -43,7 +43,6 @@ void RType::Button::checkClicked(const sf::Vector2i &pos)
         if (std::chrono::duration_cast<std::chrono::milliseconds>(clock - this->_timeout).count() < 500)
             return;
         this->_timeout = clock;
-        std::cout << "Call the handler..." << std::endl;
         this->_handler();
     }
 }

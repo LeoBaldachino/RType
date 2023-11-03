@@ -7,8 +7,9 @@
 
 #include "Menu.hpp"
 
-RType::Menu::Menu(PopUp &popUp) :
-_popUp(popUp)
+RType::Menu::Menu(PopUp &popUp, std::function<void()> fn) :
+_popUp(popUp),
+_roomSelector(fn)
 {
     this->_text.loadFromFile("../Assets/background_game_real.png");
     this->_sprite.setTexture(this->_text);
@@ -35,10 +36,8 @@ void RType::Menu::displayMenu(std::unique_ptr<sf::RenderWindow> &window, bool mo
             this->_roomSelector.handleMessage(this->_messagesQueue.front());
             this->_messagesQueue.pop();
         }
-        if (this->_roomSelector.needToSendMessage()) {
-            std::cout << "need to send message" << std::endl;
+        if (this->_roomSelector.needToSendMessage())
             this->_toSend.push(this->_roomSelector.sendMessage());
-        }
         this->_roomSelector.display(window);
         // std::cout << "Room selector end ?" << std::endl;
     }

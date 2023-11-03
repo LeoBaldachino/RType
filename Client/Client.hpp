@@ -22,6 +22,9 @@
 #include "Button/ButtonList.hpp"
 #include "Menu/Menu.hpp"
 #include "PopUp/PopUp.hpp"
+#include "MessagePanel/MessagePanel.hpp"
+#include "Hud/Hud.hpp"
+#include "SoundPlayer/SoundPlayer.hpp"
 
 #define GET_ID_LIMIT_TIME 1
 
@@ -82,6 +85,7 @@ namespace RType {
             void setValues(const Utils::MessageParsed_s &msg);
             void newMyShoot(const Utils::MessageParsed_s &msg);
             void newPercingShoot(const Utils::MessageParsed_s &msg);
+            void newMessage(const Utils::MessageParsed_s &msg);
             void gameLoop();
             void changeTypeEntityAndMove(const Utils::MessageParsed_s &msg, std::unordered_map<unsigned short, std::shared_ptr<IEntity>>::iterator &it);
             sf::Sprite getSpriteFromEntity(std::shared_ptr<IEntity> entity, unsigned int id);
@@ -123,6 +127,9 @@ namespace RType {
             unsigned int _level = 2;
             PopUp _popUp;
             bool _quittedRoom = false;
-
+            int _serverPid;
+            MessagePanel _msgPanel;
+            Hud _hud;
+            SoundPlayer _soundPlayer;
     };
 }
