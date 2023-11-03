@@ -65,7 +65,7 @@ _hud(sf::Vector2f(1700.0, 20.0))
     // this->_buttonList.addButtons([this]{std::cout << "Hello world !" << std::endl;}, "../Assets/buttonTest.png", "Hello !", sf::Vector2f(10.0, 10.0), sf::IntRect(0, 0, 150, 100), 100, 0);
     this->_window = std::make_unique<sf::RenderWindow>(sf::VideoMode::getDesktopMode(), "R-Type" /*,sf::Style::Fullscreen */);
     // if (this->_music.openFromFile("../Assets/music.ogg") != -1)
-        // this->_music.play();
+    //     this->_music.play();
     this->_socket = std::make_unique<Utils::SocketHandler>("127.0.0.1", 4001 + std::rand() % 3000, std::list<int>({keyPressed, entityType, playerPing, newPlayerConnected, givePlayerId, destroyedRoom, serverStop, entityType, removeEntity, playerDeconnected, newRoomIsCreated, playerGetId, givePlayerId}));
     this->_threadIsOpen = true;
     this->_actualId = -1;
@@ -327,6 +327,7 @@ void RType::Client::getEntityType(unsigned short entity)
 
 void RType::Client::setEntityType(const Utils::MessageParsed_s &msg)
 {
+    this->_soundPlayer.playSpawnSound((RType::EntityTypes)msg.getSecondShort());
     switch (msg.getSecondShort()) {
         case RType::player:
             return this->newPlayerToRoom(msg);
@@ -375,6 +376,9 @@ void RType::Client::newTourreToRoom(const Utils::MessageParsed_s &msg)
 void RType::Client::removeAnEntity(const Utils::MessageParsed_s &msg)
 {
     std::unique_lock<std::mutex> lock(*this->_mutex);
+    auto it = this->_entities._entities.find(msg.getFirstShort());
+    if (it != this->_entities._entities.end())
+        this->_soundPlayer.playDeathSound((RType::EntityTypes)it->second->getEntityType());
     this->_entities.removeEntity(msg.getFirstShort());
 }
 

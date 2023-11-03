@@ -24,6 +24,7 @@
 #include "PopUp/PopUp.hpp"
 #include "MessagePanel/MessagePanel.hpp"
 #include "Hud/Hud.hpp"
+#include "SoundPlayer/SoundPlayer.hpp"
 
 #define GET_ID_LIMIT_TIME 1
 
@@ -129,5 +130,6 @@ namespace RType {
             int _serverPid;
             MessagePanel _msgPanel;
             Hud _hud;
+            SoundPlayer _soundPlayer;
     };
 }
