@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "../../Entity/Player.hpp"
+#include "../../ECS/Entity/Player.hpp"
 #include "../../Core/Core.hpp"
 #include "../../EntityTypes/EntityTypes.hpp"
 #include "../../Visitor/SystemVisitor.hpp"
