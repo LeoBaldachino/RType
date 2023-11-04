@@ -7,7 +7,7 @@
 
 #include "ShotEntity.hpp"
 
-ShotEntity::ShotEntity(Shoot &shoot, std::string spriteFile, bool playerShoot, IEntity &sender) :
+ShotEntity::ShotEntity(Shoot &shoot, std::string spriteFile, bool playerShoot, unsigned short sender) :
 _shoot(shoot),
 _size(SHOT_X, SHOT_Y),
 _clockMove(MOVE_SHOT),
@@ -15,6 +15,7 @@ _frameClock(100),
 _sender(sender),
 _currentTempoState(getEntityPositionRange()[3])
 {
+    this->_sender = sender;
     this->_playerShoot = playerShoot;
 }
 

@@ -19,10 +19,10 @@ class SystemVisitor : public IVisitor {
     public:
         SystemVisitor() {};
         void visitPlayer(Player &p, Core &core) {
-            // p._inputs->lockInputs();
+            p._inputs->lockInputs();
             this->_playerSystem.updatePos(p);
             this->_playerSystem.createShots(p, core);
-            // p._inputs->unlockInputs();
+            p._inputs->unlockInputs();
             for (auto it : core._entities)
                 if (it.second->getEntityType() == RType::bydos || it.second->getEntityType() == RType::bydosShoot || it.second->getEntityType() == RType::coin || it.second->getEntityType() == RType::tourre)
                     this->_playerSystem.checkCollision(p, *it.second, core);

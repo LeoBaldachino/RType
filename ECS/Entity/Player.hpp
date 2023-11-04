@@ -23,7 +23,7 @@
  * @class Player
  * @brief Class representing a player in the game
  */
-class Player : public IEntity, public Health, public Score {
+class Player : public IEntity, public Health, public ScoreComponent {
     public:
         /**
          * @brief Construct a new Player object
@@ -31,7 +31,6 @@ class Player : public IEntity, public Health, public Score {
          */
         Player(Position position, unsigned char life, const std::string &name);
         Player(unsigned char life);
-        Player(Player &player);
         ~Player() {};
 
         /**
@@ -202,7 +201,7 @@ class Player : public IEntity, public Health, public Score {
          */
         ClockTimer getTempoState(void);
 
-        std::unique_ptr<Inputs> _inputs;
+        std::shared_ptr<Inputs> _inputs;
     private:
         State _state;
         Position _position;

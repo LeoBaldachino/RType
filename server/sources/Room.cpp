@@ -43,42 +43,42 @@ bool RType::Server::Room::addToRoom(const std::pair<std::string, int> &newPlayer
             return false;
     Utils::MessageParsed_s msg;
     unsigned short newId;
-    {
-        std::unique_lock<std::mutex> lock(this->_mutex);
+    std::unique_lock<std::mutex> lock(this->_mutex);
+    msg.msgType = newPlayerConnected;
+    msg.senderIp = newPlayer.first;
+    msg.senderPort = newPlayer.second;
+    if (this->_firstClient.first == "" && this->_firstClient.second == -1)
+        this->_firstClient = newPlayer;
+    newId = this->_core.getAvailabeIndex();
+    std::cout << "Add a new player with " << static_cast<int>(this->_baseLife) << " life" <<std::endl;
+    this->_core.addEntity(std::make_shared<Player>(Position(0, 0, 1920, 1080), this->_baseLife, newPlayer.first), newId);
+    std::cout << "End add player..." << std::endl;
+    for (auto &it : this->_allPlayers) {
         msg.msgType = newPlayerConnected;
-        msg.senderIp = newPlayer.first;
-        msg.senderPort = newPlayer.second;
-        if (this->_firstClient.first == "" && this->_firstClient.second == -1)
-            this->_firstClient = newPlayer;
-        newId = this->_core.getAvailabeIndex();
-        std::cout << "Add a new player with " << static_cast<int>(this->_baseLife) << " life" <<std::endl;
-        this->_core.addEntity(std::make_shared<Player>(Position(0, 0, 1920, 1080), this->_baseLife, newPlayer.first), newId);
-        for (auto &it : this->_allPlayers) {
-            msg.msgType = newPlayerConnected;
-            msg.setFirstShort(it.second);
-            this->_socket->send(msg);
-            msg.msgType = moveAnEntity;
-            auto coreIt = this->_core._entities.find(it.second);
-            if (coreIt == this->_core._entities.end())
-                continue;
-            msg.setThirdShort(it.second);
-            msg.setSecondShort(coreIt->second->getPosition().getY());
-            msg.setFirstShort(coreIt->second->getPosition().getX());
-            this->_socket->send(msg);
-        }
-        msg.setFirstShort(newId);
-        lock.unlock();
-        this->notifyAllPlayer(msg);
-        lock.lock();
-        this->_allPlayers.insert({newPlayer, newId});
-        this->_playerOnline.insert({newPlayer, true});
-        msg.msgType = givePlayerId;
-        msg.setFirstShort(newId);
-        msg.senderIp = newPlayer.first;
-        msg.senderPort = newPlayer.second;
+        msg.setFirstShort(it.second);
+        this->_socket->send(msg);
+        msg.msgType = moveAnEntity;
+        auto coreIt = this->_core._entities.find(it.second);
+        if (coreIt == this->_core._entities.end())
+            continue;
+        msg.setThirdShort(it.second);
+        msg.setSecondShort(coreIt->second->getPosition().getY());
+        msg.setFirstShort(coreIt->second->getPosition().getX());
         this->_socket->send(msg);
     }
-    std::unique_lock<std::mutex> lock(*this->_mutexQueue);
+    msg.setFirstShort(newId);
+    lock.unlock();
+    this->notifyAllPlayer(msg);
+    lock.lock();
+    this->_allPlayers.insert({newPlayer, newId});
+    this->_playerOnline.insert({newPlayer, true});
+    msg.msgType = givePlayerId;
+    msg.setFirstShort(newId);
+    msg.senderIp = newPlayer.first;
+    msg.senderPort = newPlayer.second;
+    this->_socket->send(msg);
+    lock.unlock();
+    std::unique_lock<std::mutex> lock2(*this->_mutexQueue);
     msg.msgType = newPlayerConnected;
     this->_toSendToGameLoop->push({newId, msg});
     return true;

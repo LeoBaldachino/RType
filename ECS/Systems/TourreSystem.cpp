@@ -19,21 +19,19 @@ void TourreSystem::checkCollision(Tourre &t, IEntity &entity, Core &core, bool i
 {
     if (this->_hitBoxSystem.entityIntersect(t, entity)) {
         if (entity.getEntityType() == RType::playerShoot) {
-            try {
-                auto shoot = dynamic_cast<ShotEntity &>(entity);
-                auto casted = dynamic_cast<Player *>(shoot.getSender());
-                casted->increaseScore(0.2);
-            } catch (const std::bad_cast &badCast) {
-                std::cout << "Bad cast... " << badCast.what() << std::endl;
+            auto shoot = dynamic_cast<ShotEntity &>(entity);
+            auto find = core._entities.find(shoot.getSender());
+            if (find != core._entities.end() && find->second->getEntityType() == RType::player) {
+                auto casted = std::dynamic_pointer_cast<Player>(find->second);
+                casted->increaseScore(0.4);
             }
         }
         if (entity.getEntityType() == RType::percingShoot) {
-            try {
-                auto shoot = dynamic_cast<PiercingShotEntity &>(entity);
-                auto casted = dynamic_cast<Player *>(shoot.getSender());
-                casted->increaseScore(0.1);
-            } catch (const std::bad_cast &badCast) {
-                std::cout << "Bad cast... " << badCast.what() << std::endl;
+            auto shoot = dynamic_cast<PiercingShotEntity &>(entity);
+            auto find = core._entities.find(shoot.getSender());
+            if (find != core._entities.end() && find->second->getEntityType() == RType::player) {
+                auto casted = std::dynamic_pointer_cast<Player>(find->second);
+                casted->increaseScore(0.04);
             }
         }
         if (t.getLifes() >= 1)
