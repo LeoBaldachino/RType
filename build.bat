@@ -14,7 +14,6 @@ if exist boost (
 
 echo "Setting up Boost headers..."
 cd boost
-call :spinner >nul 2>&1
 b2.exe headers >nul 2>&1
 echo "Boost headers set up."
 
@@ -31,6 +30,5 @@ cd build
 echo "New build directory created."
 
 echo "Running cmake..."
-call :spinner >nul 2>&1
-cmake .. >nul 2>&1
+cmake ..
 echo "Cmake run successfully."
