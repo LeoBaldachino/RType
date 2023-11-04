@@ -7,10 +7,12 @@
 
 #include "../includes/Room.hpp"
 
-RType::Server::Room::Room(unsigned char id, unsigned char maxSize, std::shared_ptr<Utils::SocketHandler> setSocket, std::vector<std::map<Parser::Enemies, int>> waves) : _socket(setSocket)
+RType::Server::Room::Room(unsigned char id, unsigned char maxSize, std::shared_ptr<Utils::SocketHandler> setSocket, std::vector<std::map<Parser::Enemies, int>> waves, unsigned char playerBaseLife) : 
+_socket(setSocket)
 {
     std::unique_lock<std::mutex> lock(this->_mutex);
     this->_willBeDestroyed = false;
+    this->_baseLife = playerBaseLife;
     this->_id = id;
     this->_maxSize = maxSize;
     this->_isOpen = true;
@@ -41,41 +43,42 @@ bool RType::Server::Room::addToRoom(const std::pair<std::string, int> &newPlayer
             return false;
     Utils::MessageParsed_s msg;
     unsigned short newId;
-    {
-        std::unique_lock<std::mutex> lock(this->_mutex);
+    std::unique_lock<std::mutex> lock(this->_mutex);
+    msg.msgType = newPlayerConnected;
+    msg.senderIp = newPlayer.first;
+    msg.senderPort = newPlayer.second;
+    if (this->_firstClient.first == "" && this->_firstClient.second == -1)
+        this->_firstClient = newPlayer;
+    newId = this->_core.getAvailabeIndex();
+    std::cout << "Add a new player with " << static_cast<int>(this->_baseLife) << " life" <<std::endl;
+    this->_core.addEntity(std::make_shared<Player>(Position(0, 0, 1920, 1080), this->_baseLife, newPlayer.first), newId);
+    std::cout << "End add player..." << std::endl;
+    for (auto &it : this->_allPlayers) {
         msg.msgType = newPlayerConnected;
-        msg.senderIp = newPlayer.first;
-        msg.senderPort = newPlayer.second;
-        if (this->_firstClient.first == "" && this->_firstClient.second == -1)
-            this->_firstClient = newPlayer;
-        newId = this->_core.getAvailabeIndex();
-        this->_core.addEntity(std::make_shared<Player>(Position(0, 0, 1920, 1080)), newId);
-        for (auto &it : this->_allPlayers) {
-            msg.msgType = newPlayerConnected;
-            msg.setFirstShort(it.second);
-            this->_socket->send(msg);
-            msg.msgType = moveAnEntity;
-            auto coreIt = this->_core._entities.find(it.second);
-            if (coreIt == this->_core._entities.end())
-                continue;
-            msg.setThirdShort(it.second);
-            msg.setSecondShort(coreIt->second->getPosition().getY());
-            msg.setFirstShort(coreIt->second->getPosition().getX());
-            this->_socket->send(msg);
-        }
-        msg.setFirstShort(newId);
-        lock.unlock();
-        this->notifyAllPlayer(msg);
-        lock.lock();
-        this->_allPlayers.insert({newPlayer, newId});
-        this->_playerOnline.insert({newPlayer, true});
-        msg.msgType = givePlayerId;
-        msg.setFirstShort(newId);
-        msg.senderIp = newPlayer.first;
-        msg.senderPort = newPlayer.second;
+        msg.setFirstShort(it.second);
+        this->_socket->send(msg);
+        msg.msgType = moveAnEntity;
+        auto coreIt = this->_core._entities.find(it.second);
+        if (coreIt == this->_core._entities.end())
+            continue;
+        msg.setThirdShort(it.second);
+        msg.setSecondShort(coreIt->second->getPosition().getY());
+        msg.setFirstShort(coreIt->second->getPosition().getX());
         this->_socket->send(msg);
     }
-    std::unique_lock<std::mutex> lock(*this->_mutexQueue);
+    msg.setFirstShort(newId);
+    lock.unlock();
+    this->notifyAllPlayer(msg);
+    lock.lock();
+    this->_allPlayers.insert({newPlayer, newId});
+    this->_playerOnline.insert({newPlayer, true});
+    msg.msgType = givePlayerId;
+    msg.setFirstShort(newId);
+    msg.senderIp = newPlayer.first;
+    msg.senderPort = newPlayer.second;
+    this->_socket->send(msg);
+    lock.unlock();
+    std::unique_lock<std::mutex> lock2(*this->_mutexQueue);
     msg.msgType = newPlayerConnected;
     this->_toSendToGameLoop->push({newId, msg});
     return true;
@@ -108,6 +111,10 @@ bool RType::Server::Room::sendMessageToRoom(const Utils::MessageParsed_s &msg)
     }
     if (msg.msgType == entityType) {
         this->sendEntityType(msg);
+        return true;
+    }
+    if (msg.msgType == message) {
+        this->notifyAllPlayer(msg);
         return true;
     }
     auto it = this->_allPlayers.find({msg.senderIp, msg.senderPort});
@@ -159,8 +166,9 @@ void RType::Server::Room::runRoom()
     }
 }
 
-bool RType::Server::Room::removeFromRoom(const std::pair<std::string, int> &toRemove)
+bool RType::Server::Room::removeFromRoom(const Utils::MessageParsed_s &toRm)
 {
+    std::pair<std::string, int> toRemove(toRm.senderIp, toRm.senderPort);
     bool isFirst = false;
     if (this->_willBeDestroyed)
         return false;
@@ -174,11 +182,10 @@ bool RType::Server::Room::removeFromRoom(const std::pair<std::string, int> &toRe
             }
             {
                 std::unique_lock<std::mutex> lock(*this->_mutexQueue);
-                Utils::MessageParsed_s newMsg;
+                Utils::MessageParsed_s newMsg(toRm);
                 newMsg.msgType = playerDeconnected;
-                newMsg.senderIp = toRemove.first;
-                newMsg.senderPort = toRemove.second;
                 this->_toSendToGameLoop->push({it->second, newMsg});
+                this->notifyAllPlayer(newMsg);
             }
             this->_allPlayers.erase(it);
             return isFirst;
@@ -228,14 +235,21 @@ void RType::Server::Room::checkCrashed()
         return this->notifyAllPlayer(msg);
     }
     _actualPing = 0;
-    std::queue<std::pair<std::string, int>> playerDisconnected;
+    std::queue<std::pair<std::pair<std::string, int>, unsigned char>> playerDisconnected;
+    int cp = 0;
     for (auto &it : this->_playerOnline) {
         if (!it.second)
-            playerDisconnected.push(it.first);
+            playerDisconnected.push({it.first, cp});
         it.second = false;
+        ++cp;
     }
     while (!playerDisconnected.empty()) {
-        this->removeFromRoom(playerDisconnected.front());
+        Utils::MessageParsed_s msg;
+        msg.bytes[0] = this->_id;
+        msg.bytes[1] = static_cast<unsigned char>(std::get<3>(this->_gameLoop->getPlayerDetails(playerDisconnected.front().second)));
+        msg.senderPort = playerDisconnected.front().first.second;
+        msg.senderIp = playerDisconnected.front().first.first;
+        this->removeFromRoom(msg);
         playerDisconnected.pop();
     }
 }
@@ -275,6 +289,25 @@ void RType::Server::Room::sendEntityType(const Utils::MessageParsed_s &msg)
     this->_socket->send(newMsg);
 }
 
+std::tuple<unsigned short, unsigned short, unsigned short, unsigned short> RType::Server::Room::getPlayerDetails(unsigned char playerId)
+{
+    return this->_gameLoop->getPlayerDetails(playerId);
+}
+
+
+bool RType::Server::Room::removeFromRoom(unsigned short id)
+{
+    Utils::MessageParsed_s msg;
+    msg.bytes[0] = this->_id;
+    msg.bytes[1] = id;
+    for (auto &it : this->_allPlayers)
+        if (it.second == id) {
+            msg.senderIp = it.first.first;
+            msg.senderPort = it.first.second;
+            return this->removeFromRoom(msg);
+        }
+    return false;
+}
 void RType::Server::Room::setEnemiesWaves(std::vector<std::map<Parser::Enemies, int>> waves)
 {
     this->_gameLoop->setEnemiesWaves(waves);

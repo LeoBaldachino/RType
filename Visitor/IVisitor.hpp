@@ -26,6 +26,7 @@ class DragonShot;
 
 class IVisitor {
     public:
+        virtual ~IVisitor() = default;
         virtual void visitPlayer(Player &p, Core &core) = 0;
         virtual void visitBydos(Bydos &b, Core &core) = 0;
         virtual void visitTourre(Tourre &t, Core &core) = 0;

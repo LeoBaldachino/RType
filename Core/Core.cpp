@@ -7,7 +7,7 @@
 
 #include "Core.hpp"
 
-bool Core::addEntity(const std::shared_ptr<IEntity> &entity, unsigned short index)
+bool Core::addEntity(std::shared_ptr<IEntity> entity, unsigned short index)
 {
     std::unique_lock<std::mutex> lock(this->_mutex);
     if (this->_entities.find(index) != this->_entities.end())
@@ -82,4 +82,13 @@ void Core::eraseEntity(void)
         this->_presentIndex.push(this->_erase.front());
         this->_erase.pop();
     }
+}
+
+unsigned short Core::getEntityId(IEntity &entity)
+{
+    std::unique_lock<std::mutex> lock(this->_mutex);
+    for (auto it : this->_entities)
+        if (it.second.get() == &entity)
+            return it.first;
+    return 0;   
 }

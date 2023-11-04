@@ -9,8 +9,10 @@
 
 RType::RTypeGameLoop::RTypeGameLoop(Core &core) : GameLoop(core)
 {
-    this->_refreshAllEntities = std::chrono::steady_clock::now();
-    this->_refreshPlayers = std::chrono::steady_clock::now();
+    auto clock = std::chrono::steady_clock::now();
+    this->_refreshAllEntities = clock;
+    this->_refreshPlayers = clock;
+    this->_refreshStatus = clock;
 }
 
 void RType::RTypeGameLoop::updatePlayerPos(std::pair<unsigned short, Utils::MessageParsed_s> msg)
@@ -18,12 +20,15 @@ void RType::RTypeGameLoop::updatePlayerPos(std::pair<unsigned short, Utils::Mess
     auto it = this->_core._entities.find(msg.first);
     if (it == this->_core._entities.end())
         return;
+    if (it->second->getEntityType() != RType::player)
+        return;
     std::shared_ptr<Player> player = std::dynamic_pointer_cast<Player>(it->second);
     player->_inputs->lockInputs();
-    for (unsigned char i = 0; i < 6; ++i) {
+    for (unsigned char i = 0; i < 7; ++i) {
         if (msg.second.bytes[i] > 6)
             break;
-        player->_inputs->addEvents((Inputs::Events)msg.second.bytes[i]);
+        if (static_cast<bool>(player->_inputs))
+            player->_inputs->addEvents((Inputs::Events)msg.second.bytes[i]);
     }
     player->_inputs->unlockInputs();
 }
@@ -45,15 +50,22 @@ std::queue<RType::Utils::MessageParsed_s> RType::RTypeGameLoop::runAfterUpdate(s
     if (std::chrono::duration_cast<std::chrono::milliseconds>(clock - this->_refreshAllEntities).count() < REFRESH_ALL_ENTITIES)
         this->sendRefreshPlayers(toReturn);
     else {
+        this->sendNbOfEntites(toReturn);
         this->sendRefreshAllEntities(toReturn);
-        this->checkPlayerStatus(toReturn);
-        this->checkBydosStatus(toReturn);
-        this->checkTourreStatus(toReturn);
         this->_refreshAllEntities = clock;
+    }
+    this->refreshStatus(toReturn);
+    size_t entitySize = this->_core._entities.size();
+    for (auto &it : this->_core._entities)
+        it.second->accept(this->v, this->_core);
+    if (entitySize != this->_core._entities.size()) {
+        std::cout << "Auto refresh..." << std::endl;
+        this->sendRefreshAllEntities(toReturn);
     }
     std::queue<unsigned short> toErase = this->_core.getToErase();
     this->_core.eraseEntity();
     while (!toErase.empty()) {
+        std::cout << "Erase entity..." << std::endl;
         this->addRemoveEntity(toReturn, toErase.front());
         toErase.pop();
     }
@@ -247,7 +259,9 @@ void RType::RTypeGameLoop::checkPlayerStatus(std::queue<Utils::MessageParsed_s> 
         std::shared_ptr<Player> player = std::dynamic_pointer_cast<Player>(find->second);
         msgToSend.setFirstShort(it);
         msgToSend.bytes[3] = player->getLifes();
-        msgToSend.bytes[4] = player->actuallyInvincible() ? 1 : 0;
+        // msgToSend.bytes[4] = player->actuallyInvincible() ? 1 : 0;
+        msgToSend.bytes[5] = player->getMaxLife();
+        msgToSend.bytes[4] = player->getScore();
         toReturn.push(msgToSend);
     }
 }
@@ -255,17 +269,19 @@ void RType::RTypeGameLoop::checkPlayerStatus(std::queue<Utils::MessageParsed_s> 
 
 void RType::RTypeGameLoop::sendRefreshAllEntities(std::queue<Utils::MessageParsed_s> &toReturn)
 {
+    this->handleBydos(toReturn);
+    this->handleTourre(toReturn);
     for (auto it : this->_core._entities) {
-        it.second->accept(this->v, this->_core);
-        if (it.second->getHasMoved()) {
+        // if (it.second->getHasMoved()) {
             Position tmpPos = it.second->getPosition();
             Utils::MessageParsed_s msgReturned;
             msgReturned.setFirstShort(tmpPos.getX());
             msgReturned.setSecondShort(tmpPos.getY());
             msgReturned.setThirdShort(it.first);
+            msgReturned.bytes[6] = it.second->getEntityType();
             msgReturned.msgType = moveAnEntity;
             toReturn.push(msgReturned);
-        }
+        // }
     }
 }
 
@@ -285,6 +301,7 @@ void RType::RTypeGameLoop::sendRefreshPlayers(std::queue<Utils::MessageParsed_s>
         msgReturned.setFirstShort(tmpPos.getX());
         msgReturned.setSecondShort(tmpPos.getY());
         msgReturned.setThirdShort(find->first);
+        msgReturned.bytes[6] = find->second->getEntityType();
         msgReturned.msgType = moveAnEntity;
         toReturn.push(msgReturned);
     }
@@ -298,13 +315,13 @@ void RType::RTypeGameLoop::checkBydosStatus(std::queue<Utils::MessageParsed_s> &
         auto find = this->_core._entities.find(it);
         if (find == this->_core._entities.end())
             continue;
-    if (find->second->getEntityType() != bydos)
-        continue;
-    std::shared_ptr<Bydos> bydos = std::dynamic_pointer_cast<Bydos>(find->second);
-    msgToSend.setFirstShort(it);
-    msgToSend.bytes[3] = bydos->getLifes();
-    msgToSend.bytes[4] = bydos->actuallyInvincible() ? 1 : 0;
-    toReturn.push(msgToSend);
+        if (find->second->getEntityType() != bydos)
+            continue;
+        std::shared_ptr<Bydos> bydos = std::dynamic_pointer_cast<Bydos>(find->second);
+        msgToSend.setFirstShort(it);
+        msgToSend.bytes[3] = bydos->getLifes();
+        msgToSend.bytes[4] = bydos->actuallyInvincible() ? 1 : 0;
+        toReturn.push(msgToSend);
     }
 }
 
@@ -329,4 +346,25 @@ void RType::RTypeGameLoop::checkTourreStatus(std::queue<Utils::MessageParsed_s> 
 void RType::RTypeGameLoop::setEnemiesWaves(std::vector<std::map<Parser::Enemies, int>> waves)
 {
     this->_waves = waves;
+}
+
+
+void RType::RTypeGameLoop::refreshStatus(std::queue<Utils::MessageParsed_s> &toReturn)
+{
+    auto clock = std::chrono::steady_clock::now();
+    if (std::chrono::duration_cast<std::chrono::milliseconds>(clock - this->_refreshStatus).count() < STATUS_ALL_ENTITES)
+        return;
+    this->_refreshStatus = clock;
+    this->checkPlayerStatus(toReturn);
+    this->checkBydosStatus(toReturn);
+    this->checkTourreStatus(toReturn);
+}
+
+void RType::RTypeGameLoop::sendNbOfEntites(std::queue<Utils::MessageParsed_s> &toReturn)
+{
+    // std::cout << "Entities size is " << this->_core._entities.size() << std::endl;
+    Utils::MessageParsed_s msg;
+    msg.msgType = nbOfEntities;
+    msg.setFirstShort(static_cast<unsigned short>(this->_core._entities.size()));
+    toReturn.push(msg);
 }

@@ -46,3 +46,18 @@ void RType::GameLoop::removePlayer(const Utils::MessageParsed_s &msg, unsigned s
         }
     std::cout << "This player does not exist..." << std::endl;
 }
+
+std::tuple<unsigned short, unsigned short, unsigned short, unsigned short> RType::GameLoop::getPlayerDetails(unsigned char playerId)
+{
+    if (playerId > this->_playerArray.size())
+        return std::make_tuple<unsigned short, unsigned short, unsigned short, unsigned short>(0, 0, 0, 0);
+    unsigned short id = this->_playerArray[playerId];
+    auto it = this->_core._entities.find(id);
+    if (!static_cast<bool>(it->second))
+        return std::make_tuple<unsigned short, unsigned short, unsigned short, unsigned short>(0, 0, 0, 0);
+    if (it->second->getEntityType() != player)
+        return std::make_tuple<unsigned short, unsigned short, unsigned short, unsigned short>(0, 0, 0, 0);
+    std::shared_ptr<Player> playerPtr = std::dynamic_pointer_cast<Player>(it->second);
+    auto pos = playerPtr->getPosition();
+    return std::make_tuple<unsigned short, unsigned short, unsigned short, unsigned short>(pos.getX(), pos.getY(), playerPtr->getLifes(), std::move(id));
+}

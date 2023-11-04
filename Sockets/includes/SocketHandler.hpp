@@ -11,6 +11,7 @@
 #include <boost/array.hpp>
 #include <tuple>
 #include <mutex>
+#include <thread>
 #include "MessageSendedQueue.hpp"
 #include "PacketTracker.hpp"
 
@@ -66,7 +67,9 @@ namespace RType {
                  * @return const std::pair<std::string, int> ip, port
                  */
                 const std::pair<std::string, int> &getIpAndPort() const;
-            protected:
+            private:
+                void send();
+                void senderThread();
                 boost::asio::io_service _ioService;
                 std::shared_ptr<boost::asio::ip::udp::socket> _socket;
                 boost::asio::ip::udp::endpoint _Endpoint;
@@ -76,6 +79,8 @@ namespace RType {
                 std::shared_ptr<MessageSendedQueue> _queueMsg;
                 std::pair<std::string, int> _ipPort;
                 std::shared_ptr<PacketTracker> _packetTracker;
+                std::shared_ptr<std::thread> _senderThread;
+                std::shared_ptr<bool> _threadOpen;
         };
     }
 }

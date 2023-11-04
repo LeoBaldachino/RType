@@ -20,7 +20,7 @@
 #include "../../gameLoop/IGameLoop.hpp"
 #include "../../gameLoop/RTypeGameLoop/RTypeGameLoop.hpp"
 #include "../../EntityTypes/EntityTypes.hpp"
-#include "../../Entity/Player.hpp"
+#include "../../ECS/Entity/Player.hpp"
 
 namespace RType {
     namespace Server {
@@ -47,7 +47,7 @@ namespace RType {
                  * @param maxSize number max of user in this room
                  * @param setSocket instance of the shared pointer of socketHandler
                  */
-                Room(unsigned char id, unsigned char maxSize, std::shared_ptr<Utils::SocketHandler> setSocket, std::vector<std::map<Parser::Enemies, int>> waves);
+                Room(unsigned char id, unsigned char maxSize, std::shared_ptr<Utils::SocketHandler> setSocket, std::vector<std::map<Parser::Enemies, int>> waves, unsigned char playerBaseLife);
                 /**
                  * @brief Destroy the Room object
                  * 
@@ -102,7 +102,7 @@ namespace RType {
                  * @return true if successfully removed 
                  * @return false otherwise
                  */
-                bool removeFromRoom(const std::pair<std::string, int> &toRemove);
+                bool removeFromRoom(const Utils::MessageParsed_s &toRemove);
                 /**
                  * @brief check if the room will be destroyed
                  * 
@@ -144,6 +144,10 @@ namespace RType {
                  * @param msg the message from the player
                  */
                 void sendPlayerId(const Utils::MessageParsed_s &msg);
+                
+                std::tuple<unsigned short, unsigned short, unsigned short, unsigned short> getPlayerDetails(unsigned char playerId);
+
+                bool removeFromRoom(unsigned short id);
             private:
                 /**
                  * @brief run the room inside of a thread, method launched at the constructor 
@@ -167,6 +171,7 @@ namespace RType {
                  * @param msg the message from the player
                  */
                 void sendEntityType(const Utils::MessageParsed_s &msg);
+
                 /**
                  * @brief Set the Enemies Waves in RTypeGameLoop
                  * 
@@ -189,6 +194,7 @@ namespace RType {
                 std::unique_ptr<std::mutex> _mutexQueue;
                 std::unique_ptr<std::queue<std::pair<unsigned short, Utils::MessageParsed_s>>> _toSendToGameLoop;
                 std::pair<std::string, int> _firstClient;
+                unsigned char _baseLife;
         };
     }
 }

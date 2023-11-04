@@ -7,19 +7,13 @@
 
 #pragma once
 #include "IVisitor.hpp"
-#include "../Systems/PlayerSystem.hpp"
-#include "../Systems/BydosSystem.hpp"
-#include "../Systems/TourreSystem.hpp"
-#include "../Systems/GenieSystem.hpp"
-#include "../Systems/DragonSystem.hpp"
-#include "../Systems/DragonShotSystem.hpp"
-#include "../Systems/CoinSystem.hpp"
-#include "../Systems/GenieShotSystem.hpp"
+#include "../ECS/Systems/PlayerSystem.hpp"
+#include "../ECS/Systems/BydosSystem.hpp"
+#include "../ECS/Systems/TourreSystem.hpp"
+#include "../ECS/Systems/GenieSystem.hpp"
+#include "../ECS/Systems/CoinSystem.hpp"
 #include "../EntityTypes/EntityTypes.hpp"
-#include "../Components/ClockTimer.hpp"
-#include "../Systems/BydosSystem.hpp"
-#include "../Systems/MermaidSystem.hpp"
-#include "../Systems/MermaidShotSystem.hpp"
+#include "../ECS/Components/ClockTimer.hpp"
 
 class SystemVisitor : public IVisitor {
     public:
@@ -57,6 +51,10 @@ class SystemVisitor : public IVisitor {
             this->_tourreSystem.updatePos(t);
             for (auto it : core._entities) {
                 auto entityType = it.second->getEntityType();
+                if (entityType == RType::playerShoot)
+                    this->_tourreSystem.checkCollision(t, *it.second, core, false);
+                if (entityType == RType::percingShoot)
+                    this->_tourreSystem.checkCollision(t, *it.second, core, true);
             }
         };
         void visitGenie(Genie &g, Core &core) {
@@ -157,7 +155,7 @@ class SystemVisitor : public IVisitor {
             this->_coinSystem.updatePos(c);
         }
     private:
-        Player _lastPlayer;
+        // Player _lastPlayer;
         Position _lastPlayerPos;
         PlayerSystem _playerSystem;
         BydosSystem _bydosSystem;

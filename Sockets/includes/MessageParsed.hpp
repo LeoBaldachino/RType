@@ -7,6 +7,8 @@
 
 #pragma once
 #include <iostream>
+#include <ostream>
+#define ENCODED_MESSAGE_SIZE 64
 
 namespace RType {
     namespace Utils {
@@ -26,14 +28,6 @@ namespace RType {
                  * @param allBytes bytes
                  */
                 MessageParsed_s(unsigned char type, const std::string &ip, unsigned short port, unsigned char allBytes[7]);
-                /**
-                 * @brief Construct a new MessageParsed_s object with an usigned long long to decode
-                 * 
-                 * @param toDecode number to decode for put him in the msgType and bytes array
-                 * @param ip senderIp
-                 * @param port sendPort
-                 */
-                MessageParsed_s(unsigned long long toDecode, const std::string &ip, unsigned short port);
                 /**
                  * @brief Construct a new MessageParsed_s object by copy
                  * 
@@ -68,12 +62,6 @@ namespace RType {
                  * @return false otherwise
                  */
                 bool operator==(const MessageParsed_s &newMsg);
-                /**
-                 * @brief encode the message for send him
-                 * 
-                 * @return unsigned long long encoded value
-                 */
-                unsigned long long encode() const;
                 /**
                  * @brief Get the First Short value
                  * 
@@ -110,10 +98,44 @@ namespace RType {
                  * @param toSet 
                  */
                 void setThirdShort(unsigned short toSet);
+
                 unsigned char msgType;
                 unsigned char bytes[7];
                 std::string senderIp;
                 unsigned short senderPort;
+                friend std::ostream& operator<<(std::ostream& os, const RType::Utils::MessageParsed_s& msg);
+                friend std::istream& operator>>(std::istream& is, RType::Utils::MessageParsed_s& msg);
+            private :
+                /**
+                 * @brief encode the message for send him
+                 * 
+                 * @return unsigned long encoded value
+                 */
+                unsigned long encode() const;
+                /**
+                 * @brief decode the message for use him
+                 * 
+                 * @param toDecode the binary value to decode
+                 * @return MessageParsed_s decoded value
+                 */
+                MessageParsed_s decode(unsigned long toDecode) const;
+
         };
+        /**
+         * @brief operator for serialize a MessageParsed_s
+         * 
+         * @param os the stream to serialize
+         * @param msg the message to serialize
+         * @return std::ostream& the stream added to the serialized data
+         */
+        std::ostream& operator<<(std::ostream& os, const RType::Utils::MessageParsed_s& msg);
+        /**
+         * @brief operator for deserialze a MessageParsed_s
+         * 
+         * @param is the stream to read from
+         * @param msg the message to fill
+         * @return std::istream& the stream without the data
+         */
+        std::istream& operator>>(std::istream& is, RType::Utils::MessageParsed_s& msg);
     }
 }

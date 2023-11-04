@@ -19,10 +19,31 @@ _commands({
 {entityType, &RType::Client::setEntityType},
 {removeEntity, &RType::Client::removeAnEntity},
 {valueSet, &RType::Client::setValues},
+{nbOfEntities, &RType::Client::syncNbOfEntities},
+{playerDeconnected, &RType::Client::quitRoom},
+{message, &RType::Client::newMessage},
 }),
+_buttonList("../Assets/insanibu.ttf"),
 _parallax(_texture),
 _parallaxGnome(_texture),
 _parallaxDragon(_texture)
+_popUp("Welcome the the R-Type !", "../Assets/insanibu.ttf"),
+_menu(this->_popUp, [this]{
+    #ifdef __unix__
+        int random = std::rand() % 1000 + 3000; 
+        int pid = fork();
+        if (!pid) {
+            std::system(std::string("./r-type_server "+ std::to_string(random) + " ../test.cfg").c_str());
+            std::exit(0);
+        }
+        this->_serverPid = pid;
+        this->_serverIp = "127.0.0.1";
+        this->_serverPort = random;
+        return;
+    #endif
+    this->_popUp.setText("Feature only available in linux systems");
+}),
+_hud(sf::Vector2f(1700.0, 20.0))
 {
     std::srand(std::time(NULL));
     if (ac < 3)
@@ -34,18 +55,22 @@ _parallaxDragon(_texture)
             {Events::Right, false},};
     this->_sendInputTime = std::chrono::steady_clock::now();
     this->_lifeBar = std::make_unique<LifeBar>();
-    this->_actualScreen = Screens::game;
+    this->_actualScreen = Screens::menu;
     this->_gameAsStarted = false;
     this->_inputs = {};
+    this->_mouseClicked = false;
     this->_serverIp = av[1];
+    this->_serverPid = -1;
     this->_serverPort = std::stoi(av[2]);
     this->_mutex = std::make_unique<std::mutex>();
-    this->_window = std::make_unique<sf::RenderWindow>(sf::VideoMode::getDesktopMode(), "R-Type", sf::Style::Fullscreen);
-    if (this->_music.openFromFile("../Assets/Music/music.ogg") != -1)
-        this->_music.play();
-    this->_socket = std::make_unique<Utils::SocketHandler>("127.0.0.1", 4001 + std::rand() % 3000, std::list<int>({entityType}));
+    // this->_buttonList.addButtons([this]{std::cout << "Hello world !" << std::endl;}, "../Assets/buttonTest.png", "Hello !", sf::Vector2f(10.0, 10.0), sf::IntRect(0, 0, 150, 100), 100, 0);
+    this->_window = std::make_unique<sf::RenderWindow>(sf::VideoMode::getDesktopMode(), "R-Type" /*,sf::Style::Fullscreen */);
+    // if (this->_music.openFromFile("../Assets/music.ogg") != -1)
+    //     this->_music.play();
+    this->_socket = std::make_unique<Utils::SocketHandler>("127.0.0.1", 4001 + std::rand() % 3000, std::list<int>({keyPressed, entityType, playerPing, newPlayerConnected, givePlayerId, destroyedRoom, serverStop, entityType, removeEntity, playerDeconnected, newRoomIsCreated, playerGetId, givePlayerId}));
     this->_threadIsOpen = true;
     this->_actualId = -1;
+    this->_predicate = std::make_unique<Prediction>(this->_entities, this->_predictionCore, this->_inputs);
     this->_infosThread = std::make_unique<std::thread>(&RType::Client::infosThread, this);
     this->run();
 }
@@ -67,6 +92,10 @@ void RType::Client::updateInputs(void)
 void RType::Client::handleInputs(void)
 {
     sf::Event event;
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+        this->_mouseClicked = true;
+    else
+        this->_mouseClicked = false;
     while (this->_window->pollEvent(event)) {
         if (event.type == sf::Event::KeyPressed) {
             switch (event.key.code) {
@@ -83,14 +112,27 @@ void RType::Client::handleInputs(void)
                     this->_keysDown[Events::Right] = true;
                     break;
                 case (sf::Keyboard::Escape) :
-                    this->_inputs.push_back(Events::CloseWindow);
+                    this->quitActualRoom();
                     break;
+                case (sf::Keyboard::C) :
+                    if (this->_msgPanel.isOpen())
+                        this->_msgPanel.closePanel();
+                    else
+                        this->_msgPanel.openPanel();
                 case (sf::Keyboard::Space) :
                     if (!this->shooting) {
                         this->shotTime = std::chrono::steady_clock::now();
                         this->shooting = true;
                     }
                     break;
+                case (sf::Keyboard::W) :
+                    sf::Texture text;
+                    text.create(1920, 1080);
+                    text.update(*this->_window);
+                    auto img = text.copyToImage();
+                    img.saveToFile("screenshoot.png");
+                    break;
+
             }
         }
         if (event.type == sf::Event::KeyReleased) {
@@ -120,6 +162,9 @@ void RType::Client::handleInputs(void)
                         this->shooting = false;
                     }
                     break;
+                case (sf::Mouse::Left || sf::Mouse::Right) :
+                    this->_mouseClicked = false;
+                    break;
             }
         }
     }
@@ -132,6 +177,9 @@ void RType::Client::run()
         case game:
             this->gameLoop();
             break;
+        case menu:
+            this->displayMenu();
+            break;
         }
     }
 }
@@ -140,6 +188,10 @@ void RType::Client::infosThread()
 {
     while (this->_threadIsOpen) {
         Utils::MessageParsed_s msg = this->_socket->receive();
+        if (this->_actualScreen == menu) {
+            this->_menu.addMessage(msg);
+            continue;
+        }
         auto it = this->_commands.find(msg.msgType);
         if (it == this->_commands.end())
             continue;
@@ -156,6 +208,7 @@ void RType::Client::sendPing(const Utils::MessageParsed_s &recMsg)
 
 void RType::Client::handleNonAuthorized(const Utils::MessageParsed_s &msg)
 {
+    this->_popUp.setText("Unauthorized action with type :" + std::to_string(static_cast<int>(msg.bytes[2])));
     if (msg.bytes[2] == newRoomIsCreated) {
         this->_mutex->lock();
         this->_actualRoom = 0;
@@ -189,15 +242,14 @@ void RType::Client::createRoom(unsigned char roomNb)
     this->_socket->send(msg);
     std::unique_lock<std::mutex> lock(*this->_mutex);
     this->_actualRoom = 1;
-    this->_entities.addEntity(std::make_shared<Player>(Position(0, 0, 1080, 1920)), 0);
+    // this->_entities.addEntity(std::make_shared<Player>(Position(0, 0, 1080, 1920), 1, ""), 0);
 }
 
 void RType::Client::newPlayerToRoom(const Utils::MessageParsed_s &msg)
 {
-    std::cout << "New player connected !!" << std::endl;
-    auto pl = std::make_shared<Player>(Position(0, 0, 1080, 1920));
-    this->_lifeBar->setLifeBarToPlayer(pl);
-    this->_entities.addEntity(pl, msg.getFirstShort());
+    std::unique_lock<std::mutex> lock(*this->_mutex);
+    this->_popUp.setText("New player to Room !");
+    this->_entities.addEntity(std::make_shared<Player>(Position(0, 0, 1080, 1920), 3, ""), msg.getFirstShort());
 }
 
 void RType::Client::getNewId(const Utils::MessageParsed_s &msg)
@@ -218,21 +270,35 @@ bool RType::Client::checkAsId()
 void RType::Client::moveEntity(const Utils::MessageParsed_s &msg)
 {
     std::unique_lock<std::mutex> lock(*this->_mutex);
+    // if (msg.getThirdShort() != 0)
+    //     std::cout << "Get message from entity" << msg.getThirdShort() << std::endl;
     auto it = this->_entities._entities.find(msg.getThirdShort());
     if (it == this->_entities._entities.end()) {
         this->getEntityType(msg.getThirdShort());
         return;
+    }
+    if (it->second->getEntityType() != msg.bytes[6]) {
+        lock.unlock();
+        return this->changeTypeEntityAndMove(msg, it);
     }
     it->second->setPosition(Position(msg.getFirstShort(), msg.getSecondShort(), 1080, 1920));
 }
 
 void RType::Client::quitRoom(const Utils::MessageParsed_s &msg)
 {
-    (void)msg;
+    std::unique_lock<std::mutex> lock(*this->_mutex);
+    if (msg.msgType == playerDeconnected && (msg.bytes[1] != this->_actualId)) {
+        this->_popUp.setText("Player " + std::to_string(static_cast<int>(msg.bytes[1])) + " has quitted the room.");
+        return (void)this->_entities.removeEntity(msg.bytes[1]);
+    }
+    this->_popUp.setText("You have quitted/kicked from your Room");
     this->_actualId = -1;
-    this->_threadIsOpen = false;
-    this->_window->close();
-    exit(0);
+    this->_quittedRoom = true;
+    this->_actualScreen = menu;
+    this->_entities._entities.clear();
+    // this->_threadIsOpen = false;
+    // this->_window->close();
+    // exit(0);
 }
 
 void RType::Client::serverStopped(const Utils::MessageParsed_s &msg)
@@ -260,6 +326,7 @@ void RType::Client::getEntityType(unsigned short entity)
 
 void RType::Client::setEntityType(const Utils::MessageParsed_s &msg)
 {
+    this->_soundPlayer.playSpawnSound((RType::EntityTypes)msg.getSecondShort());
     switch (msg.getSecondShort()) {
         case RType::player:
             return this->newPlayerToRoom(msg);
@@ -346,68 +413,73 @@ void RType::Client::newMermaidShot(const Utils::MessageParsed_s &msg)
 
 void RType::Client::newCoin(const Utils::MessageParsed_s &msg)
 {
+    std::unique_lock<std::mutex> lock(*this->_mutex);
     auto it = this->_entities._entities.find(msg.getFirstShort());
     if (it != this->_entities._entities.end())
         return;
-    std::unique_lock<std::mutex> lock(*this->_mutex);
     this->_entities.addEntity(std::make_shared<Coin>(Position(1900, 100, 1080, 1920)), msg.getFirstShort());
 }
 
 void RType::Client::newBydosToRoom(const Utils::MessageParsed_s &msg)
 {
+    std::unique_lock<std::mutex> lock(*this->_mutex);
     auto it = this->_entities._entities.find(msg.getFirstShort());
     if (it != this->_entities._entities.end())
         return;
-    std::unique_lock<std::mutex> lock(*this->_mutex);
     this->_entities.addEntity(std::make_shared<Bydos>(Position(1900, 100, 1080, 1920), 1, Vector2d(-1, 0)), msg.getFirstShort());
 }
 
 void RType::Client::newTourreToRoom(const Utils::MessageParsed_s &msg)
 {
+    std::unique_lock<std::mutex> lock(*this->_mutex);
     auto it = this->_entities._entities.find(msg.getFirstShort());
     if (it != this->_entities._entities.end())
         return;
-    std::unique_lock<std::mutex> lock(*this->_mutex);
     this->_entities.addEntity(std::make_shared<Tourre>(Position(1900, 100, 1080, 1920), 1, Vector2d(-1, 0)), msg.getFirstShort());
 }
 
 void RType::Client::removeAnEntity(const Utils::MessageParsed_s &msg)
 {
+    std::unique_lock<std::mutex> lock(*this->_mutex);
+    auto it = this->_entities._entities.find(msg.getFirstShort());
+    if (it != this->_entities._entities.end())
+        this->_soundPlayer.playDeathSound((RType::EntityTypes)it->second->getEntityType());
     this->_entities.removeEntity(msg.getFirstShort());
 }
 
 void RType::Client::newBydosShoot(const Utils::MessageParsed_s &msg)
 {
+    std::unique_lock<std::mutex> lock(*this->_mutex);
     auto it = this->_entities._entities.find(msg.getFirstShort());
     if (it != this->_entities._entities.end())
         return;
-    std::unique_lock<std::mutex> lock(*this->_mutex);
     Position pos(-20, -20);
     AIShoot aiShoot(pos, pos);
     auto tmpShoot = aiShoot.shootLogic();
-    this->_entities.addEntity(std::make_shared<ShotEntity>(tmpShoot, RType::bydosShoot, false), msg.getFirstShort());
+    this->_entities.addEntity(std::make_shared<ShotEntity>(tmpShoot, RType::bydosShoot, false, 0), msg.getFirstShort());
 }
 
 void RType::Client::setValues(const Utils::MessageParsed_s &msg)
 {
+    std::unique_lock<std::mutex> lock(*this->_mutex);
     auto find = this->_entities._entities.find(msg.getFirstShort());
     if (find == this->_entities._entities.end())
         return;
     if (find->second->getEntityType() == player) {
-        std::unique_lock<std::mutex> lock(*this->_mutex);
+        std::cout << "Player casted..." << std::endl;
         std::shared_ptr<Player> playerCasted = std::dynamic_pointer_cast<Player>(find->second);
         playerCasted->setLife(msg.bytes[3]);
+        playerCasted->setMaxLife(msg.bytes[5]);
         this->_lifeBar->setLifeBarToPlayer(playerCasted);
+        this->_hud.setScore(msg.bytes[4]);
     }
     if (find->second->getEntityType() == bydos) {
-        std::unique_lock<std::mutex> lock(*this->_mutex);
         std::shared_ptr<Bydos> bydosCasted = std::dynamic_pointer_cast<Bydos>(find->second);
         bydosCasted->setLife(msg.bytes[3]);
         this->_lifeBar->setLifeBarToBydos(bydosCasted); 
     }
 
     if (find->second->getEntityType() == tourre) {
-        std::unique_lock<std::mutex> lock(*this->_mutex);
         std::shared_ptr<Tourre> tourreCasted = std::dynamic_pointer_cast<Tourre>(find->second);
         tourreCasted->setLife(msg.bytes[3]);
         this->_lifeBar->setLifeBarToTourre(tourreCasted);
@@ -416,26 +488,26 @@ void RType::Client::setValues(const Utils::MessageParsed_s &msg)
 
 void RType::Client::newMyShoot(const Utils::MessageParsed_s &msg)
 {
+    std::unique_lock<std::mutex> lock(*this->_mutex);
     auto it = this->_entities._entities.find(msg.getFirstShort());
     if (it != this->_entities._entities.end())
         return;
-    std::unique_lock<std::mutex> lock(*this->_mutex);
     Position pos(-20, -20);
     AIShoot aiShoot(pos, pos);
     auto tmpShoot = aiShoot.shootLogic();
-    this->_entities.addEntity(std::make_shared<ShotEntity>(tmpShoot, RType::playerShoot, true), msg.getFirstShort());  
+    this->_entities.addEntity(std::make_shared<ShotEntity>(tmpShoot, RType::playerShoot, true, 0), msg.getFirstShort());  
 }
 
 void RType::Client::newPercingShoot(const Utils::MessageParsed_s &msg)
 {
+    std::unique_lock<std::mutex> lock(*this->_mutex);
     auto it = this->_entities._entities.find(msg.getFirstShort());
     if (it != this->_entities._entities.end())
         return;
-    std::unique_lock<std::mutex> lock(*this->_mutex);
     Position pos(-20, -20);
     AIShoot aiShoot(pos, pos);
     auto tmpShoot = aiShoot.shootLogic();
-    this->_entities.addEntity(std::make_shared<PiercingShotEntity>(tmpShoot), msg.getFirstShort());
+    this->_entities.addEntity(std::make_shared<PiercingShotEntity>(tmpShoot, 0), msg.getFirstShort());
 }
 
 sf::Sprite RType::Client::getSpriteFromEntity(std::shared_ptr<IEntity> entity, unsigned int id)
@@ -510,8 +582,9 @@ sf::Sprite RType::Client::getSpriteFromEntity(std::shared_ptr<IEntity> entity, u
 
 void RType::Client::gameLoop()
 {
+    this->checkAsId();
     if (!this->_gameAsStarted) {
-        this->createRoom(1);
+        // this->createRoom(1);
         this->_gameAsStarted = true;
     }
     auto msgKeyPressed = this->buildEmptyMsg(keyPressed);
@@ -522,16 +595,72 @@ void RType::Client::gameLoop()
         this->_parallax.drawBackgroundParallax(this->_window);
         this->_parallax.drawParallax(this->_window);
     }
-    if (this->_level == 2)
+    if (this->_level == 2) {}
         this->_parallaxGnome.drawGnomeParallax(this->_window);
     if (this->_level == 3)
         this->_parallaxDragon.drawDragonParallax(this->_window);
     
     this->_lifeBar->display(this->_window);
     for (auto &it : this->_entities._entities)
+    this->_lifeBar->display(this->_window);   
+    std::unique_lock<std::mutex> lock(*this->_mutex);
+    for (auto &it : this->_entities._entities)
         this->_window->draw(this->getSpriteFromEntity(it.second, it.first));
+    for (auto &it : this->_predictionCore._entities)
+        this->_window->draw(this->getSpriteFromEntity(it.second, it.first));
+    // std::cout << "Entities size is " << this->_entities._entities.size() << std::endl;
+    lock.unlock();
+    auto mousePos = sf::Mouse::getPosition(*this->_window);
+    if (this->_mouseClicked) {
+        this->_msgPanel.clickButtons(mousePos);
+        this->_buttonList.clickButtons(mousePos);
+    } else {
+        this->_msgPanel.hoverButtons(mousePos);
+        this->_buttonList.hoverButtons(mousePos);
+    }
+    this->_buttonList.displayButtons(this->_window);
+    this->_popUp.display(this->_window);
+    this->_msgPanel.display(this->_window);
+    if (this->_msgPanel.needSendMessage()) {
+        auto msgg = this->_msgPanel.sendMessage();
+        msgg.senderIp = this->_serverIp;
+        msgg.senderPort = this->_serverPort;
+        this->_socket->send(msgg);
+    }
+    this->_hud.display(this->_window);
     _window->display();
+    this->setLifeBars();
     this->updateInputs();
+    this->_predicate->PredicatePlayer(this->_actualId, 100);
+    lock.lock();
+    this->_predicate->PredicateOtherEntities();
+    lock.unlock();
+    this->sendInputs();
+}
+
+void RType::Client::changeTypeEntityAndMove(const Utils::MessageParsed_s &msg, std::unordered_map<unsigned short, std::shared_ptr<IEntity>>::iterator &it)
+{
+    std::unique_lock<std::mutex> lock(*this->_mutex);
+    if (it == this->_entities._entities.end())
+        return;
+    Utils::MessageParsed_s NewMsg = this->buildEmptyMsg(entityType);
+    NewMsg.setFirstShort(msg.getFirstShort());
+    // NewMsg.bytes[3] = msg.bytes[6];
+    NewMsg.setSecondShort(static_cast<unsigned short>(msg.bytes[6]));
+    this->_entities._entities.erase(it);
+    lock.unlock();
+    this->setEntityType(NewMsg);
+    return this->moveEntity(msg);
+}
+
+void RType::Client::sendInputs()
+{
+    auto msgKeyPressed = this->buildEmptyMsg(keyPressed);
+    unsigned char actualIndex = 0;
+    auto clock = std::chrono::steady_clock::now();
+    if (std::chrono::duration_cast<std::chrono::microseconds>(clock - this->_sendInputTime).count() < 10)
+        return;
+    this->_sendInputTime = clock;
     while (!this->_inputs.empty()) {
         if (actualIndex > 5) {
             this->_socket->send(msgKeyPressed);
@@ -546,4 +675,73 @@ void RType::Client::gameLoop()
         this->_socket->send(msgKeyPressed);
     }
     this->_parallax.drawScreenFX(this->_window);
+}
+
+void RType::Client::syncNbOfEntities(const Utils::MessageParsed_s &msg)
+{
+    unsigned short actSize = static_cast<unsigned short>(this->_entities._entities.size());
+    unsigned short desiredSize = msg.getFirstShort();
+    std::unique_lock<std::mutex> lock(*this->_mutex);
+    for (; actSize > msg.getFirstShort(); actSize--)
+        this->_entities.removeEntity(actSize);
+}
+
+void RType::Client::setLifeBars()
+{
+    std::unique_lock<std::mutex> lock(*this->_mutex);
+    for (auto &it : this->_entities._entities) {
+        if (it.second->getEntityType() == bydos) {
+            std::shared_ptr<Bydos> bydosCasted = std::dynamic_pointer_cast<Bydos>(it.second);
+            this->_lifeBar->setLifeBarToBydos(bydosCasted); 
+        }
+        if (it.second->getEntityType() == player) {
+            std::cout << "life barz" << std::endl;
+            std::shared_ptr<Player> playerCasted = std::dynamic_pointer_cast<Player>(it.second);
+            this->_lifeBar->setLifeBarToPlayer(playerCasted);    
+        }
+    }
+}
+
+void RType::Client::displayMenu()
+{
+    this->handleInputs();
+    this->_window->clear(sf::Color::Black);
+    this->_menu.displayMenu(this->_window, this->_mouseClicked);
+    if (this->_menu.needToSendMessage()) {
+        auto msg = this->_menu.sendMsg();
+        msg.senderIp = this->_serverIp;
+        msg.senderPort = this->_serverPort;
+        this->_quittedRoom = false;
+        this->_socket->send(msg);
+    }
+    if (this->_menu.closeMenu() && !this->_quittedRoom) {
+        this->checkAsId();
+        this->_actualScreen = game;
+    }
+    this->_popUp.display(this->_window);
+    this->_window->display();
+}
+
+void RType::Client::quitActualRoom()
+{
+    if (this->_actualId == -1) {
+        #ifdef __unix__
+            if (this->_serverPid != -1) {
+                kill(this->_serverPid, SIGINT);
+                kill(this->_serverPid, SIGTERM);
+            }
+        #endif
+        return std::exit(0);
+    }
+    auto msg = this->buildEmptyMsg(playerDeconnected);
+    msg.bytes[0] = this->_menu.getRoomId();
+    msg.bytes[1] = this->_actualId;
+    this->_socket->send(msg);
+}
+
+
+void RType::Client::newMessage(const Utils::MessageParsed_s &msg)
+{
+    std::cout << "New message" << std::endl;
+    this->_popUp.setText(this->_msgPanel.decyptMessage(msg));
 }

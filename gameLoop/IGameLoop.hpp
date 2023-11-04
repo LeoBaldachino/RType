@@ -17,6 +17,7 @@ namespace RType {
      */
     class IGameLoop {
         public:
+            virtual ~IGameLoop() = default;
             /**
              * @brief Update game loop
              * @param newMessages New messages to process
@@ -31,6 +32,7 @@ namespace RType {
              */
             virtual EntityTypes getEntityType(unsigned short id) = 0;
 
+            virtual std::tuple<unsigned short, unsigned short, unsigned short, unsigned short> getPlayerDetails(unsigned char playerId) = 0;
             /**
              * @brief Set the Enemies Waves
              * 

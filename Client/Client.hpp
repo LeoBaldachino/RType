@@ -9,7 +9,7 @@
 #include "Parallax/Parallax.hpp"
 #include "Parallax/ParallaxGnome.hpp"
 #include "Parallax/ParallaxDragon.hpp"
-#include "../Entity/Player.hpp"
+#include "../ECS/Entity/Player.hpp"
 #include "../Core/Core.hpp"
 #include "../EntityTypes/EntityTypes.hpp"
 #include "../Visitor/SystemVisitor.hpp"
@@ -19,8 +19,15 @@
 #include "LifeBar/LifeBar.hpp"
 #include <unordered_map>
 #include <SFML/Audio.hpp>
+#include "Prediction/Prediction.hpp"
+#include "Button/ButtonList.hpp"
+#include "Menu/Menu.hpp"
+#include "PopUp/PopUp.hpp"
+#include "MessagePanel/MessagePanel.hpp"
+#include "Hud/Hud.hpp"
+#include "SoundPlayer/SoundPlayer.hpp"
 
-#define GET_ID_LIMIT_TIME 500
+#define GET_ID_LIMIT_TIME 1
 
 namespace RType {
     /**
@@ -33,16 +40,7 @@ namespace RType {
              * @enum Events
              * @brief Enum representing possible events in the game
              */
-            enum Events {
-                Up,
-                Down,
-                Left,
-                Right,
-                Shoot,
-                PiercingShoot,
-                CloseWindow,
-                Unknown
-            };
+
 
             enum Screens {
                 menu,
@@ -94,13 +92,21 @@ namespace RType {
             void setValues(const Utils::MessageParsed_s &msg);
             void newMyShoot(const Utils::MessageParsed_s &msg);
             void newPercingShoot(const Utils::MessageParsed_s &msg);
+            void newMessage(const Utils::MessageParsed_s &msg);
             void gameLoop();
+            void changeTypeEntityAndMove(const Utils::MessageParsed_s &msg, std::unordered_map<unsigned short, std::shared_ptr<IEntity>>::iterator &it);
             sf::Sprite getSpriteFromEntity(std::shared_ptr<IEntity> entity, unsigned int id);
+            void sendInputs();
+            void syncNbOfEntities(const Utils::MessageParsed_s &msg);
+            void setLifeBars();
+            void displayMenu();
+            void quitActualRoom();
             std::unique_ptr<std::thread> _infosThread;
             std::shared_ptr<Utils::SocketHandler> _socket;
             std::unique_ptr<sf::RenderWindow> _window;
             SystemVisitor _visitor;
             Core _entities;
+            Core _predictionCore;
             std::unique_ptr<std::mutex> _mutex;
             std::string _serverIp;
             int _serverPort;
@@ -119,11 +125,19 @@ namespace RType {
             Screens _actualScreen;
             bool _gameAsStarted;
             Texture _texture;
+            std::unique_ptr<Prediction> _predicate;
+            ButtonList _buttonList;
+            bool _mouseClicked;
             Parallax _parallax;
             ParallaxGnome _parallaxGnome;
             ParallaxDragon _parallaxDragon;
-
-            unsigned int _level = 3;
-
+            Menu _menu;
+            unsigned int _level = 2;
+            PopUp _popUp;
+            bool _quittedRoom = false;
+            int _serverPid;
+            MessagePanel _msgPanel;
+            Hud _hud;
+            SoundPlayer _soundPlayer;
     };
 }

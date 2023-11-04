@@ -6,7 +6,7 @@
 */
 
 #pragma once
-#include "../Entity/Player.hpp"
+#include "../ECS/Entity/Player.hpp"
 #include <unordered_map>
 #include <memory>
 #include <climits>
@@ -35,7 +35,7 @@ class Core {
          * @param index The index to add the entity at
          * @return true if the entity was added successfully, false otherwise
          */
-        bool addEntity(const std::shared_ptr<IEntity> &entity, unsigned short index);
+        bool addEntity(std::shared_ptr<IEntity> entity, unsigned short index);
 
         /**
          * @brief Map of entities
@@ -87,6 +87,13 @@ class Core {
          */
         inline std::queue<unsigned short> getToErase() {return this->_erase;};
 
+        /**
+         * @brief Get the  id of the entity
+         * 
+         * @param entity the entity you want to know the id
+         * @return unsigned short the id
+         */
+        unsigned short getEntityId(IEntity &entity);
     private:
         /**
          * @brief Queue of present indices
