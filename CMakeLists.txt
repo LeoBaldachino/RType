@@ -91,6 +91,21 @@ else()
     target_link_libraries(r-type_server PRIVATE boost_system boost_serialization Threads::Threads config++ config)
 endif()
 
+# Copy the Assets folder to the output directory
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Assets DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+
+# Include the Assets folder in the solution
+file(GLOB_RECURSE ASSETS "Assets/*")
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/Assets PREFIX "Assets" FILES ${ASSETS})
+
+# ...
+
+# Copy the Assets folder to the output directory for each configuration
+foreach(CONFIG_TYPE ${CMAKE_CONFIGURATION_TYPES})
+    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Assets DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CONFIG_TYPE})
+endforeach()
+
+# ...
 
 # project(r-type_room_controller)
 # set(CMAKE_CXX_STANDARD 17)

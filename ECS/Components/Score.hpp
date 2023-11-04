@@ -9,6 +9,7 @@
 #include <iostream>
 #include <fstream>
 #include <mutex>
+#include <string>
 
 
 class ScoreComponent {
