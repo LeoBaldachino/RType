@@ -7,7 +7,7 @@
 
 #include "../includes/Room.hpp"
 
-RType::Server::Room::Room(unsigned char id, unsigned char maxSize, std::shared_ptr<Utils::SocketHandler> setSocket, std::vector<std::map<Parser::Enemies, int>> waves, unsigned char playerBaseLife) : 
+RType::Server::Room::Room(unsigned char id, unsigned char maxSize, std::shared_ptr<Utils::SocketHandler> setSocket, std::vector<std::map<Parser::Enemies, int>> waves, unsigned char playerBaseLife, int parralax, int music) : 
 _socket(setSocket)
 {
     std::unique_lock<std::mutex> lock(this->_mutex);
@@ -23,6 +23,9 @@ _socket(setSocket)
     this->_toSendToGameLoop = std::make_unique<std::queue<std::pair<unsigned short, Utils::MessageParsed_s>>>();
     this->_gameLoop = std::make_unique<RTypeGameLoop>(this->_core);
     this->setEnemiesWaves(waves);
+    this->_music = music;
+    this->_parralax = parralax;
+    this->_roomDetailsClock = std::chrono::steady_clock::now();
     this->_roomThread = std::make_unique<std::thread>(&RType::Server::Room::runRoom, this);
 }
 
@@ -53,19 +56,20 @@ bool RType::Server::Room::addToRoom(const std::pair<std::string, int> &newPlayer
     std::cout << "Add a new player with " << static_cast<int>(this->_baseLife) << " life" <<std::endl;
     this->_core.addEntity(std::make_shared<Player>(Position(0, 0, 1920, 1080), this->_baseLife, newPlayer.first), newId);
     std::cout << "End add player..." << std::endl;
-    for (auto &it : this->_allPlayers) {
-        msg.msgType = newPlayerConnected;
-        msg.setFirstShort(it.second);
-        this->_socket->send(msg);
-        msg.msgType = moveAnEntity;
-        auto coreIt = this->_core._entities.find(it.second);
-        if (coreIt == this->_core._entities.end())
-            continue;
-        msg.setThirdShort(it.second);
-        msg.setSecondShort(coreIt->second->getPosition().getY());
-        msg.setFirstShort(coreIt->second->getPosition().getX());
-        this->_socket->send(msg);
-    }
+    for (int i = 0; i < 4; ++i)
+        for (auto &it : this->_allPlayers) {
+            msg.msgType = newPlayerConnected;
+            msg.setFirstShort(it.second);
+            this->_socket->send(msg);
+            msg.msgType = moveAnEntity;
+            auto coreIt = this->_core._entities.find(it.second);
+            if (coreIt == this->_core._entities.end())
+                continue;
+            msg.setThirdShort(it.second);
+            msg.setSecondShort(coreIt->second->getPosition().getY());
+            msg.setFirstShort(coreIt->second->getPosition().getX());
+            this->_socket->send(msg);
+        }
     msg.setFirstShort(newId);
     lock.unlock();
     this->notifyAllPlayer(msg);
@@ -80,7 +84,14 @@ bool RType::Server::Room::addToRoom(const std::pair<std::string, int> &newPlayer
     lock.unlock();
     std::unique_lock<std::mutex> lock2(*this->_mutexQueue);
     msg.msgType = newPlayerConnected;
-    this->_toSendToGameLoop->push({newId, msg});
+    Utils::MessageParsed_s newMsg;
+    newMsg.senderIp = newPlayer.first;
+    newMsg.senderPort = newPlayer.second;
+    newMsg.msgType = roomDetails;
+    newMsg.bytes[0] = static_cast<unsigned char>(this->_parralax);
+    newMsg.bytes[1] = static_cast<unsigned char>(this->_music);
+    this->_socket->send(newMsg);
+    this->_toSendToGameLoop->push({newId, newMsg});
     return true;
 }
 
@@ -152,9 +163,17 @@ void RType::Server::Room::runRoom()
             }
             return;
         }
-        if (std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now() - this->_pingTime).count() >= static_cast<int>(CHECK_CRASHED_SECONDS)) {
+        auto clock = std::chrono::steady_clock::now();
+        if (std::chrono::duration_cast<std::chrono::seconds>(clock - this->_pingTime).count() >= static_cast<int>(CHECK_CRASHED_SECONDS)) {
             this->checkCrashed();
-            this->_pingTime = std::chrono::steady_clock::now();
+            this->_pingTime = clock;
+        }
+        if (std::chrono::duration_cast<std::chrono::milliseconds>(clock - this->_roomDetailsClock).count() >= static_cast<int>(GET_DETAILS_ROOM)) {
+            Utils::MessageParsed_s newMsg;
+            newMsg.msgType = roomDetails;
+            newMsg.bytes[0] = static_cast<unsigned char>(this->_parralax);
+            newMsg.bytes[1] = static_cast<unsigned char>(this->_music);
+            this->notifyAllPlayer(newMsg);
         }
         std::unique_lock<std::mutex> lock(*this->_mutexQueue);
         auto ret = this->_gameLoop->updateGameLoop(*this->_toSendToGameLoop);

@@ -70,9 +70,23 @@ namespace RType {
              * @param msg the message received
              */
             void connectToRoom(const RType::Utils::MessageParsed_s &msg);
-
+            /**
+             * @brief Get the members of the room
+             * 
+             * @param msg the message received
+             */
             void getRoomMembers(const Utils::MessageParsed_s &msg);
+            /**
+             * @brief Get the details of a player
+             * 
+             * @param msg 
+             */
             void getPlayerDetails(const Utils::MessageParsed_s &msg);
+            /**
+             * @brief kick a player from the room
+             * 
+             * @param msg 
+             */
             void kickPlayer(const Utils::MessageParsed_s &msg);
             std::unique_ptr<Server::ThreadPool> _threadPool;
             std::unique_ptr<Utils::SocketHandler> _socket;

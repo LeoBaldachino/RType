@@ -33,6 +33,7 @@ namespace RType {
             DESTROYED_NB_MSG_SEND = 5,
             CHECK_CRASHED_SECONDS = 3,
             CHECK_CRASHED_TIMES = 3,
+            GET_DETAILS_ROOM = 1000,
         };
         /**
          * @brief class who controls one room
@@ -47,7 +48,7 @@ namespace RType {
                  * @param maxSize number max of user in this room
                  * @param setSocket instance of the shared pointer of socketHandler
                  */
-                Room(unsigned char id, unsigned char maxSize, std::shared_ptr<Utils::SocketHandler> setSocket, std::vector<std::map<Parser::Enemies, int>> waves, unsigned char playerBaseLife);
+                Room(unsigned char id, unsigned char maxSize, std::shared_ptr<Utils::SocketHandler> setSocket, std::vector<std::map<Parser::Enemies, int>> waves, unsigned char playerBaseLife, int parralax, int music);
                 /**
                  * @brief Destroy the Room object
                  * 
@@ -195,6 +196,9 @@ namespace RType {
                 std::unique_ptr<std::queue<std::pair<unsigned short, Utils::MessageParsed_s>>> _toSendToGameLoop;
                 std::pair<std::string, int> _firstClient;
                 unsigned char _baseLife;
+                int _music;
+                int _parralax;
+                std::chrono::steady_clock::time_point _roomDetailsClock;
         };
     }
 }

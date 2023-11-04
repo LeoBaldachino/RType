@@ -22,6 +22,7 @@ _commands({
 {nbOfEntities, &RType::Client::syncNbOfEntities},
 {playerDeconnected, &RType::Client::quitRoom},
 {message, &RType::Client::newMessage},
+{roomDetails, &RType::Client::setRoomDetails}
 }),
 _buttonList("../Assets/insanibu.ttf"),
 _parallax(_texture),
@@ -653,4 +654,12 @@ void RType::Client::newMessage(const Utils::MessageParsed_s &msg)
 {
     std::cout << "New message" << std::endl;
     this->_popUp.setText(this->_msgPanel.decyptMessage(msg));
+}
+
+
+void RType::Client::setRoomDetails(const Utils::MessageParsed_s &msg)
+{
+    std::cout << "Set room details" << std::endl;
+    this->_currentMusic = msg.bytes[0];
+    this->_currentParralax = msg.bytes[1];
 }
