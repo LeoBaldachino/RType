@@ -12,6 +12,8 @@ set(BOOST_LIBRARYDIR ${CMAKE_CURRENT_SOURCE_DIR}/boost/stage/lib)
 set(BOOST_INCLUDEDIR ${CMAKE_CURRENT_SOURCE_DIR}/boost)
 
 include_directories(${Boost_INCLUDE_DIRS})
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libconfig)
+
 
 include(FetchContent)
 FetchContent_Declare(SFML
@@ -39,7 +41,8 @@ add_executable(r-type_client ${CLIENT_FILES} ${SUBSYSTEMS} ${SYSTEMS} ${ENTITY} 
 find_package(Threads REQUIRED)
 
 if(WIN32)
-    target_link_libraries(r-type_client PRIVATE sfml-graphics sfml-window sfml-system sfml-audio Threads::Threads)
+    target_link_libraries(r-type_client PRIVATE sfml-graphics sfml-window sfml-system sfml-audio Threads::Threads libconfig++)
+    set_target_properties(libconfig++ PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 else()
     target_link_libraries(r-type_client PRIVATE sfml-graphics sfml-window sfml-system sfml-audio Threads::Threads)
 endif()
@@ -54,7 +57,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/boost)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libconfig)
 
 file(GLOB SERVER_SOURCES "server/sources/*.cpp")
 file(GLOB SERVER_CORE "Core/*.cpp")
@@ -73,6 +75,7 @@ if(WIN32)
     target_link_libraries(r-type_server PRIVATE boost_system boost_serialization Threads::Threads libconfig++)
     link_directories(${CMAKE_CURRENT_SOURCE_DIR}/boost/stage/lib)
     include_directories(${CMAKE_CURRENT_SOURCE_DIR}/boost)
+    set_target_properties(libconfig++ PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 else()
     target_link_libraries(r-type_server PRIVATE boost_system boost_serialization Threads::Threads config++ config)
 endif()
