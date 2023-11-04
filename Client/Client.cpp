@@ -241,16 +241,14 @@ void RType::Client::createRoom(unsigned char roomNb)
     this->_socket->send(msg);
     std::unique_lock<std::mutex> lock(*this->_mutex);
     this->_actualRoom = 1;
-    this->_entities.addEntity(std::make_shared<Player>(Position(0, 0, 1080, 1920), 1, ""), 0);
+    // this->_entities.addEntity(std::make_shared<Player>(Position(0, 0, 1080, 1920), 1, ""), 0);
 }
 
 void RType::Client::newPlayerToRoom(const Utils::MessageParsed_s &msg)
 {
     std::unique_lock<std::mutex> lock(*this->_mutex);
     this->_popUp.setText("New player to Room !");
-    auto pl = std::make_shared<Player>(Position(0, 0, 1080, 1920), 3, "");
-    this->_lifeBar->setLifeBarToPlayer(pl);
-    this->_entities.addEntity(pl, msg.getFirstShort());
+    this->_entities.addEntity(std::make_shared<Player>(Position(0, 0, 1080, 1920), 3, ""), msg.getFirstShort());
 }
 
 void RType::Client::getNewId(const Utils::MessageParsed_s &msg)
@@ -391,7 +389,7 @@ void RType::Client::newEnemyShoot(const Utils::MessageParsed_s &msg)
     Position pos(-20, -20);
     AIShoot aiShoot(pos, pos);
     auto tmpShoot = aiShoot.shootLogic();
-    this->_entities.addEntity(std::make_shared<ShotEntity>(tmpShoot, "../Assets/EntitiesSprites/tEnemyShot.png", false, *this->_entities._entities[0]), msg.getFirstShort());
+    this->_entities.addEntity(std::make_shared<ShotEntity>(tmpShoot, "../Assets/EntitiesSprites/tEnemyShot.png", false, 0), msg.getFirstShort());
 }
 
 void RType::Client::setValues(const Utils::MessageParsed_s &msg)
@@ -401,11 +399,12 @@ void RType::Client::setValues(const Utils::MessageParsed_s &msg)
     if (find == this->_entities._entities.end())
         return;
     if (find->second->getEntityType() == player) {
+        std::cout << "Player casted..." << std::endl;
         std::shared_ptr<Player> playerCasted = std::dynamic_pointer_cast<Player>(find->second);
         playerCasted->setLife(msg.bytes[3]);
         playerCasted->setMaxLife(msg.bytes[5]);
         this->_lifeBar->setLifeBarToPlayer(playerCasted);
-        this->_hud.setScore(msg.bytes[6]);
+        this->_hud.setScore(msg.bytes[4]);
     }
     if (find->second->getEntityType() == bydos) {
         std::shared_ptr<Bydos> bydosCasted = std::dynamic_pointer_cast<Bydos>(find->second);
@@ -429,7 +428,7 @@ void RType::Client::newMyShoot(const Utils::MessageParsed_s &msg)
     Position pos(-20, -20);
     AIShoot aiShoot(pos, pos);
     auto tmpShoot = aiShoot.shootLogic();
-    this->_entities.addEntity(std::make_shared<ShotEntity>(tmpShoot, "../Assets/shot.png", true, *this->_entities._entities[0]), msg.getFirstShort());  
+    this->_entities.addEntity(std::make_shared<ShotEntity>(tmpShoot, "../Assets/shot.png", true, 0), msg.getFirstShort());  
 }
 
 void RType::Client::newPercingShoot(const Utils::MessageParsed_s &msg)
@@ -441,7 +440,7 @@ void RType::Client::newPercingShoot(const Utils::MessageParsed_s &msg)
     Position pos(-20, -20);
     AIShoot aiShoot(pos, pos);
     auto tmpShoot = aiShoot.shootLogic();
-    this->_entities.addEntity(std::make_shared<PiercingShotEntity>(tmpShoot, *this->_entities._entities[0]), msg.getFirstShort());
+    this->_entities.addEntity(std::make_shared<PiercingShotEntity>(tmpShoot, 0), msg.getFirstShort());
 }
 
 sf::Sprite RType::Client::getSpriteFromEntity(std::shared_ptr<IEntity> entity, unsigned int id)
@@ -605,6 +604,7 @@ void RType::Client::setLifeBars()
             this->_lifeBar->setLifeBarToBydos(bydosCasted); 
         }
         if (it.second->getEntityType() == player) {
+            std::cout << "life barz" << std::endl;
             std::shared_ptr<Player> playerCasted = std::dynamic_pointer_cast<Player>(it.second);
             this->_lifeBar->setLifeBarToPlayer(playerCasted);    
         }

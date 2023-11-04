@@ -20,6 +20,7 @@ FetchContent_Declare(SFML
 FetchContent_MakeAvailable(SFML)
 include_directories(${SFML_SOURCE_DIR}/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Visitor)
+# add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/boost)
 
 file(GLOB SUBSYSTEMS "ECS/Systems/Subsystems/*.cpp")
 file(GLOB SYSTEMS "ECS/Systems/*.cpp")
@@ -37,6 +38,10 @@ file(GLOB HUD "Client/Hud/*.cpp")
 file(GLOB SOUND_PLAYER "Client/SoundPlayer/*.cpp")
 file(GLOB MESSAGE_PANEL "Client/MessagePanel/*.cpp")
 add_executable(r-type_client ${CLIENT_FILES} ${SUBSYSTEMS} ${SYSTEMS} ${ENTITY} ${CORE} ${SOCKET_FILES} ${ENTITY_TYPES} ${LIFE_BAR} ${PARALLAX} ${BUTTON} ${MENU} ${POPUP} ${MESSAGE_PANEL} ${HUD} ${SOUND_PLAYER} ${MESSAGE_PANEL})
+
+target_compile_options(r-type_client PRIVATE -g)
+target_link_options(r-type_client PRIVATE -g)
+
 
 find_package(Threads REQUIRED)
 
@@ -69,6 +74,10 @@ file(GLOB SERVER_RTYPEGAMELOOP "gameLoop/RTypeGameLoop/*.cpp")
 file(GLOB SERVER_ENTITYTYPES "EntityTypes/*.cpp")
 
 add_executable(r-type_server ${SERVER_SOURCES} ${SERVER_CORE} ${SERVER_SOCKET} ${SERVER_SYSTEMS} ${SERVER_SUBSYSTEMS} ${SERVER_ENTITY} ${SERVER_GAMELOOP} ${SERVER_RTYPEGAMELOOP} ${SERVER_ENTITYTYPES})
+
+target_compile_options(r-type_server PRIVATE -g)
+target_link_options(r-type_server PRIVATE -g)
+
 
 # # Link against libconfig
 if(WIN32)

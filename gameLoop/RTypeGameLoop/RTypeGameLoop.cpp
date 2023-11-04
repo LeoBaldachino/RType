@@ -20,13 +20,17 @@ void RType::RTypeGameLoop::updatePlayerPos(std::pair<unsigned short, Utils::Mess
     auto it = this->_core._entities.find(msg.first);
     if (it == this->_core._entities.end())
         return;
+    if (it->second->getEntityType() != RType::player)
+        return;
     std::shared_ptr<Player> player = std::dynamic_pointer_cast<Player>(it->second);
+    player->_inputs->lockInputs();
     for (unsigned char i = 0; i < 7; ++i) {
         if (msg.second.bytes[i] > 6)
             break;
         if (static_cast<bool>(player->_inputs))
             player->_inputs->addEvents((Inputs::Events)msg.second.bytes[i]);
     }
+    player->_inputs->unlockInputs();
 }
 
 
@@ -222,9 +226,9 @@ void RType::RTypeGameLoop::checkPlayerStatus(std::queue<Utils::MessageParsed_s> 
         std::shared_ptr<Player> player = std::dynamic_pointer_cast<Player>(find->second);
         msgToSend.setFirstShort(it);
         msgToSend.bytes[3] = player->getLifes();
-        msgToSend.bytes[4] = player->actuallyInvincible() ? 1 : 0;
+        // msgToSend.bytes[4] = player->actuallyInvincible() ? 1 : 0;
         msgToSend.bytes[5] = player->getMaxLife();
-        msgToSend.bytes[6] = player->getScore();
+        msgToSend.bytes[4] = player->getScore();
         toReturn.push(msgToSend);
     }
 }

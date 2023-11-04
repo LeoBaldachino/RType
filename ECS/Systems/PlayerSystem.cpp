@@ -12,11 +12,11 @@ void PlayerSystem::createShots(Player &p, Core &core)
     Shoot tmpShoot(p.shoot());
     while (!p._inputs->isEmpty()) {
         if (p._inputs->getLastEvent() == Inputs::Events::PiercingShoot) {
-            core.addEntity(std::make_shared<PiercingShotEntity>(tmpShoot, p), core.getAvailabeIndex());
+            core.addEntity(std::make_shared<PiercingShotEntity>(tmpShoot, core.getEntityId(p)), core.getAvailabeIndex());
             std::cout << "New percing shoot !" << std::endl;
         }
         else if (p._inputs->getLastEvent() == Inputs::Events::Shoot)
-            core.addEntity(std::make_shared<ShotEntity>(tmpShoot, "../Assets/shot.png", true, p), core.getAvailabeIndex());
+            core.addEntity(std::make_shared<ShotEntity>(tmpShoot, "../Assets/shot.png", true, core.getEntityId(p)), core.getAvailabeIndex());
         p._inputs->popEvent();
     }
 }
@@ -46,6 +46,8 @@ void PlayerSystem::checkCollision(Player &p, IEntity &entity, Core &core)
             p.addLife();
         if (entity.getEntityType() != RType::coin && p.getLifes() >= 1)
             p.removeOneLife();
+        // if (p.getLifes() <= 0)
+        //     core.removeEntityLater(p);
         core.removeEntityLater(entity);
     }
 }
