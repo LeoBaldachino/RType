@@ -73,9 +73,9 @@ class Parser {
         /**
          * @brief Get the Music name
          * 
-         * @return std::string the music name
+         * @return int the music index
          */
-        std::string getMusic(void) const;
+        int getMusic(void) const;
         /**
          * @brief Get the current parralax
          * 
@@ -91,7 +91,7 @@ class Parser {
     private:
         libconfig::Config config;
         std::unique_ptr<Error> error;
-        std::string _music = "";
+        int _music = 0;
         int _parallaxIndex = 0;
         std::string _next_level = "";
         std::vector<std::map<Enemies, int>> _waves;

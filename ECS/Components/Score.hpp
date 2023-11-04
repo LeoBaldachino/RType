@@ -39,33 +39,34 @@ class ScoreComponent {
             std::cout << "Score end..." << std::endl;
         };
         ~ScoreComponent() {
-            std::cout << "Estoy destrudos" << std::endl;
-            if (!this->_readOnly) {
-                std::ifstream scores;
-                std::string line;
-                std::string lineToFill;
-                bool find = false;
-                scores.open("all.score");
-                if (scores.is_open()) {
-                    while (std::getline(scores, line)) {
-                        if (line.rfind(this->_name, 0) == 0) {
-                            find = true;
-                            line = this->_name + " " + std::to_string(this->_actScore);
-                        }
-                        lineToFill += line + "\n";
-                    }
-                    scores.close();
-                }
-                if (!find) {
-                    lineToFill += this->_name + " " + std::to_string(this->_actScore);
-                }
-                std::ofstream myfile;
-                myfile.open("all.score", std::ios::trunc);
-                if (!myfile.is_open())
-                    return;
-                myfile << lineToFill;
-                myfile.close();
-            }
+            //! maybe this too..
+            // std::cout << "Estoy destrudos" << std::endl;
+            // if (!this->_readOnly) {
+            //     std::ifstream scores;
+            //     std::string line;
+            //     std::string lineToFill;
+            //     bool find = false;
+            //     scores.open("all.score");
+            //     if (scores.is_open()) {
+            //         while (std::getline(scores, line)) {
+            //             if (line.rfind(this->_name, 0) == 0) {
+            //                 find = true;
+            //                 line = this->_name + " " + std::to_string(this->_actScore);
+            //             }
+            //             lineToFill += line + "\n";
+            //         }
+            //         scores.close();
+            //     }
+            //     if (!find) {
+            //         lineToFill += this->_name + " " + std::to_string(this->_actScore);
+            //     }
+            //     std::ofstream myfile;
+            //     myfile.open("all.score", std::ios::trunc);
+            //     if (!myfile.is_open())
+            //         return;
+            //     myfile << lineToFill;
+            //     myfile.close();
+            // }
         };
         inline void increaseScore(const float &toIncrease) {std::cout <<"increase" << std::endl;this->_actScore+=toIncrease;std::cout << "Actual score " << this->_actScore << std::endl;};
         inline void setScore(const float &toSet) {this->_actScore=toSet;};

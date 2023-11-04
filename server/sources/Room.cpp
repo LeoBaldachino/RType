@@ -174,6 +174,7 @@ void RType::Server::Room::runRoom()
             newMsg.bytes[0] = static_cast<unsigned char>(this->_parralax);
             newMsg.bytes[1] = static_cast<unsigned char>(this->_music);
             this->notifyAllPlayer(newMsg);
+            this->_roomDetailsClock = clock;
         }
         std::unique_lock<std::mutex> lock(*this->_mutexQueue);
         auto ret = this->_gameLoop->updateGameLoop(*this->_toSendToGameLoop);
