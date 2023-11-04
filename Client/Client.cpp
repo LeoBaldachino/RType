@@ -592,13 +592,13 @@ void RType::Client::gameLoop()
     unsigned char actualIndex = 0;
     _window->clear();
 
-    if (this->_level == 1) {
+    if (this->_level == 0) {
         this->_parallax.drawBackgroundParallax(this->_window);
         this->_parallax.drawParallax(this->_window);
     }
-    if (this->_level == 2) {}
+    if (this->_level == 1)
         this->_parallaxGnome.drawGnomeParallax(this->_window);
-    if (this->_level == 3)
+    if (this->_level == 2)
         this->_parallaxDragon.drawDragonParallax(this->_window);
     
     this->_lifeBar->display(this->_window);
@@ -747,10 +747,37 @@ void RType::Client::newMessage(const Utils::MessageParsed_s &msg)
     this->_popUp.setText(this->_msgPanel.decyptMessage(msg));
 }
 
+std::string getMusicPath(int musicIndex)
+{
+    if (musicIndex == 0)
+        return ("FloralFury.ogg");
+    if (musicIndex == 1)
+        return ("ForestFollies.ogg");
+    if (musicIndex == 2)
+        return ("InkwellIsleOne.ogg");
+    if (musicIndex == 3)
+        return ("InkwellIsleTwo.ogg");
+    if (musicIndex == 4)
+        return ("Introduction.ogg");
+    if (musicIndex == 5)
+        return ("RuseOfAnOoze.ogg");
+    if (musicIndex == 6)
+        return ("ShadowOfEvil.ogg");
+    if (musicIndex == 7)
+        return ("ThreatinZeppelin.ogg");
+    if (musicIndex == 8)
+        return ("TreetopTrouble.ogg");
+}
 
 void RType::Client::setRoomDetails(const Utils::MessageParsed_s &msg)
 {
+    if (this->roomDetailsSet)
+        return;
+    this->roomDetailsSet = true;
     std::cout << "Set room details" << std::endl;
-    this->_currentMusic = msg.bytes[0];
-    this->_currentParralax = msg.bytes[1];
+    this->_currentMusic = msg.bytes[1];
+    this->_level = msg.bytes[0];
+    std::string musicFilePath = "./Assets/Music/" + getMusicPath(this->_currentMusic);
+    if (this->_music.openFromFile(musicFilePath) != -1)
+        this->_music.play();
 }
