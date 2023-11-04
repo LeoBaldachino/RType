@@ -32,7 +32,7 @@ void Parser::readConfig(std::string configFile)
 void Parser::initMusic(void)
 {
     try {
-        this->_music = this->getSetting<std::string>("music.filepath");
+        this->_music = this->getSetting<int>("music.index");
     }
     catch (std::logic_error &e) {
         return;
@@ -149,7 +149,7 @@ T Parser::getSetting(std::string settingsName, const libconfig::Setting &setting
     return (T(NULL));
 }
 
-std::string Parser::getMusic(void) const
+int Parser::getMusic(void) const
 {
     return (this->_music);
 }

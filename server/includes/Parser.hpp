@@ -32,13 +32,13 @@ class Parser {
         template<typename T>
         T getSetting(std::string settingsName, const libconfig::Setting &setting, const std::string errorSupp = "");
         int getEnemy(std::string settingsName, const libconfig::Setting &setting, const std::string errorSupp);
-        std::string getMusic(void) const;
+        int getMusic(void) const;
         int getParallax(void) const;
         std::vector<std::map<Enemies, int>> getWaves(void) const;
     private:
         libconfig::Config config;
         std::unique_ptr<Error> error;
-        std::string _music = "";
+        int _music = 0;
         int _parallaxIndex = 0;
         std::string _next_level = "";
         std::vector<std::map<Enemies, int>> _waves;

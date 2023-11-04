@@ -79,7 +79,7 @@ namespace RType {
             std::mutex _mutex;
             std::vector<std::pair<std::string, int>> _clients;
             std::vector<std::unique_ptr<Server::Room>> _rooms;
-            std::string _music;
+            int _music;
             int _parallaxIndex;
             std::vector<std::map<Parser::Enemies, int>> _waves;
     };
