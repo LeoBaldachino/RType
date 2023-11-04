@@ -1,7 +1,7 @@
 ## Contributing
 
-[fork]: /fork
-[pr]: /compare
+[fork]: https://docs.github.com/fr/get-started/quickstart/fork-a-repo
+[pr]: https://docs.github.com/fr/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request
 [code-of-conduct]: CODE_OF_CONDUCT.md
 [readme]: README.md
 
@@ -18,7 +18,7 @@ We'd also love PRs. If you're thinking of a large PR, we advise opening up an is
 ## Submitting a pull request
 
 1. [Fork][fork] and clone the repository.
-2. Configure and install the dependencies [The readme][readme].
+2. Configure and install the dependencies [readme][readme].
 3. Make your change, add tests, and make sure that anything is broken.
 3. Push to your fork and [submit a pull request][pr].
 4. Pat your self on the back and wait for your pull request to be reviewed and merged.
