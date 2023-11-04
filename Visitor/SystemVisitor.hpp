@@ -13,6 +13,12 @@
 #include "../ECS/Systems/GenieSystem.hpp"
 #include "../ECS/Systems/CoinSystem.hpp"
 #include "../EntityTypes/EntityTypes.hpp"
+#include "../ECS/Systems/GenieSystem.hpp"
+#include "../ECS/Systems/GenieShotSystem.hpp"
+#include "../ECS/Systems/MermaidSystem.hpp"
+#include "../ECS/Systems/MermaidShotSystem.hpp"
+#include "../ECS/Systems/DragonSystem.hpp"
+#include "../ECS/Systems/DragonShotSystem.hpp"
 #include "../ECS/Components/ClockTimer.hpp"
 
 class SystemVisitor : public IVisitor {
@@ -24,7 +30,11 @@ class SystemVisitor : public IVisitor {
             this->_playerSystem.createShots(p, core);
             p._inputs->unlockInputs();
             for (auto it : core._entities)
-                if (it.second->getEntityType() == RType::bydos || it.second->getEntityType() == RType::bydosShoot || it.second->getEntityType() == RType::coin || it.second->getEntityType() == RType::tourre)
+                if (it.second->getEntityType() == RType::bydos || it.second->getEntityType() == RType::bydosShoot
+                || it.second->getEntityType() == RType::coin || it.second->getEntityType() == RType::genie
+                || it.second->getEntityType() == RType::genieShot || it.second->getEntityType() == RType::dragon
+                || it.second->getEntityType() == RType::dragonShot || it.second->getEntityType() == RType::mermaid
+                || it.second->getEntityType() == RType::mermaidShot)
                     this->_playerSystem.checkCollision(p, *it.second, core);
             this->_lastPlayerPos = p.getPosition();
         }
@@ -53,19 +63,92 @@ class SystemVisitor : public IVisitor {
                     this->_tourreSystem.checkCollision(t, *it.second, core, true);
             }
         };
-        void visitGenie(Genie &t, Core &core) {
-            if (t.getLifes() == 0)
-                return (void)core.removeEntityLater(t);
-            this->_genieSystem.updatePos(t);
-            // for (auto it : core._entities) {
-            //     auto entityType = it.second->getEntityType();
-            //     if (entityType == RType::playerShoot)
-            //         this->_tourreSystem.checkCollision(t, *it.second, core, false);
-            //     if (entityType == RType::percingShoot)
-            //         this->_tourreSystem.checkCollision(t, *it.second, core, true);
-            // }
-            // this->_tourreSystem.createShots(t, this->_lastPlayer, core);
+        void visitGenie(Genie &g, Core &core) {
+            if (g.getLifes() == 0)
+                return (void)core.removeEntityLater(g);
+            this->_genieSystem.updatePos(g);
+            if (g.getPosition().getX() <= 1920 - 500)
+                this->_genieSystem.shot(g, core);
+            for (auto it : core._entities) {
+                auto entityType = it.second->getEntityType();
+                if (entityType == RType::playerShoot)
+                    this->_genieSystem.checkCollision(g, *it.second, core, false);
+                if (entityType == RType::percingShoot)
+                    this->_genieSystem.checkCollision(g, *it.second, core, true);
+            }
         };
+        void visitMermaid(Mermaid &m, Core &core) {
+            if (m.getLifes() == 0)
+                return (void)core.removeEntityLater(m);
+            this->_mermaidSystem.updatePos(m);
+            if (m.getPosition().getX() <= 1920 - 500)
+                this->_mermaidSystem.shot(m, core);
+            for (auto it : core._entities) {
+                auto entityType = it.second->getEntityType();
+                if (entityType == RType::playerShoot)
+                    this->_mermaidSystem.checkCollision(m, *it.second, core, false);
+                if (entityType == RType::percingShoot)
+                    this->_mermaidSystem.checkCollision(m, *it.second, core, true);
+            }
+        };
+        void visitMermaidShot(MermaidShot &mS, Core &core) {
+            if (mS.getLifes() == 0) {
+                return (void)core.removeEntityLater(mS);
+            }
+            this->_mermaidShotSystem.updatePos(mS, this->_lastPlayerPos);
+            for (auto it : core._entities) {
+                auto entityType = it.second->getEntityType();
+                if (entityType == RType::playerShoot)
+                    this->_mermaidShotSystem.checkCollision(mS, *it.second, core, false);
+                if (entityType == RType::percingShoot)
+                    this->_mermaidShotSystem.checkCollision(mS, *it.second, core, true);
+            }
+        };
+        void visitDragon(Dragon &d, Core &core) {
+            if (d.getLifes() == 0)
+                return (void)core.removeEntityLater(d);
+            this->_dragonSystem.updatePos(d);
+            if (d.getPosition().getX() <= 1920 - 667)
+                this->_dragonSystem.shot(d, core);
+            for (auto it : core._entities) {
+                auto entityType = it.second->getEntityType();
+                if (entityType == RType::playerShoot)
+                    this->_dragonSystem.checkCollision(d, *it.second, core, false);
+                if (entityType == RType::percingShoot)
+                    this->_dragonSystem.checkCollision(d, *it.second, core, true);
+            }
+        };
+        void visitDragonShot(DragonShot &dS, Core &core) {
+            if (dS.getLifes() == 0) {
+                Shoot tmpShoot(Vector2d(-1, 0), Vector2d(dS.getPosition().getX(), dS.getPosition().getY()), 1, 3, 1, false);
+                core.addEntity(std::make_shared<ShotEntity>(tmpShoot, RType::bydosShoot, false, core.getEntityId(dS)), core.getAvailabeIndex());
+                tmpShoot.setDirection(Vector2d(0, -1));
+                core.addEntity(std::make_shared<ShotEntity>(tmpShoot, RType::bydosShoot, false, core.getEntityId(dS)), core.getAvailabeIndex());
+                tmpShoot.setDirection(Vector2d(0, 1));
+                core.addEntity(std::make_shared<ShotEntity>(tmpShoot, RType::bydosShoot, false, core.getEntityId(dS)), core.getAvailabeIndex());
+                tmpShoot.setDirection(Vector2d(1, 0));
+                core.addEntity(std::make_shared<ShotEntity>(tmpShoot, RType::bydosShoot, false, core.getEntityId(dS)), core.getAvailabeIndex());
+                return (void)core.removeEntityLater(dS);
+            }
+            this->_dragonShotSystem.updatePos(dS, this->_lastPlayerPos);
+            for (auto it : core._entities) {
+                auto entityType = it.second->getEntityType();
+                if (entityType == RType::playerShoot)
+                    this->_dragonShotSystem.checkCollision(dS, *it.second, core, false);
+                if (entityType == RType::percingShoot)
+                    this->_dragonShotSystem.checkCollision(dS, *it.second, core, true);
+            }
+        }
+        void visitGenieShot(GenieShot &gS, Core &core) {
+            this->_genieShotSystem.updatePos(gS);
+            for (auto it : core._entities) {
+                auto entityType = it.second->getEntityType();
+                if (entityType == RType::playerShoot)
+                    this->_genieShotSystem.checkCollision(gS, *it.second, core, false);
+                if (entityType == RType::percingShoot)
+                    this->_genieShotSystem.checkCollision(gS, *it.second, core, true);
+            }
+        }
         void visitShot(ShotEntity &s, Core &core) {
             this->_shotSystem.updatePos(s);
             this->_shotSystem.clearShots(s, core);
@@ -87,4 +170,9 @@ class SystemVisitor : public IVisitor {
         ShotSystem _shotSystem;
         PiercingShotSystem _piercingShotSystem;
         CoinSystem _coinSystem;
+        GenieShotSystem _genieShotSystem;
+        MermaidSystem _mermaidSystem;
+        MermaidShotSystem _mermaidShotSystem;
+        DragonSystem _dragonSystem;
+        DragonShotSystem _dragonShotSystem;
 };

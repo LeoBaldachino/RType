@@ -12,6 +12,8 @@ set(BOOST_LIBRARYDIR ${CMAKE_CURRENT_SOURCE_DIR}/boost/stage/lib)
 set(BOOST_INCLUDEDIR ${CMAKE_CURRENT_SOURCE_DIR}/boost)
 
 include_directories(${Boost_INCLUDE_DIRS})
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libconfig)
+
 
 include(FetchContent)
 FetchContent_Declare(SFML
@@ -46,7 +48,8 @@ add_executable(r-type_client ${CLIENT_FILES} ${SUBSYSTEMS} ${SYSTEMS} ${ENTITY} 
 find_package(Threads REQUIRED)
 
 if(WIN32)
-    target_link_libraries(r-type_client PRIVATE sfml-graphics sfml-window sfml-system sfml-audio Threads::Threads)
+    target_link_libraries(r-type_client PRIVATE sfml-graphics sfml-window sfml-system sfml-audio Threads::Threads libconfig++)
+    set_target_properties(libconfig++ PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 else()
     target_link_libraries(r-type_client PRIVATE sfml-graphics sfml-window sfml-system sfml-audio Threads::Threads)
 endif()
@@ -61,7 +64,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/boost)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libconfig)
 
 file(GLOB SERVER_SOURCES "server/sources/*.cpp")
 file(GLOB SERVER_CORE "Core/*.cpp")
@@ -84,10 +86,26 @@ if(WIN32)
     target_link_libraries(r-type_server PRIVATE boost_system boost_serialization Threads::Threads libconfig++)
     link_directories(${CMAKE_CURRENT_SOURCE_DIR}/boost/stage/lib)
     include_directories(${CMAKE_CURRENT_SOURCE_DIR}/boost)
+    set_target_properties(libconfig++ PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 else()
     target_link_libraries(r-type_server PRIVATE boost_system boost_serialization Threads::Threads config++ config)
 endif()
 
+# Copy the Assets folder to the output directory
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Assets DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+
+# Include the Assets folder in the solution
+file(GLOB_RECURSE ASSETS "Assets/*")
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/Assets PREFIX "Assets" FILES ${ASSETS})
+
+# ...
+
+# Copy the Assets folder to the output directory for each configuration
+foreach(CONFIG_TYPE ${CMAKE_CONFIGURATION_TYPES})
+    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Assets DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CONFIG_TYPE})
+endforeach()
+
+# ...
 
 # project(r-type_room_controller)
 # set(CMAKE_CXX_STANDARD 17)

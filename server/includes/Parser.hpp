@@ -19,7 +19,10 @@ class Parser {
         enum Enemies {
             BYDOS,
             TOURRE,
-            COIN
+            COIN,
+            GENIE,
+            MERMAID,
+            DRAGON
         };
         /**
          * @brief Construct a new Parser
@@ -74,12 +77,6 @@ class Parser {
          */
         std::string getMusic(void) const;
         /**
-         * @brief Get the Next Level name
-         * 
-         * @return std::string name of the next level file
-         */
-        std::string getNextLevel(void) const;
-        /**
          * @brief Get the current parralax
          * 
          * @return int the current parralax
@@ -100,6 +97,5 @@ class Parser {
         std::vector<std::map<Enemies, int>> _waves;
         void initMusic(void);
         void initParallax(void);
-        void initNextLevel(void);
         void initWaves(void);
 };

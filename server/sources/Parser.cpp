@@ -26,7 +26,6 @@ void Parser::readConfig(std::string configFile)
     }
     this->initMusic();
     this->initParallax();
-    this->initNextLevel();
     this->initWaves();
 }
 
@@ -45,16 +44,6 @@ void Parser::initParallax(void)
     this->_parallaxIndex = this->getSetting<int>("parallax.index");
 }
 
-void Parser::initNextLevel(void)
-{
-    try {
-        this->_next_level = this->getSetting<std::string>("next-level.filepath");
-    }
-    catch (std::logic_error &e) {
-        return;
-    }
-}
-
 void Parser::initWaves(void)
 {
     std::string e = " for wave ";
@@ -66,7 +55,35 @@ void Parser::initWaves(void)
             int bydosCount = this->getEnemy("bydos", wave, e + std::to_string(i + 1));
             int tourreCount = this->getEnemy("tourre", wave, e + std::to_string(i + 1));
             int coinCount = this->getEnemy("coin", wave, e + std::to_string(i + 1));
-            std::map<Enemies, int> tmpMap = {{Enemies::BYDOS, bydosCount}, {Enemies::TOURRE, tourreCount}, {Enemies::COIN, coinCount}};
+            int genieCount = this->getEnemy("genie", wave, e + std::to_string(i + 1));
+            int mermaidCount = this->getEnemy("mermaid", wave, e + std::to_string(i + 1));
+            int bossCount = 0;
+            if (genieCount > 1) {
+                this->error->writeLogs("Only one genie can be spawned\n");
+                genieCount = 1;
+            }
+            if (mermaidCount > 1) {
+                this->error->writeLogs("Only one mermaid can be spawned\n");
+                mermaidCount = 1;
+            }
+            int dragonCount = this->getEnemy("dragon", wave, e + std::to_string(i + 1));
+            if (dragonCount > 1) {
+                this->error->writeLogs("Only one dragon can be spawned\n");
+                dragonCount = 1;
+            }
+            bossCount += dragonCount == 1 ? 1 : 0;
+            bossCount += genieCount == 1 ? 1 : 0;
+            bossCount += mermaidCount == 1 ? 1 : 0;
+            if (bossCount >= 2) {
+                if (dragonCount == 1) {
+                    genieCount = 0;
+                    mermaidCount = 0;
+                }
+                if (genieCount == 1)
+                    mermaidCount = 0;
+                this->error->writeLogs("Only one boss can be spawned at once\n");
+            }
+            std::map<Enemies, int> tmpMap = {{Enemies::BYDOS, bydosCount}, {Enemies::TOURRE, tourreCount}, {Enemies::COIN, coinCount}, {Enemies::GENIE, genieCount}, {Enemies::DRAGON, dragonCount}, {Enemies::MERMAID, mermaidCount}};
             this->_waves.push_back(tmpMap);
         }
     } catch (const libconfig::SettingNotFoundException &e) {
@@ -78,7 +95,8 @@ template<typename T>
 T Parser::getSetting(std::string settingsName)
 {
     try {
-        return T(config.lookup(settingsName));
+        T tmp = config.lookup(settingsName);
+        return (tmp);
     } catch (libconfig::SettingNotFoundException &e) {
         this->error->writeLogs("No " + settingsName + " setting in configuration file.\n");
         return (T(NULL));
@@ -134,11 +152,6 @@ T Parser::getSetting(std::string settingsName, const libconfig::Setting &setting
 std::string Parser::getMusic(void) const
 {
     return (this->_music);
-}
-
-std::string Parser::getNextLevel(void) const
-{
-    return (this->_next_level);
 }
 
 int Parser::getParallax(void) const

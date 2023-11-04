@@ -8,6 +8,7 @@
 #pragma once
 #include "../Entity/Genie.hpp"
 #include "../Core/Core.hpp"
+#include "../Entity/GenieShot.hpp"
 #include "Subsystems/MovementSystem.hpp"
 #include "Subsystems/ShotSystem.hpp"
 #include "Subsystems/HitBox.hpp"
@@ -16,12 +17,11 @@
 
 class GenieSystem {
     public:
-        GenieSystem();
+        GenieSystem() {};
         ~GenieSystem() {};
         void updatePos(Genie &t);
-        // void createShots(Genie &t, const Player &player, Core &core);
         void checkCollision(Genie &t, IEntity &entity, Core &core, bool isTouching);
-
+        void shot(Genie &t, Core &core);
     private:
         MovementSystem _movementSystem;
         HitBox _hitBoxSystem;
