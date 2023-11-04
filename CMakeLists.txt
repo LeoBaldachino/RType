@@ -11,6 +11,7 @@ set(BOOST_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/boost)
 set(BOOST_LIBRARYDIR ${CMAKE_CURRENT_SOURCE_DIR}/boost/stage/lib)
 set(BOOST_INCLUDEDIR ${CMAKE_CURRENT_SOURCE_DIR}/boost)
 include_directories(${Boost_INCLUDE_DIRS})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/boost)
 
 
 include(FetchContent)
@@ -116,3 +117,4 @@ endforeach()
 
 # add_executable(r-type_room_controller ${ROOM_SOCKET} ${ROOM_CONTROLLER})
 # target_link_libraries(r-type_room_controller PRIVATE boost_system boost_serialization Threads::Threads)
+
