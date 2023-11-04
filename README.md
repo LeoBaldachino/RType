@@ -40,11 +40,6 @@ For the client
 ./r-type_client [SERVER_IP] [SERVER_PORT]
 ```
 
-For the client
-```sh
-./r-type_client [SERVER_IP] [SERVER_PORT]
-```
-
 For the room controller
 ```sh
 ./r-type_room_controller [SERVER_IP] [SERVER_PORT]
@@ -54,5 +49,5 @@ For the room controller
 
 For more detailed information about the project, refer to the following documentation:
 
-- [User Guide](link_to_user_guide) :book:
+- [User Guide](https://rtype2.gitbook.io/r-type-re-or-user-documentation/) :book:
 - [Developer Guide](https://rtype2.gitbook.io/r-type-re-or-developper-documentation/) :book:

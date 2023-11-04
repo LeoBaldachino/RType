@@ -101,6 +101,7 @@ namespace RType {
             void setLifeBars();
             void displayMenu();
             void quitActualRoom();
+            void setRoomDetails(const Utils::MessageParsed_s &msg);
             std::unique_ptr<std::thread> _infosThread;
             std::shared_ptr<Utils::SocketHandler> _socket;
             std::unique_ptr<sf::RenderWindow> _window;
@@ -139,5 +140,7 @@ namespace RType {
             MessagePanel _msgPanel;
             Hud _hud;
             SoundPlayer _soundPlayer;
+            int _currentMusic = -1;
+            int _currentParralax = -1;
     };
 }
