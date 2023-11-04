@@ -17,6 +17,7 @@ namespace RType {
      */
     class IGameLoop {
         public:
+            virtual ~IGameLoop() = default;
             /**
              * @brief Update game loop
              * @param newMessages New messages to process

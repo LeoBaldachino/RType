@@ -57,6 +57,11 @@ class PredictVisitor : public IVisitor {
         {
 
         }
+        void visitGenieShot(GenieShot &gS, Core &core) {}
+        void visitMermaid(Mermaid &c, Core &core) {}
+        void visitMermaidShot(MermaidShot &c, Core &core) {}
+        void visitDragon(Dragon &d, Core &core) {}
+        void visitDragonShot(DragonShot &dS, Core &core) {}
     private:
         PlayerSystem _playerSystem;
         BydosSystem _bydosSystem;

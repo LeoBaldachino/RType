@@ -11,7 +11,7 @@
 #include <list>
 #include "MessageParsed.hpp"
 #define MAX_SIZE_MSG_QUEUE 200
-
+#define MESSAGE_DELAY 100
 
 namespace RType {
     class MessageSendedQueue {
@@ -29,6 +29,6 @@ namespace RType {
             std::list<Utils::MessageParsed_s> _queueImportantMessages;
             std::chrono::steady_clock::time_point _delay;
             std::list<int> _importantMessages;
-            int _messageDelay = 100;
+            int _messageDelay = MESSAGE_DELAY;
     };
 }

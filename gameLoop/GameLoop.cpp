@@ -53,6 +53,8 @@ std::tuple<unsigned short, unsigned short, unsigned short, unsigned short> RType
         return std::make_tuple<unsigned short, unsigned short, unsigned short, unsigned short>(0, 0, 0, 0);
     unsigned short id = this->_playerArray[playerId];
     auto it = this->_core._entities.find(id);
+    if (!static_cast<bool>(it->second))
+        return std::make_tuple<unsigned short, unsigned short, unsigned short, unsigned short>(0, 0, 0, 0);
     if (it->second->getEntityType() != player)
         return std::make_tuple<unsigned short, unsigned short, unsigned short, unsigned short>(0, 0, 0, 0);
     std::shared_ptr<Player> playerPtr = std::dynamic_pointer_cast<Player>(it->second);

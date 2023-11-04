@@ -7,21 +7,22 @@
 
 #include "Player.hpp"
 
-Player::Player() : 
-Health(BASE_HEALTH),
+Player::Player(unsigned char life) : 
+Health(life),
 _timer(READY_MOVE),
 _frameClock(100),
-_currentTempoState(getEntityPositionRange()[3])
+_currentTempoState(getEntityPositionRange()[3]),
+ScoreComponent("")
 {
-    this->_inputs = std::make_unique<Inputs>();
+    this->_inputs = std::make_shared<Inputs>();
 }
 
-Player::Player(Position position) : _size(PLAYER_X, PLAYER_Y),  Health(BASE_HEALTH) , _timer(READY_MOVE), _frameClock(100), _currentTempoState(getEntityPositionRange()[3])
+Player::Player(Position position, unsigned char life, const std::string &name) : _size(PLAYER_X, PLAYER_Y),  Health(life) , _timer(READY_MOVE), _frameClock(100), _currentTempoState(getEntityPositionRange()[3]), ScoreComponent(name)
 {
     this->_position = position;
     this->_state = State(100);
-    this->_velocity = 1;
-    this->_inputs = std::make_unique<Inputs>();
+    this->_velocity = 2;
+    this->_inputs = std::make_shared<Inputs>();
 }
 
 Shoot Player::shoot() const

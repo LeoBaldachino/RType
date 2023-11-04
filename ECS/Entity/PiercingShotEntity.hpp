@@ -26,7 +26,7 @@ class PiercingShotEntity : public IEntity {
          * @brief Constructor
          * @param shoot Shoot component
          */
-        PiercingShotEntity(Shoot &shoot);
+        PiercingShotEntity(Shoot &shoot, unsigned short sender);
 
         /**
          * @brief Destructor
@@ -140,6 +140,8 @@ class PiercingShotEntity : public IEntity {
          * @return true if the entity is ready to move, false otherwise
          */
         inline bool readyToMove() {return this->_clockMove.clockOk();};
+
+        inline unsigned short getSender() {return this->_sender;};
     private:
         Shoot _shoot;
         Vector2d _size;
@@ -148,4 +150,5 @@ class PiercingShotEntity : public IEntity {
         ClockTimer _frameClock;
         ClockTimer _clockMove;
         ClockTimer _currentTempoState;
+        unsigned short _sender;
 };

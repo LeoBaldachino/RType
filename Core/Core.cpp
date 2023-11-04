@@ -7,7 +7,7 @@
 
 #include "Core.hpp"
 
-bool Core::addEntity(const std::shared_ptr<IEntity> &entity, unsigned short index)
+bool Core::addEntity(std::shared_ptr<IEntity> entity, unsigned short index)
 {
     std::unique_lock<std::mutex> lock(this->_mutex);
     if (this->_entities.find(index) != this->_entities.end())

@@ -13,12 +13,12 @@
 #include "../Components/ClockTimer.hpp"
 #include "../Components/Health.hpp"
 
-#define SHOOT_SPEED 3000
+#define GENIESHOOT_SPEED 1500
 #define JUMP_SPEED 3000
 #define MOVE_SPEED 3
-#define GENIE_X 247 * SIZE_SCALE
-#define GENIE_Y 220 * SIZE_SCALE
-#define GENIE_HEALTH 2
+#define GENIE_X 500
+#define GENIE_Y 541
+#define GENIE_HEALTH 100
 
 /**
  * @brief Class representing Genie in the game
@@ -33,10 +33,8 @@ class Genie : public IEntity, public Health {
          * @brief Construct a new Genie object
          * 
          * @param position Position of the Genie
-         * @param velocity Velocity of the Genie
-         * @param moveDirection Direction of the Genie movement
          */
-        Genie(Position position, int velocity, Vector2d moveDirection);
+        Genie(Position position);
         ~Genie(){};
         /**
          * @brief Accept method for visitor
@@ -62,6 +60,12 @@ class Genie : public IEntity, public Health {
          * 
          * @param state New state
          */
+        /**
+         * @brief Checks if the entity is ready to shoot
+         * @return bool
+         */
+        inline bool readyToShoot() {return this->_readyShoot.clockOk();};
+
         void setState(State state);
         /**
          * @brief Get the State of the Genie
@@ -157,14 +161,14 @@ class Genie : public IEntity, public Health {
          */
         ClockTimer getTempoState(void);
 
+        bool getGoingUp(void) const;
+        void setGoingUp(bool state);
+
     private:
         State _state;
         Position _position;
         Moveable _movement;
         int _velocity;
-        // int _shootDmg = 10;
-        // int _shootVelocity = 5;
-        // int _shootGravity = 0;
         Vector2d _size;
         bool _hasMoved = false;
         ClockTimer _readyShoot;
@@ -172,4 +176,5 @@ class Genie : public IEntity, public Health {
         unsigned int _spriteFrame = 0;
         ClockTimer _frameClock;
         ClockTimer _currentTempoState;
+        bool _goingUp = true;
 };

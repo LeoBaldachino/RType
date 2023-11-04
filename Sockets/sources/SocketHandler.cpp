@@ -62,7 +62,7 @@ RType::Utils::MessageParsed_s RType::Utils::SocketHandler::receive()
     auto clock = std::chrono::steady_clock::now();
     nbMsg++;
     if (std::chrono::duration_cast<std::chrono::microseconds>(clock - clockReceive).count() > 1000000) {
-        std::cout << "Receive " << nbMsg << "Packets in one sec" << std::endl;
+        // std::cout << "Receive " << nbMsg << "Packets in one sec" << std::endl;
         nbMsg = 0;
         clockReceive = clock;
     }
@@ -139,7 +139,7 @@ void RType::Utils::SocketHandler::send()
     ++nbMsgSend;
     auto clock = std::chrono::steady_clock::now();
     if (std::chrono::duration_cast<std::chrono::microseconds>(clock - clockSend).count() > 1000000) {
-        std::cout << "Send " << nbMsgSend << "Packets in one sec" << std::endl;
+        // std::cout << "Send " << nbMsgSend << "Packets in one sec" << std::endl;
         nbMsgSend = 0;
         clockSend = clock;
     }

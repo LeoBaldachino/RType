@@ -8,6 +8,7 @@
 #include "Texture/Texture.hpp"
 #include "Parallax/Parallax.hpp"
 #include "Parallax/ParallaxGnome.hpp"
+#include "Parallax/ParallaxDragon.hpp"
 #include "../ECS/Entity/Player.hpp"
 #include "../Core/Core.hpp"
 #include "../EntityTypes/EntityTypes.hpp"
@@ -22,6 +23,9 @@
 #include "Button/ButtonList.hpp"
 #include "Menu/Menu.hpp"
 #include "PopUp/PopUp.hpp"
+#include "MessagePanel/MessagePanel.hpp"
+#include "Hud/Hud.hpp"
+#include "SoundPlayer/SoundPlayer.hpp"
 
 #define GET_ID_LIMIT_TIME 1
 
@@ -76,12 +80,19 @@ namespace RType {
             void updateInputs(void);
             void newBydosToRoom(const Utils::MessageParsed_s &msg);
             void newCoin(const Utils::MessageParsed_s &msg);
+            void newGenie(const Utils::MessageParsed_s &msg);
+            void newDragon(const Utils::MessageParsed_s &msg);
+            void newDragonShot(const Utils::MessageParsed_s &msg);
+            void newGenieShot(const Utils::MessageParsed_s &msg);
+            void newMermaid(const Utils::MessageParsed_s &msg);
+            void newMermaidShot(const Utils::MessageParsed_s &msg);
             void newTourreToRoom(const Utils::MessageParsed_s &msg);
             void removeAnEntity(const Utils::MessageParsed_s &msg);
-            void newEnemyShoot(const Utils::MessageParsed_s &msg);
+            void newBydosShoot(const Utils::MessageParsed_s &msg);
             void setValues(const Utils::MessageParsed_s &msg);
             void newMyShoot(const Utils::MessageParsed_s &msg);
             void newPercingShoot(const Utils::MessageParsed_s &msg);
+            void newMessage(const Utils::MessageParsed_s &msg);
             void gameLoop();
             void changeTypeEntityAndMove(const Utils::MessageParsed_s &msg, std::unordered_map<unsigned short, std::shared_ptr<IEntity>>::iterator &it);
             sf::Sprite getSpriteFromEntity(std::shared_ptr<IEntity> entity, unsigned int id);
@@ -119,10 +130,14 @@ namespace RType {
             bool _mouseClicked;
             Parallax _parallax;
             ParallaxGnome _parallaxGnome;
+            ParallaxDragon _parallaxDragon;
             Menu _menu;
             unsigned int _level = 2;
             PopUp _popUp;
             bool _quittedRoom = false;
-
+            int _serverPid;
+            MessagePanel _msgPanel;
+            Hud _hud;
+            SoundPlayer _soundPlayer;
     };
 }

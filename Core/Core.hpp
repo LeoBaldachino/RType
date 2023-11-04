@@ -35,7 +35,7 @@ class Core {
          * @param index The index to add the entity at
          * @return true if the entity was added successfully, false otherwise
          */
-        bool addEntity(const std::shared_ptr<IEntity> &entity, unsigned short index);
+        bool addEntity(std::shared_ptr<IEntity> entity, unsigned short index);
 
         /**
          * @brief Map of entities

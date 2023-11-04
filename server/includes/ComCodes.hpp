@@ -13,6 +13,7 @@ namespace RType {
         keyPressed = 14,
         nbOfEntities = 15,
         entityType = 16,
+        message = 19,
         newPlayerConnected = 21,
         playerDeconnected = 22,
         newRoomIsCreated = 23,

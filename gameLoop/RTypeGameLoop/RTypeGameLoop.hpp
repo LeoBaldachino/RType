@@ -9,7 +9,7 @@
 #include "../../Visitor/SystemVisitor.hpp"
 #define TARGET_FPS 30
 #define REFRESH_ALL_ENTITIES 1000 / 100
-#define STATUS_ALL_ENTITES 1000 / 70
+#define STATUS_ALL_ENTITES 1000 / 3
 #define REFRESH_PLAYERS 1000
 
 namespace RType {
@@ -113,6 +113,9 @@ namespace RType {
             std::vector<unsigned short> _bydos;
             std::vector<unsigned short> _tourre;
             std::vector<unsigned short> _coin;
+            unsigned short _genie = -1;
+            unsigned short _mermaid = -1;
+            unsigned short _dragon = -1;
             std::chrono::steady_clock::time_point _refreshAllEntities;
             std::chrono::steady_clock::time_point _refreshPlayers;
             std::vector<std::map<Parser::Enemies, int>> _waves;

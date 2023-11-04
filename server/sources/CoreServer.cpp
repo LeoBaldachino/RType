@@ -32,7 +32,6 @@ RType::CoreServer::CoreServer(int ar, char **av)
     Parser parser(av[2]);
     this->_music = parser.getMusic();
     this->_waves = parser.getWaves();
-    this->_nextLevel = parser.getNextLevel();
     this->_parallaxIndex = parser.getParallax();
     this->_threadPool = std::make_unique<Server::ThreadPool>(std::thread::hardware_concurrency() - 1);
     this->_threadPool->InitThreadPool();
@@ -115,7 +114,7 @@ void RType::CoreServer::newRoomCreated(const Utils::MessageParsed_s &msg)
         }
     std::unique_lock<std::mutex> lock(this->_mutex);
     std::cerr << "Team " << static_cast<int>(msg.bytes[0]) << " is created !" << std::endl;
-    this->_rooms.push_back(std::make_unique<Server::Room>(msg.bytes[0], Server::ROOM_MAX_SIZE, this->_socket->getInstance(), this->_waves));
+    this->_rooms.push_back(std::make_unique<Server::Room>(msg.bytes[0], msg.bytes[1], this->_socket->getInstance(), this->_waves, msg.bytes[2]));
     this->_rooms.back()->addToRoom({msg.senderIp, msg.senderPort});
     return;
 }
@@ -128,7 +127,7 @@ void RType::CoreServer::getOutFromRoom(const Utils::MessageParsed_s &msg)
             if ((*it)->removeFromRoom(msg) && (*it)->willBeDestroyed()) {
                 (*it)->waitForDestroy();
                 std::unique_lock<std::mutex>(this->_mutex);
-                std::cout << "Remove room with id " << (*it)->getId() << std::endl;
+                std::cout << "Remove room with id " << static_cast<int>((*it)->getId()) << std::endl;
                 this->_rooms.erase(it);
                 return;
             }

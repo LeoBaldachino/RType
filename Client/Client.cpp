@@ -20,13 +20,30 @@ _commands({
 {removeEntity, &RType::Client::removeAnEntity},
 {valueSet, &RType::Client::setValues},
 {nbOfEntities, &RType::Client::syncNbOfEntities},
-{playerDeconnected, &RType::Client::quitRoom}
+{playerDeconnected, &RType::Client::quitRoom},
+{message, &RType::Client::newMessage},
 }),
 _buttonList("../Assets/insanibu.ttf"),
 _parallax(_texture),
 _parallaxGnome(_texture),
+_parallaxDragon(_texture),
 _popUp("Welcome the the R-Type !", "../Assets/insanibu.ttf"),
-_menu(this->_popUp)
+_menu(this->_popUp, [this]{
+    #ifdef __unix__
+        int random = std::rand() % 1000 + 3000; 
+        int pid = fork();
+        if (!pid) {
+            std::system(std::string("./r-type_server "+ std::to_string(random) + " ../test.cfg").c_str());
+            std::exit(0);
+        }
+        this->_serverPid = pid;
+        this->_serverIp = "127.0.0.1";
+        this->_serverPort = random;
+        return;
+    #endif
+    this->_popUp.setText("Feature only available in linux systems");
+}),
+_hud(sf::Vector2f(1700.0, 20.0))
 {
     std::srand(std::time(NULL));
     if (ac < 3)
@@ -43,12 +60,13 @@ _menu(this->_popUp)
     this->_inputs = {};
     this->_mouseClicked = false;
     this->_serverIp = av[1];
+    this->_serverPid = -1;
     this->_serverPort = std::stoi(av[2]);
     this->_mutex = std::make_unique<std::mutex>();
     // this->_buttonList.addButtons([this]{std::cout << "Hello world !" << std::endl;}, "../Assets/buttonTest.png", "Hello !", sf::Vector2f(10.0, 10.0), sf::IntRect(0, 0, 150, 100), 100, 0);
     this->_window = std::make_unique<sf::RenderWindow>(sf::VideoMode::getDesktopMode(), "R-Type" /*,sf::Style::Fullscreen */);
     // if (this->_music.openFromFile("../Assets/music.ogg") != -1)
-        // this->_music.play();
+    //     this->_music.play();
     this->_socket = std::make_unique<Utils::SocketHandler>("127.0.0.1", 4001 + std::rand() % 3000, std::list<int>({keyPressed, entityType, playerPing, newPlayerConnected, givePlayerId, destroyedRoom, serverStop, entityType, removeEntity, playerDeconnected, newRoomIsCreated, playerGetId, givePlayerId}));
     this->_threadIsOpen = true;
     this->_actualId = -1;
@@ -96,11 +114,23 @@ void RType::Client::handleInputs(void)
                 case (sf::Keyboard::Escape) :
                     this->quitActualRoom();
                     break;
+                case (sf::Keyboard::C) :
+                    if (this->_msgPanel.isOpen())
+                        this->_msgPanel.closePanel();
+                    else
+                        this->_msgPanel.openPanel();
                 case (sf::Keyboard::Space) :
                     if (!this->shooting) {
                         this->shotTime = std::chrono::steady_clock::now();
                         this->shooting = true;
                     }
+                    break;
+                case (sf::Keyboard::W) :
+                    sf::Texture text;
+                    text.create(1920, 1080);
+                    text.update(*this->_window);
+                    auto img = text.copyToImage();
+                    img.saveToFile("screenshoot.png");
                     break;
 
             }
@@ -212,16 +242,14 @@ void RType::Client::createRoom(unsigned char roomNb)
     this->_socket->send(msg);
     std::unique_lock<std::mutex> lock(*this->_mutex);
     this->_actualRoom = 1;
-    this->_entities.addEntity(std::make_shared<Player>(Position(0, 0, 1080, 1920)), 0);
+    // this->_entities.addEntity(std::make_shared<Player>(Position(0, 0, 1080, 1920), 1, ""), 0);
 }
 
 void RType::Client::newPlayerToRoom(const Utils::MessageParsed_s &msg)
 {
     std::unique_lock<std::mutex> lock(*this->_mutex);
     this->_popUp.setText("New player to Room !");
-    auto pl = std::make_shared<Player>(Position(0, 0, 1080, 1920));
-    this->_lifeBar->setLifeBarToPlayer(pl);
-    this->_entities.addEntity(pl, msg.getFirstShort());
+    this->_entities.addEntity(std::make_shared<Player>(Position(0, 0, 1080, 1920), 3, ""), msg.getFirstShort());
 }
 
 void RType::Client::getNewId(const Utils::MessageParsed_s &msg)
@@ -298,22 +326,89 @@ void RType::Client::getEntityType(unsigned short entity)
 
 void RType::Client::setEntityType(const Utils::MessageParsed_s &msg)
 {
+    this->_soundPlayer.playSpawnSound((RType::EntityTypes)msg.getSecondShort());
     switch (msg.getSecondShort()) {
         case RType::player:
             return this->newPlayerToRoom(msg);
         case RType::bydos:
             return this->newBydosToRoom(msg);
         case RType::bydosShoot:
-            return this->newEnemyShoot(msg);
+            return this->newBydosShoot(msg);
         case RType::tourre:
             return this->newTourreToRoom(msg);
-        case RType::playerShoot :
+        case RType::playerShoot:
             return this->newMyShoot(msg);
-        case RType::percingShoot :
+        case RType::percingShoot:
             return this->newPercingShoot(msg);
-        case RType::coin :
+        case RType::coin:
             return this->newCoin(msg);
+        case RType::genie:
+            return this->newGenie(msg);
+        case RType::genieShot:
+            return this->newGenieShot(msg);
+        case RType::mermaid:
+            return this->newMermaid(msg);
+        case RType::mermaidShot:
+            return this->newMermaidShot(msg);
+        case RType::dragon:
+            return this->newDragon(msg);
+        case RType::dragonShot:
+            return this->newDragonShot(msg);
     }
+}
+
+void RType::Client::newDragonShot(const Utils::MessageParsed_s &msg)
+{
+    auto it = this->_entities._entities.find(msg.getFirstShort());
+    if (it != this->_entities._entities.end())
+        return;
+    std::unique_lock<std::mutex> lock(*this->_mutex);
+    this->_entities.addEntity(std::make_shared<DragonShot>(Position(1900, 100, 1080, 1920)), msg.getFirstShort());
+}
+
+void RType::Client::newGenieShot(const Utils::MessageParsed_s &msg)
+{
+    auto it = this->_entities._entities.find(msg.getFirstShort());
+    if (it != this->_entities._entities.end())
+        return;
+    std::unique_lock<std::mutex> lock(*this->_mutex);
+    this->_entities.addEntity(std::make_shared<GenieShot>(Position(1900, 100, 1080, 1920)), msg.getFirstShort());
+}
+
+void RType::Client::newDragon(const Utils::MessageParsed_s &msg)
+{
+    auto it = this->_entities._entities.find(msg.getFirstShort());
+    if (it != this->_entities._entities.end())
+        return;
+    std::unique_lock<std::mutex> lock(*this->_mutex);
+    this->_entities.addEntity(std::make_shared<Dragon>(Position(1900, 100, 1080, 1920)), msg.getFirstShort());
+}
+
+void RType::Client::newGenie(const Utils::MessageParsed_s &msg)
+{
+    auto it = this->_entities._entities.find(msg.getFirstShort());
+    if (it != this->_entities._entities.end())
+        return;
+    std::unique_lock<std::mutex> lock(*this->_mutex);
+    this->_entities.addEntity(std::make_shared<Genie>(Position(1900, 100, 1080, 1920)), msg.getFirstShort());
+}
+
+void RType::Client::newMermaid(const Utils::MessageParsed_s &msg)
+{
+    auto it = this->_entities._entities.find(msg.getFirstShort());
+    if (it != this->_entities._entities.end())
+        return;
+    std::unique_lock<std::mutex> lock(*this->_mutex);
+    this->_entities.addEntity(std::make_shared<Mermaid>(Position(1900, 100, 1080, 1920)), msg.getFirstShort());
+}
+
+void RType::Client::newMermaidShot(const Utils::MessageParsed_s &msg)
+{
+    auto it = this->_entities._entities.find(msg.getFirstShort());
+    if (it != this->_entities._entities.end())
+        return;
+    std::unique_lock<std::mutex> lock(*this->_mutex);
+    this->_entities.addEntity(std::make_shared<MermaidShot>(Position(1900, 100, 1080, 1920)), msg.getFirstShort());
 }
 
 void RType::Client::newCoin(const Utils::MessageParsed_s &msg)
@@ -346,10 +441,13 @@ void RType::Client::newTourreToRoom(const Utils::MessageParsed_s &msg)
 void RType::Client::removeAnEntity(const Utils::MessageParsed_s &msg)
 {
     std::unique_lock<std::mutex> lock(*this->_mutex);
+    auto it = this->_entities._entities.find(msg.getFirstShort());
+    if (it != this->_entities._entities.end())
+        this->_soundPlayer.playDeathSound((RType::EntityTypes)it->second->getEntityType());
     this->_entities.removeEntity(msg.getFirstShort());
 }
 
-void RType::Client::newEnemyShoot(const Utils::MessageParsed_s &msg)
+void RType::Client::newBydosShoot(const Utils::MessageParsed_s &msg)
 {
     std::unique_lock<std::mutex> lock(*this->_mutex);
     auto it = this->_entities._entities.find(msg.getFirstShort());
@@ -358,7 +456,7 @@ void RType::Client::newEnemyShoot(const Utils::MessageParsed_s &msg)
     Position pos(-20, -20);
     AIShoot aiShoot(pos, pos);
     auto tmpShoot = aiShoot.shootLogic();
-    this->_entities.addEntity(std::make_shared<ShotEntity>(tmpShoot, "../Assets/EntitiesSprites/tEnemyShot.png", false), msg.getFirstShort());
+    this->_entities.addEntity(std::make_shared<ShotEntity>(tmpShoot, RType::bydosShoot, false, 0), msg.getFirstShort());
 }
 
 void RType::Client::setValues(const Utils::MessageParsed_s &msg)
@@ -368,9 +466,12 @@ void RType::Client::setValues(const Utils::MessageParsed_s &msg)
     if (find == this->_entities._entities.end())
         return;
     if (find->second->getEntityType() == player) {
+        std::cout << "Player casted..." << std::endl;
         std::shared_ptr<Player> playerCasted = std::dynamic_pointer_cast<Player>(find->second);
         playerCasted->setLife(msg.bytes[3]);
+        playerCasted->setMaxLife(msg.bytes[5]);
         this->_lifeBar->setLifeBarToPlayer(playerCasted);
+        this->_hud.setScore(msg.bytes[4]);
     }
     if (find->second->getEntityType() == bydos) {
         std::shared_ptr<Bydos> bydosCasted = std::dynamic_pointer_cast<Bydos>(find->second);
@@ -394,7 +495,7 @@ void RType::Client::newMyShoot(const Utils::MessageParsed_s &msg)
     Position pos(-20, -20);
     AIShoot aiShoot(pos, pos);
     auto tmpShoot = aiShoot.shootLogic();
-    this->_entities.addEntity(std::make_shared<ShotEntity>(tmpShoot, "../Assets/shot.png", true), msg.getFirstShort());  
+    this->_entities.addEntity(std::make_shared<ShotEntity>(tmpShoot, RType::playerShoot, true, 0), msg.getFirstShort());  
 }
 
 void RType::Client::newPercingShoot(const Utils::MessageParsed_s &msg)
@@ -406,7 +507,7 @@ void RType::Client::newPercingShoot(const Utils::MessageParsed_s &msg)
     Position pos(-20, -20);
     AIShoot aiShoot(pos, pos);
     auto tmpShoot = aiShoot.shootLogic();
-    this->_entities.addEntity(std::make_shared<PiercingShotEntity>(tmpShoot), msg.getFirstShort());
+    this->_entities.addEntity(std::make_shared<PiercingShotEntity>(tmpShoot, 0), msg.getFirstShort());
 }
 
 sf::Sprite RType::Client::getSpriteFromEntity(std::shared_ptr<IEntity> entity, unsigned int id)
@@ -437,19 +538,39 @@ sf::Sprite RType::Client::getSpriteFromEntity(std::shared_ptr<IEntity> entity, u
         ret.setTexture(this->_texture.coinTexture);
         ret.setTextureRect(sf::Rect<int>(103 * (spriteFrame - 1), 0, 103, 130));
     }
+    if (entity->getEntityType() == RType::EntityTypes::genie) {
+        ret.setTexture(this->_texture.genieTexture);
+        ret.setTextureRect(sf::Rect<int>(500 * (spriteFrame - 1), 0, 500, 541));
+    }
+
+    if (entity->getEntityType() == RType::EntityTypes::mermaid) {
+        ret.setTexture(this->_texture.mermaidTexture);
+        ret.setTextureRect(sf::Rect<int>(520 * (spriteFrame - 1), 0, 520, 813));
+    }
+    if (entity.get()->getEntityType() == RType::EntityTypes::mermaidShot) {
+        ret.setTexture(this->_texture.mermaidShotTexture);
+        ret.setTextureRect(sf::Rect<int>(138 * (spriteFrame - 1), 0, 138, 135));
+    }
+
+    if (entity->getEntityType() == RType::EntityTypes::dragon) {
+        ret.setTexture(this->_texture.dragonTexture);
+        ret.setTextureRect(sf::Rect<int>(667 * (spriteFrame - 1), 0, 667, 836));
+    }
+    if (entity->getEntityType() == RType::EntityTypes::genieShot) {
+        ret.setTexture(this->_texture.genieShotTexture);
+        ret.setTextureRect(sf::Rect<int>(198 * (spriteFrame - 1), 0, 198, 254));
+        ret.setScale(0.5, 0.5);
+    }
+    if (entity->getEntityType() == RType::EntityTypes::dragonShot) {
+        ret.setTexture(this->_texture.dragonShotTexture);
+        ret.setTextureRect(sf::Rect<int>(130 * (spriteFrame - 1), 0, 130, 130));
+    }
     if (entity->getEntityType() == RType::EntityTypes::playerShoot) {
         ret.setTexture(this->_texture.playerShotTexture);
     }
     if (entity->getEntityType() == RType::EntityTypes::player && id == this->_actualId) {
         ret.setTexture(this->_texture.playerTexture);
         ret.setTextureRect(sf::Rect<int>(107 * (spriteFrame - 1), 0, 107, 98));
-        // int r = rand() % 3;
-        // if (r == 0)
-            // ret.setTextureRect(sf::Rect<int>(107 * (spriteFrame - 1), 0, 107, 98));
-        // else if (r == 1)
-            // ret.setTextureRect(sf::Rect<int>(109 * (spriteFrame - 1), 106, 109, 89));
-        // else
-            // ret.setTextureRect(sf::Rect<int>(106 * (spriteFrame - 1), 201, 106, 99));
     }
     if (entity->getEntityType() == RType::EntityTypes::player && id != this->_actualId) {
         ret.setTexture(this->_texture.otherPlayerTexture);
@@ -469,12 +590,16 @@ void RType::Client::gameLoop()
     auto msgKeyPressed = this->buildEmptyMsg(keyPressed);
     unsigned char actualIndex = 0;
     _window->clear();
+
     if (this->_level == 1) {
         this->_parallax.drawBackgroundParallax(this->_window);
         this->_parallax.drawParallax(this->_window);
     }
     if (this->_level == 2) {}
         this->_parallaxGnome.drawGnomeParallax(this->_window);
+    if (this->_level == 3)
+        this->_parallaxDragon.drawDragonParallax(this->_window);
+    
     this->_lifeBar->display(this->_window);
     for (auto &it : this->_entities._entities)
     this->_lifeBar->display(this->_window);   
@@ -486,11 +611,23 @@ void RType::Client::gameLoop()
     // std::cout << "Entities size is " << this->_entities._entities.size() << std::endl;
     lock.unlock();
     auto mousePos = sf::Mouse::getPosition(*this->_window);
-    this->_buttonList.hoverButtons(mousePos);
-    if (this->_mouseClicked)
+    if (this->_mouseClicked) {
+        this->_msgPanel.clickButtons(mousePos);
         this->_buttonList.clickButtons(mousePos);
+    } else {
+        this->_msgPanel.hoverButtons(mousePos);
+        this->_buttonList.hoverButtons(mousePos);
+    }
     this->_buttonList.displayButtons(this->_window);
     this->_popUp.display(this->_window);
+    this->_msgPanel.display(this->_window);
+    if (this->_msgPanel.needSendMessage()) {
+        auto msgg = this->_msgPanel.sendMessage();
+        msgg.senderIp = this->_serverIp;
+        msgg.senderPort = this->_serverPort;
+        this->_socket->send(msgg);
+    }
+    this->_hud.display(this->_window);
     _window->display();
     this->setLifeBars();
     this->updateInputs();
@@ -558,6 +695,7 @@ void RType::Client::setLifeBars()
             this->_lifeBar->setLifeBarToBydos(bydosCasted); 
         }
         if (it.second->getEntityType() == player) {
+            std::cout << "life barz" << std::endl;
             std::shared_ptr<Player> playerCasted = std::dynamic_pointer_cast<Player>(it.second);
             this->_lifeBar->setLifeBarToPlayer(playerCasted);    
         }
@@ -570,7 +708,6 @@ void RType::Client::displayMenu()
     this->_window->clear(sf::Color::Black);
     this->_menu.displayMenu(this->_window, this->_mouseClicked);
     if (this->_menu.needToSendMessage()) {
-        std::cout << "message sended !" << std::endl;
         auto msg = this->_menu.sendMsg();
         msg.senderIp = this->_serverIp;
         msg.senderPort = this->_serverPort;
@@ -587,10 +724,24 @@ void RType::Client::displayMenu()
 
 void RType::Client::quitActualRoom()
 {
-    if (this->_actualId == -1)
+    if (this->_actualId == -1) {
+        #ifdef __unix__
+            if (this->_serverPid != -1) {
+                kill(this->_serverPid, SIGINT);
+                kill(this->_serverPid, SIGTERM);
+            }
+        #endif
         return std::exit(0);
+    }
     auto msg = this->buildEmptyMsg(playerDeconnected);
     msg.bytes[0] = this->_menu.getRoomId();
     msg.bytes[1] = this->_actualId;
     this->_socket->send(msg);
+}
+
+
+void RType::Client::newMessage(const Utils::MessageParsed_s &msg)
+{
+    std::cout << "New message" << std::endl;
+    this->_popUp.setText(this->_msgPanel.decyptMessage(msg));
 }
