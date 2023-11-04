@@ -20,6 +20,7 @@ FetchContent_Declare(SFML
 FetchContent_MakeAvailable(SFML)
 include_directories(${SFML_SOURCE_DIR}/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Visitor)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/boost)
 
 file(GLOB SUBSYSTEMS "ECS/Systems/Subsystems/*.cpp")
 file(GLOB SYSTEMS "ECS/Systems/*.cpp")
