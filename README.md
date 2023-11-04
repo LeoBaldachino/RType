@@ -55,4 +55,4 @@ For the room controller
 For more detailed information about the project, refer to the following documentation:
 
 - [User Guide](link_to_user_guide) :book:
-- [Developer Guide](https://r-type-2.gitbook.io/r-type-re-or-server-documentation/) :book:
+- [Developer Guide](https://rtype2.gitbook.io/r-type-re-or-developper-documentation/) :book:

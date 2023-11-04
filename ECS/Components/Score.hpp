@@ -17,6 +17,7 @@ class ScoreComponent {
             this->_readOnly = true;
             this->_name = name;
             this->_actScore = 0.0;
+            //! do not uncomment this code, it will have some very strange behavior on the client side
             // if (!name.empty()) {            
             //     this->_readOnly = false;
             //     std::ifstream scores("all.score");
