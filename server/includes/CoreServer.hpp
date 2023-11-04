@@ -80,7 +80,6 @@ namespace RType {
             std::vector<std::pair<std::string, int>> _clients;
             std::vector<std::unique_ptr<Server::Room>> _rooms;
             std::string _music;
-            std::string _nextLevel;
             int _parallaxIndex;
             std::vector<std::map<Parser::Enemies, int>> _waves;
     };

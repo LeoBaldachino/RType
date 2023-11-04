@@ -17,8 +17,8 @@
 #define SHOOT_SPEED 3000
 #define JUMP_SPEED 3000
 #define MOVE_SPEED 3
-#define TOURRE_X 247 * SIZE_SCALE
-#define TOURRE_Y 220 * SIZE_SCALE
+#define TOURRE_X 247 * 0.5
+#define TOURRE_Y 220 * 0.5
 #define TOURRE_HEALTH 2
 
 /**

@@ -113,6 +113,9 @@ namespace RType {
             std::vector<unsigned short> _bydos;
             std::vector<unsigned short> _tourre;
             std::vector<unsigned short> _coin;
+            unsigned short _genie = -1;
+            unsigned short _mermaid = -1;
+            unsigned short _dragon = -1;
             std::chrono::steady_clock::time_point _refreshAllEntities;
             std::chrono::steady_clock::time_point _refreshPlayers;
             std::vector<std::map<Parser::Enemies, int>> _waves;

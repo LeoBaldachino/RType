@@ -17,7 +17,12 @@ namespace RType {
         bydosShoot,
         tourre,
         coin,
-        genie
+        genie,
+        genieShot,
+        mermaid,
+        mermaidShot,
+        dragon,
+        dragonShot
     };
     EntityTypes castEntity(unsigned char c) ;
 }
