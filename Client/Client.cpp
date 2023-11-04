@@ -26,7 +26,7 @@ _commands({
 _buttonList("../Assets/insanibu.ttf"),
 _parallax(_texture),
 _parallaxGnome(_texture),
-_parallaxDragon(_texture)
+_parallaxDragon(_texture),
 _popUp("Welcome the the R-Type !", "../Assets/insanibu.ttf"),
 _menu(this->_popUp, [this]{
     #ifdef __unix__

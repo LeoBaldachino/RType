@@ -16,7 +16,7 @@ void PlayerSystem::createShots(Player &p, Core &core)
             std::cout << "New percing shoot !" << std::endl;
         }
         else if (p._inputs->getLastEvent() == Inputs::Events::Shoot)
-            core.addEntity(std::make_shared<ShotEntity>(tmpShoot, RType::playerShoot, true), core.getAvailabeIndex());
+            core.addEntity(std::make_shared<ShotEntity>(tmpShoot, RType::playerShoot, true, core.getEntityId(p)), core.getAvailabeIndex());
         p._inputs->popEvent();
     }
 }

@@ -13,6 +13,12 @@
 #include "../ECS/Systems/GenieSystem.hpp"
 #include "../ECS/Systems/CoinSystem.hpp"
 #include "../EntityTypes/EntityTypes.hpp"
+#include "../ECS/Systems/GenieSystem.hpp"
+#include "../ECS/Systems/GenieShotSystem.hpp"
+#include "../ECS/Systems/MermaidSystem.hpp"
+#include "../ECS/Systems/MermaidShotSystem.hpp"
+#include "../ECS/Systems/DragonSystem.hpp"
+#include "../ECS/Systems/DragonShotSystem.hpp"
 #include "../ECS/Components/ClockTimer.hpp"
 
 class SystemVisitor : public IVisitor {
@@ -115,13 +121,13 @@ class SystemVisitor : public IVisitor {
         void visitDragonShot(DragonShot &dS, Core &core) {
             if (dS.getLifes() == 0) {
                 Shoot tmpShoot(Vector2d(-1, 0), Vector2d(dS.getPosition().getX(), dS.getPosition().getY()), 1, 3, 1, false);
-                core.addEntity(std::make_shared<ShotEntity>(tmpShoot, RType::bydosShoot, false), core.getAvailabeIndex());
+                core.addEntity(std::make_shared<ShotEntity>(tmpShoot, RType::bydosShoot, false, core.getEntityId(dS)), core.getAvailabeIndex());
                 tmpShoot.setDirection(Vector2d(0, -1));
-                core.addEntity(std::make_shared<ShotEntity>(tmpShoot, RType::bydosShoot, false), core.getAvailabeIndex());
+                core.addEntity(std::make_shared<ShotEntity>(tmpShoot, RType::bydosShoot, false, core.getEntityId(dS)), core.getAvailabeIndex());
                 tmpShoot.setDirection(Vector2d(0, 1));
-                core.addEntity(std::make_shared<ShotEntity>(tmpShoot, RType::bydosShoot, false), core.getAvailabeIndex());
+                core.addEntity(std::make_shared<ShotEntity>(tmpShoot, RType::bydosShoot, false, core.getEntityId(dS)), core.getAvailabeIndex());
                 tmpShoot.setDirection(Vector2d(1, 0));
-                core.addEntity(std::make_shared<ShotEntity>(tmpShoot, RType::bydosShoot, false), core.getAvailabeIndex());
+                core.addEntity(std::make_shared<ShotEntity>(tmpShoot, RType::bydosShoot, false, core.getEntityId(dS)), core.getAvailabeIndex());
                 return (void)core.removeEntityLater(dS);
             }
             this->_dragonShotSystem.updatePos(dS, this->_lastPlayerPos);
