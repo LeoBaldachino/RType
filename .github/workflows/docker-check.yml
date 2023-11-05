@@ -1,0 +1,26 @@
+name: Docker-Compose for Server
+
+on:
+    push:
+        branches: [master]
+    pull_request:
+        branches: [master]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v1
+              with:
+                  driver: docker-container
+                  endpoint: unix:///var/run/docker.sock
+                  status: running
+                  flags: --allow-insecure-entitlement security.insecure --allow-insecure-entitlement network.host
+                  platforms: linux/amd64,linux/amd64/v2,linux/amd64/v3,linux/386
+            - name: Runs docker-compose
+              run: |
+                  apt-get update
+                  apt-get install -y docker-compose
+                  docker-compose up -d
