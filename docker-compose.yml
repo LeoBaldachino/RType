@@ -1,13 +1,13 @@
 version: '3'
 services:
   server:
-    image: gcc:latest
+    image: ubuntu:latest
     volumes:
       - .:/app
     working_dir: /app/
-    command: bash -c "apt-get update && apt-get install -y cmake libboost-dev && ./build.sh"
+    command: bash -c "apt-get update && apt-get install -y g++ cmake libboost-all-dev libconfig++-dev && ./buildserver.sh && LD_LIBRARY_PATH=/usr/local/lib:/usr/lib/x86_64-linux-gnu ./r-type_server 4248 test.cfg"
     ports:
-      - 4000:4000
+      - 4248:4248
     networks:
       - mynet
 networks:
