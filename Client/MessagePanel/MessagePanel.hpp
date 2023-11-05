@@ -20,7 +20,7 @@ namespace RType {
     class MessagePanel {
         public :
             MessagePanel();
-            ~MessagePanel();
+            ~MessagePanel() {};
             void display(std::unique_ptr<sf::RenderWindow> &window);
             inline bool needSendMessage()  {bool ret = this->_readyToSend; this->_readyToSend = false; return ret;};
             inline void openPanel() {this->_isOpen = true;};

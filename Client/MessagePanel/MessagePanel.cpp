@@ -31,10 +31,6 @@ RType::MessagePanel::MessagePanel() : _list("../Assets/insanibu.ttf")
     this->_list.addButtons([this]{this->_readyToSend = true;}, "../Assets/buttonTest.png", "Send", sf::Vector2f(190.0, 920.0), sf::IntRect(0, 0, 150, 100), 100, cp);
 }
 
-RType::MessagePanel::~MessagePanel()
-{
-}
-
 RType::Utils::MessageParsed_s RType::MessagePanel::sendMessage()
 {
     RType::Utils::MessageParsed_s msg;
