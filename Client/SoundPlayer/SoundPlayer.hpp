@@ -12,11 +12,12 @@
 #include <memory>
 #include <iostream>
 #include <chrono>
+
 namespace RType {
     class SoundPlayer {
         public:
             SoundPlayer();
-            ~SoundPlayer();
+            ~SoundPlayer() {};
             void playSpawnSound(const RType::EntityTypes &entityType);
             void playDeathSound(const RType::EntityTypes &entityType);
         private:

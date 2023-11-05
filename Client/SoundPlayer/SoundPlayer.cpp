@@ -21,10 +21,6 @@ RType::SoundPlayer::SoundPlayer()
     this->_loopChrono = std::chrono::steady_clock::now();
 }
 
-RType::SoundPlayer::~SoundPlayer()
-{
-}
-
 void RType::SoundPlayer::playSpawnSound(const RType::EntityTypes &entityType)
 {
     auto it = this->_sounds.find(entityType);
