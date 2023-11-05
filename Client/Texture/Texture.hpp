@@ -60,9 +60,6 @@ public:
         this->gnomeLargeClouds.loadFromFile("./Assets/Gnome/Background/GnomeBigClouds.png");
         this->gnomeMediumClouds.loadFromFile("./Assets/Gnome/Background/GnomeMediumClouds.png");
         this->gnomeSmallClouds.loadFromFile("./Assets/Gnome/Background/GnomeSmallClouds.png");
-        // this->gnomeAloneCloudOne.loadFromFile("./Assets/Gnome/Foreground/GnomeAloneCloudOne.png");
-        // this->gnomeAloneCloudTwo.loadFromFile("./Assets/Gnome/Foreground/GnomeAloneCloudTwo.png");
-        // this->gnomeAloneCloudThree.loadFromFile("./Assets/Gnome/Foreground/GnomeAloneCloudThree.png");
 
         this->dragonSky.loadFromFile("./Assets/Dragon/Background/dragonSky.png");
         this->dragonBackCloudsFirst.loadFromFile("./Assets/Dragon/Background/dragonBackCloudsFirst.png");
@@ -109,9 +106,6 @@ public:
     sf::Texture gnomeLargeClouds;
     sf::Texture gnomeMediumClouds;
     sf::Texture gnomeSmallClouds;
-    sf::Texture gnomeAloneCloudOne;
-    sf::Texture gnomeAloneCloudTwo;
-    sf::Texture gnomeAloneCloudThree;
 
     sf::Texture dragonSky;
     sf::Texture dragonBackCloudsFirst;
@@ -121,6 +115,4 @@ public:
     sf::Texture dragonForeCloudsSecond;
     sf::Texture dragonForeCloudsThird;
     std::vector<sf::Texture> tower;
-
-
 };
