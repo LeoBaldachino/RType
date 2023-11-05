@@ -19,6 +19,7 @@ jobs:
             - name: Start Docker daemon
               run: |
                   service docker start
+                  sudo systemctl enable docker
                   sleep 10
             - name: Verify Docker daemon
               run: |
