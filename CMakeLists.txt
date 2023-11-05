@@ -56,6 +56,13 @@ if(CMAKE_COMPILER_IS_GNUCXX)
     target_compile_options(r-type_client PRIVATE "-Wno-unused-result")
 endif()
 
+# CPack configuration for r-type_client
+# set(CPACK_PACKAGE_NAME "r-type_client")
+# set(CPACK_PACKAGE_VERSION "1.0.0")
+# set(CPACK_PACKAGE_DIRECTORY "${CMAKE_BINARY_DIR}/release")
+# install(TARGETS r-type_client DESTINATION release)
+# include(CPack)
+
 project(r-type_server)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
@@ -88,23 +95,12 @@ else()
     target_link_libraries(r-type_server PRIVATE boost_system boost_serialization Threads::Threads config++ config)
 endif()
 
-# Copy the Assets folder to the output directory
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Assets DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
-
-# Include the Assets folder in the solution
-file(GLOB_RECURSE ASSETS "Assets/*")
-source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/Assets PREFIX "Assets" FILES ${ASSETS})
-
-# Copy the Assets folder to the output directory for each configuration
-foreach(CONFIG_TYPE ${CMAKE_CONFIGURATION_TYPES})
-    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Assets DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CONFIG_TYPE})
-endforeach()
-
-# Copy the libconfig.dll to the output directory for each configuration
-foreach(CONFIG_TYPE ${CMAKE_CONFIGURATION_TYPES})
-    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/external/libconfig.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CONFIG_TYPE})
-    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/external/libconfig.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CONFIG_TYPE}/libconfig++.dll)
-endforeach()
+# CPack configuration for r-type_server
+# set(CPACK_PACKAGE_NAME "r-type_server")
+# set(CPACK_PACKAGE_VERSION "1.0.0")
+# set(CPACK_PACKAGE_DIRECTORY "${CMAKE_BINARY_DIR}/release")
+# install(TARGETS r-type_server DESTINATION release)
+# include(CPack)
 
 project(r-type_room_controller)
 set(CMAKE_CXX_STANDARD 17)
@@ -116,3 +112,10 @@ file(GLOB ROOM_CONTROLLER "roomController/sources/*.cpp")
 
 add_executable(r-type_room_controller ${ROOM_SOCKET} ${ROOM_CONTROLLER})
 target_link_libraries(r-type_room_controller PRIVATE boost_system boost_serialization Threads::Threads)
+
+# CPack configuration for r-type_room_controller
+set(CPACK_PACKAGE_NAME "r-type_room_controller")
+set(CPACK_PACKAGE_VERSION "1.0.0")
+set(CPACK_PACKAGE_DIRECTORY "${CMAKE_BINARY_DIR}/release")
+install(TARGETS r-type_room_controller DESTINATION release)
+include(CPack)
