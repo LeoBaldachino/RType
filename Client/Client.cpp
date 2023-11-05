@@ -480,7 +480,6 @@ void RType::Client::setValues(const Utils::MessageParsed_s &msg)
         bydosCasted->setLife(msg.bytes[3]);
         this->_lifeBar->setLifeBarToBydos(bydosCasted); 
     }
-
     if (find->second->getEntityType() == tourre) {
         std::shared_ptr<Tourre> tourreCasted = std::dynamic_pointer_cast<Tourre>(find->second);
         tourreCasted->setLife(msg.bytes[3]);
@@ -544,7 +543,6 @@ sf::Sprite RType::Client::getSpriteFromEntity(std::shared_ptr<IEntity> entity, u
         ret.setTexture(this->_texture.genieTexture);
         ret.setTextureRect(sf::Rect<int>(500 * (spriteFrame - 1), 0, 500, 541));
     }
-
     if (entity->getEntityType() == RType::EntityTypes::mermaid) {
         ret.setTexture(this->_texture.mermaidTexture);
         ret.setTextureRect(sf::Rect<int>(520 * (spriteFrame - 1), 0, 520, 813));
@@ -553,7 +551,6 @@ sf::Sprite RType::Client::getSpriteFromEntity(std::shared_ptr<IEntity> entity, u
         ret.setTexture(this->_texture.mermaidShotTexture);
         ret.setTextureRect(sf::Rect<int>(138 * (spriteFrame - 1), 0, 138, 135));
     }
-
     if (entity->getEntityType() == RType::EntityTypes::dragon) {
         ret.setTexture(this->_texture.dragonTexture);
         ret.setTextureRect(sf::Rect<int>(667 * (spriteFrame - 1), 0, 667, 836));
