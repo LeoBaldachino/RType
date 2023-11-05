@@ -1,4 +1,4 @@
-name: Check Build standalone Server
+name: Check global build
 
 on:
     push:
