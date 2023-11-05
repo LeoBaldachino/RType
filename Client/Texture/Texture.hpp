@@ -36,7 +36,7 @@ public:
         this->mermaidShotTexture.loadFromFile("./Assets/Mermaid/MermaidShots.png");
         for (int i = 0; i != 24; ++i) {
             sf::Texture _text;
-            std::string fileName = "./../Assets/Desert/Desert/desert";
+            std::string fileName = "./Assets/Desert/Desert/desert";
             fileName += std::to_string(i) + ".png";
             _text.loadFromFile(fileName);
             this->desert.push_back(_text);
@@ -46,7 +46,7 @@ public:
         this->desertSky.loadFromFile("./Assets/Desert/Background/SkyDesert.png");
         for (int i = 0; i != 8; ++i) {
             sf::Texture _text;
-            std::string fileName = "./../Assets/ScreenFX/screenFX";
+            std::string fileName = "./Assets/ScreenFX/screenFX";
             fileName += std::to_string(i) + ".png";
             _text.loadFromFile(fileName);
             this->screenFX.push_back(_text);
@@ -70,7 +70,7 @@ public:
         this->dragonForeCloudsThird.loadFromFile("./Assets/Dragon/Foreground/dragonForeCloudsThree.png");
         for (int i = 1; i != 7; ++i) {
             sf::Texture _text;
-            std::string fileName = "./../Assets/Dragon/Tower/tower";
+            std::string fileName = "./Assets/Dragon/Tower/tower";
             fileName += std::to_string(i) + ".png";
             _text.loadFromFile(fileName);
             this->tower.push_back(_text);

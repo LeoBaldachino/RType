@@ -2,7 +2,6 @@
 @git submodule update --init --recursive
 
 @echo Building project...
-@cd ../../
 if not exist "build" mkdir build
 @cd build
 @echo Removing everything in build...

@@ -36,6 +36,12 @@ file(GLOB SOUND_PLAYER "Client/SoundPlayer/*.cpp")
 file(GLOB MESSAGE_PANEL "Client/MessagePanel/*.cpp")
 add_executable(r-type_client ${CLIENT_FILES} ${SUBSYSTEMS} ${SYSTEMS} ${ENTITY} ${CORE} ${SOCKET_FILES} ${ENTITY_TYPES} ${LIFE_BAR} ${PARALLAX} ${BUTTON} ${MENU} ${POPUP} ${MESSAGE_PANEL} ${HUD} ${SOUND_PLAYER} ${MESSAGE_PANEL})
 
+# Copies the Assets folder to the build directory
+add_custom_command(TARGET r-type_client POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/Assets $<TARGET_FILE_DIR:r-type_client>/Assets)
+
+
 # target_link_options(r-type_client PRIVATE -g)
 
 
@@ -90,12 +96,12 @@ else()
 endif()
 
 # CPack configuration for r-type_server
-set(CPACK_PACKAGE_NAME "r-type_server")
-set(CPACK_PACKAGE_VERSION "1.0.0")
-set(CPACK_PACKAGE_DIRECTORY "${CMAKE_BINARY_DIR}/release")
-add_dependencies(r-type_server config++ config)
-install(TARGETS r-type_server DESTINATION release)
-include(CPack)
+# set(CPACK_PACKAGE_NAME "r-type_server")
+# set(CPACK_PACKAGE_VERSION "1.0.0")
+# set(CPACK_PACKAGE_DIRECTORY "${CMAKE_BINARY_DIR}/release")
+# add_dependencies(r-type_server config++ config)
+# install(TARGETS r-type_server DESTINATION release)
+# include(CPack)
 
 project(r-type_room_controller)
 set(CMAKE_CXX_STANDARD 17)

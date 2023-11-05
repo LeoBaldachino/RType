@@ -8,7 +8,6 @@
 #pragma once
 #include <asio.hpp>
 #include "MessageParsed.hpp"
-#include <boost/array.hpp>
 #include <tuple>
 #include <mutex>
 #include <thread>
