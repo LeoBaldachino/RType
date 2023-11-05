@@ -46,6 +46,8 @@ void PlayerSystem::checkCollision(Player &p, IEntity &entity, Core &core)
             p.addLife();
         if (entity.getEntityType() != RType::coin && p.getLifes() >= 1)
             p.removeOneLife();
+        if (entity.getEntityType() != RType::coin && p.getLifes() <= 0)
+            core.removeEntityLater(p);
         if (entity.getEntityType() != RType::genie && entity.getEntityType() != RType::dragon && entity.getEntityType() != RType::mermaid)
             core.removeEntityLater(entity);
     }

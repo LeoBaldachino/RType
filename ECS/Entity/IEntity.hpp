@@ -11,7 +11,7 @@
 #include <queue>
 #include "../Components/Moveable.hpp"
 #include "../Components/Position.hpp"
-#include "../Visitor/IVisitor.hpp"
+#include "../../Visitor/IVisitor.hpp"
 #include "../Components/ClockTimer.hpp"
 
 #define SIZE_SCALE 2

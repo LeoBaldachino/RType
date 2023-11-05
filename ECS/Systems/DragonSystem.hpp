@@ -7,7 +7,7 @@
 
 #pragma once
 #include "../Entity/Dragon.hpp"
-#include "../Core/Core.hpp"
+#include "../../Core/Core.hpp"
 #include "../Entity/DragonShot.hpp"
 #include "Subsystems/MovementSystem.hpp"
 #include "Subsystems/ShotSystem.hpp"

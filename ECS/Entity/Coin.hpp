@@ -7,7 +7,7 @@
 
 #pragma once
 #include "IEntity.hpp"
-#include "../EntityTypes/EntityTypes.hpp"
+#include "../../EntityTypes/EntityTypes.hpp"
 
 #define MOVE_SPEED 3
 #define COIN_X 103

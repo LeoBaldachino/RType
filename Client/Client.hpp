@@ -133,7 +133,8 @@ namespace RType {
             ParallaxGnome _parallaxGnome;
             ParallaxDragon _parallaxDragon;
             Menu _menu;
-            unsigned int _level = 2;
+            unsigned int _level = 0;
+            bool roomDetailsSet = false;
             PopUp _popUp;
             bool _quittedRoom = false;
             int _serverPid;

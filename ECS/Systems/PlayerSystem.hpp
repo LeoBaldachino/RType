@@ -8,7 +8,7 @@
 #pragma once
 #include <memory>
 #include "../Entity/Player.hpp"
-#include "../Core/Core.hpp"
+#include "../../Core/Core.hpp"
 #include "Subsystems/InputSystem.hpp"
 #include "Subsystems/ShotSystem.hpp"
 #include "Subsystems/PiercingShotSystem.hpp"
