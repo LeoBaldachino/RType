@@ -33,7 +33,7 @@ void Parser::initMusic(void)
 {
     try {
         this->_music = this->getSetting<int>("music.index");
-        this->_music = this->_music > 8 || this->_music < 0 ? 0 : this->_music;
+        this->_music = this->_music > 9 || this->_music < 1 ? 1 : this->_music;
     }
     catch (std::logic_error &e) {
         return;
@@ -43,7 +43,7 @@ void Parser::initMusic(void)
 void Parser::initParallax(void)
 {
     this->_parallaxIndex = this->getSetting<int>("parallax.index");
-    this->_parallaxIndex = this->_parallaxIndex > 2 || this->_parallaxIndex < 0 ? 0 : this->_parallaxIndex;
+    this->_parallaxIndex = this->_parallaxIndex > 3 || this->_parallaxIndex < 1 ? 1 : this->_parallaxIndex;
 }
 
 void Parser::initWaves(void)
