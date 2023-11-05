@@ -19,9 +19,13 @@ jobs:
             - name: Start Docker daemon
               run: |
                   service docker start
+                  sleep 10
             - name: Verify Docker daemon
               run: |
                   docker info
+            - name: Create and use new builder instance
+              run: |
+                  /tmp/docker-setup-buildx-Ui8kd2/bin/buildx create --name builder-a1d58ac8-f67e-4c1a-a706-c13764864ae4 --driver docker-container --buildkitd-flags --allow-insecure-entitlement security.insecure --allow-insecure-entitlement network.host --use
             - name: Runs docker-compose
               run: |
                   apt-get update
