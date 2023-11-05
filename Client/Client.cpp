@@ -34,7 +34,7 @@ _menu(this->_popUp, [this]{
         int random = std::rand() % 1000 + 3000; 
         int pid = this->_encaps.serverFork();
         if (!pid) {
-            std::system(std::string("./bin/r-type_server "+ std::to_string(random) + " ../test.cfg").c_str());
+            std::system(std::string("./r-type_server "+ std::to_string(random) + " Assets/test.cfg").c_str());
             std::exit(0);
         }
         this->_serverPid = pid;
