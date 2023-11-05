@@ -1,0 +1,25 @@
+name: Check server build standalone
+
+on:
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
+
+jobs:
+    build:
+        runs-on: self-hosted
+        container: 
+            image: ubuntu:latest
+        steps:
+            - uses: actions/checkout@v2
+            - name: Install dependencies
+              run: |
+                apt-get update
+                apt-get install -y make
+                apt-get install -y g++
+                apt-get install -y libboost-all-dev
+                apt-get install -y libconfig++-dev
+            - name: Build
+              run: |
+                make
