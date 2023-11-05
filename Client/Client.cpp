@@ -467,7 +467,7 @@ void RType::Client::setValues(const Utils::MessageParsed_s &msg)
     if (find == this->_entities._entities.end())
         return;
     if (find->second->getEntityType() == player) {
-        std::cout << "Player casted..." << std::endl;
+        std::cout << "Get status !" << std::endl;
         std::shared_ptr<Player> playerCasted = std::dynamic_pointer_cast<Player>(find->second);
         playerCasted->setLife(msg.bytes[3]);
         playerCasted->setMaxLife(msg.bytes[5]);
@@ -696,7 +696,6 @@ void RType::Client::setLifeBars()
             this->_lifeBar->setLifeBarToBydos(bydosCasted); 
         }
         if (it.second->getEntityType() == player) {
-            std::cout << "life barz" << std::endl;
             std::shared_ptr<Player> playerCasted = std::dynamic_pointer_cast<Player>(it.second);
             this->_lifeBar->setLifeBarToPlayer(playerCasted);    
         }
@@ -743,7 +742,6 @@ void RType::Client::quitActualRoom()
 
 void RType::Client::newMessage(const Utils::MessageParsed_s &msg)
 {
-    std::cout << "New message" << std::endl;
     this->_popUp.setText(this->_msgPanel.decyptMessage(msg));
 }
 
@@ -765,8 +763,7 @@ std::string getMusicPath(int musicIndex)
         return ("ShadowOfEvil.ogg");
     if (musicIndex == 7)
         return ("ThreatinZeppelin.ogg");
-    if (musicIndex == 8)
-        return ("TreetopTrouble.ogg");
+    return ("TreetopTrouble.ogg");
 }
 
 void RType::Client::setRoomDetails(const Utils::MessageParsed_s &msg)

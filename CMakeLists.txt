@@ -1,28 +1,11 @@
-cmake_minimum_required(VERSION 3.10)
-
-# Add the directory containing FindLibConfig.cmake to the module path
-# list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/libconfig/CMakeLists.txt")
+cmake_minimum_required(VERSION 3.5)
 
 project(r-type_client)
 set(CMAKE_CXX_STANDARD 17)
-# set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-# set(CMAKE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
-# set(BOOST_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/boost)
-# set(BOOST_LIBRARYDIR ${CMAKE_CURRENT_SOURCE_DIR}/boost/stage/lib)
-# set(BOOST_INCLUDEDIR ${CMAKE_CURRENT_SOURCE_DIR}/boost)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
-# include_directories(${Boost_INCLUDE_DIRS})
-# add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libconfig)
-
-
-# include(FetchContent)
-# FetchContent_Declare(SFML
-#     GIT_REPOSITORY https://github.com/SFML/SFML.git
-#     GIT_TAG 2.6.x)
-# FetchContent_MakeAvailable(SFML)
-# include_directories(${SFML_SOURCE_DIR}/include)
-# include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Visitor)
-# add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/boost)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Visitor)
 
 file(GLOB SUBSYSTEMS "ECS/Systems/Subsystems/*.cpp")
 file(GLOB SYSTEMS "ECS/Systems/*.cpp")
@@ -58,8 +41,6 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
-# add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/boost)
-
 file(GLOB SERVER_SOURCES "server/sources/*.cpp")
 file(GLOB SERVER_CORE "Core/*.cpp")
 file(GLOB SERVER_SOCKET "Sockets/sources/*.cpp")
@@ -86,4 +67,3 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/Assets PREFIX "Assets" FILES ${ASS
 foreach(CONFIG_TYPE ${CMAKE_CONFIGURATION_TYPES})
     file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Assets DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CONFIG_TYPE})
 endforeach()
-

@@ -11,7 +11,7 @@
 #include "../Components/Shoot.hpp"
 #include "../Components/ClockTimer.hpp"
 #include "IEntity.hpp"
-#include "../EntityTypes/EntityTypes.hpp"
+#include "../../EntityTypes/EntityTypes.hpp"
 
 #define PIERCING_SHOT_X 55
 #define PIERCING_SHOT_Y 50

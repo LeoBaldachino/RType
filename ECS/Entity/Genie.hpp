@@ -9,7 +9,7 @@
 #include "../Components/State.hpp"
 #include "../Systems/Subsystems/AIShoot.hpp"
 #include "../Entity/Player.hpp"
-#include "../EntityTypes/EntityTypes.hpp"
+#include "../../EntityTypes/EntityTypes.hpp"
 #include "../Components/ClockTimer.hpp"
 #include "../Components/Health.hpp"
 

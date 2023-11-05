@@ -7,7 +7,7 @@
 
 #pragma once
 #include "../Entity/Mermaid.hpp"
-#include "../Core/Core.hpp"
+#include "../../Core/Core.hpp"
 #include "../Entity/MermaidShot.hpp"
 #include "Subsystems/MovementSystem.hpp"
 #include "Subsystems/ShotSystem.hpp"

@@ -8,8 +8,8 @@
 #include "../GameLoop.hpp"
 #include "../../Visitor/SystemVisitor.hpp"
 #define TARGET_FPS 30
-#define REFRESH_ALL_ENTITIES 1000 / 100
-#define STATUS_ALL_ENTITES 1000 / 3
+#define REFRESH_ALL_ENTITIES 1000 / 30
+#define STATUS_ALL_ENTITES 1000 / 20
 #define REFRESH_PLAYERS 1000
 
 namespace RType {

@@ -10,7 +10,7 @@
 #include <iostream>
 #include "../Components/Shoot.hpp"
 #include "IEntity.hpp"
-#include "../EntityTypes/EntityTypes.hpp"
+#include "../../EntityTypes/EntityTypes.hpp"
 #include "../Components/ClockTimer.hpp"
 
 #define SHOT_X 32

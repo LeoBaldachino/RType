@@ -58,14 +58,11 @@ std::queue<RType::Utils::MessageParsed_s> RType::RTypeGameLoop::runAfterUpdate(s
     size_t entitySize = this->_core._entities.size();
     for (auto &it : this->_core._entities)
         it.second->accept(this->v, this->_core);
-    if (entitySize != this->_core._entities.size()) {
-        std::cout << "Auto refresh..." << std::endl;
-        this->sendRefreshAllEntities(toReturn);
-    }
+    // if (entitySize != this->_core._entities.size())
+    //     this->sendRefreshAllEntities(toReturn);
     std::queue<unsigned short> toErase = this->_core.getToErase();
     this->_core.eraseEntity();
     while (!toErase.empty()) {
-        std::cout << "Erase entity..." << std::endl;
         this->addRemoveEntity(toReturn, toErase.front());
         toErase.pop();
     }
@@ -250,16 +247,14 @@ void RType::RTypeGameLoop::checkPlayerStatus(std::queue<Utils::MessageParsed_s> 
 {
     Utils::MessageParsed_s msgToSend;
     msgToSend.msgType = valueSet;
-    for (auto it : this->_playerArray) {
-        auto find = this->_core._entities.find(it);
-        if (find == this->_core._entities.end())
+    for (auto find : this->_core._entities) {
+        if (find.second->getEntityType() != RType::EntityTypes::player)
             continue;
-        if (find->second->getEntityType() != player)
-            continue;
-        std::shared_ptr<Player> player = std::dynamic_pointer_cast<Player>(find->second);
-        msgToSend.setFirstShort(it);
+        std::shared_ptr<Player> player = std::dynamic_pointer_cast<Player>(find.second);
+        msgToSend.setFirstShort(find.first);
         msgToSend.bytes[3] = player->getLifes();
         // msgToSend.bytes[4] = player->actuallyInvincible() ? 1 : 0;
+        // std::cout << "Actual life " << (int)msgToSend.bytes[3] << " / " << (int)msgToSend.bytes[5] << std::endl;
         msgToSend.bytes[5] = player->getMaxLife();
         msgToSend.bytes[4] = player->getScore();
         toReturn.push(msgToSend);
@@ -355,6 +350,7 @@ void RType::RTypeGameLoop::refreshStatus(std::queue<Utils::MessageParsed_s> &toR
     if (std::chrono::duration_cast<std::chrono::milliseconds>(clock - this->_refreshStatus).count() < STATUS_ALL_ENTITES)
         return;
     this->_refreshStatus = clock;
+    // std::cout << "Refrsh statuts?" << std::endl;
     this->checkPlayerStatus(toReturn);
     this->checkBydosStatus(toReturn);
     this->checkTourreStatus(toReturn);

@@ -7,7 +7,7 @@
 
 #pragma once
 #include "../Entity/MermaidShot.hpp"
-#include "../Core/Core.hpp"
+#include "../../Core/Core.hpp"
 #include "Subsystems/HitBox.hpp"
 
 class MermaidShotSystem {
