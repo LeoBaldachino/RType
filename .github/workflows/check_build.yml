@@ -8,7 +8,7 @@ on:
 
 jobs:
     build:
-        runs-on: ubuntu-latest
+        runs-on: self-hosted
         container: 
             image: ubuntu:latest
         steps:
@@ -16,10 +16,13 @@ jobs:
             - name: Install dependencies
               run: |
                 apt-get update
-                apt-get install -y libboost-all-dev
-                apt-get install -y libconfig++-dev
                 apt-get install -y make
                 apt-get install -y g++
+                apt-get install -y cmake
+                apt-get install -y git
+                apt-get install -y libsfml-dev
+                apt-get install -y libx11-dev
+                apt-get install -y libudev-dev          
             - name: Build
               run: |
-                make
+                bash build.sh
