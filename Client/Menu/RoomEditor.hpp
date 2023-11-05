@@ -16,7 +16,7 @@ namespace RType {
     class RoomEditor {
         public:
             RoomEditor(bool &sendMsg, Utils::MessageParsed_s &msg, int &sizeNb);
-            ~RoomEditor();
+            ~RoomEditor() {};
             void display(std::unique_ptr<sf::RenderWindow> &toDraw);
             inline void hoverButtons(const sf::Vector2i &mousePos) {this->_list.hoverButtons(mousePos);};
             inline void clickedButtons(const sf::Vector2i &mousePos) {this->_list.clickButtons(mousePos);};

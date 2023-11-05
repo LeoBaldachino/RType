@@ -17,7 +17,7 @@ namespace RType {
     class RoomSelector {
         public:
             RoomSelector(std::function<void()> &createServer);
-            ~RoomSelector();
+            ~RoomSelector() {};
             void display(std::unique_ptr<sf::RenderWindow> &toDraw);
             void hoverButtons(const sf::Vector2i &mousePos);
             void clickedButtons(const sf::Vector2i &mousePos);

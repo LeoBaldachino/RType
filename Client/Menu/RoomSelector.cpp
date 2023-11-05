@@ -40,10 +40,6 @@ _roomEditor(this->_sendedMessage, this->_messageToSend, this->_actualRoom)
     "../Assets/buttonTest.png", "Be the\nnew server", sf::Vector2f(1700.0, 20.0), sf::IntRect(0, 0, 150, 100), 100, 1);
 }
 
-RType::RoomSelector::~RoomSelector()
-{
-}
-
 void RType::RoomSelector::display(std::unique_ptr<sf::RenderWindow> &toDraw)
 {
     if (this->_openRoomEditor)
