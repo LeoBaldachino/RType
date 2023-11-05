@@ -6,7 +6,6 @@
 */
 
 #pragma once
-
 #include "../../ECS/Entity/Player.hpp"
 #include "../../Core/Core.hpp"
 #include "../../EntityTypes/EntityTypes.hpp"
@@ -25,9 +24,7 @@ namespace RType {
             Prediction(Core &core, Core &predictionCore, std::vector<Events> &events) : _core(core), _inputs(events), _predictionCore(predictionCore) {
                 this->_clockOtherEntities = std::chrono::steady_clock::now();
             };
-            ~Prediction() {
-
-            };
+            ~Prediction() {};
             void PredicatePlayer(unsigned short id, size_t delay = 20) {
                 auto find = this->_core._entities.find(id);
                 if (find == this->_core._entities.end())
