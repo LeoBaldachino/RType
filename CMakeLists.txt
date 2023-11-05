@@ -1,27 +1,27 @@
 cmake_minimum_required(VERSION 3.10)
 
 # Add the directory containing FindLibConfig.cmake to the module path
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/libconfig/CMakeLists.txt")
+# list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/libconfig/CMakeLists.txt")
 
 project(r-type_client)
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-set(CMAKE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
-set(BOOST_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/boost)
-set(BOOST_LIBRARYDIR ${CMAKE_CURRENT_SOURCE_DIR}/boost/stage/lib)
-set(BOOST_INCLUDEDIR ${CMAKE_CURRENT_SOURCE_DIR}/boost)
+# set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+# set(CMAKE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+# set(BOOST_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/boost)
+# set(BOOST_LIBRARYDIR ${CMAKE_CURRENT_SOURCE_DIR}/boost/stage/lib)
+# set(BOOST_INCLUDEDIR ${CMAKE_CURRENT_SOURCE_DIR}/boost)
 
-include_directories(${Boost_INCLUDE_DIRS})
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libconfig)
+# include_directories(${Boost_INCLUDE_DIRS})
+# add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libconfig)
 
 
-include(FetchContent)
-FetchContent_Declare(SFML
-    GIT_REPOSITORY https://github.com/SFML/SFML.git
-    GIT_TAG 2.6.x)
-FetchContent_MakeAvailable(SFML)
-include_directories(${SFML_SOURCE_DIR}/include)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Visitor)
+# include(FetchContent)
+# FetchContent_Declare(SFML
+#     GIT_REPOSITORY https://github.com/SFML/SFML.git
+#     GIT_TAG 2.6.x)
+# FetchContent_MakeAvailable(SFML)
+# include_directories(${SFML_SOURCE_DIR}/include)
+# include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Visitor)
 # add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/boost)
 
 file(GLOB SUBSYSTEMS "ECS/Systems/Subsystems/*.cpp")
@@ -63,7 +63,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/boost)
+# add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/boost)
 
 file(GLOB SERVER_SOURCES "server/sources/*.cpp")
 file(GLOB SERVER_CORE "Core/*.cpp")

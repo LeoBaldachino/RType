@@ -9,7 +9,7 @@
 #include "IEntity.hpp"
 #include "../Components/Shoot.hpp"
 #include "../Components/State.hpp"
-#include "../EntityTypes/EntityTypes.hpp"
+#include "../../EntityTypes/EntityTypes.hpp"
 #include "../Components/Inputs.hpp"
 #include "../Components/Health.hpp"
 #include "../Components/ClockTimer.hpp"
