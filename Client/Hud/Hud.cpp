@@ -10,7 +10,7 @@
 RType::Hud::Hud(const sf::Vector2f &pos)
 {
     this->_pos = pos;
-    this->_font.loadFromFile("../Assets/insanibu.ttf");
+    this->_font.loadFromFile("Assets/insanibu.ttf");
     this->_text.setPosition(pos);
     this->_text.setFont(this->_font);
     this->_score = 0;

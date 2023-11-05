@@ -8,7 +8,7 @@
 #include "RoomSelector.hpp"
 
 RType::RoomSelector::RoomSelector(std::function<void()> &createServer) :
-_list("../Assets/insanibu.ttf"),
+_list("Assets/insanibu.ttf"),
 _createServer(createServer),
 _roomEditor(this->_sendedMessage, this->_messageToSend, this->_actualRoom)
 {
@@ -25,7 +25,7 @@ _roomEditor(this->_sendedMessage, this->_messageToSend, this->_actualRoom)
         // this->_sendedMessage = true;
         // std::cout << "clicked ???" << std::endl;
     }, 
-    "../Assets/buttonTest.png", "Create a \nnew room", sf::Vector2f(20.0, 20.0), sf::IntRect(0, 0, 150, 100), 100, 0);
+    "Assets/buttonTest.png", "Create a \nnew room", sf::Vector2f(20.0, 20.0), sf::IntRect(0, 0, 150, 100), 100, 0);
         this->_list.addButtons([this]{
         this->_createServer();
         this->_actualRoom = this->_currentRoomList.size() + 1;
@@ -37,7 +37,7 @@ _roomEditor(this->_sendedMessage, this->_messageToSend, this->_actualRoom)
         // this->_sendedMessage = true;
         // // std::cout << "clicked ???" << std::endl;
     }, 
-    "../Assets/buttonTest.png", "Be the\nnew server", sf::Vector2f(1700.0, 20.0), sf::IntRect(0, 0, 150, 100), 100, 1);
+    "Assets/buttonTest.png", "Be the\nnew server", sf::Vector2f(1700.0, 20.0), sf::IntRect(0, 0, 150, 100), 100, 1);
 }
 
 void RType::RoomSelector::display(std::unique_ptr<sf::RenderWindow> &toDraw)
@@ -81,7 +81,7 @@ void RType::RoomSelector::handleMessage(const Utils::MessageParsed_s &msg)
         this->_messageToSend.bytes[0] = this->_actualRoom;
         this->_sendedMessage = true;
     }, 
-    "../Assets/buttonTest.png", "Room :" + std::to_string(static_cast<int>(roomId)) + "\n" + std::to_string(static_cast<int>(msg.bytes[1])) + " / " + std::to_string(static_cast<int>(msg.bytes[2])), 
+    "Assets/buttonTest.png", "Room :" + std::to_string(static_cast<int>(roomId)) + "\n" + std::to_string(static_cast<int>(msg.bytes[1])) + " / " + std::to_string(static_cast<int>(msg.bytes[2])), 
     sf::Vector2f(20.0 + 110.0 * this->_currentRoomList.size(), 300.0), sf::IntRect(0, 0, 150, 100), 100, this->_currentRoomList.size() + 2);
     this->_currentRoomList.push_back(roomId);
 }

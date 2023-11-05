@@ -9,7 +9,7 @@
 
 RType::SoundPlayer::SoundPlayer()
 {
-    std::vector<std::string> sounds = {"../Assets/fire.ogg", "../Assets/fireK.ogg"};
+    std::vector<std::string> sounds = {"Assets/fire.ogg", "Assets/fireK.ogg"};
     int cp = 0;
     for (auto it : sounds) {
         this->_buffers.push_back(std::make_unique<sf::SoundBuffer>());

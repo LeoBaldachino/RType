@@ -11,7 +11,7 @@ RType::Menu::Menu(PopUp &popUp, std::function<void()> fn) :
 _popUp(popUp),
 _roomSelector(fn)
 {
-    this->_text.loadFromFile("../Assets/background_game_real.png");
+    this->_text.loadFromFile("Assets/background_game_real.png");
     this->_sprite.setTexture(this->_text);
     this->_panel = baseMenu;
     this->_closeMenu = false;

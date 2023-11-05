@@ -7,7 +7,7 @@
 
 #include "MessagePanel.hpp"
 
-RType::MessagePanel::MessagePanel() : _list("../Assets/insanibu.ttf")
+RType::MessagePanel::MessagePanel() : _list("Assets/insanibu.ttf")
 {
     this->_font = this->_list.getFont();
     this->_alltexts = {"Hello", "Bydos", "Boss", "Morning", "Vision", "I'm", "of", "over there", "Happiness", "Coin", "Need", "...", "!", "Warning", "Danger", "Genuis",
@@ -18,7 +18,7 @@ RType::MessagePanel::MessagePanel() : _list("../Assets/insanibu.ttf")
     sf::Vector2f pos(100.0, 10.0);
     int cp = 0;
     for (auto it : this->_alltexts) {
-        this->_list.addButtons([this, cp, it]{if (this->_message.size() > 6) return;this->_message.push_back(cp);this->_messageText.push_back(it);}, "../Assets/buttonTest.png", it, pos, sf::IntRect(0, 0, 150, 100), 100, cp);
+        this->_list.addButtons([this, cp, it]{if (this->_message.size() > 6) return;this->_message.push_back(cp);this->_messageText.push_back(it);}, "Assets/buttonTest.png", it, pos, sf::IntRect(0, 0, 150, 100), 100, cp);
         pos.x += 150.0;
         if (pos.x >= 1600.0) {
             pos.x = 10.0;
@@ -26,9 +26,9 @@ RType::MessagePanel::MessagePanel() : _list("../Assets/insanibu.ttf")
         }
         ++cp;
     }
-    this->_list.addButtons([this]{if (this->_message.size() < 1) return;this->_message.pop_back();this->_messageText.pop_back();}, "../Assets/buttonTest.png", "<--", sf::Vector2f(20.0, 920.0), sf::IntRect(0, 0, 150, 100), 100, cp);
+    this->_list.addButtons([this]{if (this->_message.size() < 1) return;this->_message.pop_back();this->_messageText.pop_back();}, "Assets/buttonTest.png", "<--", sf::Vector2f(20.0, 920.0), sf::IntRect(0, 0, 150, 100), 100, cp);
     ++cp;
-    this->_list.addButtons([this]{this->_readyToSend = true;}, "../Assets/buttonTest.png", "Send", sf::Vector2f(190.0, 920.0), sf::IntRect(0, 0, 150, 100), 100, cp);
+    this->_list.addButtons([this]{this->_readyToSend = true;}, "Assets/buttonTest.png", "Send", sf::Vector2f(190.0, 920.0), sf::IntRect(0, 0, 150, 100), 100, cp);
 }
 
 RType::Utils::MessageParsed_s RType::MessagePanel::sendMessage()

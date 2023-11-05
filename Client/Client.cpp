@@ -24,11 +24,11 @@ _commands({
 {message, &RType::Client::newMessage},
 {roomDetails, &RType::Client::setRoomDetails}
 }),
-_buttonList("../Assets/insanibu.ttf"),
+_buttonList("Assets/insanibu.ttf"),
 _parallax(_texture),
 _parallaxGnome(_texture),
 _parallaxDragon(_texture),
-_popUp("Welcome the the R-Type !", "../Assets/insanibu.ttf"),
+_popUp("Welcome the the R-Type !", "Assets/insanibu.ttf"),
 _menu(this->_popUp, [this]{
     #ifdef __unix__
         int random = std::rand() % 1000 + 3000; 
@@ -64,9 +64,9 @@ _hud(sf::Vector2f(1700.0, 20.0))
     this->_serverPid = -1;
     this->_serverPort = std::stoi(av[2]);
     this->_mutex = std::make_unique<std::mutex>();
-    // this->_buttonList.addButtons([this]{std::cout << "Hello world !" << std::endl;}, "../Assets/buttonTest.png", "Hello !", sf::Vector2f(10.0, 10.0), sf::IntRect(0, 0, 150, 100), 100, 0);
+    // this->_buttonList.addButtons([this]{std::cout << "Hello world !" << std::endl;}, "Assets/buttonTest.png", "Hello !", sf::Vector2f(10.0, 10.0), sf::IntRect(0, 0, 150, 100), 100, 0);
     this->_window = std::make_unique<sf::RenderWindow>(sf::VideoMode::getDesktopMode(), "R-Type" /*,sf::Style::Fullscreen */);
-    // if (this->_music.openFromFile("../Assets/music.ogg") != -1)
+    // if (this->_music.openFromFile("Assets/music.ogg") != -1)
     //     this->_music.play();
     this->_socket = std::make_unique<Utils::SocketHandler>("127.0.0.1", 4001 + std::rand() % 3000, std::list<int>({keyPressed, entityType, playerPing, newPlayerConnected, givePlayerId, destroyedRoom, serverStop, entityType, removeEntity, playerDeconnected, newRoomIsCreated, playerGetId, givePlayerId}));
     this->_threadIsOpen = true;

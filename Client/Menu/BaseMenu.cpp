@@ -8,11 +8,11 @@
 #include "BaseMenu.hpp"
 
 RType::BaseMenu::BaseMenu() :
-_list("../Assets/insanibu.ttf")
+_list("Assets/insanibu.ttf")
 {
     this->_exited = false;
-    this->_list.addButtons([this]{this->_exited = true;}, "../Assets/Start_Btn.png", "", sf::Vector2f(885.0, 400.0), sf::IntRect(0, 0, 200, 200), 200, 0);
-    this->_list.addButtons([this]{std::exit(0);}, "../Assets/buttonTest.png", "Quit", sf::Vector2f(885.0, 700.0), sf::IntRect(0, 0, 150, 100), 100, 1);
+    this->_list.addButtons([this]{this->_exited = true;}, "Assets/Start_Btn.png", "", sf::Vector2f(885.0, 400.0), sf::IntRect(0, 0, 200, 200), 200, 0);
+    this->_list.addButtons([this]{std::exit(0);}, "Assets/buttonTest.png", "Quit", sf::Vector2f(885.0, 700.0), sf::IntRect(0, 0, 150, 100), 100, 1);
 }
 
 void RType::BaseMenu::display(std::unique_ptr<sf::RenderWindow> &window)

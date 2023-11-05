@@ -10,7 +10,7 @@
 RType::RoomEditor::RoomEditor(bool &sendMsg, Utils::MessageParsed_s &msg, int &sizeNb) :
 _msg(msg),
 _sendMsg(sendMsg),
-_list("../Assets/insanibu.ttf"),
+_list("Assets/insanibu.ttf"),
 _sizeNb(sizeNb)
 {
     this->_posLife = sf::Vector2f(800.0, 490.0);
@@ -20,23 +20,23 @@ _sizeNb(sizeNb)
     this->_list.addButtons([this]{
         this->_nbOfPlayers++;
     }, 
-    "../Assets/buttonTest.png", "+\nNumber of \nplayers", sf::Vector2f(300.0, 270.0), sf::IntRect(0, 0, 150, 100), 100, 0);
+    "Assets/buttonTest.png", "+\nNumber of \nplayers", sf::Vector2f(300.0, 270.0), sf::IntRect(0, 0, 150, 100), 100, 0);
     this->_list.addButtons([this]{
         if (this->_nbOfPlayers < 2)
             return;
         this->_nbOfPlayers--;
     }, 
-    "../Assets/buttonTest.png", "-\nNumber of \nplayers", sf::Vector2f(300.0, 670.0), sf::IntRect(0, 0, 150, 100), 100, 1);
+    "Assets/buttonTest.png", "-\nNumber of \nplayers", sf::Vector2f(300.0, 670.0), sf::IntRect(0, 0, 150, 100), 100, 1);
     this->_list.addButtons([this]{
         this->_baseLifePlayer++;
     }, 
-    "../Assets/buttonTest.png", "+\nNumber of \nmax lifes", sf::Vector2f(800.0, 270.0), sf::IntRect(0, 0, 150, 100), 100, 2);
+    "Assets/buttonTest.png", "+\nNumber of \nmax lifes", sf::Vector2f(800.0, 270.0), sf::IntRect(0, 0, 150, 100), 100, 2);
     this->_list.addButtons([this]{
         if (this->_baseLifePlayer < 2)
             return;
         this->_baseLifePlayer--;
     }, 
-    "../Assets/buttonTest.png", "-\nNumber of \nmax lifes", sf::Vector2f(800.0, 670.0), sf::IntRect(0, 0, 150, 100), 100, 3);
+    "Assets/buttonTest.png", "-\nNumber of \nmax lifes", sf::Vector2f(800.0, 670.0), sf::IntRect(0, 0, 150, 100), 100, 3);
     this->_list.addButtons([this] {
         this->_sendMsg = true;
         this->_msg.msgType = newRoomIsCreated;
@@ -44,7 +44,7 @@ _sizeNb(sizeNb)
         this->_msg.bytes[1] = this->_nbOfPlayers;
         this->_msg.bytes[2] = this->_baseLifePlayer;
     }, 
-    "../Assets/buttonTest.png", "Add a \nroom", sf::Vector2f(440.0, 850.0), sf::IntRect(0, 0, 150, 100), 100, 4);
+    "Assets/buttonTest.png", "Add a \nroom", sf::Vector2f(440.0, 850.0), sf::IntRect(0, 0, 150, 100), 100, 4);
     this->_font = this->_list.getFont();
     this->_text.setFont(this->_font);
 }
