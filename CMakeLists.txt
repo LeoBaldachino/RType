@@ -7,13 +7,8 @@ project(r-type_client)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
-set(BOOST_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/external/boost)
-set(BOOST_LIBRARYDIR ${CMAKE_CURRENT_SOURCE_DIR}/external/boost/stage/lib)
-set(BOOST_INCLUDEDIR ${CMAKE_CURRENT_SOURCE_DIR}/external/boost)
-include_directories(${Boost_INCLUDE_DIRS})
 # Add the directory to linker library paths
-link_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/boost/stage/lib)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/boost)
+link_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/asio/asio/include)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/external/libconfig)
 
 include(FetchContent)
@@ -64,11 +59,12 @@ endif()
 # include(CPack)
 
 project(r-type_server)
+include_directories(${CMAKE_SOURCE_DIR}/external/asio/asio)
+include_directories(${CMAKE_SOURCE_DIR}/external/asio/asio/include)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/external/boost)
 
 file(GLOB SERVER_SOURCES "server/sources/*.cpp")
 file(GLOB SERVER_CORE "Core/*.cpp")
@@ -88,11 +84,9 @@ target_link_options(r-type_server PRIVATE -g)
 
 # Link against libconfig
 if(WIN32)
-    target_link_libraries(r-type_server PRIVATE boost_system boost_serialization Threads::Threads libconfig++)
-    link_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/boost/stage/lib)
-    include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/boost)
+    target_link_libraries(r-type_server libconfig++ Threads::Threads)
 else()
-    target_link_libraries(r-type_server PRIVATE boost_system boost_serialization Threads::Threads config++ config)
+    target_link_libraries(r-type_server PRIVATE Threads::Threads config++ config)
 endif()
 
 # CPack configuration for r-type_server
@@ -111,7 +105,7 @@ file(GLOB ROOM_CONTROLLER "roomController/sources/*.cpp")
 
 
 add_executable(r-type_room_controller ${ROOM_SOCKET} ${ROOM_CONTROLLER})
-target_link_libraries(r-type_room_controller PRIVATE boost_system boost_serialization Threads::Threads)
+target_link_libraries(r-type_room_controller Threads::Threads)
 
 # CPack configuration for r-type_room_controller
 set(CPACK_PACKAGE_NAME "r-type_room_controller")
