@@ -14,7 +14,7 @@ namespace RType {
     class ButtonList {
         public:
             ButtonList(const std::string &fontPath);
-            ~ButtonList();
+            ~ButtonList() {};
             void addButtons(const std::function<void()>& handler, const std::string &path, const std::string &text, const sf::Vector2f pos, const sf::IntRect rect, int decalHover, unsigned int id);
             void removeButton(unsigned int id);
             void displayButtons(std::unique_ptr<sf::RenderWindow> &window);

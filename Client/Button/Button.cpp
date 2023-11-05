@@ -30,11 +30,6 @@ _font(font)
     this->_timeout = std::chrono::steady_clock::now();
 }
 
-RType::Button::~Button()
-{
-}
-
-
 void RType::Button::checkClicked(const sf::Vector2i &pos)
 {
     if (this->_rectCheck.contains(pos)) {
