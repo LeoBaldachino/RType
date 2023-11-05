@@ -21,11 +21,6 @@ RType::PopUp::PopUp(const std::string &text, const std::string &font)
     this->_timeout = std::chrono::steady_clock::now();
 }
 
-RType::PopUp::~PopUp()
-{
-}
-
-
 void RType::PopUp::display(std::unique_ptr<sf::RenderWindow> &window)
 {
     auto clock = std::chrono::steady_clock::now();

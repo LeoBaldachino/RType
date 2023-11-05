@@ -21,7 +21,7 @@ namespace RType {
     class PopUp {
         public:
             PopUp(const std::string &text, const std::string &font);
-            ~PopUp();
+            ~PopUp() {};
             void display(std::unique_ptr<sf::RenderWindow> &window);
             void setText(const std::string &text);
         private:
@@ -29,6 +29,5 @@ namespace RType {
             std::chrono::steady_clock::time_point _timeout;
             sf::Text _text;
             sf::RectangleShape _rect;
-
     };
 }
