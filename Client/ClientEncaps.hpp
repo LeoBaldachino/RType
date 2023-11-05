@@ -6,7 +6,14 @@
 */
 
 #pragma once
-#include<unistd.h>
+
+#ifdef _WIN32
+    #include <io.h>
+    #include <windows.h>
+#else
+    #include <unistd.h>
+#endif
+
 #include <signal.h>
 
 namespace RType {
@@ -28,7 +35,11 @@ namespace RType {
              * @return int the pid of the fork
              */
             int serverFork() {
-                return fork();
+                #ifdef _WIN32
+                    return _spawnl(_P_NOWAIT, "RTypeServer.exe", NULL);
+                #else
+                    return fork();
+                #endif
             }
             /**
              * @brief make a kill
@@ -38,7 +49,11 @@ namespace RType {
              * @return int return of the kill
              */
             int serverKill(int pid, int signum) {
-                return kill(pid, signum);
+                #ifdef _WIN32
+                    return TerminateProcess((HANDLE)pid, signum);
+                #else
+                    return kill(pid, signum);
+                #endif
             }
     };
 }
