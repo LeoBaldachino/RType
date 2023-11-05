@@ -1,0 +1,9 @@
+[submodule "external/SFML"]
+	path = external/SFML
+	url = https://github.com/SFML/SFML.git
+[submodule "external/boost"]
+	path = external/boost
+	url = https://github.com/boostorg/boost.git
+[submodule "external/libconfig"]
+	path = external/libconfig
+	url = https://github.com/hyperrealm/libconfig.git
