@@ -1,12 +1,6 @@
 echo "Updating submodules..."
 git submodule update --init --recursive
 
-echo "Building Boost.Build..."
-cd external/boost/
-./bootstrap.sh
-./b2
-./b2 headers
-
 echo "Building project..."
 cd ../../
 if [ ! -d "build" ]; then
@@ -14,7 +8,7 @@ if [ ! -d "build" ]; then
 fi
 cd build
 echo "Removing everything in build..."
-rm -rf *
+sudo rm -rf *
 echo "Building project..."
 cmake ..
 make
