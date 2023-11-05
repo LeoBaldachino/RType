@@ -28,7 +28,6 @@ class Parallax {
         std::chrono::steady_clock::time_point _screenFXClock;
         Texture _texture;
         sf::Sprite _sprite;
-
         unsigned int _skyFrame = 0;
         unsigned int _mountainFrame = 0;
         unsigned int _forestFrame = 0;

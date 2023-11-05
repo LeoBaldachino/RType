@@ -59,12 +59,10 @@ void ParallaxGnome::drawMidElements(std::unique_ptr<sf::RenderWindow> &window)
     this->_sprite.setScale(0.5, 0.5);
     this->_sprite.setPosition(0, 673);
     window->draw(this->_sprite);
-
 }
 
 void ParallaxGnome::drawNearElements(std::unique_ptr<sf::RenderWindow> &window)
 {
-
     this->_sprite.setTexture(this->_texture.gnomeMountainsFirst);
     this->_sprite.setTextureRect(sf::Rect<int>(0, 0, 2028, 757));
     this->_sprite.setScale(1, 1);
@@ -72,33 +70,19 @@ void ParallaxGnome::drawNearElements(std::unique_ptr<sf::RenderWindow> &window)
     window->draw(this->_sprite);
 }
 
-
-void ParallaxGnome::handleAloneCloudsFrame(void)
-{
-
-}
-
-void ParallaxGnome::drawAloneClouds(std::unique_ptr<sf::RenderWindow> &window)
-{
-
-}
-
 void ParallaxGnome::handleCloudsFrame(void)
 {
     auto clock = std::chrono::steady_clock::now();
-
     if (std::chrono::duration_cast<std::chrono::milliseconds>(clock - this->_smallCloudsClock).count() < 10)
         return;
     this->_smallCloudsClock = std::chrono::steady_clock::now();
     ++this->_smallCloudsFrame;
     this->_smallCloudsFrame = this->_smallCloudsFrame >= 2131 ? 0 : this->_smallCloudsFrame;
-
     if (std::chrono::duration_cast<std::chrono::milliseconds>(clock - this->_mediumCloudsClock).count() < 20)
         return;
     this->_mediumCloudsClock = std::chrono::steady_clock::now();
     ++this->_mediumCloudsFrame;
     this->_mediumCloudsFrame = this->_mediumCloudsFrame >= 2026 ? 0 : this->_mediumCloudsFrame;
-
     if (std::chrono::duration_cast<std::chrono::milliseconds>(clock - this->_largeCloudsClock).count() < 30)
         return;
     this->_largeCloudsClock = std::chrono::steady_clock::now();
