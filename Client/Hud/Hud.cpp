@@ -18,10 +18,6 @@ RType::Hud::Hud(const sf::Vector2f &pos)
     this->_serverPort = 0;
 }
 
-RType::Hud::~Hud()
-{
-}
-
 void RType::Hud::setServerDetails(const std::string &serverIp, int serverPort)
 {
     this->_serverIp = serverIp;
