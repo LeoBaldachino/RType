@@ -194,6 +194,8 @@ void RType::CoreServer::getRoomMembers(const Utils::MessageParsed_s &msg)
         if (it->getId() == msg.getFirstShort()) {
             newMsg.msgType = sendRoomMembers;
             unsigned char size = it->getNumberOfPlayer();
+            if (size >= 6)
+                size = 6;
             for (int i = 0; i < size; ++i)
                 newMsg.bytes[i] = i;
             newMsg.bytes[size] = 255;

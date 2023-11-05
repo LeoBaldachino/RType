@@ -6,7 +6,7 @@
 */
 
 #pragma once
-#include <boost/asio.hpp>
+#include <asio.hpp>
 #include "MessageParsed.hpp"
 #include <boost/array.hpp>
 #include <tuple>
@@ -70,9 +70,9 @@ namespace RType {
             private:
                 void send();
                 void senderThread();
-                boost::asio::io_service _ioService;
-                std::shared_ptr<boost::asio::ip::udp::socket> _socket;
-                boost::asio::ip::udp::endpoint _Endpoint;
+                asio::io_service _ioService;
+                std::shared_ptr<asio::ip::udp::socket> _socket;
+                asio::ip::udp::endpoint _Endpoint;
                 std::shared_ptr<SocketHandler> _instance;
                 std::shared_ptr<std::mutex> _mutex;
                 std::shared_ptr<std::mutex> _receiverMutex;

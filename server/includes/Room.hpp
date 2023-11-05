@@ -41,12 +41,17 @@ namespace RType {
          */
         class Room {
             public:
+
                 /**
                  * @brief Construct a new Room object
                  * 
                  * @param id id of the room
                  * @param maxSize number max of user in this room
                  * @param setSocket instance of the shared pointer of socketHandler
+                 * @param waves waves from the config file
+                 * @param playerBaseLife spawn life of each of the players
+                 * @param parralax current parralax to display in the client
+                 * @param music current music to play in the client
                  */
                 Room(unsigned char id, unsigned char maxSize, std::shared_ptr<Utils::SocketHandler> setSocket, std::vector<std::map<Parser::Enemies, int>> waves, unsigned char playerBaseLife, int parralax, int music);
                 /**
@@ -145,9 +150,20 @@ namespace RType {
                  * @param msg the message from the player
                  */
                 void sendPlayerId(const Utils::MessageParsed_s &msg);
-                
+                /**
+                 * @brief Get the in-game details about a player
+                 * 
+                 * @param playerId 
+                 * @return std::tuple<unsigned short, unsigned short, unsigned short, unsigned short> 
+                 */
                 std::tuple<unsigned short, unsigned short, unsigned short, unsigned short> getPlayerDetails(unsigned char playerId);
-
+                /**
+                 * @brief remove a player from a room with his id
+                 * 
+                 * @param id player id
+                 * @return true player removed
+                 * @return false player not removed
+                 */
                 bool removeFromRoom(unsigned short id);
             private:
                 /**

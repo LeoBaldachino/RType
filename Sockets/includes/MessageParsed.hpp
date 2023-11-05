@@ -103,7 +103,21 @@ namespace RType {
                 unsigned char bytes[7];
                 std::string senderIp;
                 unsigned short senderPort;
+                /**
+                 * @brief friend operator used to write to a stream
+                 * 
+                 * @param os the stream
+                 * @param msg a message to encode
+                 * @return std::ostream& the stream with the message encoded
+                 */
                 friend std::ostream& operator<<(std::ostream& os, const RType::Utils::MessageParsed_s& msg);
+                /**
+                 * @brief friend operator used to read from a stream
+                 * 
+                 * @param is the stream to read
+                 * @param msg the message to fill
+                 * @return std::istream& the stream without the message
+                 */
                 friend std::istream& operator>>(std::istream& is, RType::Utils::MessageParsed_s& msg);
             private :
                 /**

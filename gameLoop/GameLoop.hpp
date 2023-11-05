@@ -36,6 +36,12 @@ namespace RType {
              * @return std::queue<Utils::MessageParsed_s> updated queue of messages
              */
             std::queue<Utils::MessageParsed_s> updateGameLoop(std::queue<std::pair<unsigned short, Utils::MessageParsed_s>> newMessages);
+            /**
+             * @brief Get the details of a player
+             * 
+             * @param playerId 
+             * @return std::tuple<unsigned short, unsigned short, unsigned short, unsigned short> 
+             */
             std::tuple<unsigned short, unsigned short, unsigned short, unsigned short> getPlayerDetails(unsigned char playerId);
         protected:
             /**

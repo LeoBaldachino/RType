@@ -56,9 +56,17 @@ namespace RType {
              * @param toReturn Queue of messages to return
              */
             void handleBydos(std::queue<Utils::MessageParsed_s> &toReturn);
-
+            /**
+             * @brief 
+             * 
+             * @param toReturn 
+             */
             void handleTourre(std::queue<Utils::MessageParsed_s> &toReturn);
-
+            /**
+             * @brief 
+             * 
+             * @param toReturn 
+             */
             void handleCoin(std::queue<Utils::MessageParsed_s> &toReturn);
 
             /**
@@ -79,7 +87,11 @@ namespace RType {
              * @param toReturn Queue of messages to return
              */
             void checkBydosStatus(std::queue<Utils::MessageParsed_s> &toReturn);
-
+            /**
+             * @brief 
+             * 
+             * @param toReturn 
+             */
             void checkTourreStatus(std::queue<Utils::MessageParsed_s> &toReturn);
 
             /**
@@ -107,7 +119,17 @@ namespace RType {
              * @param waves 
              */
             void setEnemiesWaves(std::vector<std::map<Parser::Enemies, int>> waves);
+            /**
+             * @brief 
+             * 
+             * @param toReturn 
+             */
             void refreshStatus(std::queue<Utils::MessageParsed_s> &toReturn);
+            /**
+             * @brief 
+             * 
+             * @param toReturn 
+             */
             void sendNbOfEntites(std::queue<Utils::MessageParsed_s> &toReturn);
             SystemVisitor v;
             std::vector<unsigned short> _bydos;
