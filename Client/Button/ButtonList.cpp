@@ -12,11 +12,6 @@ RType::ButtonList::ButtonList(const std::string &fontFile)
     this->_buttonsFont.loadFromFile(fontFile);
 }
 
-RType::ButtonList::~ButtonList()
-{
-}
-
-
 void RType::ButtonList::addButtons(const std::function<void()>& handler, const std::string &path, const std::string &text, const sf::Vector2f pos, const sf::IntRect rect, int decalHover, unsigned int id)
 {
     auto it = this->_buttons.find(id);

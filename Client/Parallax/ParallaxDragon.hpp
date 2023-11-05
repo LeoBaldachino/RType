@@ -32,13 +32,11 @@ class ParallaxDragon {
         unsigned int _cloudsFrameFirst = 0;
         unsigned int _cloudsFrameSecond = 0;
         unsigned int _cloudsFrameThird = 0;
-
         std::chrono::steady_clock::time_point _skyClock;
         std::chrono::steady_clock::time_point _towerClock;
         std::chrono::steady_clock::time_point _cloudsClockFirst;
         std::chrono::steady_clock::time_point _cloudsClockSecond;
         std::chrono::steady_clock::time_point _cloudsClockThird;
-
         Texture _texture;
         sf::Sprite _sprite;
 };

@@ -12,7 +12,7 @@ namespace RType {
     class Hud {
         public:
             Hud(const sf::Vector2f &pos);
-            ~Hud();
+            ~Hud() {};
             void display(std::unique_ptr<sf::RenderWindow> &toDraw);
             inline void setScore(unsigned char score) {this->_score = score;};
             void setServerDetails(const std::string &serverIp, int serverPort);

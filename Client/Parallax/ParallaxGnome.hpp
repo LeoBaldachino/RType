@@ -24,30 +24,20 @@ class ParallaxGnome {
         void drawMidElements(std::unique_ptr<sf::RenderWindow> &window);
         void drawNearElements(std::unique_ptr<sf::RenderWindow> &window);
 
-        void drawAloneClouds(std::unique_ptr<sf::RenderWindow> &window);
-
-
-        void handleAloneCloudsFrame(void);
         void handleCloudsFrame(void);
 
         unsigned int _aloneCloudOneFrame = 0;
         unsigned int _aloneCloudTwoFrame = 0;
         unsigned int _aloneCloudThreeFrame = 0;
-        
         unsigned int _largeCloudsFrame = 0;
         unsigned int _mediumCloudsFrame = 0;
         unsigned int _smallCloudsFrame = 0;
-
         unsigned int _groundFrame = 0;
-
         std::chrono::steady_clock::time_point _aloneCloudsClock;
-
         std::chrono::steady_clock::time_point _largeCloudsClock;
         std::chrono::steady_clock::time_point _mediumCloudsClock;
         std::chrono::steady_clock::time_point _smallCloudsClock;
-
         std::chrono::steady_clock::time_point _groundClock;
-
         Texture _texture;
         sf::Sprite _sprite;
 };

@@ -7,7 +7,6 @@
 
 #include "RoomEditor.hpp"
 
-// 
 RType::RoomEditor::RoomEditor(bool &sendMsg, Utils::MessageParsed_s &msg, int &sizeNb) :
 _msg(msg),
 _sendMsg(sendMsg),
@@ -48,10 +47,6 @@ _sizeNb(sizeNb)
     "../Assets/buttonTest.png", "Add a \nroom", sf::Vector2f(440.0, 850.0), sf::IntRect(0, 0, 150, 100), 100, 4);
     this->_font = this->_list.getFont();
     this->_text.setFont(this->_font);
-}
-
-RType::RoomEditor::~RoomEditor()
-{
 }
 
 void RType::RoomEditor::display(std::unique_ptr<sf::RenderWindow> &toDraw)

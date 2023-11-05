@@ -15,10 +15,6 @@ _list("../Assets/insanibu.ttf")
     this->_list.addButtons([this]{std::exit(0);}, "../Assets/buttonTest.png", "Quit", sf::Vector2f(885.0, 700.0), sf::IntRect(0, 0, 150, 100), 100, 1);
 }
 
-RType::BaseMenu::~BaseMenu()
-{
-}
-
 void RType::BaseMenu::display(std::unique_ptr<sf::RenderWindow> &window)
 {
     this->_list.displayButtons(window);
