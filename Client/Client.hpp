@@ -26,6 +26,7 @@
 #include "MessagePanel/MessagePanel.hpp"
 #include "Hud/Hud.hpp"
 #include "SoundPlayer/SoundPlayer.hpp"
+#include "ClientEncaps.hpp"
 
 #define GET_ID_LIMIT_TIME 1
 
@@ -143,5 +144,6 @@ namespace RType {
             SoundPlayer _soundPlayer;
             int _currentMusic = -1;
             int _currentParralax = -1;
+            ClientEncaps _encaps;
     };
 }

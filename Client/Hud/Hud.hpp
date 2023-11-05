@@ -15,10 +15,13 @@ namespace RType {
             ~Hud();
             void display(std::unique_ptr<sf::RenderWindow> &toDraw);
             inline void setScore(unsigned char score) {this->_score = score;};
+            void setServerDetails(const std::string &serverIp, int serverPort);
         private:
             unsigned char _score;
             sf::Font _font;
             sf::Text _text;
             sf::Vector2f _pos;
+            std::string _serverIp;
+            int _serverPort;
     };
 }

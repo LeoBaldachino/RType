@@ -32,9 +32,9 @@ _popUp("Welcome the the R-Type !", "../Assets/insanibu.ttf"),
 _menu(this->_popUp, [this]{
     #ifdef __unix__
         int random = std::rand() % 1000 + 3000; 
-        int pid = fork();
+        int pid = this->_encaps.serverFork();
         if (!pid) {
-            std::system(std::string("./r-type_server "+ std::to_string(random) + " ../test.cfg").c_str());
+            std::system(std::string("./bin/r-type_server "+ std::to_string(random) + " ../test.cfg").c_str());
             std::exit(0);
         }
         this->_serverPid = pid;
@@ -473,6 +473,7 @@ void RType::Client::setValues(const Utils::MessageParsed_s &msg)
         playerCasted->setMaxLife(msg.bytes[5]);
         this->_lifeBar->setLifeBarToPlayer(playerCasted);
         this->_hud.setScore(msg.bytes[4]);
+        this->_hud.setServerDetails(this->_serverIp, this->_serverPort);
     }
     if (find->second->getEntityType() == bydos) {
         std::shared_ptr<Bydos> bydosCasted = std::dynamic_pointer_cast<Bydos>(find->second);
@@ -727,8 +728,8 @@ void RType::Client::quitActualRoom()
     if (this->_actualId == -1) {
         #ifdef __unix__
             if (this->_serverPid != -1) {
-                kill(this->_serverPid, SIGINT);
-                kill(this->_serverPid, SIGTERM);
+                this->_encaps.serverKill(this->_serverPid, SIGINT);
+                this->_encaps.serverKill(this->_serverPid, SIGTERM);
             }
         #endif
         return std::exit(0);
